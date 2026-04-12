@@ -13,6 +13,16 @@ app = Flask(__name__)
 
 SITE_NAME = "Relocate to Asia"
 SITE_URL = "http://127.0.0.1:5000"
+
+
+@app.before_request
+def redirect_to_www():
+    """Redirect marharuta.online → www.marharuta.online (301)."""
+    host = request.host.split(":")[0]  # strip port if any
+    if host == "marharuta.online":
+        url = request.url.replace("://marharuta.online", "://www.marharuta.online", 1)
+        from flask import redirect
+        return redirect(url, 301)
 DEFAULT_AUTHOR = "Relocate to Asia"
 DEFAULT_DESCRIPTION = (
     "Relocate to Asia helps expats compare countries, cities, visas and real-world "
