@@ -184,8 +184,18 @@ def countries_index():
 @app.route("/countries/<slug>/")
 def country(slug: str):
     row = page_or_404(slug, parent="countries")
-    return render_page_row(row,
-                           breadcrumbs=[("Countries", "/countries/")])
+    facts = one("SELECT * FROM country_facts WHERE slug = ?", (slug,))
+    seo = seo_payload(
+        title=row["title"],
+        description=row["excerpt"] if "excerpt" in row.keys() else row["content"],
+    )
+    return render_template(
+        "country.html",
+        page=row,
+        facts=facts,
+        seo=seo,
+        breadcrumbs=[("Countries", "/countries/")],
+    )
 
 
 @app.route("/tools/")

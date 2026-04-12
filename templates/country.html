@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+
+{% block title %}{{ seo.page_title if seo else (page['title'] ~ " | Relocate to Asia") }}{% endblock %}
+
+{% block content %}
+<style>
+  /* ── Country facts card ──────────────────────────────────────────── */
+  .cf-card {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin: 32px auto;
+    max-width: 860px;
+    box-shadow: var(--shadow);
+  }
+
+  .cf-header {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 24px;
+  }
+
+  .cf-flag {
+    width: 56px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid var(--line);
+    flex-shrink: 0;
+  }
+
+  .cf-country-name {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--dark);
+    margin: 0;
+  }
+
+  .cf-region {
+    font-size: 13px;
+    color: var(--muted);
+    margin: 2px 0 0;
+  }
+
+  .cf-basics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 24px;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--line);
+    font-size: 14px;
+    color: var(--text);
+  }
+
+  .cf-basics span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .cf-basics strong {
+    color: var(--dark);
+  }
+
+  .cf-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+  }
+
+  .cf-stat {
+    background: var(--bg);
+    border-radius: 8px;
+    padding: 14px 16px;
+    text-align: center;
+  }
+
+  .cf-stat-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--dark);
+    line-height: 1.2;
+  }
+
+  .cf-stat-label {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+    line-height: 1.3;
+  }
+
+  .cf-stat-year {
+    font-size: 11px;
+    color: #aab4c2;
+    margin-top: 2px;
+  }
+
+  .cf-source {
+    margin-top: 16px;
+    font-size: 12px;
+    color: var(--muted);
+    text-align: right;
+  }
+
+  @media (max-width: 600px) {
+    .cf-card { padding: 20px 16px; margin: 20px 12px; }
+    .cf-stats { grid-template-columns: repeat(2, 1fr); }
+    .cf-stat-value { font-size: 18px; }
+  }
+</style>
+
+<div class="rta-content">
+  {% if '<h1' not in (page['content'] or '')|lower %}<h1 class="sr-only">{{ page['title'] }}</h1>{% endif %}
+
+  {% if facts %}
+  <div class="cf-card">
+    <div class="cf-header">
+      {% if facts['flag_svg'] %}
+      <img class="cf-flag" src="{{ facts['flag_svg'] }}" alt="{{ facts['name'] }} flag" loading="lazy">
+      {% endif %}
+      <div>
+        <p class="cf-country-name">{{ facts['name'] }}</p>
+        <p class="cf-region">{{ facts['region'] }}</p>
+      </div>
+    </div>
+
+    <div class="cf-basics">
+      {% if facts['capital'] %}
+      <span>🏛 Capital: <strong>{{ facts['capital'] }}</strong></span>
+      {% endif %}
+      {% if facts['currency_code'] and facts['currency_name'] %}
+      <span>💱 Currency: <strong>{{ facts['currency_name'] }} ({{ facts['currency_code'] }})</strong></span>
+      {% endif %}
+      {% if facts['languages'] %}
+      <span>🗣 Languages: <strong>{{ facts['languages'] }}</strong></span>
+      {% endif %}
+      {% if facts['timezone'] %}
+      <span>🕐 Timezone: <strong>{{ facts['timezone'] }}</strong></span>
+      {% endif %}
+      {% if facts['population'] %}
+      <span>👥 Population: <strong>{{ "{:,.0f}".format(facts['population']) }}</strong></span>
+      {% endif %}
+    </div>
+
+    <div class="cf-stats">
+      {% if facts['gdp_per_capita'] %}
+      <div class="cf-stat">
+        <div class="cf-stat-value">${{ "{:,.0f}".format(facts['gdp_per_capita']) }}</div>
+        <div class="cf-stat-label">GDP per Capita</div>
+        {% if facts['wb_year'] %}<div class="cf-stat-year">{{ facts['wb_year'] }}</div>{% endif %}
+      </div>
+      {% endif %}
+
+      {% if facts['life_expectancy'] %}
+      <div class="cf-stat">
+        <div class="cf-stat-value">{{ "%.1f"|format(facts['life_expectancy']) }}</div>
+        <div class="cf-stat-label">Life Expectancy (years)</div>
+        {% if facts['wb_year'] %}<div class="cf-stat-year">{{ facts['wb_year'] }}</div>{% endif %}
+      </div>
+      {% endif %}
+
+      {% if facts['internet_pct'] %}
+      <div class="cf-stat">
+        <div class="cf-stat-value">{{ "%.1f"|format(facts['internet_pct']) }}%</div>
+        <div class="cf-stat-label">Internet Users</div>
+        {% if facts['wb_year'] %}<div class="cf-stat-year">{{ facts['wb_year'] }}</div>{% endif %}
+      </div>
+      {% endif %}
+
+      {% if facts['inflation'] is not none %}
+      <div class="cf-stat">
+        <div class="cf-stat-value">{{ "%.1f"|format(facts['inflation']) }}%</div>
+        <div class="cf-stat-label">Inflation Rate</div>
+        {% if facts['wb_year'] %}<div class="cf-stat-year">{{ facts['wb_year'] }}</div>{% endif %}
+      </div>
+      {% endif %}
+
+      {% if facts['unemployment'] is not none %}
+      <div class="cf-stat">
+        <div class="cf-stat-value">{{ "%.1f"|format(facts['unemployment']) }}%</div>
+        <div class="cf-stat-label">Unemployment</div>
+        {% if facts['wb_year'] %}<div class="cf-stat-year">{{ facts['wb_year'] }}</div>{% endif %}
+      </div>
+      {% endif %}
+    </div>
+
+    <p class="cf-source">Sources: REST Countries · World Bank Open Data</p>
+  </div>
+  {% endif %}
+
+  {{ page['content'] | wp_clean | safe }}
+</div>
+{% endblock %}
