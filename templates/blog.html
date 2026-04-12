@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}{{ seo.page_title if seo else "Blog | Relocate to Asia" }}{% endblock %}
+
+{% block content %}
+<div class="rta-blog">
+  <section class="rta-blog-hero">
+    <h1>Relocation Blog</h1>
+    <p>Guides, tips and real expat stories from across Asia.</p>
+  </section>
+
+  {% if posts %}
+    <div class="rta-blog-grid">
+      {% for post in posts %}
+      <a class="rta-blog-card" href="/blog/{{ post['slug'] }}/">
+        <div class="rta-blog-date">{{ post['date'][:10] }}</div>
+        <h2>{{ post['title'] | safe }}</h2>
+        {% if post['excerpt'] %}
+        <div class="rta-blog-excerpt">
+          {{ post['excerpt'] | striptags | truncate(200) }}
+        </div>
+        {% endif %}
+        <div class="rta-blog-link">Read more &rarr;</div>
+      </a>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="rta-empty">No posts yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

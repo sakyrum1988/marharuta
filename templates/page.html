@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block title %}{{ seo.page_title if seo else (page['title'] ~ " | Relocate to Asia") }}{% endblock %}
+
+{% block content %}
+<div class="rta-content">
+  {% if '<h1' not in (page['content'] or '')|lower %}<h1 class="sr-only">{{ page['title'] }}</h1>{% endif %}
+  {{ page['content'] | wp_clean | safe }}
+</div>
+{% endblock %}

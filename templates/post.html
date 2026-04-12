@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block title %}{{ seo.page_title if seo else (post['title'] | striptags ~ " | Relocate to Asia") }}{% endblock %}
+
+{% block content %}
+<div class="rta-content">
+  <h1 class="sr-only">{{ post['title'] | striptags }}</h1>
+  {{ post['content'] | wp_clean | safe }}
+</div>
+{% endblock %}

@@ -1,0 +1,1242 @@
+<!doctype html>
+<html lang="{{ seo.html_lang if seo else 'en' }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ seo.page_title if seo else "Relocate to Asia" }}{% endblock %}</title>
+  <meta name="description" content="{{ seo.meta_description if seo else "Relocate to Asia helps expats compare countries, cities, visas and moving costs across Asia." }}">
+  <meta name="keywords" content="{{ seo.meta_keywords if seo else "Relocate to Asia, Asia relocation, expat visas, move to Asia" }}">
+  <meta name="robots" content="{{ seo.meta_robots if seo else "index,follow,max-image-preview:large" }}">
+  <meta name="author" content="{{ seo.meta_author if seo else "Relocate to Asia" }}">
+  <meta name="publisher" content="{{ seo.meta_publisher if seo else "Relocate to Asia" }}">
+  <link rel="canonical" href="{{ seo.canonical_url if seo else request.url }}">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Relocate to Asia">
+  <meta property="og:title" content="{{ seo.meta_title if seo else "Relocate to Asia" }}">
+  <meta property="og:description" content="{{ seo.meta_description if seo else "Relocate to Asia helps expats compare countries, cities, visas and moving costs across Asia." }}">
+  <meta property="og:url" content="{{ seo.canonical_url if seo else request.url }}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ seo.meta_title if seo else "Relocate to Asia" }}">
+  <meta name="twitter:description" content="{{ seo.meta_description if seo else "Relocate to Asia helps expats compare countries, cities, visas and moving costs across Asia." }}">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    :root {
+      --blue: #1a56db;
+      --blue-soft: #eef4ff;
+      --dark: #0f3460;
+      --ink: #142033;
+      --text: #263244;
+      --muted: #66758a;
+      --line: #e3e9f2;
+      --bg: #f5f7fb;
+      --white: #fff;
+      --shadow: 0 10px 30px rgba(15, 52, 96, 0.08);
+      --radius: 8px;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.6;
+      text-rendering: optimizeLegibility;
+    }
+
+    a {
+      color: var(--blue);
+      text-decoration-thickness: 1px;
+      text-underline-offset: 3px;
+    }
+
+    img, svg, video, canvas, iframe {
+      max-width: 100%;
+      height: auto;
+    }
+
+    /* Navigation */
+    .rta-nav {
+      background: #fff;
+      border-bottom: 1px solid #d6dbe4;
+      position: relative;
+      z-index: 100;
+    }
+
+    .rta-nav-inner {
+      max-width: 1270px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 40px;
+    }
+
+    .rta-logo {
+      color: #071b36;
+      font-size: 26px;
+      font-weight: 700;
+      line-height: 1;
+      text-decoration: none;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .rta-logo:hover {
+      color: #071b36;
+    }
+
+    .rta-nav-links {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 26px;
+      flex-wrap: nowrap;
+    }
+
+    .rta-nav-links > a,
+    .rta-nav-trigger {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #071b36;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 72px;
+      text-decoration: none;
+      white-space: nowrap;
+      padding: 0;
+      border-radius: 0;
+      transition: color .15s;
+    }
+
+    .rta-nav-links > a:hover,
+    .rta-nav-item:hover .rta-nav-trigger,
+    .rta-nav-item:focus-within .rta-nav-trigger {
+      color: #005bbb;
+      background: transparent;
+    }
+
+    .rta-nav-item {
+      position: relative;
+      height: 72px;
+      display: flex;
+      align-items: center;
+    }
+
+    .rta-nav-trigger::after {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-right: 1.5px solid currentColor;
+      border-bottom: 1.5px solid currentColor;
+      transform: rotate(45deg) translateY(-2px);
+      opacity: .85;
+    }
+
+    .rta-dropdown {
+      position: absolute;
+      top: 72px;
+      left: 0;
+      z-index: 200;
+      min-width: 240px;
+      padding: 0;
+      border: 0;
+      border-top: 2px solid #005bbb;
+      border-radius: 0;
+      background: #fff;
+      box-shadow: 0 10px 24px rgba(15, 52, 96, .08);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-2px);
+      transition: opacity .12s, transform .12s;
+    }
+
+    .rta-nav-item:hover .rta-dropdown,
+    .rta-nav-item:focus-within .rta-dropdown {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .rta-dropdown a {
+      display: block;
+      padding: 14px 16px;
+      color: #071b36;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.5;
+      text-decoration: none;
+      white-space: nowrap;
+      border-radius: 0;
+    }
+
+    .rta-dropdown a:hover {
+      background: #f6f8fb;
+      color: #005bbb;
+    }
+
+    .rta-dropdown-section {
+      display: none;
+    }
+
+    /* Layout */
+    .rta-main {
+      min-height: calc(100vh - 64px - 88px);
+    }
+
+    .rta-content,
+    .rta-blog {
+      width: min(1120px, calc(100% - 48px));
+      margin: 0 auto;
+      padding-top: 56px;
+    }
+
+    .rta-content > p:empty,
+    .rta-content > p:has(> br:only-child) {
+      display: none;
+    }
+
+    .rta-content > style,
+    .rta-content > script {
+      display: none !important;
+    }
+
+    .rta-content h1,
+    .rta-content h2,
+    .rta-content h3,
+    .rta-content h4,
+    .rta-blog h1,
+    .rta-blog h2 {
+      color: var(--ink);
+      line-height: 1.2;
+    }
+
+    .rta-content p,
+    .rta-content li {
+      overflow-wrap: anywhere;
+    }
+
+    .rta-content table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .rta-content th,
+    .rta-content td {
+      overflow-wrap: anywhere;
+    }
+
+    /* Imported page wrappers */
+    .rta-content .rta-page,
+    .rta-content .ch2,
+    .rta-content .ct-wrap,
+    .rta-content .cc-page,
+    .rta-content .tp {
+      max-width: 100% !important;
+      width: 100% !important;
+      margin-left: auto !important;
+      margin-right: auto !important;
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+    }
+
+    /* Imported heroes */
+    .rta-content .rta-hero,
+    .rta-content .ch2-hero,
+    .rta-content .ct-hero,
+    .rta-content .cc-hero,
+    .rta-content .tp-hero,
+    .rta-content .visa-hero,
+    .rta-content .bvt-hero,
+    .rta-content .art-hero,
+    .rta-blog-hero {
+      border-radius: var(--radius) !important;
+      margin: 0 0 36px !important;
+      box-shadow: var(--shadow);
+    }
+
+    .rta-content .ct-hero {
+      background: var(--white);
+      border: 1px solid var(--line);
+      padding: 42px 28px;
+    }
+
+    .rta-content .cc-hero {
+      background: linear-gradient(135deg, #0a1628, #1a3a6c);
+      color: #fff;
+      text-align: center;
+      padding: 42px 28px;
+    }
+
+    .rta-content .cc-hero h2,
+    .rta-content .cc-hero p {
+      color: #fff;
+    }
+
+    /* Cards, panels and tables */
+    .rta-content .rta-cc,
+    .rta-content .rta-tool,
+    .rta-content .ch2-card,
+    .rta-content .tp-tool,
+    .rta-content .tp-feat,
+    .rta-content .visa-card,
+    .rta-content .country-section,
+    .rta-content .stat-box,
+    .rta-content .pros,
+    .rta-content .cons,
+    .rta-content .visa-box,
+    .rta-content .faq-item,
+    .rta-content .bvt-card,
+    .rta-content .bvt-faq-item,
+    .rta-blog-card {
+      border-radius: var(--radius) !important;
+    }
+
+    .rta-content .art-toc,
+    .rta-content .bvt-toc,
+    .rta-content .visa-intro,
+    .rta-content .ct-selector,
+    .rta-content .cc-selector,
+    .rta-content .ct-results,
+    .rta-content .cc-results,
+    .rta-content .sources-box,
+    .rta-blog-card {
+      border-radius: var(--radius) !important;
+      box-shadow: var(--shadow);
+    }
+
+    .rta-content .cmp-table,
+    .rta-content .visa-table,
+    .rta-content .bvt-cost-table,
+    .rta-content .rta-table {
+      border-radius: var(--radius) !important;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .rta-content .art-breadcrumb,
+    .rta-content .ct-breadcrumbs {
+      max-width: 100% !important;
+      margin: 0 0 16px !important;
+      color: var(--muted) !important;
+    }
+
+    .rta-content .art-ru-link {
+      margin: 0 0 16px !important;
+    }
+
+    /* Tools index was imported without its WordPress CSS. */
+    .tp {
+      display: grid;
+      gap: 34px;
+    }
+
+    .tp > p {
+      display: none;
+    }
+
+    .tp-hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(260px, .85fr);
+      gap: 28px;
+      align-items: center;
+      background: linear-gradient(135deg, #0a1628, #1a3a6c);
+      color: #fff;
+      padding: 46px 36px;
+    }
+
+    .tp-hero-badge {
+      display: inline-block;
+      margin-bottom: 16px;
+      padding: 6px 12px;
+      border: 1px solid rgba(255,255,255,.26);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.12);
+      color: rgba(255,255,255,.9);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .tp-hero h1 {
+      margin: 0 0 14px;
+      color: #fff;
+      font-size: clamp(30px, 4vw, 48px);
+      font-weight: 850;
+    }
+
+    .tp-hero h1 span {
+      color: #60a5fa;
+    }
+
+    .tp-hero-sub {
+      margin: 0 0 24px;
+      max-width: 620px;
+      color: rgba(255,255,255,.82);
+      font-size: 17px;
+    }
+
+    .tp-hero-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .tp-stat {
+      min-width: 120px;
+      padding: 12px 14px;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.1);
+    }
+
+    .tp-stat-num {
+      display: block;
+      color: #60a5fa;
+      font-size: 26px;
+      font-weight: 850;
+      line-height: 1;
+    }
+
+    .tp-stat-lbl {
+      margin-top: 6px;
+      color: rgba(255,255,255,.76);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .tp-hero-right {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .tp-hero-pill {
+      min-height: 112px;
+      display: grid;
+      place-items: center;
+      gap: 8px;
+      padding: 18px;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.1);
+      text-align: center;
+    }
+
+    .tp-hero-pill-icon {
+      font-size: 30px;
+      line-height: 1;
+    }
+
+    .tp-hero-pill-name {
+      color: #fff;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .tp-sec {
+      text-align: center;
+    }
+
+    .tp-label {
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 850;
+      text-transform: uppercase;
+    }
+
+    .tp-sec h2 {
+      margin: 8px 0 8px;
+      font-size: clamp(26px, 3vw, 38px);
+    }
+
+    .tp-sec-sub {
+      margin: 0 auto;
+      max-width: 680px;
+      color: var(--muted);
+    }
+
+    .tp-tools {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .tp-tool {
+      display: flex;
+      min-height: 100%;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid var(--line);
+      color: inherit;
+      text-decoration: none;
+      box-shadow: var(--shadow);
+      transition: transform .15s, box-shadow .15s, border-color .15s;
+    }
+
+    .tp-tool:hover {
+      transform: translateY(-2px);
+      border-color: #bfd0ee;
+      box-shadow: 0 16px 38px rgba(15, 52, 96, 0.12);
+    }
+
+    .tp-tool-top,
+    .tp-tool-bottom {
+      padding: 22px;
+    }
+
+    .tp-tool-icon-wrap {
+      width: 54px;
+      height: 54px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 14px;
+      border-radius: var(--radius);
+      font-size: 28px;
+    }
+
+    .tp-tool-tag,
+    .tp-tool-free {
+      display: inline-block;
+      margin-bottom: 10px;
+      padding: 4px 8px;
+      border-radius: var(--radius);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .tp-tool h3 {
+      margin: 0 0 10px;
+      color: var(--ink);
+      font-size: 20px;
+      line-height: 1.25;
+    }
+
+    .tp-tool p {
+      margin: 0;
+      color: #536176;
+      font-size: 14px;
+    }
+
+    .tp-tool-bottom {
+      border-top: 1px solid var(--line);
+      background: #f8fbff;
+    }
+
+    .tp-tool-cta {
+      color: var(--blue);
+      font-weight: 850;
+    }
+
+    .tp-features,
+    .tp-faqs {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 24px;
+    }
+
+    .tp-feat,
+    .tp-faq,
+    .tp-seo {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .tp-feat {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: start;
+      padding: 20px;
+      text-align: left;
+    }
+
+    .tp-feat-icon {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: var(--radius);
+      background: var(--blue-soft);
+      font-size: 22px;
+    }
+
+    .tp-feat h3,
+    .tp-faq h3 {
+      margin: 0 0 8px;
+      color: var(--ink);
+      font-size: 18px;
+    }
+
+    .tp-feat p,
+    .tp-faq p,
+    .tp-seo p {
+      margin: 0;
+      color: #536176;
+      font-size: 14px;
+    }
+
+    .tp-faq {
+      padding: 20px;
+      text-align: left;
+    }
+
+    .tp-seo {
+      padding: 28px;
+      text-align: left;
+    }
+
+    .tp-seo h2 {
+      margin: 0 0 12px;
+      font-size: 26px;
+    }
+
+    .tp-seo p + p {
+      margin-top: 12px;
+    }
+
+    /* Compare cities page was imported without its WordPress CSS. */
+    .cc-page {
+      display: grid;
+      gap: 28px;
+    }
+
+    .cc-badge {
+      display: inline-block;
+      margin-bottom: 14px;
+      padding: 5px 12px;
+      border: 1px solid rgba(255,255,255,.3);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.14);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .cc-selector {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 18px;
+      align-items: end;
+      padding: 28px;
+      background: var(--white);
+      border: 1px solid var(--line);
+    }
+
+    .cc-sel-col label {
+      display: inline-block;
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .cc-sel-col select {
+      width: 100%;
+      min-height: 46px;
+      padding: 10px 12px;
+      border: 1px solid #cfd8e6;
+      border-radius: var(--radius);
+      background: #fff;
+      color: var(--ink);
+      font-size: 15px;
+    }
+
+    .cc-vs-badge {
+      display: grid;
+      place-items: center;
+      min-width: 46px;
+      min-height: 46px;
+      padding: 0 10px;
+      border-radius: var(--radius);
+      background: var(--dark);
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .cc-results:empty {
+      display: none;
+    }
+
+    /* Blog index */
+    .rta-blog-hero {
+      background: linear-gradient(135deg, #0f3460, #1a3a6e);
+      padding: 46px 28px;
+      margin-bottom: 34px;
+      color: #fff;
+      text-align: center;
+    }
+
+    .rta-blog-hero h1 {
+      margin: 0 0 12px;
+      color: #fff;
+      font-size: 36px;
+      font-weight: 800;
+    }
+
+    .rta-blog-hero p {
+      margin: 0;
+      color: rgba(255,255,255,.86);
+      font-size: 17px;
+    }
+
+    .rta-blog-grid {
+      display: grid;
+      gap: 20px;
+    }
+
+    .rta-blog-card {
+      display: block;
+      padding: 26px 28px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      color: inherit;
+      text-decoration: none;
+      transition: transform .15s, box-shadow .15s, border-color .15s;
+    }
+
+    .rta-blog-card:hover {
+      transform: translateY(-2px);
+      border-color: #bfd0ee;
+      box-shadow: 0 16px 38px rgba(15, 52, 96, 0.12);
+    }
+
+    .rta-blog-date {
+      margin-bottom: 10px;
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .rta-blog-card h2 {
+      margin: 0 0 10px;
+      color: var(--dark);
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    .rta-blog-excerpt {
+      color: #4f5f73;
+      font-size: 15px;
+      line-height: 1.65;
+    }
+
+    .rta-blog-link {
+      margin-top: 16px;
+      color: var(--blue);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .rta-empty {
+      text-align: center;
+      color: var(--muted);
+    }
+
+    /* Footer */
+    .rta-footer {
+      background: #071b36;
+      color: rgba(255,255,255,0.55);
+      font-size: 14px;
+      margin-top: 80px;
+    }
+    .rta-footer-inner {
+      max-width: 1270px;
+      margin: 0 auto;
+      padding: 52px 24px 40px;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 40px;
+    }
+    .rta-footer-logo {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 12px;
+    }
+    .rta-footer-col p {
+      font-size: 14px;
+      line-height: 1.6;
+      margin: 0;
+    }
+    .rta-footer-heading {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 14px;
+    }
+    .rta-footer-col a {
+      display: block;
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      font-size: 14px;
+      margin-bottom: 8px;
+      transition: color .15s;
+    }
+    .rta-footer-col a:hover { color: #fff; }
+    .rta-footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      text-align: center;
+      padding: 20px 24px;
+      font-size: 13px;
+    }
+    @media (max-width: 720px) {
+      .rta-footer-inner {
+        grid-template-columns: 1fr 1fr;
+        gap: 28px;
+        padding: 36px 20px 28px;
+      }
+      .rta-footer-col:first-child {
+        grid-column: 1 / -1;
+      }
+    }
+
+    /* WP chrome resets */
+    .entry-header, h1.entry-title, .page-title, .entry-title,
+    .ast-breadcrumbs-wrapper, .comments-area, .post-navigation,
+    .ast-author-meta, .ast-related-posts-title-section,
+    .ast-featured-img, .widget-area, #secondary, .ast-sidebar-div {
+      display: none !important;
+    }
+
+    @media (max-width: 900px) {
+      .rta-content .rta-countries,
+      .rta-content .ch2-g3,
+      .rta-content .ch2-g4,
+      .rta-content .ch2-g7a,
+      .rta-content .ch2-g7b,
+      .rta-content .tp-tools,
+      .rta-content .tp-features,
+      .rta-content .tp-faqs,
+      .rta-content .visa-grid,
+      .rta-content .bvt-grid,
+      .rta-content .bvt-verdict-grid,
+      .rta-content .bvt-nomad-grid,
+      .rta-content .pros-cons,
+      .rta-content .ct-selector-row {
+        grid-template-columns: 1fr 1fr !important;
+      }
+
+      .rta-content .tp-hero,
+      .rta-content .country-header {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+      }
+
+      .rta-content .country-header .verdict-badge {
+        margin-left: 0 !important;
+        width: fit-content;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .rta-nav-inner {
+        height: auto;
+        min-height: 72px;
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 12px;
+        padding-top: 18px;
+        padding-bottom: 18px;
+      }
+
+      .rta-nav-links {
+        width: 100%;
+        justify-content: flex-start;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+
+      .rta-nav-item {
+        height: auto;
+      }
+
+      .rta-nav-links > a,
+      .rta-nav-trigger {
+        line-height: 1.4;
+      }
+
+      .rta-dropdown {
+        top: calc(100% + 12px);
+      }
+
+      .rta-content,
+      .rta-blog {
+        width: min(100% - 32px, 1120px);
+        padding-top: 34px;
+      }
+
+      .rta-content .rta-hero,
+      .rta-content .ch2-hero,
+      .rta-content .ct-hero,
+      .rta-content .cc-hero,
+      .rta-content .tp-hero,
+      .rta-content .visa-hero,
+      .rta-content .bvt-hero,
+      .rta-content .art-hero,
+      .rta-blog-hero {
+        padding: 30px 18px !important;
+      }
+
+      .rta-content .rta-countries,
+      .rta-content .ch2-g3,
+      .rta-content .ch2-g4,
+      .rta-content .ch2-g7a,
+      .rta-content .ch2-g7b,
+      .rta-content .tp-tools,
+      .rta-content .tp-features,
+      .rta-content .tp-faqs,
+      .rta-content .visa-grid,
+      .rta-content .bvt-grid,
+      .rta-content .bvt-verdict-grid,
+      .rta-content .bvt-nomad-grid,
+      .rta-content .pros-cons,
+      .rta-content .stats-row,
+      .rta-content .ct-selector-row,
+      .cc-selector {
+        grid-template-columns: 1fr !important;
+      }
+
+      .rta-content .art-stats,
+      .rta-content .ch2-stats,
+      .rta-content .rta-hero-btns,
+      .rta-content .bvt-flags {
+        gap: 14px !important;
+      }
+
+      .rta-content .cmp-table,
+      .rta-content .visa-table,
+      .rta-content .bvt-cost-table,
+      .rta-content .rta-table,
+      .rta-content .type-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+      }
+
+      .rta-blog-card {
+        padding: 22px 20px;
+      }
+    }
+
+    /* Compare article heroes */
+    .rta-content .tvm-hero,
+    .rta-content .bvt-hero {
+      color: #fff !important;
+      text-align: center !important;
+    }
+
+    .rta-content .tvm-hero h1,
+    .rta-content .bvt-hero h1,
+    .rta-content .tvm-hero h2,
+    .rta-content .bvt-hero h2 {
+      color: #fff !important;
+      max-width: 860px;
+      margin-left: auto !important;
+      margin-right: auto !important;
+    }
+
+    .rta-content .tvm-hero p,
+    .rta-content .bvt-hero p {
+      color: rgba(255,255,255,.86) !important;
+    }
+
+    .rta-content .tvm-hero .badge,
+    .rta-content .bvt-hero .badge {
+      color: #fff !important;
+    }
+
+    .rta-content .tvm-flags,
+    .rta-content .bvt-flags {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 24px !important;
+      flex-wrap: wrap !important;
+      margin: 28px auto 8px !important;
+    }
+
+    .rta-content .tvm-flag-box,
+    .rta-content .bvt-flag-box {
+      display: grid !important;
+      justify-items: center !important;
+      gap: 8px !important;
+      min-width: 96px;
+      text-align: center !important;
+    }
+
+    .rta-content .tvm-flag-box .flag,
+    .rta-content .bvt-flag-box .flag {
+      display: block !important;
+      font-size: 56px !important;
+      line-height: 1 !important;
+    }
+
+    .rta-content .tvm-flag-box .name,
+    .rta-content .bvt-flag-box .name {
+      display: block !important;
+      color: #fff !important;
+      font-size: 14px !important;
+      font-weight: 800 !important;
+      opacity: 1 !important;
+    }
+
+    .rta-content .tvm-vs,
+    .rta-content .bvt-vs {
+      color: rgba(255,255,255,.62) !important;
+      font-size: 32px !important;
+      font-weight: 900 !important;
+      opacity: 1 !important;
+      line-height: 1 !important;
+    }
+
+    /* Compare Cities */
+    .rta-content .cc-selector {
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) !important;
+    }
+
+    .cc-results {
+      display: none;
+    }
+
+    .cc-results.visible {
+      display: block;
+      padding: 24px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius) !important;
+      box-shadow: var(--shadow);
+    }
+
+    .cc-city-heads {
+      display: grid;
+      grid-template-columns: 180px minmax(0, 1fr) minmax(0, 1fr);
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .cc-lbl-empty {
+      min-width: 0;
+    }
+
+    .cc-city-head {
+      min-width: 0;
+      background: #f8fbff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 22px;
+      text-align: center;
+    }
+
+    .cc-city-head strong {
+      color: var(--ink);
+      font-size: 18px;
+    }
+
+    .cc-city-head-score {
+      margin-top: 12px;
+      font-size: 38px;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .cc-group-lbl {
+      margin: 28px 0 10px;
+      padding-left: 196px;
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .cc-row {
+      display: grid;
+      grid-template-columns: 180px minmax(0, 1fr) minmax(0, 1fr);
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .cc-row-lbl {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .cc-card {
+      min-width: 0;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-left: 3px solid transparent;
+      border-radius: var(--radius);
+      padding: 16px 18px;
+    }
+
+    .cc-card.winner {
+      border-left-color: var(--blue);
+      background: #f8fbff;
+    }
+
+    .cc-bar-wrap {
+      height: 6px;
+      margin: 8px 0 4px;
+      overflow: hidden;
+      border-radius: 6px;
+      background: #eef2f7;
+    }
+
+    .cc-bar {
+      height: 100%;
+      border-radius: 6px;
+      transition: width .7s ease;
+    }
+
+    @media (max-width: 720px) {
+      .rta-content .cc-selector {
+        grid-template-columns: 1fr !important;
+      }
+
+      .rta-content .cc-vs-badge {
+        width: 46px;
+        margin: 0 auto;
+      }
+
+      .cc-results.visible {
+        padding: 18px;
+      }
+
+      .cc-city-heads,
+      .cc-row {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      }
+
+      .cc-lbl-empty,
+      .cc-row-lbl,
+      .cc-group-lbl {
+        display: none;
+      }
+
+      .cc-city-head,
+      .cc-card {
+        padding: 14px;
+      }
+
+      .cc-city-head-score {
+        font-size: 30px;
+      }
+    }
+  </style>
+  {% block head %}{% endblock %}
+</head>
+<body>
+
+<nav class="rta-nav">
+  <div class="rta-nav-inner">
+    <a href="/" class="rta-logo">Relocate to Asia</a>
+    <div class="rta-nav-links">
+      <div class="rta-nav-item">
+        <a class="rta-nav-trigger" href="/countries/">Countries</a>
+        <div class="rta-dropdown">
+          <a href="/countries/move-to-thailand/">Thailand</a>
+          <a href="/countries/move-to-malaysia/">Malaysia</a>
+          <a href="/countries/move-to-bali/">Bali</a>
+          <a href="/countries/move-to-vietnam/">Vietnam</a>
+          <a href="/countries/move-to-taiwan/">Taiwan</a>
+        </div>
+      </div>
+      <a href="/visas/">Visas</a>
+      <div class="rta-nav-item">
+        <a class="rta-nav-trigger" href="/compare/">Compare</a>
+        <div class="rta-dropdown">
+          <a href="/compare/thailand-vs-malaysia/">Thailand vs Malaysia</a>
+          <a href="/compare/bali-vs-thailand/">Bali vs Thailand</a>
+          <a href="/compare-cities/">Compare Cities</a>
+        </div>
+      </div>
+      <div class="rta-nav-item">
+        <a class="rta-nav-trigger" href="/tools/">Tools</a>
+        <div class="rta-dropdown">
+          <a href="/tools/cost-calculator/">Cost of Living Calculator</a>
+          <a href="/tools/budget-planner/">Budget Planner</a>
+          <a href="/best-countries-in-asia-to-move/">Best Countries</a>
+          <a href="/cheapest-countries-in-asia/">Cheapest Countries</a>
+        </div>
+      </div>
+      <a href="/blog/">Blog</a>
+    </div>
+  </div>
+</nav>
+
+<main class="rta-main">
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="rta-footer">
+  <div class="rta-footer-inner">
+    <div class="rta-footer-col">
+      <div class="rta-footer-logo">🌏 Relocate to Asia</div>
+      <p>Your complete guide to relocating across Asia — costs, visas, cities and tools.</p>
+    </div>
+    <div class="rta-footer-col">
+      <div class="rta-footer-heading">Countries</div>
+      <a href="/countries/move-to-thailand/">Thailand</a>
+      <a href="/countries/move-to-malaysia/">Malaysia</a>
+      <a href="/countries/move-to-bali/">Bali</a>
+      <a href="/countries/move-to-vietnam/">Vietnam</a>
+      <a href="/countries/move-to-taiwan/">Taiwan</a>
+      <a href="/countries/">All countries →</a>
+    </div>
+    <div class="rta-footer-col">
+      <div class="rta-footer-heading">Tools</div>
+      <a href="/tools/cost-calculator/">Cost of Living Calculator</a>
+      <a href="/tools/budget-planner/">Budget Planner</a>
+      <a href="/compare-cities/">Compare Cities</a>
+      <a href="/compare/">Compare Countries</a>
+      <a href="/visas/">Visa Guide</a>
+    </div>
+    <div class="rta-footer-col">
+      <div class="rta-footer-heading">Resources</div>
+      <a href="/blog/">Blog</a>
+      <a href="/best-countries-in-asia-to-move/">Best Countries</a>
+      <a href="/cheapest-countries-in-asia/">Cheapest Countries</a>
+    </div>
+  </div>
+  <div class="rta-footer-bottom">© 2026 Relocate to Asia. All rights reserved.</div>
+</footer>
+
+{% block scripts %}{% endblock %}
+{% if extra_js == "compare_cities" %}
+<script src="/static/js/compare-cities.js"></script>
+{% endif %}
+</body>
+</html>
