@@ -858,41 +858,156 @@
       }
     }
 
+    /* Burger button — hidden on desktop */
+    .rta-burger {
+      display: none;
+    }
+
     @media (max-width: 720px) {
-      .rta-nav-inner {
-        height: auto;
-        min-height: 72px;
-        align-items: flex-start;
-        flex-direction: column;
-        gap: 12px;
-        padding-top: 18px;
-        padding-bottom: 18px;
+      html,
+      body {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
       }
 
-      .rta-nav-links {
+      /* Burger button */
+      .rta-burger {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        flex-shrink: 0;
+      }
+
+      .rta-burger span {
+        display: block;
+        width: 22px;
+        height: 2px;
+        background: #071b36;
+        border-radius: 2px;
+        transition: transform .2s, opacity .2s;
+      }
+
+      .rta-nav--open .rta-burger span:nth-child(1) {
+        transform: translateY(7px) rotate(45deg);
+      }
+      .rta-nav--open .rta-burger span:nth-child(2) {
+        opacity: 0;
+      }
+      .rta-nav--open .rta-burger span:nth-child(3) {
+        transform: translateY(-7px) rotate(-45deg);
+      }
+
+      .rta-nav {
         width: 100%;
-        justify-content: flex-start;
-        gap: 16px;
-        flex-wrap: wrap;
+        overflow: visible;
+      }
+
+      .rta-nav-inner {
+        width: 100%;
+        max-width: 100%;
+        height: 56px;
+        padding: 0 16px;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0;
+      }
+
+      .rta-logo {
+        font-size: 20px;
+        white-space: nowrap;
+      }
+
+      /* Mobile nav panel — hidden by default */
+      .rta-nav-links {
+        display: none;
+        position: absolute;
+        top: 56px;
+        left: 0;
+        right: 0;
+        z-index: 300;
+        background: #fff;
+        border-top: 1px solid #d6dbe4;
+        box-shadow: 0 8px 24px rgba(15,52,96,.1);
+        flex-direction: column;
+        gap: 0;
+        padding: 8px 0 16px;
+      }
+
+      .rta-nav--open .rta-nav-links {
+        display: flex;
       }
 
       .rta-nav-item {
+        position: static;
         height: auto;
+        width: 100%;
+        flex-direction: column;
+        align-items: flex-start;
       }
 
       .rta-nav-links > a,
       .rta-nav-trigger {
-        line-height: 1.4;
+        width: 100%;
+        font-size: 15px;
+        line-height: 1;
+        padding: 13px 20px;
+        white-space: nowrap;
       }
 
+      .rta-nav-trigger::after {
+        margin-left: auto;
+      }
+
+      /* Dropdown always visible inside mobile panel */
       .rta-dropdown {
-        top: calc(100% + 12px);
+        position: static;
+        width: 100%;
+        min-width: 0;
+        border-top: none;
+        border-left: 3px solid #e3e9f2;
+        border-radius: 0;
+        box-shadow: none;
+        opacity: 1;
+        pointer-events: auto;
+        transform: none;
+        transition: none;
+        background: #f9fafc;
+        padding: 0;
+      }
+
+      .rta-dropdown a {
+        padding: 11px 20px 11px 28px;
+        font-size: 14px;
+        white-space: nowrap;
       }
 
       .rta-content,
       .rta-blog {
-        width: min(100% - 32px, 1120px);
-        padding-top: 34px;
+        width: 100%;
+        max-width: 100%;
+        padding: 24px 12px 0;
+        overflow-x: hidden;
+      }
+
+      .rta-content > *,
+      .rta-blog > * {
+        max-width: 100% !important;
+      }
+
+      .rta-content h1,
+      .rta-content h2,
+      .rta-blog h1 {
+        overflow-wrap: anywhere;
       }
 
       .rta-content .rta-hero,
@@ -904,7 +1019,20 @@
       .rta-content .bvt-hero,
       .rta-content .art-hero,
       .rta-blog-hero {
-        padding: 30px 18px !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        padding: 28px 14px !important;
+      }
+
+      .rta-content .rta-hero h1,
+      .rta-content .ch2-hero h1,
+      .rta-content .tp-hero h1,
+      .rta-content .visa-hero h1,
+      .rta-content .bvt-hero h1,
+      .rta-content .art-hero h2,
+      .rta-blog-hero h1 {
+        font-size: clamp(24px, 9vw, 32px) !important;
+        line-height: 1.15 !important;
       }
 
       .rta-content .rta-countries,
@@ -923,14 +1051,26 @@
       .rta-content .stats-row,
       .rta-content .ct-selector-row,
       .cc-selector {
-        grid-template-columns: 1fr !important;
+        grid-template-columns: minmax(0, 1fr) !important;
       }
 
-      .rta-content .art-stats,
-      .rta-content .ch2-stats,
+      .rta-content .tp-hero-right,
       .rta-content .rta-hero-btns,
+      .rta-content .ch2-stats,
+      .rta-content .art-stats,
       .rta-content .bvt-flags {
-        gap: 14px !important;
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 12px !important;
+      }
+
+      .rta-content .rta-hero-btns a,
+      .rta-content .tp-hero a,
+      .rta-content .ch2-hero a {
+        width: 100% !important;
+        max-width: 100% !important;
+        justify-content: center !important;
+        text-align: center !important;
+        white-space: normal !important;
       }
 
       .rta-content .cmp-table,
@@ -939,12 +1079,70 @@
       .rta-content .rta-table,
       .rta-content .type-table {
         display: block;
+        max-width: 100%;
         overflow-x: auto;
         white-space: nowrap;
       }
 
       .rta-blog-card {
         padding: 22px 20px;
+      }
+
+
+      .rta-content .rta-page {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+      }
+
+      .rta-content .rta-hero {
+        margin-bottom: 32px !important;
+        border-radius: 8px !important;
+      }
+
+      .rta-content .rta-hero-badge {
+        max-width: 100% !important;
+        display: inline-flex !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        white-space: normal !important;
+        font-size: 11px !important;
+        line-height: 1.35 !important;
+      }
+
+      .rta-content .rta-hero-sub {
+        max-width: 100% !important;
+        font-size: 15px !important;
+      }
+
+      .rta-content .rta-hero-btns {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) !important;
+        width: 100% !important;
+      }
+
+      .rta-content .rta-btn-p,
+      .rta-content .rta-btn-s,
+      .rta-content .rta-cc-btn,
+      .rta-content .rta-tool-link {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding-left: 14px !important;
+        padding-right: 14px !important;
+        text-align: center !important;
+        white-space: normal !important;
+      }
+
+      .rta-content .rta-cc,
+      .rta-content .rta-tool,
+      .rta-content .rta-step,
+      .rta-content .rta-cmp {
+        min-width: 0 !important;
+      }
+
+      .rta-content .rta-cc-footer {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 12px !important;
       }
     }
 
@@ -1160,9 +1358,12 @@
 </head>
 <body>
 
-<nav class="rta-nav">
+<nav class="rta-nav" id="rta-nav">
   <div class="rta-nav-inner">
     <a href="/" class="rta-logo">Relocate to Asia</a>
+    <button class="rta-burger" id="rta-burger" aria-label="Menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
     <div class="rta-nav-links">
       <div class="rta-nav-item">
         <a class="rta-nav-trigger" href="/countries/">Countries</a>
@@ -1238,5 +1439,22 @@
 {% if extra_js == "compare_cities" %}
 <script src="/static/js/compare-cities.js"></script>
 {% endif %}
+<script>
+(function(){
+  var nav = document.getElementById('rta-nav');
+  var btn = document.getElementById('rta-burger');
+  if (!btn) return;
+  btn.addEventListener('click', function(){
+    var open = nav.classList.toggle('rta-nav--open');
+    btn.setAttribute('aria-expanded', open);
+  });
+  document.addEventListener('click', function(e){
+    if (!nav.contains(e.target)) {
+      nav.classList.remove('rta-nav--open');
+      btn.setAttribute('aria-expanded', 'false');
+    }
+  });
+})();
+</script>
 </body>
 </html>
