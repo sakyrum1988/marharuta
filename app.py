@@ -33,7 +33,9 @@ DEFAULT_DESCRIPTION = (
 def strip_html(value: str | None) -> str:
     if not value:
         return ""
-    text = re.sub(r"<[^>]+>", " ", value)
+    text = re.sub(r"<style\b[^>]*>.*?</style>", " ", value, flags=re.IGNORECASE | re.DOTALL)
+    text = re.sub(r"<script\b[^>]*>.*?</script>", " ", text, flags=re.IGNORECASE | re.DOTALL)
+    text = re.sub(r"<[^>]+>", " ", text)
     text = re.sub(r"\s+", " ", text)
     return text.strip()
 
@@ -272,6 +274,16 @@ def post_ru(slug: str):
     if not row:
         abort(404)
     return render_post_row(row, lang="ru")
+
+
+@app.errorhandler(404)
+def not_found(error):
+    seo = seo_payload(
+        title="Page Not Found",
+        description="The page could not be found. Use Relocate to Asia navigation to browse countries, visas, comparisons, tools and relocation guides.",
+    )
+    seo["meta_robots"] = "noindex,follow"
+    return render_template("404.html", seo=seo), 404
 
 
 if __name__ == "__main__":
