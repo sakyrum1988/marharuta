@@ -2,9 +2,10 @@ from __future__ import annotations
 
 import re
 import sqlite3
+import json
 from pathlib import Path
 
-from flask import Flask, abort, render_template, request
+from flask import Flask, Response, abort, render_template, request
 
 APP_DIR = Path(__file__).resolve().parent
 DB_PATH = APP_DIR / "content.db"
@@ -12,7 +13,8 @@ DB_PATH = APP_DIR / "content.db"
 app = Flask(__name__)
 
 SITE_NAME = "Relocate to Asia"
-SITE_URL = "http://127.0.0.1:5000"
+SITE_URL = "https://www.marharuta.online"
+DEFAULT_OG_IMAGE = "/static/img/og-default.png"
 
 
 @app.before_request
@@ -23,7 +25,7 @@ def redirect_to_www():
         url = request.url.replace("://marharuta.online", "://www.marharuta.online", 1)
         from flask import redirect
         return redirect(url, 301)
-DEFAULT_AUTHOR = "Relocate to Asia"
+DEFAULT_AUTHOR = "Relocate to Asia Editorial Team"
 DEFAULT_DESCRIPTION = (
     "Relocate to Asia helps expats compare countries, cities, visas and real-world "
     "moving costs across Asia."
@@ -53,10 +55,17 @@ def seo_payload(
     description: str = "",
     author: str = DEFAULT_AUTHOR,
     lang: str = "en",
-) -> dict[str, str]:
+    canonical_path: str | None = None,
+    alternates: list[dict[str, str]] | None = None,
+    schema: list[dict] | dict | None = None,
+    og_type: str = "website",
+    og_image: str = DEFAULT_OG_IMAGE,
+) -> dict:
     clean_title = strip_html(title) or SITE_NAME
     description = strip_html(description) or DEFAULT_DESCRIPTION
     short_title = trim_text(clean_title, 52)
+    canonical_url = f"{SITE_URL}{canonical_path or request.path}"
+    og_image_url = absolute_url(og_image) if "absolute_url" in globals() else f"{SITE_URL}{og_image}"
     return {
         "page_title": f"{short_title} | {SITE_NAME}" if short_title != SITE_NAME else SITE_NAME,
         "meta_title": clean_title,
@@ -70,12 +79,136 @@ def seo_payload(
                 "move to Asia",
             ]
         ),
-        "canonical_url": f"{SITE_URL}{request.path}",
+        "canonical_url": canonical_url,
         "meta_robots": "index,follow,max-image-preview:large",
         "meta_author": author,
         "meta_publisher": SITE_NAME,
         "html_lang": lang,
+        "alternates": alternates or [],
+        "schema_json": json.dumps(schema, ensure_ascii=False) if schema else "",
+        "og_type": og_type,
+        "og_image": og_image_url,
     }
+
+
+def absolute_url(path: str) -> str:
+    if path.startswith("http://") or path.startswith("https://"):
+        return path
+    if not path.startswith("/"):
+        path = f"/{path}"
+    return f"{SITE_URL}{path}"
+
+
+def breadcrumb_schema(items: list[tuple[str, str]], current_title: str, current_path: str) -> dict:
+    schema_items = [("Home", "/"), *items, (strip_html(current_title), current_path)]
+    return {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": index,
+                "name": name,
+                "item": absolute_url(url),
+            }
+            for index, (name, url) in enumerate(schema_items, start=1)
+        ],
+    }
+
+
+def organization_schema() -> dict:
+    return {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": SITE_NAME,
+        "url": SITE_URL,
+    }
+
+
+def website_schema() -> dict:
+    return {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": SITE_NAME,
+        "url": SITE_URL,
+        "inLanguage": ["en", "ru"],
+    }
+
+
+def article_schema(row: sqlite3.Row, *, lang: str, canonical_path: str) -> dict:
+    published = row["date"] or ""
+    return {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": strip_html(row["title"]),
+        "description": trim_text(strip_html(row["excerpt"] or row["content"]), 200),
+        "datePublished": published,
+        "dateModified": published,
+        "author": {"@type": "Organization", "name": DEFAULT_AUTHOR},
+        "publisher": {"@type": "Organization", "name": SITE_NAME, "url": SITE_URL},
+        "mainEntityOfPage": absolute_url(canonical_path),
+        "url": absolute_url(canonical_path),
+        "inLanguage": lang,
+        "image": [absolute_url(DEFAULT_OG_IMAGE)],
+    }
+
+
+def post_alternates(row: sqlite3.Row, *, lang: str, canonical_path: str) -> list[dict[str, str]]:
+    alternates = [{"lang": lang, "url": absolute_url(canonical_path)}]
+    content = row["content"] or ""
+    if lang == "en":
+        match = re.search(r'href="/ru/blog/([^"/]+)/"', content)
+        if match:
+            alternates.append({"lang": "ru", "url": absolute_url(f"/ru/blog/{match.group(1)}/")})
+    elif lang == "ru":
+        match = re.search(r'href="/blog/([^"/]+)/"', content)
+        if match:
+            alternates.append({"lang": "en", "url": absolute_url(f"/blog/{match.group(1)}/")})
+    english = next((item for item in alternates if item["lang"] == "en"), alternates[0])
+    alternates.append({"lang": "x-default", "url": english["url"]})
+    return alternates
+
+
+def post_path(row: sqlite3.Row) -> str:
+    prefix = "/blog" if row["lang"] == "en" else "/ru/blog"
+    return f"{prefix}/{row['slug']}/"
+
+
+def related_posts(row: sqlite3.Row, *, limit: int = 3) -> list[sqlite3.Row]:
+    title_words = [w.lower() for w in re.findall(r"[A-Za-zА-Яа-яЁё]{4,}", strip_html(row["title"]))]
+    candidates = many(
+        "SELECT id, slug, title, excerpt, date, lang FROM posts WHERE lang = ? AND id != ? ORDER BY date DESC",
+        (row["lang"], row["id"]),
+    )
+    scored = []
+    for candidate in candidates:
+        haystack = f"{candidate['title']} {candidate['excerpt'] or ''}".lower()
+        score = sum(1 for word in title_words if word in haystack)
+        scored.append((score, candidate))
+    scored.sort(key=lambda item: (item[0], item[1]["date"] or ""), reverse=True)
+    return [candidate for _, candidate in scored[:limit]]
+
+
+def collection_schema(title: str, description: str, path: str) -> dict:
+    return {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": strip_html(title),
+        "description": trim_text(strip_html(description), 200),
+        "url": absolute_url(path),
+        "inLanguage": "ru" if path.startswith("/ru/") else "en",
+    }
+
+
+def post_pair_map() -> dict[str, list[dict[str, str]]]:
+    rows = many("SELECT slug, lang, content FROM posts")
+    path_to_alternates: dict[str, list[dict[str, str]]] = {}
+    for row in rows:
+        path = post_path(row)
+        alternates = post_alternates(row, lang=row["lang"], canonical_path=path)
+        if len(alternates) > 2:
+            path_to_alternates[path] = alternates
+    return path_to_alternates
 
 def _flag_emojis_to_img(text: str) -> str:
     """Replace flag emoji pairs (regional indicator chars) with flagcdn.com <img> tags."""
@@ -154,21 +287,41 @@ def page_or_404(slug: str, parent: str | None = None) -> sqlite3.Row:
 
 # ── Routes ────────────────────────────────────────────────────────────────────
 
-def render_page_row(row: sqlite3.Row, **kwargs):
+def render_page_row(row: sqlite3.Row | dict, **kwargs):
+    breadcrumbs = kwargs.get("breadcrumbs", [])
+    path = row["link"] if "link" in row.keys() and row["link"] else request.path
+    schema = [
+        breadcrumb_schema(breadcrumbs, row["title"], path),
+        organization_schema(),
+        website_schema(),
+    ]
     seo = seo_payload(
         title=row["title"],
         description=row["excerpt"] if "excerpt" in row.keys() else row["content"],
+        canonical_path=path,
+        schema=schema,
     )
     return render_template("page.html", page=row, seo=seo, **kwargs)
 
 
 def render_post_row(row: sqlite3.Row, *, lang: str):
+    canonical_path = f"/blog/{row['slug']}/" if lang == "en" else f"/ru/blog/{row['slug']}/"
+    alternates = post_alternates(row, lang=lang, canonical_path=canonical_path)
+    schema = [
+        article_schema(row, lang=lang, canonical_path=canonical_path),
+        breadcrumb_schema([("Blog", "/blog/")], row["title"], canonical_path),
+        organization_schema(),
+    ]
     seo = seo_payload(
         title=row["title"],
         description=row["excerpt"] or row["content"],
         lang=lang,
+        canonical_path=canonical_path,
+        alternates=alternates,
+        schema=schema,
+        og_type="article",
     )
-    return render_template("post.html", post=row, seo=seo, lang_code=lang)
+    return render_template("post.html", post=row, seo=seo, lang_code=lang, related_posts=related_posts(row))
 
 
 @app.route("/")
@@ -190,6 +343,12 @@ def country(slug: str):
     seo = seo_payload(
         title=row["title"],
         description=row["excerpt"] if "excerpt" in row.keys() else row["content"],
+        canonical_path=row["link"] or request.path,
+        schema=[
+            breadcrumb_schema([("Countries", "/countries/")], row["title"], row["link"] or request.path),
+            organization_schema(),
+            website_schema(),
+        ],
     )
     return render_template(
         "country.html",
@@ -251,13 +410,52 @@ def cheapest_countries():
     return render_page_row(row, breadcrumbs=[])
 
 
+def render_blog_index(*, lang: str):
+    is_ru = lang == "ru"
+    path = "/ru/blog/" if is_ru else "/blog/"
+    title = "Блог о релокации в Азию" if is_ru else "Asia Relocation Blog"
+    description = (
+        "Русскоязычные гайды по визам, странам и релокации в Азию на основе официальных источников."
+        if is_ru else
+        "Guides, comparisons and practical relocation advice for expats moving across Asia."
+    )
+    posts = many(
+        "SELECT id, slug, title, excerpt, date, lang FROM posts WHERE lang = ? ORDER BY date DESC",
+        (lang,),
+    )
+    alternates = [
+        {"lang": "en", "url": absolute_url("/blog/")},
+        {"lang": "ru", "url": absolute_url("/ru/blog/")},
+        {"lang": "x-default", "url": absolute_url("/blog/")},
+    ]
+    seo = seo_payload(
+        title=title,
+        description=description,
+        lang=lang,
+        canonical_path=path,
+        alternates=alternates,
+        schema=[breadcrumb_schema([], title, path), collection_schema(title, description, path), organization_schema(), website_schema()],
+    )
+    return render_template(
+        "blog.html",
+        posts=posts,
+        seo=seo,
+        blog_lang=lang,
+        blog_url_prefix="/ru/blog" if is_ru else "/blog",
+        blog_title=title,
+        blog_intro=description,
+        read_more="Читать" if is_ru else "Read more",
+    )
+
+
 @app.route("/blog/")
 def blog():
-    posts = many(
-        "SELECT id, slug, title, excerpt, date FROM posts"
-        " WHERE lang = 'en' ORDER BY date DESC"
-    )
-    return render_template("blog.html", posts=posts, seo=seo_payload(title="Asia Relocation Blog", description="Guides, comparisons and practical relocation advice for expats moving across Asia."))
+    return render_blog_index(lang="en")
+
+
+@app.route("/ru/blog/")
+def blog_ru():
+    return render_blog_index(lang="ru")
 
 
 @app.route("/blog/<slug>/")
@@ -274,6 +472,156 @@ def post_ru(slug: str):
     if not row:
         abort(404)
     return render_post_row(row, lang="ru")
+
+
+
+
+TRUST_PAGES = {
+    "about": {
+        "title": "About Relocate to Asia",
+        "description": "Who publishes Relocate to Asia and how the site helps readers compare Asian countries, visas and relocation costs.",
+        "content": """
+<section class="rta-trust-page">
+  <h1>About Relocate to Asia</h1>
+  <p>Relocate to Asia is an editorial relocation resource for readers comparing Asian countries, cities, visas and practical moving costs. The site focuses on decision support: official visa facts, country comparisons, cost context and clear trade-offs.</p>
+  <p>Our editorial goal is to help readers filter options before they spend money on applications, flights, housing or professional advice. We do not sell visas, and we do not present editorial planning guides as legal advice.</p>
+  <h2>What We Cover</h2>
+  <ul>
+    <li>Country and city comparisons for expats and remote workers.</li>
+    <li>Visa and long-stay guides based on official public sources.</li>
+    <li>Cost and lifestyle trade-offs for moving across Asia.</li>
+    <li>English and Russian versions where a translated guide is useful.</li>
+  </ul>
+</section>
+""",
+    },
+    "editorial-policy": {
+        "title": "Editorial Policy",
+        "description": "How Relocate to Asia researches, writes and updates relocation and visa guides.",
+        "content": """
+<section class="rta-trust-page">
+  <h1>Editorial Policy</h1>
+  <p>Relocate to Asia publishes practical relocation guides for planning, not legal instructions. Visa articles prioritize official government, consular or program pages. Secondary sources may be used for context, but they should not override the authority that publishes the rule.</p>
+  <h2>Our Standards</h2>
+  <ul>
+    <li>Use official sources for visa limits, eligibility, stay duration and application rules.</li>
+    <li>Separate confirmed facts from editorial interpretation.</li>
+    <li>Show the month and year when a guide was checked whenever possible.</li>
+    <li>Use nofollow links for external official references.</li>
+    <li>Update or rewrite pages when rules change or a better official source becomes available.</li>
+  </ul>
+  <p>Readers should always verify the official source before applying. Immigration rules can change without notice.</p>
+</section>
+""",
+    },
+    "how-we-verify-data": {
+        "title": "How We Verify Data",
+        "description": "The verification process used for Relocate to Asia visa, country and comparison content.",
+        "content": """
+<section class="rta-trust-page">
+  <h1>How We Verify Data</h1>
+  <p>For visa and long-stay guides, the visible source block should point to official public pages such as immigration departments, ministries, consulates or government program websites. We quote short official phrases for key numbers, then explain what those facts mean for planning.</p>
+  <h2>Verification Checklist</h2>
+  <ul>
+    <li>Identify the official authority for the visa or program.</li>
+    <li>Confirm the core numbers: allowed stay, validity, income, fees or deposit when stated.</li>
+    <li>Check whether local work, renewal, dependants or conversion are explicitly mentioned.</li>
+    <li>Keep internal data tools out of public source blocks because they are editorial infrastructure, not reader-facing authority.</li>
+    <li>Add a clear caution when a rule is not confirmed by the official source.</li>
+  </ul>
+</section>
+""",
+    },
+}
+
+
+@app.route("/about/")
+def about():
+    page = {"title": TRUST_PAGES["about"]["title"], "content": TRUST_PAGES["about"]["content"], "link": "/about/"}
+    return render_page_row(page, breadcrumbs=[])
+
+
+@app.route("/editorial-policy/")
+def editorial_policy():
+    page = {"title": TRUST_PAGES["editorial-policy"]["title"], "content": TRUST_PAGES["editorial-policy"]["content"], "link": "/editorial-policy/"}
+    return render_page_row(page, breadcrumbs=[])
+
+
+@app.route("/how-we-verify-data/")
+def how_we_verify_data():
+    page = {"title": TRUST_PAGES["how-we-verify-data"]["title"], "content": TRUST_PAGES["how-we-verify-data"]["content"], "link": "/how-we-verify-data/"}
+    return render_page_row(page, breadcrumbs=[])
+
+
+def sitemap_paths() -> list[tuple[str, str]]:
+    paths: list[tuple[str, str]] = [
+        ("/", "daily"),
+        ("/countries/", "weekly"),
+        ("/tools/", "monthly"),
+        ("/compare/", "weekly"),
+        ("/compare-cities/", "monthly"),
+        ("/visas/", "weekly"),
+        ("/best-countries-in-asia-to-move/", "monthly"),
+        ("/cheapest-countries-in-asia/", "monthly"),
+        ("/blog/", "daily"),
+        ("/ru/blog/", "daily"),
+        ("/about/", "monthly"),
+        ("/editorial-policy/", "monthly"),
+        ("/how-we-verify-data/", "monthly"),
+    ]
+    for row in many("SELECT link FROM pages WHERE link IS NOT NULL AND link != ''"):
+        paths.append((row["link"], "monthly"))
+    for row in many("SELECT slug, lang FROM posts ORDER BY date DESC"):
+        prefix = "/blog" if row["lang"] == "en" else "/ru/blog"
+        paths.append((f"{prefix}/{row['slug']}/", "weekly"))
+    seen = set()
+    unique: list[tuple[str, str]] = []
+    for path, changefreq in paths:
+        if path not in seen:
+            seen.add(path)
+            unique.append((path, changefreq))
+    return unique
+
+
+@app.route("/sitemap.xml")
+def sitemap_xml():
+    from html import escape
+
+    alternate_map = post_pair_map()
+    alternate_map["/blog/"] = [
+        {"lang": "en", "url": absolute_url("/blog/")},
+        {"lang": "ru", "url": absolute_url("/ru/blog/")},
+        {"lang": "x-default", "url": absolute_url("/blog/")},
+    ]
+    alternate_map["/ru/blog/"] = alternate_map["/blog/"]
+    urls = []
+    for path, changefreq in sitemap_paths():
+        links = "".join(
+            f"<xhtml:link rel=\"alternate\" hreflang=\"{escape(item['lang'])}\" href=\"{escape(item['url'])}\" />"
+            for item in alternate_map.get(path, [])
+        )
+        urls.append(
+            "  <url>"
+            f"<loc>{escape(absolute_url(path))}</loc>"
+            f"{links}"
+            f"<changefreq>{changefreq}</changefreq>"
+            "</url>"
+        )
+    xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
+    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'
+    xml += "\n".join(urls)
+    xml += "\n</urlset>\n"
+    return Response(xml, mimetype="application/xml")
+
+@app.route("/robots.txt")
+def robots_txt():
+    body = "\n".join([
+        "User-agent: *",
+        "Allow: /",
+        f"Sitemap: {SITE_URL}/sitemap.xml",
+        "",
+    ])
+    return Response(body, mimetype="text/plain")
 
 
 @app.errorhandler(404)

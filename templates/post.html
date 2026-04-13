@@ -6,5 +6,19 @@
 <div class="rta-content">
   <h1 class="sr-only">{{ post['title'] | striptags }}</h1>
   {{ post['content'] | wp_clean | safe }}
+
+  {% if related_posts %}
+  <section class="rta-related" aria-labelledby="related-posts-title">
+    <h2 id="related-posts-title">{{ "Похожие статьи" if lang_code == "ru" else "Related Guides" }}</h2>
+    <div class="rta-related-grid">
+      {% for related in related_posts %}
+      <a class="rta-related-card" href="{{ '/ru/blog/' if lang_code == 'ru' else '/blog/' }}{{ related['slug'] }}/">
+        <h3>{{ related['title'] | safe }}</h3>
+        {% if related['excerpt'] %}<p>{{ related['excerpt'] | striptags | truncate(120) }}</p>{% endif %}
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
 </div>
 {% endblock %}

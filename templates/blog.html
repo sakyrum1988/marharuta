@@ -5,14 +5,14 @@
 {% block content %}
 <div class="rta-blog">
   <section class="rta-blog-hero">
-    <h1>Relocation Blog</h1>
-    <p>Guides, tips and real expat stories from across Asia.</p>
+    <h1>{{ blog_title | default("Relocation Blog") }}</h1>
+    <p>{{ blog_intro | default("Guides, tips and real expat stories from across Asia.") }}</p>
   </section>
 
   {% if posts %}
     <div class="rta-blog-grid">
       {% for post in posts %}
-      <a class="rta-blog-card" href="/blog/{{ post['slug'] }}/">
+      <a class="rta-blog-card" href="{{ blog_url_prefix | default('/blog') }}/{{ post['slug'] }}/">
         <div class="rta-blog-card-body">
           <div class="rta-blog-date">{{ post['date'][:10] }}</div>
           <h2>{{ post['title'] | safe }}</h2>
@@ -21,13 +21,13 @@
             {{ post['excerpt'] | striptags | truncate(180) }}
           </div>
           {% endif %}
-          <div class="rta-blog-link">Read more &rarr;</div>
+          <div class="rta-blog-link">{{ read_more | default("Read more") }} &rarr;</div>
         </div>
       </a>
       {% endfor %}
     </div>
   {% else %}
-    <p class="rta-empty">No posts yet.</p>
+    <p class="rta-empty">{{ "Пока нет статей." if blog_lang == "ru" else "No posts yet." }}</p>
   {% endif %}
 </div>
 {% endblock %}
