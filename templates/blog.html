@@ -9,6 +9,28 @@
     <p>{{ blog_intro | default("Guides, tips and real expat stories from across Asia.") }}</p>
   </section>
 
+  <div class="rta-blog-lang">
+  {% if blog_lang == "ru" %}
+    <a href="/blog/" hreflang="en">Read in English</a>
+  {% else %}
+    <a href="/ru/blog/" hreflang="ru">🇷🇺 Читать на русском</a>
+  {% endif %}
+  </div>
+
+  {% if internal_links %}
+  <section class="rta-linkhub" aria-labelledby="internal-links-title">
+    <h2 id="internal-links-title">{{ "Что посмотреть ещё" if blog_lang == "ru" else "Start Here" }}</h2>
+    <div class="rta-linkhub-grid">
+      {% for link in internal_links %}
+      <a class="rta-linkhub-card" href="{{ link['url'] }}">
+        <h3>{{ link['title'] | safe }}</h3>
+        {% if link['description'] %}<p>{{ link['description'] }}</p>{% endif %}
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
   {% if posts %}
     <div class="rta-blog-grid">
       {% for post in posts %}

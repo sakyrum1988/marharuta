@@ -30,6 +30,33 @@ DEFAULT_DESCRIPTION = (
     "Relocate to Asia helps expats compare countries, cities, visas and real-world "
     "moving costs across Asia."
 )
+PAGE_SEO_DESCRIPTIONS = {
+    "compare": (
+        "Compare Asian countries in 2026 by cost of living, visas, safety, healthcare, "
+        "climate, English level and digital nomad practicality."
+    ),
+    "move-to-asia": (
+        "Plan a move to Asia in 2026 with country guides, visa routes, cost tools, "
+        "comparison pages and practical relocation trade-offs."
+    ),
+    "digital-nomad-visas-asia": (
+        "Compare digital nomad visas in Asia for 2026, including Japan, Taiwan, "
+        "Indonesia, Thailand, South Korea and UAE remote work routes."
+    ),
+    "retire-in-asia": (
+        "Compare retirement options in Asia for 2026, including long-stay visas, "
+        "healthcare, deposits, costs and practical country trade-offs."
+    ),
+    "cost-of-living-asia": (
+        "Compare cost of living in Asia for 2026 with budget tools, cheap country "
+        "guides and relocation planning links."
+    ),
+    "japan-vs-taiwan": "Compare Japan vs Taiwan for expats in 2026 by visa route, cost pressure, professional fit, lifestyle and long-stay practicality.",
+    "thailand-vs-vietnam": "Compare Thailand vs Vietnam for expats in 2026 by cost, visas, city life, infrastructure and practical long-stay trade-offs.",
+    "malaysia-vs-vietnam": "Compare Malaysia vs Vietnam for expats in 2026 by English level, costs, visa planning, city comfort and relocation fit.",
+    "singapore-vs-hong-kong": "Compare Singapore vs Hong Kong for expats in 2026 by career routes, cost pressure, talent visas, housing and regional access.",
+    "uae-vs-qatar": "Compare UAE vs Qatar for expats in 2026 by entry routes, remote work options, cost profile, lifestyle and relocation fit.",
+}
 
 
 def strip_html(value: str | None) -> str:
@@ -64,7 +91,7 @@ def seo_payload(
     clean_title = strip_html(title) or SITE_NAME
     description = strip_html(description) or DEFAULT_DESCRIPTION
     short_title = trim_text(clean_title, 52)
-    canonical_url = f"{SITE_URL}{canonical_path or request.path}"
+    canonical_url = absolute_url(canonical_path or request.path)
     og_image_url = absolute_url(og_image) if "absolute_url" in globals() else f"{SITE_URL}{og_image}"
     return {
         "page_title": f"{short_title} | {SITE_NAME}" if short_title != SITE_NAME else SITE_NAME,
@@ -133,6 +160,106 @@ def website_schema() -> dict:
         "url": SITE_URL,
         "inLanguage": ["en", "ru"],
     }
+
+
+def faq_schema_from_html(content: str | None, *, lang: str) -> dict | None:
+    if not content:
+        return None
+    items: list[tuple[str, str]] = []
+    for question, answer in re.findall(
+        r'<div class="faq-item">\s*<h3>(.*?)</h3>\s*<p>(.*?)</p>\s*</div>',
+        content,
+        flags=re.IGNORECASE | re.DOTALL,
+    ):
+        items.append((strip_html(question), strip_html(answer)))
+    for question, answer in re.findall(
+        r'<details>\s*<summary>(.*?)</summary>\s*<p>(.*?)</p>\s*</details>',
+        content,
+        flags=re.IGNORECASE | re.DOTALL,
+    ):
+        items.append((strip_html(question), strip_html(answer)))
+    if not items:
+        return None
+    return {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "inLanguage": lang,
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": question,
+                "acceptedAnswer": {"@type": "Answer", "text": answer},
+            }
+            for question, answer in items[:8]
+            if question and answer
+        ],
+    }
+
+
+def item_list_schema(name: str, links: list[dict[str, str]]) -> dict | None:
+    if not links:
+        return None
+    return {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "name": name,
+        "itemListElement": [
+            {"@type": "ListItem", "position": index, "name": strip_html(link["title"]), "url": absolute_url(link["url"])}
+            for index, link in enumerate(links, start=1)
+        ],
+    }
+
+
+def web_application_schema(name: str, path: str, description: str) -> dict:
+    return {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": strip_html(name),
+        "url": absolute_url(path),
+        "applicationCategory": "TravelApplication",
+        "operatingSystem": "Web",
+        "description": trim_text(strip_html(description), 200),
+        "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+    }
+
+
+def country_meta_description(row: sqlite3.Row, facts: sqlite3.Row | None) -> str:
+    title = strip_html(row["title"]).replace("—", "-").replace(":", " -")
+    if facts:
+        details = []
+        if facts["capital"]:
+            details.append(f"capital {facts['capital']}")
+        if facts["currency_code"]:
+            details.append(f"currency {facts['currency_code']}")
+        if facts["internet_pct"]:
+            details.append(f"internet users {facts['internet_pct']:.1f}%")
+        if details:
+            return f"{title}: 2026 relocation guide with visa context, cost planning, cities and country facts including {', '.join(details)}."
+    return f"{title}: 2026 relocation guide with visa context, cost planning, cities, country facts and practical trade-offs for expats."
+
+
+def country_schema(row: sqlite3.Row, facts: sqlite3.Row | None, path: str) -> dict:
+    name = facts["name"] if facts and facts["name"] else strip_html(row["title"])
+    schema = {
+        "@context": "https://schema.org",
+        "@type": "Country",
+        "name": name,
+        "url": absolute_url(path),
+    }
+    if facts:
+        if facts["capital"]:
+            schema["containsPlace"] = {"@type": "City", "name": facts["capital"]}
+        if facts["population"]:
+            schema["additionalProperty"] = [
+                {
+                    "@type": "PropertyValue",
+                    "name": "Population",
+                    "value": facts["population"],
+                }
+            ]
+        if facts["flag_svg"]:
+            schema["image"] = facts["flag_svg"]
+    return schema
 
 
 def article_schema(row: sqlite3.Row, *, lang: str, canonical_path: str) -> dict:
@@ -287,21 +414,181 @@ def page_or_404(slug: str, parent: str | None = None) -> sqlite3.Row:
 
 # ── Routes ────────────────────────────────────────────────────────────────────
 
+COUNTRY_INTERNAL_LINKS = [
+    ("japan", "yaponiya", "Япони", "/countries/move-to-japan/", "Move to Japan", "Переезд в Японию"),
+    ("taiwan", "Тайван", "/countries/move-to-taiwan/", "Move to Taiwan", "Переезд на Тайвань"),
+    ("indonesia", "bali", "Бали", "Индонез", "/countries/move-to-bali/", "Move to Bali", "Переезд на Бали"),
+    ("thailand", "tailand", "Таиланд", "/countries/move-to-thailand/", "Move to Thailand", "Переезд в Таиланд"),
+    ("philippines", "Филиппин", "/countries/move-to-philippines/", "Move to Philippines", "Переезд на Филиппины"),
+    ("south-korea", "korea", "Коре", "/countries/move-to-south-korea/", "Move to South Korea", "Переезд в Южную Корею"),
+    ("singapore", "Сингапур", "/countries/move-to-singapore/", "Move to Singapore", "Переезд в Сингапур"),
+    ("hong-kong", "Гонконг", "/countries/move-to-china/", "Move to China", "Переезд в Китай"),
+    ("vietnam", "Вьетнам", "/countries/move-to-vietnam/", "Move to Vietnam", "Переезд во Вьетнам"),
+    ("cambodia", "Камбодж", "/countries/move-to-cambodia/", "Move to Cambodia", "Переезд в Камбоджу"),
+    ("sri-lanka", "Шри-Ланк", "/countries/move-to-sri-lanka/", "Move to Sri Lanka", "Переезд на Шри-Ланку"),
+    ("india", "Инди", "/countries/move-to-india/", "Move to India", "Переезд в Индию"),
+    ("qatar", "Катар", "/visas/", "Asia visa guide", "Гайд по визам Азии"),
+    ("saudi", "Сауд", "/visas/", "Asia visa guide", "Гайд по визам Азии"),
+    ("uae", "ОАЭ", "emirates", "/countries/move-to-uae/", "Move to UAE", "Переезд в ОАЭ"),
+    ("malaysia", "Малайз", "/countries/move-to-malaysia/", "Move to Malaysia", "Переезд в Малайзию"),
+]
+
+
+def _link(title: str, url: str, description: str = "") -> dict[str, str]:
+    return {"title": title, "url": url, "description": description}
+
+
+def _dedupe_links(links: list[dict[str, str]], current_path: str = "", limit: int = 8) -> list[dict[str, str]]:
+    seen: set[str] = set()
+    clean: list[dict[str, str]] = []
+    current_paths = {current_path}
+    if current_path.startswith(SITE_URL):
+        current_paths.add(current_path.removeprefix(SITE_URL))
+    elif current_path.startswith("/"):
+        current_paths.add(absolute_url(current_path))
+    for link in links:
+        url = link["url"]
+        if not url or url in current_paths or url in seen:
+            continue
+        seen.add(url)
+        clean.append(link)
+        if len(clean) >= limit:
+            break
+    return clean
+
+
+def _matched_country_links(text: str, lang: str) -> list[dict[str, str]]:
+    haystack = text.lower()
+    links: list[dict[str, str]] = []
+    for *keys, url, en_title, ru_title in COUNTRY_INTERNAL_LINKS:
+        if any(str(key).lower() in haystack for key in keys):
+            links.append(_link(
+                ru_title if lang == "ru" else en_title,
+                url,
+                (
+                    "Базовая страница страны: расходы, города, визовая логика и практические компромиссы."
+                    if lang == "ru"
+                    else "Country hub: costs, cities, visa logic and practical trade-offs."
+                ),
+            ))
+    return links
+
+
+def internal_links_for_post(row: sqlite3.Row, *, lang: str) -> list[dict[str, str]]:
+    current_path = post_path(row)
+    title_text = strip_html(f"{row['title']} {row['excerpt'] or ''} {row['slug']}")
+    links = _matched_country_links(title_text, lang)
+    if lang == "ru":
+        links.extend([
+            _link("Все статьи на русском", "/ru/blog/", "Свежие русскоязычные материалы по визам, странам и релокации."),
+            _link("Гайд по визам Азии", "/visas/", "Главная страница для сравнения визовых маршрутов."),
+            _link("Сравнить страны", "/compare/", "Быстрое сравнение стран для переезда в Азию."),
+            _link("Калькулятор стоимости жизни", "/tools/cost-calculator/", "Проверка бюджета перед выбором страны."),
+            _link("Планировщик бюджета", "/tools/budget-planner/", "Разложить переезд по основным расходам."),
+        ])
+    else:
+        links.extend([
+            _link("All relocation articles", "/blog/", "Fresh guides on visas, countries and relocation planning."),
+            _link("Asia visa guide", "/visas/", "Start here when comparing visa routes across Asia."),
+            _link("Compare Asian countries", "/compare/", "Compare relocation options side by side."),
+            _link("Cost of living calculator", "/tools/cost-calculator/", "Check the monthly budget before choosing a country."),
+            _link("Budget planner", "/tools/budget-planner/", "Turn a relocation idea into a rough expense plan."),
+        ])
+    for related in related_posts(row, limit=4):
+        links.append(_link(strip_html(related["title"]), post_path(related), trim_text(strip_html(related["excerpt"] or ""), 110)))
+    return _dedupe_links(links, current_path=current_path, limit=9)
+
+
+def internal_links_for_page(row: sqlite3.Row | dict, *, current_path: str) -> list[dict[str, str]]:
+    text = strip_html(f"{row['title']} {row['content']} {current_path}")
+    links = _matched_country_links(text, "en")
+    links.extend([
+        _link("Countries hub", "/countries/", "Start with country pages if you are still choosing a destination."),
+        _link("Asia visa guide", "/visas/", "Compare visa routes before planning housing or flights."),
+        _link("Compare countries", "/compare/", "Side-by-side country comparison for relocation decisions."),
+        _link("Compare Asian cities", "/compare-cities/", "Check city-level trade-offs before choosing a base."),
+        _link("Free relocation tools", "/tools/", "Cost calculator and budget planner for early planning."),
+        _link("Relocation blog", "/blog/", "Fresh visa and country guides based on official sources."),
+    ])
+    haystack = text.lower()
+    for *keys, _url, _en_title, _ru_title in COUNTRY_INTERNAL_LINKS:
+        if not any(str(key).lower() in haystack for key in keys):
+            continue
+        for key in keys:
+            if str(key).startswith("/") or len(str(key)) < 4:
+                continue
+            topic_posts = many(
+                """
+                SELECT slug, title, excerpt, lang
+                FROM posts
+                WHERE lang = 'en'
+                  AND (lower(slug) LIKE ? OR lower(title) LIKE ? OR lower(excerpt) LIKE ?)
+                ORDER BY date DESC, id DESC
+                LIMIT 3
+                """,
+                (f"%{str(key).lower()}%", f"%{str(key).lower()}%", f"%{str(key).lower()}%"),
+            )
+            for post in topic_posts:
+                links.append(_link(strip_html(post["title"]), post_path(post), trim_text(strip_html(post["excerpt"] or ""), 110)))
+            if topic_posts:
+                break
+    latest_posts = many("SELECT slug, title, excerpt, lang FROM posts WHERE lang = 'en' ORDER BY date DESC, id DESC LIMIT 4")
+    for post in latest_posts:
+        links.append(_link(strip_html(post["title"]), post_path(post), trim_text(strip_html(post["excerpt"] or ""), 110)))
+    return _dedupe_links(links, current_path=current_path, limit=8)
+
+
+def internal_links_for_blog(lang: str) -> list[dict[str, str]]:
+    if lang == "ru":
+        return [
+            _link("Гайд по странам", "/countries/", "Страницы стран: стоимость жизни, города, визовая логика и практические компромиссы."),
+            _link("Гайд по визам Азии", "/visas/", "Сравнение визовых маршрутов до выбора страны."),
+            _link("Сравнить страны", "/compare/", "Быстрое сравнение направлений для переезда."),
+            _link("Калькулятор стоимости жизни", "/tools/cost-calculator/", "Проверка бюджета перед планированием переезда."),
+            _link("Планировщик бюджета", "/tools/budget-planner/", "Разложить расходы на переезд по категориям."),
+            _link("Compare Cities", "/compare-cities/", "Сравнение городов по практическим метрикам."),
+        ]
+    return [
+        _link("Countries hub", "/countries/", "Country pages for costs, cities, visa logic and trade-offs."),
+        _link("Asia visa guide", "/visas/", "Compare visa routes before choosing a destination."),
+        _link("Compare countries", "/compare/", "Side-by-side comparison for relocation decisions."),
+        _link("Cost of living calculator", "/tools/cost-calculator/", "Check the monthly budget before planning a move."),
+        _link("Budget planner", "/tools/budget-planner/", "Break relocation expenses into practical categories."),
+        _link("Compare Asian cities", "/compare-cities/", "City-level comparison for choosing a base."),
+    ]
+
+
 def render_page_row(row: sqlite3.Row | dict, **kwargs):
     breadcrumbs = kwargs.get("breadcrumbs", [])
     path = row["link"] if "link" in row.keys() and row["link"] else request.path
+    slug = row["slug"] if "slug" in row.keys() else request.path.strip("/")
     schema = [
         breadcrumb_schema(breadcrumbs, row["title"], path),
         organization_schema(),
         website_schema(),
     ]
+    internal_links = internal_links_for_page(row, current_path=path)
+    faq_schema = faq_schema_from_html(row["content"], lang="en")
+    if faq_schema:
+        schema.append(faq_schema)
+    item_list = item_list_schema(f"Internal links for {strip_html(row['title'])}", internal_links)
+    if item_list:
+        schema.append(item_list)
+    if path in {"/compare/", "/compare-cities/", "/tools/cost-calculator/", "/tools/budget-planner/"}:
+        schema.append(web_application_schema(row["title"], path, row["content"]))
     seo = seo_payload(
         title=row["title"],
-        description=row["excerpt"] if "excerpt" in row.keys() else row["content"],
+        description=PAGE_SEO_DESCRIPTIONS.get(slug, row["excerpt"] if "excerpt" in row.keys() else row["content"]),
         canonical_path=path,
         schema=schema,
     )
-    return render_template("page.html", page=row, seo=seo, **kwargs)
+    return render_template(
+        "page.html",
+        page=row,
+        seo=seo,
+        internal_links=internal_links,
+        **kwargs,
+    )
 
 
 def render_post_row(row: sqlite3.Row, *, lang: str):
@@ -312,6 +599,13 @@ def render_post_row(row: sqlite3.Row, *, lang: str):
         breadcrumb_schema([("Blog", "/blog/")], row["title"], canonical_path),
         organization_schema(),
     ]
+    faq_schema = faq_schema_from_html(row["content"], lang=lang)
+    if faq_schema:
+        schema.append(faq_schema)
+    internal_links = internal_links_for_post(row, lang=lang)
+    item_list = item_list_schema(f"Internal links for {strip_html(row['title'])}", internal_links)
+    if item_list:
+        schema.append(item_list)
     seo = seo_payload(
         title=row["title"],
         description=row["excerpt"] or row["content"],
@@ -321,7 +615,14 @@ def render_post_row(row: sqlite3.Row, *, lang: str):
         schema=schema,
         og_type="article",
     )
-    return render_template("post.html", post=row, seo=seo, lang_code=lang, related_posts=related_posts(row))
+    return render_template(
+        "post.html",
+        post=row,
+        seo=seo,
+        lang_code=lang,
+        related_posts=related_posts(row),
+        internal_links=internal_links,
+    )
 
 
 @app.route("/")
@@ -340,15 +641,22 @@ def countries_index():
 def country(slug: str):
     row = page_or_404(slug, parent="countries")
     facts = one("SELECT * FROM country_facts WHERE slug = ?", (slug,))
+    path = row["link"] or request.path
+    internal_links = internal_links_for_page(row, current_path=path)
+    schema = [
+        breadcrumb_schema([("Countries", "/countries/")], row["title"], path),
+        organization_schema(),
+        website_schema(),
+        country_schema(row, facts, path),
+    ]
+    item_list = item_list_schema(f"Internal links for {strip_html(row['title'])}", internal_links)
+    if item_list:
+        schema.append(item_list)
     seo = seo_payload(
         title=row["title"],
-        description=row["excerpt"] if "excerpt" in row.keys() else row["content"],
-        canonical_path=row["link"] or request.path,
-        schema=[
-            breadcrumb_schema([("Countries", "/countries/")], row["title"], row["link"] or request.path),
-            organization_schema(),
-            website_schema(),
-        ],
+        description=country_meta_description(row, facts),
+        canonical_path=path,
+        schema=schema,
     )
     return render_template(
         "country.html",
@@ -356,6 +664,7 @@ def country(slug: str):
         facts=facts,
         seo=seo,
         breadcrumbs=[("Countries", "/countries/")],
+        internal_links=internal_links,
     )
 
 
@@ -410,6 +719,30 @@ def cheapest_countries():
     return render_page_row(row, breadcrumbs=[])
 
 
+@app.route("/move-to-asia/")
+def move_to_asia():
+    row = page_or_404("move-to-asia")
+    return render_page_row(row, breadcrumbs=[])
+
+
+@app.route("/digital-nomad-visas-asia/")
+def digital_nomad_visas_asia():
+    row = page_or_404("digital-nomad-visas-asia")
+    return render_page_row(row, breadcrumbs=[])
+
+
+@app.route("/retire-in-asia/")
+def retire_in_asia():
+    row = page_or_404("retire-in-asia")
+    return render_page_row(row, breadcrumbs=[])
+
+
+@app.route("/cost-of-living-asia/")
+def cost_of_living_asia():
+    row = page_or_404("cost-of-living-asia")
+    return render_page_row(row, breadcrumbs=[])
+
+
 def render_blog_index(*, lang: str):
     is_ru = lang == "ru"
     path = "/ru/blog/" if is_ru else "/blog/"
@@ -444,6 +777,7 @@ def render_blog_index(*, lang: str):
         blog_url_prefix="/ru/blog" if is_ru else "/blog",
         blog_title=title,
         blog_intro=description,
+        internal_links=internal_links_for_blog(lang),
         read_more="Читать" if is_ru else "Read more",
     )
 

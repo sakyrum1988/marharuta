@@ -278,10 +278,67 @@
     .rta-content .visa-hero,
     .rta-content .bvt-hero,
     .rta-content .art-hero,
+    .rta-content .article-hero,
+    .rta-content .fc-hero,
+    .rta-content .bcm-hero,
+    .rta-content .bp-hero,
     .rta-blog-hero {
       border-radius: var(--radius) !important;
       margin: 0 0 36px !important;
       box-shadow: var(--shadow);
+    }
+
+    .rta-content .rta-hero,
+    .rta-content .ch2-hero,
+    .rta-content .cc-hero,
+    .rta-content .tp-hero,
+    .rta-content .visa-hero,
+    .rta-content .bvt-hero,
+    .rta-content .art-hero,
+    .rta-content .article-hero,
+    .rta-content .fc-hero,
+    .rta-content .bcm-hero,
+    .rta-content .bp-hero {
+      color: #fff !important;
+    }
+
+    .rta-content .rta-hero h1,
+    .rta-content .rta-hero h2,
+    .rta-content .ch2-hero h1,
+    .rta-content .ch2-hero h2,
+    .rta-content .cc-hero h1,
+    .rta-content .cc-hero h2,
+    .rta-content .tp-hero h1,
+    .rta-content .tp-hero h2,
+    .rta-content .visa-hero h1,
+    .rta-content .visa-hero h2,
+    .rta-content .bvt-hero h1,
+    .rta-content .bvt-hero h2,
+    .rta-content .art-hero h1,
+    .rta-content .art-hero h2,
+    .rta-content .article-hero h1,
+    .rta-content .article-hero h2,
+    .rta-content .fc-hero h1,
+    .rta-content .fc-hero h2,
+    .rta-content .bcm-hero h1,
+    .rta-content .bcm-hero h2,
+    .rta-content .bp-hero h1,
+    .rta-content .bp-hero h2 {
+      color: #fff !important;
+    }
+
+    .rta-content .rta-hero p,
+    .rta-content .ch2-hero p,
+    .rta-content .cc-hero p,
+    .rta-content .tp-hero p,
+    .rta-content .visa-hero p,
+    .rta-content .bvt-hero p,
+    .rta-content .art-hero p,
+    .rta-content .article-hero p,
+    .rta-content .fc-hero p,
+    .rta-content .bcm-hero p,
+    .rta-content .bp-hero p {
+      color: rgba(255,255,255,.86) !important;
     }
 
     .rta-content .ct-hero {
@@ -715,6 +772,36 @@
       margin: 0 auto;
       color: rgba(255,255,255,.86);
       font-size: 17px;
+    }
+
+    .rta-blog-lang {
+      margin: -14px 0 28px;
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .rta-blog-lang a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 40px;
+      padding: 8px 16px;
+      border: 1.5px solid var(--blue);
+      border-radius: var(--radius);
+      color: var(--blue);
+      background: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 10px 24px rgba(15,52,96,.06);
+      transition: background .15s, color .15s, transform .15s;
+    }
+
+    .rta-blog-lang a:hover {
+      background: var(--blue);
+      color: #fff;
+      transform: translateY(-1px);
     }
 
     .rta-blog-grid {
@@ -1522,8 +1609,116 @@
       font-size: 14px;
     }
 
+    .rta-linkhub {
+      max-width: 1120px;
+      margin: 34px auto 0;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #f8fbff;
+      box-shadow: var(--shadow);
+    }
+
+    .rta-linkhub h2 {
+      margin: 0 0 18px;
+      color: var(--ink);
+      font-size: 24px;
+    }
+
+    .rta-linkhub-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .rta-linkhub-card {
+      display: block;
+      padding: 18px;
+      border: 1px solid #d9e4f7;
+      border-radius: var(--radius);
+      background: #fff;
+      color: inherit;
+      text-decoration: none;
+      transition: transform .15s, box-shadow .15s, border-color .15s;
+    }
+
+    .rta-linkhub-card:hover {
+      transform: translateY(-2px);
+      border-color: #bfd0ee;
+      box-shadow: 0 14px 30px rgba(15,52,96,.1);
+    }
+
+    .rta-linkhub-card h3 {
+      margin: 0 0 8px;
+      color: var(--ink);
+      font-size: 17px;
+      line-height: 1.3;
+    }
+
+    .rta-linkhub-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .rta-country-facts {
+      max-width: 1120px;
+      margin: 34px auto 0;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .rta-country-facts h2 {
+      margin: 0 0 18px;
+      color: var(--ink);
+      font-size: 24px;
+    }
+
+    .rta-country-facts-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .rta-country-facts-grid div {
+      padding: 16px;
+      border: 1px solid #e3e9f2;
+      border-radius: var(--radius);
+      background: #f8fbff;
+    }
+
+    .rta-country-facts-grid strong {
+      display: block;
+      color: var(--ink);
+      font-size: 20px;
+      line-height: 1.25;
+    }
+
+    .rta-country-facts-grid span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .rta-country-facts p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
     @media (max-width: 720px) {
-      .rta-related-grid {
+      .rta-related-grid,
+      .rta-linkhub-grid,
+      .rta-country-facts-grid {
         grid-template-columns: 1fr;
       }
     }
@@ -1555,6 +1750,8 @@
         <div class="rta-dropdown">
           <a href="/compare/thailand-vs-malaysia/">Thailand vs Malaysia</a>
           <a href="/compare/bali-vs-thailand/">Bali vs Thailand</a>
+          <a href="/compare/japan-vs-taiwan/">Japan vs Taiwan</a>
+          <a href="/compare/thailand-vs-vietnam/">Thailand vs Vietnam</a>
           <a href="/compare-cities/">Compare Cities</a>
         </div>
       </div>
@@ -1565,6 +1762,7 @@
           <a href="/tools/budget-planner/">Budget Planner</a>
           <a href="/best-countries-in-asia-to-move/">Best Countries</a>
           <a href="/cheapest-countries-in-asia/">Cheapest Countries</a>
+          <a href="/cost-of-living-asia/">Cost of Living Asia</a>
         </div>
       </div>
       <a href="/blog/">Blog</a>
@@ -1602,6 +1800,10 @@
     <div class="rta-footer-col">
       <div class="rta-footer-heading">Resources</div>
       <a href="/blog/">Blog</a>
+      <a href="/move-to-asia/">Move to Asia</a>
+      <a href="/digital-nomad-visas-asia/">Digital Nomad Visas Asia</a>
+      <a href="/retire-in-asia/">Retire in Asia</a>
+      <a href="/cost-of-living-asia/">Cost of Living Asia</a>
       <a href="/best-countries-in-asia-to-move/">Best Countries</a>
       <a href="/cheapest-countries-in-asia/">Cheapest Countries</a>
       <a href="/about/">About</a>

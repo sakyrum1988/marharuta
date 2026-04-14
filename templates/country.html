@@ -6,5 +6,34 @@
 <div class="rta-content">
   {% if '<h1' not in (page['content'] or '')|lower %}<h1 class="sr-only">{{ page['title'] }}</h1>{% endif %}
   {{ page['content'] | wp_clean | safe }}
+
+  {% if facts %}
+  <section class="rta-country-facts" aria-labelledby="country-facts-title">
+    <h2 id="country-facts-title">Country Facts For Relocation Planning</h2>
+    <div class="rta-country-facts-grid">
+      {% if facts['capital'] %}<div><strong>{{ facts['capital'] }}</strong><span>Capital</span></div>{% endif %}
+      {% if facts['currency_code'] %}<div><strong>{{ facts['currency_code'] }}</strong><span>Currency</span></div>{% endif %}
+      {% if facts['languages'] %}<div><strong>{{ facts['languages'] }}</strong><span>Languages</span></div>{% endif %}
+      {% if facts['internet_pct'] %}<div><strong>{{ "%.1f"|format(facts['internet_pct']) }}%</strong><span>Internet Users</span></div>{% endif %}
+      {% if facts['life_expectancy'] %}<div><strong>{{ "%.1f"|format(facts['life_expectancy']) }}</strong><span>Life Expectancy</span></div>{% endif %}
+      {% if facts['wb_year'] %}<div><strong>{{ facts['wb_year'] }}</strong><span>World Bank Year</span></div>{% endif %}
+    </div>
+    <p>Use these facts as planning context, then compare visas, housing and healthcare before making a paid commitment.</p>
+  </section>
+  {% endif %}
+
+  {% if internal_links %}
+  <section class="rta-linkhub" aria-labelledby="internal-links-title">
+    <h2 id="internal-links-title">Explore Next</h2>
+    <div class="rta-linkhub-grid">
+      {% for link in internal_links %}
+      <a class="rta-linkhub-card" href="{{ link['url'] }}">
+        <h3>{{ link['title'] | safe }}</h3>
+        {% if link['description'] %}<p>{{ link['description'] }}</p>{% endif %}
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
 </div>
 {% endblock %}

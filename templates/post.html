@@ -20,5 +20,19 @@
     </div>
   </section>
   {% endif %}
+
+  {% if internal_links %}
+  <section class="rta-linkhub" aria-labelledby="internal-links-title">
+    <h2 id="internal-links-title">{{ "Куда перейти дальше" if lang_code == "ru" else "Plan The Next Step" }}</h2>
+    <div class="rta-linkhub-grid">
+      {% for link in internal_links %}
+      <a class="rta-linkhub-card" href="{{ link['url'] }}">
+        <h3>{{ link['title'] | safe }}</h3>
+        {% if link['description'] %}<p>{{ link['description'] }}</p>{% endif %}
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
 </div>
 {% endblock %}
