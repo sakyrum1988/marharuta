@@ -4,6 +4,24 @@
 
 {% block content %}
 <div class="rta-content">
+  {% if breadcrumbs is defined and breadcrumbs %}
+  <nav class="rta-breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a>
+    {% for label, url in breadcrumbs %}
+      <span aria-hidden="true">›</span>
+      <a href="{{ url }}">{{ label }}</a>
+    {% endfor %}
+    <span aria-hidden="true">›</span>
+    <span>{{ page['title'] | striptags }}</span>
+  </nav>
+  {% elif show_breadcrumbs is defined and show_breadcrumbs %}
+  <nav class="rta-breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a>
+    <span aria-hidden="true">›</span>
+    <span>{{ page['title'] | striptags }}</span>
+  </nav>
+  {% endif %}
+
   {% if '<h1' not in (page['content'] or '')|lower %}<h1 class="sr-only">{{ page['title'] }}</h1>{% endif %}
   {{ page['content'] | wp_clean | safe }}
 

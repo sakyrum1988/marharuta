@@ -204,6 +204,17 @@
       color: #005bbb;
     }
 
+    .rta-dropdown--wide {
+      width: 520px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .rta-dropdown--wide a {
+      white-space: normal;
+      line-height: 1.35;
+    }
+
     .rta-dropdown-section {
       display: none;
     }
@@ -405,6 +416,32 @@
       max-width: 100% !important;
       margin: 0 0 16px !important;
       color: var(--muted) !important;
+    }
+
+    .rta-breadcrumbs {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 22px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .rta-breadcrumbs a {
+      color: #1a56db;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .rta-breadcrumbs a:hover {
+      text-decoration: underline;
+    }
+
+    .rta-breadcrumbs span:last-child {
+      color: var(--muted);
+      overflow-wrap: anywhere;
     }
 
     .rta-content .art-ru-link {
@@ -804,9 +841,42 @@
       transform: translateY(-1px);
     }
 
+    .rta-blog-list-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 18px;
+      margin: 36px 0 20px;
+      padding-top: 8px;
+      border-top: 1px solid var(--line);
+    }
+
+    .rta-blog-list-head h2 {
+      margin: 0;
+      color: var(--ink);
+      font-size: 28px;
+      line-height: 1.15;
+    }
+
+    .rta-blog-list-head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .rta-blog-kicker {
+      margin: 0 0 6px !important;
+      color: var(--blue) !important;
+      font-size: 12px !important;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
     .rta-blog-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 24px;
       align-items: stretch;
     }
@@ -814,7 +884,7 @@
     .rta-blog-card {
       position: relative;
       display: flex;
-      min-height: 310px;
+      min-height: 280px;
       flex-direction: column;
       overflow: hidden;
       padding: 0;
@@ -861,7 +931,7 @@
     .rta-blog-card h2 {
       margin: 0 0 12px;
       color: var(--dark);
-      font-size: 21px;
+      font-size: 22px;
       font-weight: 800;
       line-height: 1.25;
     }
@@ -878,6 +948,56 @@
       color: var(--blue);
       font-size: 14px;
       font-weight: 800;
+    }
+
+    .rta-pagination {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin: 34px 0 0;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .rta-page-numbers {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .rta-page-numbers a,
+    .rta-page-numbers span,
+    .rta-page-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 40px;
+      min-height: 40px;
+      padding: 8px 12px;
+      border: 1px solid #d9e4f7;
+      border-radius: var(--radius);
+      background: #fff;
+      color: var(--dark);
+      font-size: 14px;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .rta-page-numbers .is-current {
+      background: var(--dark);
+      border-color: var(--dark);
+      color: #fff;
+    }
+
+    .rta-page-link.is-disabled {
+      color: #9aa8ba;
+      background: #f5f7fb;
+      pointer-events: none;
     }
 
     .rta-empty {
@@ -1165,6 +1285,7 @@
         position: static;
         width: 100%;
         min-width: 0;
+        display: block;
         border-top: none;
         border-left: 3px solid #e3e9f2;
         border-radius: 0;
@@ -1200,6 +1321,29 @@
       .rta-content h2,
       .rta-blog h1 {
         overflow-wrap: anywhere;
+      }
+
+      .rta-blog-list-head {
+        display: block;
+        margin-top: 26px;
+      }
+
+      .rta-blog-list-head > p {
+        margin-top: 8px;
+      }
+
+      .rta-blog-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .rta-pagination {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .rta-page-numbers {
+        order: -1;
       }
 
       .rta-content .rta-hero,
@@ -1715,11 +1859,238 @@
       line-height: 1.65;
     }
 
+    .rta-seo-facts {
+      margin: 34px 0 0;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .rta-seo-facts h2 {
+      margin: 0 0 18px;
+      color: var(--ink);
+      font-size: 24px;
+      line-height: 1.2;
+    }
+
+    .rta-seo-facts h3 {
+      margin: 22px 0 10px;
+      color: var(--ink);
+      font-size: 18px;
+    }
+
+    .rta-seo-facts-flag {
+      display: block;
+      width: 56px;
+      height: 38px;
+      object-fit: cover;
+      border-radius: 4px;
+      margin: -4px 0 18px;
+      box-shadow: 0 6px 14px rgba(15,52,96,.12);
+    }
+
+    .rta-seo-facts-table {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .rta-seo-facts-row {
+      min-width: 0;
+      padding: 14px;
+      border: 1px solid #e3e9f2;
+      border-radius: var(--radius);
+      background: #f8fbff;
+    }
+
+    .rta-seo-facts-row strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+    }
+
+    .rta-seo-facts-row span {
+      display: block;
+      color: var(--ink);
+      font-size: 16px;
+      font-weight: 700;
+      overflow-wrap: anywhere;
+    }
+
+    .rta-source-list {
+      margin: 0 0 14px;
+      padding-left: 20px;
+    }
+
+    .rta-source-list li {
+      margin: 6px 0;
+    }
+
+    .rta-seo-facts p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .guide-page {
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .guide-hero {
+      background: linear-gradient(135deg, #0a1628, #173b70);
+      color: #fff;
+      padding: 46px 32px;
+      border-radius: var(--radius);
+      margin-bottom: 28px;
+      text-align: left;
+      box-shadow: var(--shadow);
+    }
+
+    .guide-hero .badge {
+      display: inline-block;
+      margin-bottom: 14px;
+      padding: 5px 12px;
+      border: 1px solid rgba(255,255,255,.28);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.12);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .guide-hero h1 {
+      max-width: 850px;
+      margin: 0 0 14px;
+      color: #fff !important;
+      font-size: clamp(30px, 4vw, 44px);
+      line-height: 1.12;
+    }
+
+    .guide-hero p {
+      max-width: 760px;
+      margin: 0;
+      color: rgba(255,255,255,.86);
+      font-size: 17px;
+      line-height: 1.7;
+    }
+
+    .guide-note {
+      background: #fff8e8;
+      border: 1px solid #f7d48a;
+      color: #6b4e00;
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      margin: 0 0 28px;
+      line-height: 1.65;
+    }
+
+    .guide-page h2 {
+      margin: 36px 0 14px;
+      color: var(--ink);
+      font-size: 28px;
+      line-height: 1.2;
+    }
+
+    .guide-page p {
+      font-size: 16px;
+      line-height: 1.82;
+    }
+
+    .guide-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 18px 0 24px;
+      background: #fff;
+      border: 1px solid #e3e9f2;
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .guide-table th,
+    .guide-table td {
+      padding: 14px;
+      border-bottom: 1px solid #e3e9f2;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .guide-table th {
+      background: #f8fbff;
+      color: var(--dark);
+      width: 26%;
+    }
+
+    .guide-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .guide-card {
+      border: 1px solid #e3e9f2;
+      border-radius: var(--radius);
+      background: #fff;
+      padding: 20px;
+      box-shadow: 0 8px 22px rgba(15,52,96,.06);
+    }
+
+    .guide-card strong {
+      display: block;
+      color: var(--dark);
+      margin-bottom: 8px;
+      font-size: 18px;
+    }
+
+    .guide-card p {
+      margin: 0;
+      color: #344256;
+    }
+
+    .guide-sources {
+      background: #f8faff;
+      border: 1px solid #dde5ff;
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin: 28px 0;
+    }
+
+    .guide-sources li {
+      margin: 8px 0;
+    }
+
     @media (max-width: 720px) {
       .rta-related-grid,
       .rta-linkhub-grid,
-      .rta-country-facts-grid {
+      .rta-country-facts-grid,
+      .rta-seo-facts-table,
+      .guide-grid {
         grid-template-columns: 1fr;
+      }
+
+      .rta-seo-facts {
+        padding: 18px;
+      }
+
+      .rta-content table,
+      .rta-content .guide-page table {
+        display: block;
+        max-width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .rta-content th,
+      .rta-content td {
+        min-width: 150px;
       }
     }
   </style>
@@ -1745,6 +2116,21 @@
         </div>
       </div>
       <a href="/visas/">Visas</a>
+      <div class="rta-nav-item">
+        <a class="rta-nav-trigger" href="/guides/">Guides</a>
+        <div class="rta-dropdown rta-dropdown--wide">
+          <a href="/guides/can-you-extend-japan-digital-nomad-visa/">Can You Extend Japan Digital Nomad Visa?</a>
+          <a href="/guides/japan-digital-nomad-visa-income-requirement/">Japan Digital Nomad Visa Income</a>
+          <a href="/guides/thailand-dtv-vs-ltr-visa/">Thailand DTV vs LTR Visa</a>
+          <a href="/guides/malaysia-de-rantau-vs-thailand-dtv/">Malaysia DE Rantau vs Thailand DTV</a>
+          <a href="/guides/taiwan-gold-card-income-requirement/">Taiwan Gold Card Income</a>
+          <a href="/guides/best-asian-countries-with-easy-long-stay-visas/">Easy Long-Stay Visas In Asia</a>
+          <a href="/guides/where-to-live-in-asia-on-1500-a-month/">Asia On $1500 A Month</a>
+          <a href="/guides/best-asian-countries-for-remote-workers-with-family/">Remote Workers With Family</a>
+          <a href="/guides/philippines-srrv-vs-thailand-retirement-visa/">Philippines SRRV vs Thailand Retirement</a>
+          <a href="/guides/vietnam-evisa-vs-thailand-dtv/">Vietnam E-Visa vs Thailand DTV</a>
+        </div>
+      </div>
       <div class="rta-nav-item">
         <a class="rta-nav-trigger" href="/compare/">Compare</a>
         <div class="rta-dropdown">
@@ -1804,6 +2190,7 @@
       <a href="/digital-nomad-visas-asia/">Digital Nomad Visas Asia</a>
       <a href="/retire-in-asia/">Retire in Asia</a>
       <a href="/cost-of-living-asia/">Cost of Living Asia</a>
+      <a href="/guides/">Focused Guides</a>
       <a href="/best-countries-in-asia-to-move/">Best Countries</a>
       <a href="/cheapest-countries-in-asia/">Cheapest Countries</a>
       <a href="/about/">About</a>

@@ -5,7 +5,7 @@ import sqlite3
 import json
 from pathlib import Path
 
-from flask import Flask, Response, abort, render_template, request
+from flask import Flask, Response, abort, redirect, render_template, request
 
 APP_DIR = Path(__file__).resolve().parent
 DB_PATH = APP_DIR / "content.db"
@@ -35,6 +35,10 @@ PAGE_SEO_DESCRIPTIONS = {
         "Compare Asian countries in 2026 by cost of living, visas, safety, healthcare, "
         "climate, English level and digital nomad practicality."
     ),
+    "visas": (
+        "Asia visa guide for 2026 covering digital nomad visas, long-stay routes, "
+        "retirement options and official source checks."
+    ),
     "move-to-asia": (
         "Plan a move to Asia in 2026 with country guides, visa routes, cost tools, "
         "comparison pages and practical relocation trade-offs."
@@ -56,6 +60,17 @@ PAGE_SEO_DESCRIPTIONS = {
     "malaysia-vs-vietnam": "Compare Malaysia vs Vietnam for expats in 2026 by English level, costs, visa planning, city comfort and relocation fit.",
     "singapore-vs-hong-kong": "Compare Singapore vs Hong Kong for expats in 2026 by career routes, cost pressure, talent visas, housing and regional access.",
     "uae-vs-qatar": "Compare UAE vs Qatar for expats in 2026 by entry routes, remote work options, cost profile, lifestyle and relocation fit.",
+    "guides": "Asia relocation guides for 2026 visa, budget, family, retirement and country comparison decisions before you spend money on a move.",
+    "can-you-extend-japan-digital-nomad-visa": "Can you extend Japan Digital Nomad Visa in 2026? Clear answer, official limit and practical planning risk.",
+    "japan-digital-nomad-visa-income-requirement": "Japan Digital Nomad Visa income requirement in 2026, what to verify and where applicants often misread the rule.",
+    "thailand-dtv-vs-ltr-visa": "Thailand DTV vs LTR Visa in 2026 by stay logic, eligibility, documents and who should avoid each route.",
+    "malaysia-de-rantau-vs-thailand-dtv": "Malaysia DE Rantau vs Thailand DTV in 2026 for remote workers comparing visa fit, location and practical limits.",
+    "taiwan-gold-card-income-requirement": "Taiwan Gold Card income requirement and eligibility logic in 2026 for skilled professionals and remote workers.",
+    "best-asian-countries-with-easy-long-stay-visas": "Best Asian countries with easier long-stay visa routes in 2026, with realistic limits and planning cautions.",
+    "where-to-live-in-asia-on-1500-a-month": "Where to live in Asia on $1500 a month in 2026, with budget trade-offs and country fit.",
+    "best-asian-countries-for-remote-workers-with-family": "Best Asian countries for remote workers with family in 2026 by visa practicality, schools, healthcare and cost.",
+    "philippines-srrv-vs-thailand-retirement-visa": "Philippines SRRV vs Thailand Retirement Visa in 2026 by deposit logic, stay comfort and retirement planning risk.",
+    "vietnam-evisa-vs-thailand-dtv": "Vietnam eVisa vs Thailand DTV in 2026 for long stays, remote workers and people testing Southeast Asia.",
 }
 
 
@@ -166,8 +181,8 @@ def faq_schema_from_html(content: str | None, *, lang: str) -> dict | None:
     if not content:
         return None
     items: list[tuple[str, str]] = []
-    for question, answer in re.findall(
-        r'<div class="faq-item">\s*<h3>(.*?)</h3>\s*<p>(.*?)</p>\s*</div>',
+    for _quote, question, answer in re.findall(
+        r'<div[^>]+class=(["\'])(?:[^"\']*\s)?faq-item(?:\s[^"\']*)?\1[^>]*>\s*<h3>(.*?)</h3>\s*<p>(.*?)</p>\s*</div>',
         content,
         flags=re.IGNORECASE | re.DOTALL,
     ):
@@ -291,6 +306,12 @@ def post_alternates(row: sqlite3.Row, *, lang: str, canonical_path: str) -> list
         match = re.search(r'href="/blog/([^"/]+)/"', content)
         if match:
             alternates.append({"lang": "en", "url": absolute_url(f"/blog/{match.group(1)}/")})
+    if len(alternates) == 1:
+        paired_lang = "ru" if lang == "en" else "en"
+        paired_prefix = "/ru/blog" if paired_lang == "ru" else "/blog"
+        paired = one("SELECT slug FROM posts WHERE slug = ? AND lang = ?", (row["slug"], paired_lang))
+        if paired:
+            alternates.append({"lang": paired_lang, "url": absolute_url(f"{paired_prefix}/{paired['slug']}/")})
     english = next((item for item in alternates if item["lang"] == "en"), alternates[0])
     alternates.append({"lang": "x-default", "url": english["url"]})
     return alternates
@@ -362,6 +383,31 @@ def _flag_emojis_to_img(text: str) -> str:
     return "".join(result)
 
 
+def _external_links_nofollow(text: str) -> str:
+    def repl(match: re.Match) -> str:
+        attrs = match.group(1)
+        href_match = re.search(r'\bhref=(["\'])(https?://.*?)\1', attrs, flags=re.IGNORECASE)
+        if not href_match:
+            return match.group(0)
+        if re.search(r"\brel=", attrs, flags=re.IGNORECASE):
+            attrs = re.sub(
+                r'\brel=(["\'])(.*?)\1',
+                lambda rel: f'rel={rel.group(1)}{rel.group(2)} nofollow noopener{rel.group(1)}'
+                if "nofollow" not in rel.group(2).lower()
+                else rel.group(0),
+                attrs,
+                count=1,
+                flags=re.IGNORECASE,
+            )
+        else:
+            attrs = f'{attrs} rel="nofollow noopener"'
+        if not re.search(r"\btarget=", attrs, flags=re.IGNORECASE):
+            attrs = f'{attrs} target="_blank"'
+        return f"<a{attrs}>"
+
+    return re.sub(r"<a\b([^>]*)>", repl, text, flags=re.IGNORECASE)
+
+
 @app.template_filter("wp_clean")
 def wp_clean(content: str | None) -> str:
     if not content:
@@ -380,6 +426,7 @@ def wp_clean(content: str | None) -> str:
         cleaned = re.sub(pattern, replacement, cleaned, flags=re.IGNORECASE | re.DOTALL)
 
     cleaned = _flag_emojis_to_img(cleaned)
+    cleaned = _external_links_nofollow(cleaned)
     return cleaned
 
 
@@ -505,6 +552,7 @@ def internal_links_for_page(row: sqlite3.Row | dict, *, current_path: str) -> li
     links.extend([
         _link("Countries hub", "/countries/", "Start with country pages if you are still choosing a destination."),
         _link("Asia visa guide", "/visas/", "Compare visa routes before planning housing or flights."),
+        _link("Focused SEO guides", "/guides/", "Short decision pages for long-tail visa and relocation questions."),
         _link("Compare countries", "/compare/", "Side-by-side country comparison for relocation decisions."),
         _link("Compare Asian cities", "/compare-cities/", "Check city-level trade-offs before choosing a base."),
         _link("Free relocation tools", "/tools/", "Cost calculator and budget planner for early planning."),
@@ -551,11 +599,185 @@ def internal_links_for_blog(lang: str) -> list[dict[str, str]]:
     return [
         _link("Countries hub", "/countries/", "Country pages for costs, cities, visa logic and trade-offs."),
         _link("Asia visa guide", "/visas/", "Compare visa routes before choosing a destination."),
+        _link("Focused visa questions", "/guides/", "Long-tail answers for specific relocation decisions."),
         _link("Compare countries", "/compare/", "Side-by-side comparison for relocation decisions."),
         _link("Cost of living calculator", "/tools/cost-calculator/", "Check the monthly budget before planning a move."),
         _link("Budget planner", "/tools/budget-planner/", "Break relocation expenses into practical categories."),
         _link("Compare Asian cities", "/compare-cities/", "City-level comparison for choosing a base."),
     ]
+
+
+SOURCE_EXCLUDE_TERMS = (
+    "worldbank",
+    "api.worldbank",
+    "restcountries",
+    "flagcdn",
+    "github",
+    "localhost",
+    "127.0.0.1",
+)
+
+
+VISA_FACT_HINTS = [
+    (
+        ("japan-digital-nomad", "yaponiya-digital-nomad"),
+        [
+            ("Stay Length", "6 months"),
+            ("Extension", "No extension will be granted"),
+            ("Work Logic", "Remote work in Japan, not local employment"),
+        ],
+    ),
+    (
+        ("taiwan-gold-card",),
+        [
+            ("Validity", "1 year, 2 years or 3 years"),
+            ("Route Type", "Work permit, residence permit and visa combined"),
+        ],
+    ),
+    (
+        ("indonesia-e33g",),
+        [
+            ("Core Limit", "Remote work for an overseas employer"),
+            ("Planning Risk", "Local Indonesian employment is a separate issue"),
+        ],
+    ),
+    (
+        ("thailand-ltr",),
+        [
+            ("Route Type", "Long-term resident visa category"),
+            ("Planning Risk", "Eligibility depends on profile and documents"),
+        ],
+    ),
+    (
+        ("philippines-srrv",),
+        [
+            ("Benefit", "Multiple entry and indefinite stay"),
+            ("Core Check", "Deposit tier and age category"),
+        ],
+    ),
+    (
+        ("south-korea-workation", "yuzhnaya-koreya-workation"),
+        [
+            ("Visa Route", "F-1-D Workation"),
+            ("Core Limit", "Remote work route, not local employment"),
+        ],
+    ),
+    (
+        ("malaysia-de-rantau",),
+        [
+            ("Route", "DE Rantau Nomad Pass"),
+            ("Planning Check", "Income, work profile and location fit"),
+        ],
+    ),
+    (
+        ("singapore-one-pass",),
+        [
+            ("Validity", "5 years"),
+            ("Route Type", "Top talent pass"),
+        ],
+    ),
+    (
+        ("vietnam-evisa", "vietnam-evisa-guide"),
+        [
+            ("Stay Length", "Up to 90 days"),
+            ("Entry Type", "Single or multiple entry"),
+        ],
+    ),
+    (
+        ("sri-lanka-eta",),
+        [
+            ("Route Type", "ETA for short visits"),
+            ("Core Check", "Short-visit purpose and extension rules"),
+        ],
+    ),
+    (
+        ("india-e-tourist",),
+        [
+            ("Route Type", "e-Tourist Visa"),
+            ("Options", "30 days, 1 year or 5 years"),
+        ],
+    ),
+    (
+        ("uae-virtual-work",),
+        [
+            ("Route Type", "Virtual Work Residence"),
+            ("Validity", "One-year self-sponsored route"),
+        ],
+    ),
+]
+
+
+def extract_official_sources(content: str | None, *, limit: int = 6) -> list[dict[str, str]]:
+    if not content:
+        return []
+    sources: list[dict[str, str]] = []
+    for attrs, label in re.findall(r"<a\b([^>]*)>(.*?)</a>", content, flags=re.IGNORECASE | re.DOTALL):
+        href_match = re.search(r'\bhref=(["\'])(https?://.*?)\1', attrs, flags=re.IGNORECASE)
+        if not href_match:
+            continue
+        url = href_match.group(2)
+        lowered = url.lower()
+        if any(term in lowered for term in SOURCE_EXCLUDE_TERMS):
+            continue
+        title = strip_html(label) or url
+        if not any(item["url"] == url for item in sources):
+            sources.append({"title": trim_text(title, 90), "url": url})
+        if len(sources) >= limit:
+            break
+    return sources
+
+
+def matched_country_fact(text: str) -> sqlite3.Row | None:
+    lowered = text.lower()
+    for *keys, url, _en_title, _ru_title in COUNTRY_INTERNAL_LINKS:
+        if any(str(key).lower() in lowered for key in keys):
+            slug = url.rstrip("/").rsplit("/", 1)[-1]
+            return one("SELECT * FROM country_facts WHERE slug = ?", (slug,))
+    return None
+
+
+def post_seo_panel(row: sqlite3.Row, *, lang: str) -> dict:
+    text = f"{row['slug']} {strip_html(row['title'])} {strip_html(row['excerpt'] or '')}"
+    sources = extract_official_sources(row["content"])
+    country = matched_country_fact(text)
+    labels = {
+        "title": "Проверенные Факты Для Планирования" if lang == "ru" else "Checked Planning Facts",
+        "source_title": "Официальные Источники" if lang == "ru" else "Official Sources",
+        "source_note": (
+            "API и технические источники здесь не показываются: они используются только внутри сайта."
+            if lang == "ru"
+            else "Technical APIs are not shown here because they are internal data infrastructure."
+        ),
+        "checked": "Проверено" if lang == "ru" else "Checked",
+        "country": "Страна" if lang == "ru" else "Country",
+        "capital": "Столица" if lang == "ru" else "Capital",
+        "currency": "Валюта" if lang == "ru" else "Currency",
+        "internet": "Интернет Пользователи" if lang == "ru" else "Internet Users",
+        "official_links": "Официальные Ссылки" if lang == "ru" else "Official Links",
+    }
+    rows = [
+        {"label": labels["checked"], "value": "April 2026"},
+        {"label": labels["official_links"], "value": str(len(sources)) if sources else "1+"},
+    ]
+    if country:
+        rows.extend([
+            {"label": labels["country"], "value": country["name"]},
+            {"label": labels["capital"], "value": country["capital"]},
+            {"label": labels["currency"], "value": country["currency_code"]},
+        ])
+        if country["internet_pct"]:
+            rows.append({"label": labels["internet"], "value": f"{country['internet_pct']:.1f}%"})
+    slug = row["slug"].lower()
+    for patterns, facts in VISA_FACT_HINTS:
+        if any(pattern in slug for pattern in patterns):
+            rows.extend({"label": label, "value": value} for label, value in facts)
+            break
+    return {
+        "labels": labels,
+        "rows": rows[:8],
+        "sources": sources,
+        "country": country,
+    }
 
 
 def render_page_row(row: sqlite3.Row | dict, **kwargs):
@@ -620,6 +842,7 @@ def render_post_row(row: sqlite3.Row, *, lang: str):
         post=row,
         seo=seo,
         lang_code=lang,
+        article_seo_panel=post_seo_panel(row, lang=lang),
         related_posts=related_posts(row),
         internal_links=internal_links,
     )
@@ -743,18 +966,47 @@ def cost_of_living_asia():
     return render_page_row(row, breadcrumbs=[])
 
 
-def render_blog_index(*, lang: str):
+@app.route("/guides/")
+def guides_index():
+    row = page_or_404("guides")
+    return render_page_row(row, breadcrumbs=[], show_breadcrumbs=True)
+
+
+@app.route("/guides/<slug>/")
+def guide(slug: str):
+    row = page_or_404(slug, parent="guides")
+    return render_page_row(row, breadcrumbs=[("Guides", "/guides/")])
+
+
+def render_blog_index(*, lang: str, page: int = 1):
     is_ru = lang == "ru"
     path = "/ru/blog/" if is_ru else "/blog/"
+    query_page = request.args.get("page", type=int)
+    if query_page:
+        if query_page <= 1:
+            return redirect(path, 301)
+        return redirect(f"{path}page/{query_page}/", 301)
+    page = max(page, 1)
+    per_page = 10
     title = "Блог о релокации в Азию" if is_ru else "Asia Relocation Blog"
     description = (
         "Русскоязычные гайды по визам, странам и релокации в Азию на основе официальных источников."
         if is_ru else
         "Guides, comparisons and practical relocation advice for expats moving across Asia."
     )
+    total_posts = one("SELECT COUNT(*) AS count FROM posts WHERE lang = ?", (lang,))["count"]
+    total_pages = max((total_posts + per_page - 1) // per_page, 1)
+    if page > total_pages:
+        abort(404)
     posts = many(
-        "SELECT id, slug, title, excerpt, date, lang FROM posts WHERE lang = ? ORDER BY date DESC",
-        (lang,),
+        """
+        SELECT id, slug, title, excerpt, date, lang
+        FROM posts
+        WHERE lang = ?
+        ORDER BY date DESC, id DESC
+        LIMIT ? OFFSET ?
+        """,
+        (lang, per_page, (page - 1) * per_page),
     )
     alternates = [
         {"lang": "en", "url": absolute_url("/blog/")},
@@ -765,10 +1017,19 @@ def render_blog_index(*, lang: str):
         title=title,
         description=description,
         lang=lang,
-        canonical_path=path,
+        canonical_path=path if page == 1 else f"{path}page/{page}/",
         alternates=alternates,
         schema=[breadcrumb_schema([], title, path), collection_schema(title, description, path), organization_schema(), website_schema()],
     )
+    pagination = {
+        "page": page,
+        "per_page": per_page,
+        "total_posts": total_posts,
+        "total_pages": total_pages,
+        "base_path": path,
+        "prev_url": path if page == 2 else f"{path}page/{page - 1}/" if page > 2 else "",
+        "next_url": f"{path}page/{page + 1}/" if page < total_pages else "",
+    }
     return render_template(
         "blog.html",
         posts=posts,
@@ -779,6 +1040,7 @@ def render_blog_index(*, lang: str):
         blog_intro=description,
         internal_links=internal_links_for_blog(lang),
         read_more="Читать" if is_ru else "Read more",
+        pagination=pagination,
     )
 
 
@@ -787,9 +1049,23 @@ def blog():
     return render_blog_index(lang="en")
 
 
+@app.route("/blog/page/<int:page>/")
+def blog_page(page: int):
+    if page <= 1:
+        return redirect("/blog/", 301)
+    return render_blog_index(lang="en", page=page)
+
+
 @app.route("/ru/blog/")
 def blog_ru():
     return render_blog_index(lang="ru")
+
+
+@app.route("/ru/blog/page/<int:page>/")
+def blog_ru_page(page: int):
+    if page <= 1:
+        return redirect("/ru/blog/", 301)
+    return render_blog_index(lang="ru", page=page)
 
 
 @app.route("/blog/<slug>/")
@@ -888,6 +1164,9 @@ def how_we_verify_data():
 
 
 def sitemap_paths() -> list[tuple[str, str]]:
+    en_post_count = one("SELECT COUNT(*) AS count FROM posts WHERE lang = 'en'")["count"]
+    ru_post_count = one("SELECT COUNT(*) AS count FROM posts WHERE lang = 'ru'")["count"]
+    per_page = 10
     paths: list[tuple[str, str]] = [
         ("/", "daily"),
         ("/countries/", "weekly"),
@@ -897,14 +1176,22 @@ def sitemap_paths() -> list[tuple[str, str]]:
         ("/visas/", "weekly"),
         ("/best-countries-in-asia-to-move/", "monthly"),
         ("/cheapest-countries-in-asia/", "monthly"),
+        ("/guides/", "weekly"),
         ("/blog/", "daily"),
         ("/ru/blog/", "daily"),
         ("/about/", "monthly"),
         ("/editorial-policy/", "monthly"),
         ("/how-we-verify-data/", "monthly"),
     ]
+    for page_num in range(2, max((en_post_count + per_page - 1) // per_page, 1) + 1):
+        paths.append((f"/blog/page/{page_num}/", "daily"))
+    for page_num in range(2, max((ru_post_count + per_page - 1) // per_page, 1) + 1):
+        paths.append((f"/ru/blog/page/{page_num}/", "daily"))
     for row in many("SELECT link FROM pages WHERE link IS NOT NULL AND link != ''"):
-        paths.append((row["link"], "monthly"))
+        link = row["link"]
+        if link.startswith(SITE_URL):
+            link = link.removeprefix(SITE_URL) or "/"
+        paths.append((link, "monthly"))
     for row in many("SELECT slug, lang FROM posts ORDER BY date DESC"):
         prefix = "/blog" if row["lang"] == "en" else "/ru/blog"
         paths.append((f"{prefix}/{row['slug']}/", "weekly"))

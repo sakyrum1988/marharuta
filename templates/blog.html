@@ -32,6 +32,16 @@
   {% endif %}
 
   {% if posts %}
+    <div class="rta-blog-list-head">
+      <div>
+        <p class="rta-blog-kicker">{{ "Свежие материалы" if blog_lang == "ru" else "Latest Guides" }}</p>
+        <h2>{{ "Статьи и разборы" if blog_lang == "ru" else "Articles And Analysis" }}</h2>
+      </div>
+      {% if pagination %}
+      <p>{{ pagination.total_posts }} {{ "статей" if blog_lang == "ru" else "articles" }} · {{ "страница" if blog_lang == "ru" else "page" }} {{ pagination.page }} / {{ pagination.total_pages }}</p>
+      {% endif %}
+    </div>
+
     <div class="rta-blog-grid">
       {% for post in posts %}
       <a class="rta-blog-card" href="{{ blog_url_prefix | default('/blog') }}/{{ post['slug'] }}/">
@@ -48,6 +58,33 @@
       </a>
       {% endfor %}
     </div>
+
+    {% if pagination and pagination.total_pages > 1 %}
+    <nav class="rta-pagination" aria-label="Blog pagination">
+      {% if pagination.prev_url %}
+      <a class="rta-page-link" href="{{ pagination.prev_url }}">{{ "← Назад" if blog_lang == "ru" else "← Previous" }}</a>
+      {% else %}
+      <span class="rta-page-link is-disabled">{{ "← Назад" if blog_lang == "ru" else "← Previous" }}</span>
+      {% endif %}
+
+      <div class="rta-page-numbers">
+        {% for num in range(1, pagination.total_pages + 1) %}
+          {% set page_url = pagination.base_path if num == 1 else pagination.base_path ~ "page/" ~ num ~ "/" %}
+          {% if num == pagination.page %}
+          <span class="is-current" aria-current="page">{{ num }}</span>
+          {% else %}
+          <a href="{{ page_url }}">{{ num }}</a>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      {% if pagination.next_url %}
+      <a class="rta-page-link" href="{{ pagination.next_url }}">{{ "Вперёд →" if blog_lang == "ru" else "Next →" }}</a>
+      {% else %}
+      <span class="rta-page-link is-disabled">{{ "Вперёд →" if blog_lang == "ru" else "Next →" }}</span>
+      {% endif %}
+    </nav>
+    {% endif %}
   {% else %}
     <p class="rta-empty">{{ "Пока нет статей." if blog_lang == "ru" else "No posts yet." }}</p>
   {% endif %}

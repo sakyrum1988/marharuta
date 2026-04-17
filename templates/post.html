@@ -7,6 +7,32 @@
   <h1 class="sr-only">{{ post['title'] | striptags }}</h1>
   {{ post['content'] | wp_clean | safe }}
 
+  {% if article_seo_panel and article_seo_panel.rows %}
+  <section class="rta-seo-facts" aria-labelledby="article-facts-title">
+    <h2 id="article-facts-title">{{ article_seo_panel.labels.title }}</h2>
+    {% if article_seo_panel.country and article_seo_panel.country['flag_svg'] %}
+    <img class="rta-seo-facts-flag" src="{{ article_seo_panel.country['flag_svg'] }}" width="56" height="38" alt="{{ article_seo_panel.country['name'] }} flag">
+    {% endif %}
+    <div class="rta-seo-facts-table" role="table">
+      {% for row in article_seo_panel.rows %}
+      <div class="rta-seo-facts-row" role="row">
+        <strong role="cell">{{ row.label }}</strong>
+        <span role="cell">{{ row.value }}</span>
+      </div>
+      {% endfor %}
+    </div>
+    {% if article_seo_panel.sources %}
+    <h3>{{ article_seo_panel.labels.source_title }}</h3>
+    <ul class="rta-source-list">
+      {% for source in article_seo_panel.sources %}
+      <li><a href="{{ source.url }}" rel="nofollow noopener" target="_blank">{{ source.title }}</a></li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    <p>{{ article_seo_panel.labels.source_note }}</p>
+  </section>
+  {% endif %}
+
   {% if related_posts %}
   <section class="rta-related" aria-labelledby="related-posts-title">
     <h2 id="related-posts-title">{{ "Похожие статьи" if lang_code == "ru" else "Related Guides" }}</h2>
