@@ -15,6 +15,7 @@ app = Flask(__name__)
 SITE_NAME = "Relocate to Asia"
 SITE_URL = "https://www.marharuta.online"
 DEFAULT_OG_IMAGE = "/static/img/og-default.png"
+FAVICON_PATH = "/static/img/favicon.svg"
 
 
 @app.before_request
@@ -25,6 +26,13 @@ def redirect_to_www():
         url = request.url.replace("://marharuta.online", "://www.marharuta.online", 1)
         from flask import redirect
         return redirect(url, 301)
+
+
+@app.route("/favicon.ico")
+def favicon_ico():
+    return redirect(FAVICON_PATH, 301)
+
+
 DEFAULT_AUTHOR = "Relocate to Asia Editorial Team"
 DEFAULT_DESCRIPTION = (
     "Relocate to Asia helps expats compare countries, cities, visas and real-world "

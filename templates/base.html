@@ -9,6 +9,8 @@
   <meta name="robots" content="{{ seo.meta_robots if seo else "index,follow,max-image-preview:large" }}">
   <meta name="author" content="{{ seo.meta_author if seo else "Relocate to Asia" }}">
   <meta name="publisher" content="{{ seo.meta_publisher if seo else "Relocate to Asia" }}">
+  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+  <link rel="shortcut icon" href="/favicon.ico">
   <link rel="canonical" href="{{ seo.canonical_url if seo else request.url }}">
   {% if seo and seo.alternates %}
     {% for alternate in seo.alternates %}
