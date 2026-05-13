@@ -1,17 +1,17 @@
 ﻿{% extends "base.html" %}
 
-{% block title %}Page Not Found | Relocate to Asia{% endblock %}
+{% block title %}{{ seo.page_title if seo else "Page Not Found | Relocate to Asia" }}{% endblock %}
 
 {% block content %}
 <div class="rta-content">
   <section class="rta-404" aria-labelledby="not-found-title">
     <div class="rta-404-code">404</div>
-    <h1 id="not-found-title">Page not found</h1>
-    <p>The page may have moved, or the link might be outdated. Start from a trusted section and keep going.</p>
+    <h1 id="not-found-title">{{ "Страница не найдена" if lang_code == "ru" else "Page not found" }}</h1>
+    <p>{{ "Страница могла переехать, а ссылка могла устареть. Лучше вернуться в проверенный раздел и продолжить оттуда." if lang_code == "ru" else "The page may have moved, or the link might be outdated. Start from a trusted section and keep going." }}</p>
     <div class="rta-404-actions">
-      <a class="rta-btn-p" href="/">Go to homepage</a>
-      <a class="rta-btn-s" href="/countries/">Browse countries</a>
-      <a class="rta-btn-s" href="/blog/">Read the blog</a>
+      <a class="rta-btn-p" href="{{ '/ru/' if lang_code == 'ru' else '/' }}">{{ "На главную" if lang_code == "ru" else "Go to homepage" }}</a>
+      <a class="rta-btn-s" href="{{ '/ru/countries/' if lang_code == 'ru' else '/countries/' }}">{{ "Смотреть страны" if lang_code == "ru" else "Browse countries" }}</a>
+      <a class="rta-btn-s" href="{{ '/ru/blog/' if lang_code == 'ru' else '/blog/' }}">{{ "Читать блог" if lang_code == "ru" else "Read the blog" }}</a>
     </div>
   </section>
 </div>

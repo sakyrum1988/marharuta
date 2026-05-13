@@ -9,22 +9,33 @@
 
   {% if facts %}
   <section class="rta-country-facts" aria-labelledby="country-facts-title">
-    <h2 id="country-facts-title">Country Facts For Relocation Planning</h2>
+    {% set labels = labels if labels is defined else {
+      'facts_title': 'Country Facts For Relocation Planning',
+      'capital': 'Capital',
+      'currency': 'Currency',
+      'languages': 'Languages',
+      'internet': 'Internet Users',
+      'life_expectancy': 'Life Expectancy',
+      'wb_year': 'World Bank Year',
+      'facts_note': 'Use these facts as planning context, then compare visas, housing and healthcare before making a paid commitment.',
+      'explore_next': 'Explore Next'
+    } %}
+    <h2 id="country-facts-title">{{ labels.facts_title }}</h2>
     <div class="rta-country-facts-grid">
-      {% if facts['capital'] %}<div><strong>{{ facts['capital'] }}</strong><span>Capital</span></div>{% endif %}
-      {% if facts['currency_code'] %}<div><strong>{{ facts['currency_code'] }}</strong><span>Currency</span></div>{% endif %}
-      {% if facts['languages'] %}<div><strong>{{ facts['languages'] }}</strong><span>Languages</span></div>{% endif %}
-      {% if facts['internet_pct'] %}<div><strong>{{ "%.1f"|format(facts['internet_pct']) }}%</strong><span>Internet Users</span></div>{% endif %}
-      {% if facts['life_expectancy'] %}<div><strong>{{ "%.1f"|format(facts['life_expectancy']) }}</strong><span>Life Expectancy</span></div>{% endif %}
-      {% if facts['wb_year'] %}<div><strong>{{ facts['wb_year'] }}</strong><span>World Bank Year</span></div>{% endif %}
+      {% if facts['capital'] %}<div><strong>{{ facts['capital'] }}</strong><span>{{ labels.capital }}</span></div>{% endif %}
+      {% if facts['currency_code'] %}<div><strong>{{ facts['currency_code'] }}</strong><span>{{ labels.currency }}</span></div>{% endif %}
+      {% if facts['languages'] %}<div><strong>{{ facts['languages'] }}</strong><span>{{ labels.languages }}</span></div>{% endif %}
+      {% if facts['internet_pct'] %}<div><strong>{{ "%.1f"|format(facts['internet_pct']) }}%</strong><span>{{ labels.internet }}</span></div>{% endif %}
+      {% if facts['life_expectancy'] %}<div><strong>{{ "%.1f"|format(facts['life_expectancy']) }}</strong><span>{{ labels.life_expectancy }}</span></div>{% endif %}
+      {% if facts['wb_year'] %}<div><strong>{{ facts['wb_year'] }}</strong><span>{{ labels.wb_year }}</span></div>{% endif %}
     </div>
-    <p>Use these facts as planning context, then compare visas, housing and healthcare before making a paid commitment.</p>
+    <p>{{ labels.facts_note }}</p>
   </section>
   {% endif %}
 
   {% if internal_links %}
   <section class="rta-linkhub" aria-labelledby="internal-links-title">
-    <h2 id="internal-links-title">Explore Next</h2>
+    <h2 id="internal-links-title">{{ labels.explore_next if labels is defined else 'Explore Next' }}</h2>
     <div class="rta-linkhub-grid">
       {% for link in internal_links %}
       <a class="rta-linkhub-card" href="{{ link['url'] }}">

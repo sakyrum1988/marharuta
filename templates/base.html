@@ -124,6 +124,49 @@
       flex-wrap: nowrap;
     }
 
+    .rta-lang-switcher {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: 8px;
+      padding: 4px;
+      border: 1px solid #d6dbe4;
+      border-radius: 999px;
+      background: #f8fafc;
+      flex-shrink: 0;
+    }
+
+    .rta-lang-link,
+    .rta-lang-current {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 38px;
+      height: 30px;
+      padding: 0 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .rta-lang-link {
+      color: #4b5d73;
+      transition: background .15s, color .15s;
+    }
+
+    .rta-lang-link:hover {
+      background: #eef4ff;
+      color: #005bbb;
+    }
+
+    .rta-lang-current {
+      background: #071b36;
+      color: #fff;
+    }
+
     .rta-nav-links > a,
     .rta-nav-trigger {
       display: inline-flex;
@@ -1257,6 +1300,11 @@
         padding: 8px 0 16px;
       }
 
+      .rta-lang-switcher {
+        margin: 8px 20px 0;
+        align-self: flex-start;
+      }
+
       .rta-nav--open .rta-nav-links {
         display: flex;
       }
@@ -1808,6 +1856,107 @@
       line-height: 1.55;
     }
 
+    .rta-article {
+      max-width: 980px;
+      margin: 0 auto;
+      color: var(--ink);
+    }
+
+    .rta-article .rta-hero-card {
+      margin-bottom: 32px;
+      padding: 46px 40px;
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, #0d1d34, #1c4174);
+      color: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .rta-article .rta-hero-card h1 {
+      margin: 14px 0 12px;
+      color: #fff;
+      font-size: clamp(34px, 5vw, 52px);
+      line-height: 1.08;
+    }
+
+    .rta-article .rta-hero-card p {
+      max-width: 760px;
+      margin: 0;
+      color: rgba(255,255,255,.88);
+      font-size: 18px;
+      line-height: 1.65;
+    }
+
+    .rta-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 14px;
+      border: 1px solid rgba(255,255,255,.35);
+      border-radius: 999px;
+      background: rgba(255,255,255,.12);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .rta-note {
+      margin: 24px 0;
+      padding: 18px 20px;
+      border: 1px solid #f2c36b;
+      border-radius: var(--radius);
+      background: #fff7e6;
+      color: #7a4b00;
+      line-height: 1.7;
+    }
+
+    .rta-article h2 {
+      margin: 34px 0 12px;
+      color: var(--ink);
+      font-size: 30px;
+      line-height: 1.18;
+    }
+
+    .rta-article p {
+      margin: 0 0 18px;
+      color: #243b5a;
+      font-size: 17px;
+      line-height: 1.8;
+    }
+
+    .rta-fact-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin: 18px 0;
+    }
+
+    .rta-fact-grid > div {
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+    }
+
+    .rta-fact-grid strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+    }
+
+    .rta-fact-grid span {
+      color: var(--ink);
+      font-weight: 800;
+    }
+
+    .rta-muted {
+      color: var(--muted) !important;
+      font-size: 14px !important;
+    }
+
     .rta-country-facts {
       max-width: 1120px;
       margin: 34px auto 0;
@@ -2072,10 +2221,19 @@
     @media (max-width: 720px) {
       .rta-related-grid,
       .rta-linkhub-grid,
+      .rta-fact-grid,
       .rta-country-facts-grid,
       .rta-seo-facts-table,
       .guide-grid {
         grid-template-columns: 1fr;
+      }
+
+      .rta-article .rta-hero-card {
+        padding: 32px 22px;
+      }
+
+      .rta-article .rta-hero-card h1 {
+        font-size: 32px;
       }
 
       .rta-seo-facts {
@@ -2099,61 +2257,149 @@
   {% block head %}{% endblock %}
 </head>
 <body>
+{% set is_ru_page = request.path.startswith('/ru/') %}
+{% set compare_prefix = '/ru/compare' if is_ru_page else '/compare' %}
+{% set countries_prefix = '/ru/countries' if is_ru_page else '/countries' %}
+{% set tools_prefix = '/ru/tools' if is_ru_page else '/tools' %}
+{% set guides_prefix = '/ru/guides' if is_ru_page else '/guides' %}
+{% set blog_index_url = '/ru/blog/' if is_ru_page else '/blog/' %}
+{% set home_url = '/ru/' if is_ru_page else '/' %}
+{% set visas_url = '/ru/visas/' if is_ru_page else '/visas/' %}
+{% set compare_cities_url = '/ru/compare-cities/' if is_ru_page else '/compare-cities/' %}
+{% set move_to_asia_url = '/ru/move-to-asia/' if is_ru_page else '/move-to-asia/' %}
+{% set dn_visas_url = '/ru/digital-nomad-visas-asia/' if is_ru_page else '/digital-nomad-visas-asia/' %}
+{% set retire_asia_url = '/ru/retire-in-asia/' if is_ru_page else '/retire-in-asia/' %}
+{% set cola_asia_url = '/ru/cost-of-living-asia/' if is_ru_page else '/cost-of-living-asia/' %}
+{% set best_countries_url = '/ru/best-countries-in-asia-to-move/' if is_ru_page else '/best-countries-in-asia-to-move/' %}
+{% set cheapest_countries_url = '/ru/cheapest-countries-in-asia/' if is_ru_page else '/cheapest-countries-in-asia/' %}
+{% set about_url = '/ru/about/' if is_ru_page else '/about/' %}
+{% set editorial_policy_url = '/ru/editorial-policy/' if is_ru_page else '/editorial-policy/' %}
+{% set verify_data_url = '/ru/how-we-verify-data/' if is_ru_page else '/how-we-verify-data/' %}
+{% set current_lang = 'ru' if is_ru_page else 'en' %}
+{% set alternate_lang = 'en' if is_ru_page else 'ru' %}
+{% set nav_countries = 'Страны' if is_ru_page else 'Countries' %}
+{% set nav_visas = 'Визы' if is_ru_page else 'Visas' %}
+{% set nav_guides = 'Гайды' if is_ru_page else 'Guides' %}
+{% set nav_compare = 'Сравнения' if is_ru_page else 'Compare' %}
+{% set nav_tools = 'Инструменты' if is_ru_page else 'Tools' %}
+{% set nav_blog = 'Блог' if is_ru_page else 'Blog' %}
+{% set nav_menu = 'Меню' if is_ru_page else 'Menu' %}
+{% set footer_tagline = 'Практический гид по релокации в Азию: страны, визы, города, расходы и инструменты планирования.' if is_ru_page else 'Your complete guide to relocating across Asia — costs, visas, cities and tools.' %}
+{% set footer_countries = 'Страны' if is_ru_page else 'Countries' %}
+{% set footer_tools = 'Инструменты' if is_ru_page else 'Tools' %}
+{% set footer_resources = 'Материалы' if is_ru_page else 'Resources' %}
+{% set footer_all_countries = 'Все страны →' if is_ru_page else 'All countries →' %}
+{% set compare_cities_label = 'Сравнить города' if is_ru_page else 'Compare Cities' %}
+{% set compare_countries_label = 'Сравнить страны' if is_ru_page else 'Compare Countries' %}
+{% set visa_guide_label = 'Гид по визам' if is_ru_page else 'Visa Guide' %}
+{% set move_to_asia_label = 'Переезд в Азию' if is_ru_page else 'Move to Asia' %}
+{% set dn_visas_label = 'Визы digital nomad в Азии' if is_ru_page else 'Digital Nomad Visas Asia' %}
+{% set retire_asia_label = 'Пенсия в Азии' if is_ru_page else 'Retire in Asia' %}
+{% set cola_asia_label = 'Стоимость жизни в Азии' if is_ru_page else 'Cost of Living Asia' %}
+{% set focused_guides_label = 'Точечные гайды' if is_ru_page else 'Focused Guides' %}
+{% set best_countries_label = 'Лучшие страны' if is_ru_page else 'Best Countries' %}
+{% set cheapest_countries_label = 'Самые дешёвые страны' if is_ru_page else 'Cheapest Countries' %}
+{% set about_label = 'О проекте' if is_ru_page else 'About' %}
+{% set editorial_policy_label = 'Редакционная политика' if is_ru_page else 'Editorial Policy' %}
+{% set verify_data_label = 'Как мы проверяем данные' if is_ru_page else 'How We Verify Data' %}
+{% set lang_ns = namespace(url='', show=false) %}
+{% if seo and seo.alternates %}
+  {% for alternate in seo.alternates %}
+    {% if alternate.lang == alternate_lang %}
+      {% set lang_ns.url = alternate.url
+        | replace('https://www.marharuta.online', '')
+        | replace('http://www.marharuta.online', '')
+        | replace('http://127.0.0.1:5000', '')
+        | replace('http://localhost:5000', '') %}
+      {% set lang_ns.show = true %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+{% if not lang_ns.url %}
+  {% if is_ru_page %}
+    {% if request.path.startswith('/ru/compare/') %}
+      {% set lang_ns.url = '/compare/' if request.path == '/ru/compare/' else request.path | replace('/ru/compare/', '/compare/', 1) %}
+      {% set lang_ns.show = true %}
+    {% elif request.path.startswith('/ru/blog/') %}
+      {% set lang_ns.url = '/blog/' if request.path == '/ru/blog/' else request.path | replace('/ru/blog/', '/blog/', 1) %}
+      {% set lang_ns.show = true %}
+    {% endif %}
+  {% else %}
+    {% if request.path.startswith('/compare/') %}
+      {% set lang_ns.url = '/ru/compare/' if request.path == '/compare/' else request.path | replace('/compare/', '/ru/compare/', 1) %}
+      {% set lang_ns.show = true %}
+    {% elif request.path.startswith('/blog/') %}
+      {% set lang_ns.url = '/ru/blog/' if request.path == '/blog/' else request.path | replace('/blog/', '/ru/blog/', 1) %}
+      {% set lang_ns.show = true %}
+    {% endif %}
+  {% endif %}
+{% endif %}
 
 <nav class="rta-nav" id="rta-nav">
   <div class="rta-nav-inner">
-    <a href="/" class="rta-logo">Relocate to Asia</a>
-    <button class="rta-burger" id="rta-burger" aria-label="Menu" aria-expanded="false">
+    <a href="{{ home_url }}" class="rta-logo">Relocate to Asia</a>
+    <button class="rta-burger" id="rta-burger" aria-label="{{ nav_menu }}" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
     <div class="rta-nav-links">
       <div class="rta-nav-item">
-        <a class="rta-nav-trigger" href="/countries/">Countries</a>
+        <a class="rta-nav-trigger" href="{{ countries_prefix }}/">{{ nav_countries }}</a>
         <div class="rta-dropdown">
-          <a href="/countries/move-to-thailand/">Thailand</a>
-          <a href="/countries/move-to-malaysia/">Malaysia</a>
-          <a href="/countries/move-to-bali/">Bali</a>
-          <a href="/countries/move-to-vietnam/">Vietnam</a>
-          <a href="/countries/move-to-taiwan/">Taiwan</a>
+          <a href="{{ countries_prefix }}/move-to-thailand/">{{ 'Таиланд' if is_ru_page else 'Thailand' }}</a>
+          <a href="{{ countries_prefix }}/move-to-malaysia/">{{ 'Малайзия' if is_ru_page else 'Malaysia' }}</a>
+          <a href="{{ countries_prefix }}/move-to-bali/">{{ 'Бали' if is_ru_page else 'Bali' }}</a>
+          <a href="{{ countries_prefix }}/move-to-vietnam/">{{ 'Вьетнам' if is_ru_page else 'Vietnam' }}</a>
+          <a href="{{ countries_prefix }}/move-to-taiwan/">{{ 'Тайвань' if is_ru_page else 'Taiwan' }}</a>
         </div>
       </div>
-      <a href="/visas/">Visas</a>
+      <a href="{{ visas_url }}">{{ nav_visas }}</a>
       <div class="rta-nav-item">
-        <a class="rta-nav-trigger" href="/guides/">Guides</a>
+        <a class="rta-nav-trigger" href="{{ guides_prefix }}/">{{ nav_guides }}</a>
         <div class="rta-dropdown rta-dropdown--wide">
-          <a href="/guides/can-you-extend-japan-digital-nomad-visa/">Can You Extend Japan Digital Nomad Visa?</a>
-          <a href="/guides/japan-digital-nomad-visa-income-requirement/">Japan Digital Nomad Visa Income</a>
-          <a href="/guides/thailand-dtv-vs-ltr-visa/">Thailand DTV vs LTR Visa</a>
-          <a href="/guides/malaysia-de-rantau-vs-thailand-dtv/">Malaysia DE Rantau vs Thailand DTV</a>
-          <a href="/guides/taiwan-gold-card-income-requirement/">Taiwan Gold Card Income</a>
-          <a href="/guides/best-asian-countries-with-easy-long-stay-visas/">Easy Long-Stay Visas In Asia</a>
-          <a href="/guides/where-to-live-in-asia-on-1500-a-month/">Asia On $1500 A Month</a>
-          <a href="/guides/best-asian-countries-for-remote-workers-with-family/">Remote Workers With Family</a>
-          <a href="/guides/philippines-srrv-vs-thailand-retirement-visa/">Philippines SRRV vs Thailand Retirement</a>
-          <a href="/guides/vietnam-evisa-vs-thailand-dtv/">Vietnam E-Visa vs Thailand DTV</a>
+          <a href="{{ guides_prefix }}/can-you-extend-japan-digital-nomad-visa/">{{ 'Можно ли продлить визу digital nomad в Японии?' if is_ru_page else 'Can You Extend Japan Digital Nomad Visa?' }}</a>
+          <a href="{{ guides_prefix }}/japan-digital-nomad-visa-income-requirement/">{{ 'Требование к доходу для Japan Digital Nomad Visa' if is_ru_page else 'Japan Digital Nomad Visa Income' }}</a>
+          <a href="{{ guides_prefix }}/thailand-dtv-vs-ltr-visa/">{{ 'Thailand DTV или LTR Visa' if is_ru_page else 'Thailand DTV vs LTR Visa' }}</a>
+          <a href="{{ guides_prefix }}/malaysia-de-rantau-vs-thailand-dtv/">{{ 'Malaysia DE Rantau или Thailand DTV' if is_ru_page else 'Malaysia DE Rantau vs Thailand DTV' }}</a>
+          <a href="{{ guides_prefix }}/taiwan-gold-card-income-requirement/">{{ 'Требование к доходу для Taiwan Gold Card' if is_ru_page else 'Taiwan Gold Card Income' }}</a>
+          <a href="{{ guides_prefix }}/best-asian-countries-with-easy-long-stay-visas/">{{ 'Простые long-stay визы в Азии' if is_ru_page else 'Easy Long-Stay Visas In Asia' }}</a>
+          <a href="{{ guides_prefix }}/where-to-live-in-asia-on-1500-a-month/">{{ 'Где жить в Азии на $1500 в месяц' if is_ru_page else 'Asia On $1500 A Month' }}</a>
+          <a href="{{ guides_prefix }}/best-asian-countries-for-remote-workers-with-family/">{{ 'Страны Азии для удалёнщиков с семьёй' if is_ru_page else 'Remote Workers With Family' }}</a>
+          <a href="{{ guides_prefix }}/philippines-srrv-vs-thailand-retirement-visa/">{{ 'Philippines SRRV или пенсия в Таиланде' if is_ru_page else 'Philippines SRRV vs Thailand Retirement' }}</a>
+          <a href="{{ guides_prefix }}/vietnam-evisa-vs-thailand-dtv/">{{ 'Vietnam eVisa или Thailand DTV' if is_ru_page else 'Vietnam E-Visa vs Thailand DTV' }}</a>
         </div>
       </div>
       <div class="rta-nav-item">
-        <a class="rta-nav-trigger" href="/compare/">Compare</a>
+        <a class="rta-nav-trigger" href="{{ compare_prefix }}/">{{ nav_compare }}</a>
         <div class="rta-dropdown">
-          <a href="/compare/thailand-vs-malaysia/">Thailand vs Malaysia</a>
-          <a href="/compare/bali-vs-thailand/">Bali vs Thailand</a>
-          <a href="/compare/japan-vs-taiwan/">Japan vs Taiwan</a>
-          <a href="/compare/thailand-vs-vietnam/">Thailand vs Vietnam</a>
-          <a href="/compare-cities/">Compare Cities</a>
+          <a href="{{ compare_prefix }}/thailand-vs-malaysia/">{{ 'Таиланд vs Малайзия' if is_ru_page else 'Thailand vs Malaysia' }}</a>
+          <a href="{{ compare_prefix }}/bali-vs-thailand/">{{ 'Бали vs Таиланд' if is_ru_page else 'Bali vs Thailand' }}</a>
+          <a href="{{ compare_prefix }}/japan-vs-taiwan/">{{ 'Япония vs Тайвань' if is_ru_page else 'Japan vs Taiwan' }}</a>
+          <a href="{{ compare_prefix }}/thailand-vs-vietnam/">{{ 'Таиланд vs Вьетнам' if is_ru_page else 'Thailand vs Vietnam' }}</a>
+          <a href="{{ compare_cities_url }}">{{ compare_cities_label }}</a>
         </div>
       </div>
       <div class="rta-nav-item">
-        <a class="rta-nav-trigger" href="/tools/">Tools</a>
+        <a class="rta-nav-trigger" href="{{ tools_prefix }}/">{{ nav_tools }}</a>
         <div class="rta-dropdown">
-          <a href="/tools/cost-calculator/">Cost of Living Calculator</a>
-          <a href="/tools/budget-planner/">Budget Planner</a>
-          <a href="/best-countries-in-asia-to-move/">Best Countries</a>
-          <a href="/cheapest-countries-in-asia/">Cheapest Countries</a>
-          <a href="/cost-of-living-asia/">Cost of Living Asia</a>
+          <a href="{{ tools_prefix }}/cost-calculator/">{{ 'Калькулятор стоимости жизни' if is_ru_page else 'Cost of Living Calculator' }}</a>
+          <a href="{{ tools_prefix }}/budget-planner/">{{ 'Планировщик бюджета' if is_ru_page else 'Budget Planner' }}</a>
+          <a href="{{ best_countries_url }}">{{ best_countries_label }}</a>
+          <a href="{{ cheapest_countries_url }}">{{ cheapest_countries_label }}</a>
+          <a href="{{ cola_asia_url }}">{{ cola_asia_label }}</a>
         </div>
       </div>
-      <a href="/blog/">Blog</a>
+      <a href="{{ blog_index_url }}">{{ nav_blog }}</a>
+      {% if lang_ns.show %}
+      <div class="rta-lang-switcher" aria-label="{{ 'Переключатель языка' if is_ru_page else 'Language switcher' }}">
+        {% if current_lang == 'en' %}
+          <span class="rta-lang-current">EN</span>
+          <a class="rta-lang-link" href="{{ lang_ns.url }}" hreflang="ru" lang="ru">RU</a>
+        {% else %}
+          <a class="rta-lang-link" href="{{ lang_ns.url }}" hreflang="en" lang="en">EN</a>
+          <span class="rta-lang-current">RU</span>
+        {% endif %}
+      </div>
+      {% endif %}
     </div>
   </div>
 </nav>
@@ -2166,41 +2412,41 @@
   <div class="rta-footer-inner">
     <div class="rta-footer-col">
       <div class="rta-footer-logo">🌏 Relocate to Asia</div>
-      <p>Your complete guide to relocating across Asia — costs, visas, cities and tools.</p>
+      <p>{{ footer_tagline }}</p>
     </div>
     <div class="rta-footer-col">
-      <div class="rta-footer-heading">Countries</div>
-      <a href="/countries/move-to-thailand/">Thailand</a>
-      <a href="/countries/move-to-malaysia/">Malaysia</a>
-      <a href="/countries/move-to-bali/">Bali</a>
-      <a href="/countries/move-to-vietnam/">Vietnam</a>
-      <a href="/countries/move-to-taiwan/">Taiwan</a>
-      <a href="/countries/">All countries →</a>
+      <div class="rta-footer-heading">{{ footer_countries }}</div>
+      <a href="{{ countries_prefix }}/move-to-thailand/">{{ 'Таиланд' if is_ru_page else 'Thailand' }}</a>
+      <a href="{{ countries_prefix }}/move-to-malaysia/">{{ 'Малайзия' if is_ru_page else 'Malaysia' }}</a>
+      <a href="{{ countries_prefix }}/move-to-bali/">{{ 'Бали' if is_ru_page else 'Bali' }}</a>
+      <a href="{{ countries_prefix }}/move-to-vietnam/">{{ 'Вьетнам' if is_ru_page else 'Vietnam' }}</a>
+      <a href="{{ countries_prefix }}/move-to-taiwan/">{{ 'Тайвань' if is_ru_page else 'Taiwan' }}</a>
+      <a href="{{ countries_prefix }}/">{{ footer_all_countries }}</a>
     </div>
     <div class="rta-footer-col">
-      <div class="rta-footer-heading">Tools</div>
-      <a href="/tools/cost-calculator/">Cost of Living Calculator</a>
-      <a href="/tools/budget-planner/">Budget Planner</a>
-      <a href="/compare-cities/">Compare Cities</a>
-      <a href="/compare/">Compare Countries</a>
-      <a href="/visas/">Visa Guide</a>
+      <div class="rta-footer-heading">{{ footer_tools }}</div>
+      <a href="{{ tools_prefix }}/cost-calculator/">{{ 'Калькулятор стоимости жизни' if is_ru_page else 'Cost of Living Calculator' }}</a>
+      <a href="{{ tools_prefix }}/budget-planner/">{{ 'Планировщик бюджета' if is_ru_page else 'Budget Planner' }}</a>
+      <a href="{{ compare_cities_url }}">{{ compare_cities_label }}</a>
+      <a href="{{ compare_prefix }}/">{{ compare_countries_label }}</a>
+      <a href="{{ visas_url }}">{{ visa_guide_label }}</a>
     </div>
     <div class="rta-footer-col">
-      <div class="rta-footer-heading">Resources</div>
-      <a href="/blog/">Blog</a>
-      <a href="/move-to-asia/">Move to Asia</a>
-      <a href="/digital-nomad-visas-asia/">Digital Nomad Visas Asia</a>
-      <a href="/retire-in-asia/">Retire in Asia</a>
-      <a href="/cost-of-living-asia/">Cost of Living Asia</a>
-      <a href="/guides/">Focused Guides</a>
-      <a href="/best-countries-in-asia-to-move/">Best Countries</a>
-      <a href="/cheapest-countries-in-asia/">Cheapest Countries</a>
-      <a href="/about/">About</a>
-      <a href="/editorial-policy/">Editorial Policy</a>
-      <a href="/how-we-verify-data/">How We Verify Data</a>
+      <div class="rta-footer-heading">{{ footer_resources }}</div>
+      <a href="{{ blog_index_url }}">{{ nav_blog }}</a>
+      <a href="{{ move_to_asia_url }}">{{ move_to_asia_label }}</a>
+      <a href="{{ dn_visas_url }}">{{ dn_visas_label }}</a>
+      <a href="{{ retire_asia_url }}">{{ retire_asia_label }}</a>
+      <a href="{{ cola_asia_url }}">{{ cola_asia_label }}</a>
+      <a href="{{ guides_prefix }}/">{{ focused_guides_label }}</a>
+      <a href="{{ best_countries_url }}">{{ best_countries_label }}</a>
+      <a href="{{ cheapest_countries_url }}">{{ cheapest_countries_label }}</a>
+      <a href="{{ about_url }}">{{ about_label }}</a>
+      <a href="{{ editorial_policy_url }}">{{ editorial_policy_label }}</a>
+      <a href="{{ verify_data_url }}">{{ verify_data_label }}</a>
     </div>
   </div>
-  <div class="rta-footer-bottom">© 2026 Relocate to Asia. All rights reserved.</div>
+  <div class="rta-footer-bottom">© 2026 Relocate to Asia. {{ 'Все права защищены.' if is_ru_page else 'All rights reserved.' }}</div>
 </footer>
 
 {% block scripts %}{% endblock %}

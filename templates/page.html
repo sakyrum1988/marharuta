@@ -4,20 +4,21 @@
 
 {% block content %}
 <div class="rta-content">
+  {% set resolved_home_url = home_url if home_url is defined else ('/ru/' if lang_code == 'ru' else '/') %}
   {% if breadcrumbs is defined and breadcrumbs %}
   <nav class="rta-breadcrumbs" aria-label="Breadcrumb">
-    <a href="/">Home</a>
+    <a href="{{ resolved_home_url }}">{{ home_label if home_label is defined else 'Home' }}</a>
     {% for label, url in breadcrumbs %}
-      <span aria-hidden="true">›</span>
+      <span aria-hidden="true">&rsaquo;</span>
       <a href="{{ url }}">{{ label }}</a>
     {% endfor %}
-    <span aria-hidden="true">›</span>
+    <span aria-hidden="true">&rsaquo;</span>
     <span>{{ page['title'] | striptags }}</span>
   </nav>
   {% elif show_breadcrumbs is defined and show_breadcrumbs %}
   <nav class="rta-breadcrumbs" aria-label="Breadcrumb">
-    <a href="/">Home</a>
-    <span aria-hidden="true">›</span>
+    <a href="{{ resolved_home_url }}">{{ home_label if home_label is defined else 'Home' }}</a>
+    <span aria-hidden="true">&rsaquo;</span>
     <span>{{ page['title'] | striptags }}</span>
   </nav>
   {% endif %}
@@ -25,9 +26,9 @@
   {% if '<h1' not in (page['content'] or '')|lower %}<h1 class="sr-only">{{ page['title'] }}</h1>{% endif %}
   {{ page['content'] | wp_clean | safe }}
 
-  {% if internal_links %}
+  {% if internal_links and (show_internal_links is not defined or show_internal_links) %}
   <section class="rta-linkhub" aria-labelledby="internal-links-title">
-    <h2 id="internal-links-title">Explore Next</h2>
+    <h2 id="internal-links-title">{{ explore_next_label if explore_next_label is defined else 'Explore Next' }}</h2>
     <div class="rta-linkhub-grid">
       {% for link in internal_links %}
       <a class="rta-linkhub-card" href="{{ link['url'] }}">
