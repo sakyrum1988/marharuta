@@ -17,6 +17,7 @@ SITE_NAME = "Relocate to Asia"
 SITE_URL = "https://www.marharuta.online"
 DEFAULT_OG_IMAGE = "/static/img/og-default.png"
 FAVICON_PATH = "/static/img/favicon.svg"
+GOOGLE_SITE_VERIFICATION_FILE = "google0cbfacb558cd5e85.html"
 
 
 @app.before_request
@@ -32,6 +33,14 @@ def redirect_to_www():
 @app.route("/favicon.ico")
 def favicon_ico():
     return redirect(FAVICON_PATH, 301)
+
+
+@app.route(f"/{GOOGLE_SITE_VERIFICATION_FILE}")
+def google_site_verification():
+    verification_path = APP_DIR / GOOGLE_SITE_VERIFICATION_FILE
+    if not verification_path.exists():
+        abort(404)
+    return Response(verification_path.read_text(encoding="utf-8"), mimetype="text/html")
 
 
 DEFAULT_AUTHOR = "Relocate to Asia Editorial Team"
