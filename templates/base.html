@@ -2089,6 +2089,299 @@
       font-size: 14px;
     }
 
+    .rta-trust-box {
+      margin: 34px 0 0;
+      padding: 24px;
+      border: 1px solid #d7e4f4;
+      border-radius: var(--radius);
+      background: #f8fbff;
+      box-shadow: 0 14px 34px rgba(15,52,96,.08);
+    }
+
+    .rta-trust-eyebrow {
+      margin: 0 0 8px;
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .rta-trust-box h2 {
+      margin: 0 0 16px;
+      color: var(--ink);
+      font-size: 24px;
+      line-height: 1.25;
+    }
+
+    .rta-trust-box h2 a {
+      color: inherit;
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 4px;
+    }
+
+    .rta-trust-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .rta-trust-grid div {
+      min-width: 0;
+      padding: 13px 14px;
+      border: 1px solid #e2eaf5;
+      border-radius: var(--radius);
+      background: #fff;
+    }
+
+    .rta-trust-grid strong {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .rta-trust-grid span {
+      display: block;
+      color: var(--ink);
+      font-weight: 700;
+      overflow-wrap: anywhere;
+    }
+
+    .rta-trust-box p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .rta-trust-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .rta-trust-actions a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 38px;
+      padding: 8px 12px;
+      border: 1px solid #bfd3ee;
+      border-radius: var(--radius);
+      color: var(--blue);
+      font-size: 14px;
+      font-weight: 800;
+      text-decoration: none;
+      background: #fff;
+    }
+
+    .rta-depth-panel {
+      margin: 34px 0 0;
+      padding: 28px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .rta-depth-panel h2 {
+      margin: 0 0 12px;
+      color: var(--ink);
+      font-size: 28px;
+      line-height: 1.2;
+    }
+
+    .rta-article-expansion {
+      margin: 34px 0 0;
+      padding: 30px;
+      border: 1px solid #d9e6f6;
+      border-radius: var(--radius);
+      background: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .rta-article-expansion h2 {
+      margin: 0 0 14px;
+      color: var(--ink);
+      font-size: 30px;
+      line-height: 1.2;
+    }
+
+    .rta-article-expansion h3 {
+      margin: 26px 0 10px;
+      color: var(--ink);
+      font-size: 22px;
+      line-height: 1.25;
+    }
+
+    .rta-article-expansion p {
+      margin: 0 0 16px;
+      color: #253b5c;
+      font-size: 17px;
+      line-height: 1.82;
+    }
+
+    .rta-article-lead {
+      max-width: 880px;
+      font-size: 18px;
+    }
+
+    .rta-article-checklist {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin: 24px 0;
+    }
+
+    .rta-article-checklist div {
+      padding: 15px 16px;
+      border: 1px solid #dbe7f5;
+      border-radius: var(--radius);
+      background: #f8fbff;
+      color: var(--ink);
+      font-weight: 700;
+      line-height: 1.55;
+    }
+
+    .rta-article-closing {
+      padding-top: 8px;
+      border-top: 1px solid #e4edf8;
+      font-weight: 700;
+    }
+
+    .rta-source-panel {
+      margin: 34px 0 0;
+      padding: 28px;
+      border: 1px solid #d7e3f3;
+      border-radius: var(--radius);
+      background: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .rta-source-eyebrow {
+      margin: 0 0 8px;
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .rta-source-panel h2 {
+      margin: 0 0 10px;
+      color: var(--ink);
+      font-size: 28px;
+      line-height: 1.2;
+    }
+
+    .rta-source-panel p {
+      max-width: 900px;
+      margin: 0 0 18px;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .rta-source-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .rta-source-grid a {
+      display: block;
+      padding: 16px;
+      border: 1px solid #e0e8f4;
+      border-radius: var(--radius);
+      background: #f8fbff;
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    .rta-source-grid a:hover {
+      border-color: #9db9df;
+      background: #fff;
+    }
+
+    .rta-source-grid strong,
+    .rta-source-grid span {
+      display: block;
+    }
+
+    .rta-source-grid strong {
+      margin-bottom: 7px;
+      color: var(--ink);
+      font-size: 16px;
+      line-height: 1.3;
+    }
+
+    .rta-source-grid span {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .rta-source-checks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .rta-source-checks span {
+      padding: 7px 10px;
+      border: 1px solid #dbe7f5;
+      border-radius: 999px;
+      background: #fff;
+      color: #24415f;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .rta-depth-intro {
+      max-width: 880px;
+      margin: 0 0 20px;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .rta-depth-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin: 0 0 20px;
+    }
+
+    .rta-depth-grid article {
+      padding: 18px;
+      border: 1px solid #e3e9f2;
+      border-radius: var(--radius);
+      background: #f8fbff;
+    }
+
+    .rta-depth-grid h3 {
+      margin: 0 0 8px;
+      color: var(--ink);
+      font-size: 18px;
+      line-height: 1.25;
+    }
+
+    .rta-depth-grid p,
+    .rta-depth-faq p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .rta-depth-faq {
+      display: grid;
+      gap: 12px;
+    }
+
     .guide-page {
       max-width: 980px;
       margin: 0 auto;
@@ -2224,6 +2517,10 @@
       .rta-fact-grid,
       .rta-country-facts-grid,
       .rta-seo-facts-table,
+      .rta-trust-grid,
+      .rta-article-checklist,
+      .rta-source-grid,
+      .rta-depth-grid,
       .guide-grid {
         grid-template-columns: 1fr;
       }
@@ -2238,6 +2535,18 @@
 
       .rta-seo-facts {
         padding: 18px;
+      }
+
+      .rta-article-expansion {
+        padding: 22px 18px;
+      }
+
+      .rta-article-expansion h2 {
+        font-size: 25px;
+      }
+
+      .rta-article-expansion h3 {
+        font-size: 20px;
       }
 
       .rta-content table,
@@ -2273,6 +2582,8 @@
 {% set best_countries_url = '/ru/best-countries-in-asia-to-move/' if is_ru_page else '/best-countries-in-asia-to-move/' %}
 {% set cheapest_countries_url = '/ru/cheapest-countries-in-asia/' if is_ru_page else '/cheapest-countries-in-asia/' %}
 {% set about_url = '/ru/about/' if is_ru_page else '/about/' %}
+{% set authors_url = '/ru/authors/' if is_ru_page else '/authors/' %}
+{% set contact_url = '/ru/contact/' if is_ru_page else '/contact/' %}
 {% set editorial_policy_url = '/ru/editorial-policy/' if is_ru_page else '/editorial-policy/' %}
 {% set verify_data_url = '/ru/how-we-verify-data/' if is_ru_page else '/how-we-verify-data/' %}
 {% set current_lang = 'ru' if is_ru_page else 'en' %}
@@ -2300,6 +2611,8 @@
 {% set best_countries_label = 'Лучшие страны' if is_ru_page else 'Best Countries' %}
 {% set cheapest_countries_label = 'Самые дешёвые страны' if is_ru_page else 'Cheapest Countries' %}
 {% set about_label = 'О проекте' if is_ru_page else 'About' %}
+{% set authors_label = 'Авторы и проверка' if is_ru_page else 'Authors And Review' %}
+{% set contact_label = 'Контакты и исправления' if is_ru_page else 'Contact And Corrections' %}
 {% set editorial_policy_label = 'Редакционная политика' if is_ru_page else 'Editorial Policy' %}
 {% set verify_data_label = 'Как мы проверяем данные' if is_ru_page else 'How We Verify Data' %}
 {% set lang_ns = namespace(url='', show=false) %}
@@ -2361,7 +2674,7 @@
           <a href="{{ guides_prefix }}/thailand-dtv-vs-ltr-visa/">{{ 'Thailand DTV или LTR Visa' if is_ru_page else 'Thailand DTV vs LTR Visa' }}</a>
           <a href="{{ guides_prefix }}/malaysia-de-rantau-vs-thailand-dtv/">{{ 'Malaysia DE Rantau или Thailand DTV' if is_ru_page else 'Malaysia DE Rantau vs Thailand DTV' }}</a>
           <a href="{{ guides_prefix }}/taiwan-gold-card-income-requirement/">{{ 'Требование к доходу для Taiwan Gold Card' if is_ru_page else 'Taiwan Gold Card Income' }}</a>
-          <a href="{{ guides_prefix }}/best-asian-countries-with-easy-long-stay-visas/">{{ 'Простые long-stay визы в Азии' if is_ru_page else 'Easy Long-Stay Visas In Asia' }}</a>
+          <a href="{{ guides_prefix }}/best-asian-countries-with-easy-long-stay-visas/">{{ 'Простые визы для долгого проживания в Азии' if is_ru_page else 'Easy Long-Stay Visas In Asia' }}</a>
           <a href="{{ guides_prefix }}/where-to-live-in-asia-on-1500-a-month/">{{ 'Где жить в Азии на $1500 в месяц' if is_ru_page else 'Asia On $1500 A Month' }}</a>
           <a href="{{ guides_prefix }}/best-asian-countries-for-remote-workers-with-family/">{{ 'Страны Азии для удалёнщиков с семьёй' if is_ru_page else 'Remote Workers With Family' }}</a>
           <a href="{{ guides_prefix }}/philippines-srrv-vs-thailand-retirement-visa/">{{ 'Philippines SRRV или пенсия в Таиланде' if is_ru_page else 'Philippines SRRV vs Thailand Retirement' }}</a>
@@ -2442,6 +2755,8 @@
       <a href="{{ best_countries_url }}">{{ best_countries_label }}</a>
       <a href="{{ cheapest_countries_url }}">{{ cheapest_countries_label }}</a>
       <a href="{{ about_url }}">{{ about_label }}</a>
+      <a href="{{ authors_url }}">{{ authors_label }}</a>
+      <a href="{{ contact_url }}">{{ contact_label }}</a>
       <a href="{{ editorial_policy_url }}">{{ editorial_policy_label }}</a>
       <a href="{{ verify_data_url }}">{{ verify_data_label }}</a>
     </div>

@@ -33,6 +33,87 @@
   </section>
   {% endif %}
 
+  {% if trust_panel %}
+  <section class="rta-trust-box" aria-labelledby="country-trust-title">
+    <h2 id="country-trust-title">{{ trust_panel.title }}</h2>
+    <div class="rta-trust-grid">
+      {% for label, value in trust_panel['items'] %}
+      <div><strong>{{ label }}</strong><span>{{ value }}</span></div>
+      {% endfor %}
+    </div>
+    <p>{{ trust_panel.disclaimer }}</p>
+    <div class="rta-trust-actions">
+      <a href="{{ trust_panel.methodology_url }}">{{ trust_panel.methodology_label }}</a>
+      <a href="{{ trust_panel.contact_url }}">{{ trust_panel.contact_label }}</a>
+    </div>
+  </section>
+  {% endif %}
+
+  {% if source_panel %}
+  <section class="rta-source-panel" aria-labelledby="country-source-panel-title">
+    <div>
+      <p class="rta-source-eyebrow">{{ source_panel.eyebrow }}</p>
+      <h2 id="country-source-panel-title">{{ source_panel.title }}</h2>
+      <p>{{ source_panel.intro }}</p>
+    </div>
+    <div class="rta-source-grid">
+      {% for source in source_panel.sources %}
+      <a href="{{ source.url }}" rel="nofollow noopener" target="_blank">
+        <strong>{{ source.title }}</strong>
+        <span>{{ source.note }}</span>
+      </a>
+      {% endfor %}
+    </div>
+    {% if source_panel.checks %}
+    <div class="rta-source-checks">
+      {% for check in source_panel.checks %}
+      <span>{{ check }}</span>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </section>
+  {% endif %}
+
+  {% if depth_panel %}
+  <section class="rta-depth-panel" aria-labelledby="depth-panel-title">
+    <h2 id="depth-panel-title">{{ depth_panel.title }}</h2>
+    <p class="rta-depth-intro">{{ depth_panel.intro }}</p>
+    <div class="rta-depth-grid">
+      {% for heading, text in depth_panel.sections %}
+      <article>
+        <h3>{{ heading }}</h3>
+        <p>{{ text }}</p>
+      </article>
+      {% endfor %}
+    </div>
+    {% if depth_panel.faq %}
+    <div class="rta-depth-faq">
+      {% for question, answer in depth_panel.faq %}
+      <div class="faq-item">
+        <h3>{{ question }}</h3>
+        <p>{{ answer }}</p>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </section>
+  {% endif %}
+
+  {% if quality_panel %}
+  <section class="rta-depth-panel" aria-labelledby="quality-panel-title">
+    <h2 id="quality-panel-title">{{ quality_panel.title }}</h2>
+    <p class="rta-depth-intro">{{ quality_panel.intro }}</p>
+    <div class="rta-depth-grid">
+      {% for heading, text in quality_panel.sections %}
+      <article>
+        <h3>{{ heading }}</h3>
+        <p>{{ text }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
   {% if internal_links %}
   <section class="rta-linkhub" aria-labelledby="internal-links-title">
     <h2 id="internal-links-title">{{ labels.explore_next if labels is defined else 'Explore Next' }}</h2>

@@ -31,6 +31,47 @@
   </section>
   {% endif %}
 
+  {% if trust_panel %}
+  <section class="rta-trust-box" aria-labelledby="blog-trust-title">
+    <h2 id="blog-trust-title">{{ trust_panel.title }}</h2>
+    <div class="rta-trust-grid">
+      {% for label, value in trust_panel['items'] %}
+      <div><strong>{{ label }}</strong><span>{{ value }}</span></div>
+      {% endfor %}
+    </div>
+    <p>{{ trust_panel.disclaimer }}</p>
+    <div class="rta-trust-actions">
+      <a href="{{ trust_panel.methodology_url }}">{{ trust_panel.methodology_label }}</a>
+      <a href="{{ trust_panel.contact_url }}">{{ trust_panel.contact_label }}</a>
+    </div>
+  </section>
+  {% endif %}
+
+  {% if depth_panel %}
+  <section class="rta-depth-panel" aria-labelledby="blog-depth-title">
+    <h2 id="blog-depth-title">{{ depth_panel.title }}</h2>
+    <p class="rta-depth-intro">{{ depth_panel.intro }}</p>
+    <div class="rta-depth-grid">
+      {% for heading, text in depth_panel.sections %}
+      <article>
+        <h3>{{ heading }}</h3>
+        <p>{{ text }}</p>
+      </article>
+      {% endfor %}
+    </div>
+    {% if depth_panel.faq %}
+    <div class="rta-depth-faq">
+      {% for question, answer in depth_panel.faq %}
+      <div class="faq-item">
+        <h3>{{ question }}</h3>
+        <p>{{ answer }}</p>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </section>
+  {% endif %}
+
   {% if posts %}
     <div class="rta-blog-list-head">
       <div>

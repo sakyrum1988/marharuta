@@ -7,6 +7,94 @@
   <h1 class="sr-only">{{ post['title'] | striptags }}</h1>
   {{ post['content'] | wp_clean | safe }}
 
+  {% if article_expansion %}
+  <section class="rta-article-expansion" aria-labelledby="article-expansion-title">
+    <h2 id="article-expansion-title">{{ article_expansion.title }}</h2>
+    <p class="rta-article-lead">{{ article_expansion.lead }}</p>
+    <div class="rta-article-prose">
+      {% for heading, text in article_expansion.sections %}
+      <h3>{{ heading }}</h3>
+      <p>{{ text }}</p>
+      {% endfor %}
+    </div>
+    {% if article_expansion.points %}
+    <div class="rta-article-checklist">
+      {% for point in article_expansion.points %}
+      <div>{{ point }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    <p class="rta-article-closing">{{ article_expansion.closing }}</p>
+  </section>
+  {% endif %}
+
+  {% if article_depth %}
+  <section class="rta-depth-panel" aria-labelledby="article-depth-title">
+    <h2 id="article-depth-title">{{ article_depth.title }}</h2>
+    <p class="rta-depth-intro">{{ article_depth.intro }}</p>
+    <div class="rta-depth-grid">
+      {% for heading, text in article_depth.sections %}
+      <article>
+        <h3>{{ heading }}</h3>
+        <p>{{ text }}</p>
+      </article>
+      {% endfor %}
+    </div>
+    {% if article_depth.faq %}
+    <div class="rta-depth-faq">
+      {% for question, answer in article_depth.faq %}
+      <div class="faq-item">
+        <h3>{{ question }}</h3>
+        <p>{{ answer }}</p>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </section>
+  {% endif %}
+
+  {% if article_source_panel %}
+  <section class="rta-source-panel" aria-labelledby="article-source-panel-title">
+    <div>
+      <p class="rta-source-eyebrow">{{ article_source_panel.eyebrow }}</p>
+      <h2 id="article-source-panel-title">{{ article_source_panel.title }}</h2>
+      <p>{{ article_source_panel.intro }}</p>
+    </div>
+    <div class="rta-source-grid">
+      {% for source in article_source_panel.sources %}
+      <a href="{{ source.url }}" rel="nofollow noopener" target="_blank">
+        <strong>{{ source.title }}</strong>
+        <span>{{ source.note }}</span>
+      </a>
+      {% endfor %}
+    </div>
+    {% if article_source_panel.checks %}
+    <div class="rta-source-checks">
+      {% for check in article_source_panel.checks %}
+      <span>{{ check }}</span>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </section>
+  {% endif %}
+
+  {% if article_trust %}
+  <section class="rta-trust-box" aria-labelledby="article-trust-title">
+    <div class="rta-trust-eyebrow">{{ article_trust.eyebrow }}</div>
+    <h2 id="article-trust-title">{{ article_trust.author_label }}: <a href="{{ article_trust.author_url }}">{{ article_trust.author }}</a></h2>
+    <div class="rta-trust-grid">
+      <div><strong>{{ article_trust.reviewer_label }}</strong><span>{{ article_trust.reviewer }}</span></div>
+      <div><strong>{{ article_trust.reviewed_label }}</strong><span>{{ article_trust.reviewed }}</span></div>
+      <div><strong>{{ article_trust.sources_label }}</strong><span>{{ article_trust.sources_count }}</span></div>
+    </div>
+    <p>{{ article_trust.disclaimer }}</p>
+    <div class="rta-trust-actions">
+      <a href="{{ article_trust.methodology_url }}">{{ article_trust.methodology_label }}</a>
+      <a href="{{ article_trust.corrections_url }}">{{ article_trust.corrections_label }}</a>
+    </div>
+  </section>
+  {% endif %}
+
   {% if article_seo_panel and article_seo_panel.rows %}
   <section class="rta-seo-facts" aria-labelledby="article-facts-title">
     <h2 id="article-facts-title">{{ article_seo_panel.labels.title }}</h2>
