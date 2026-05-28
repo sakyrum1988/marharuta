@@ -4,6 +4,9 @@
 
 {% block content %}
 <div class="rta-content">
+  {% set current_title = page['title'] %}
+  {% include "_breadcrumbs.html" %}
+
   {% if '<h1' not in (page['content'] or '')|lower %}<h1 class="sr-only">{{ page['title'] }}</h1>{% endif %}
   {{ page['content'] | wp_clean | safe }}
 

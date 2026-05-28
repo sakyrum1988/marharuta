@@ -4,18 +4,13 @@
 
 {% block content %}
 <div class="rta-blog">
+  {% set current_title = blog_breadcrumb_title | default(blog_title) %}
+  {% include "_breadcrumbs.html" %}
+
   <section class="rta-blog-hero">
     <h1>{{ blog_title | default("Relocation Blog") }}</h1>
     <p>{{ blog_intro | default("Guides, tips and real expat stories from across Asia.") }}</p>
   </section>
-
-  <div class="rta-blog-lang">
-  {% if blog_lang == "ru" %}
-    <a href="/blog/" hreflang="en">Читать на английском</a>
-  {% else %}
-    <a href="/ru/blog/" hreflang="ru">🇷🇺 Читать на русском</a>
-  {% endif %}
-  </div>
 
   {% if internal_links %}
   <section class="rta-linkhub" aria-labelledby="internal-links-title">
@@ -87,7 +82,7 @@
       {% for post in posts %}
       <a class="rta-blog-card" href="{{ blog_url_prefix | default('/blog') }}/{{ post['slug'] }}/">
         <div class="rta-blog-card-body">
-          <div class="rta-blog-date">{{ post['date'][:10] }}</div>
+          <div class="rta-blog-date">{{ post['date'][:10] if post['date'] else '' }}</div>
           <h2>{{ post['title'] | safe }}</h2>
           {% if post['excerpt'] %}
           <div class="rta-blog-excerpt">

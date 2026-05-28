@@ -1,0 +1,20 @@
+{% set resolved_home_url = home_url if home_url is defined else ('/ru/' if request.path.startswith('/ru/') else '/') %}
+{% set resolved_home_label = home_label if home_label is defined else ('Главная' if request.path.startswith('/ru/') else 'Home') %}
+{% set resolved_current_title = current_title if current_title is defined else '' %}
+{% if breadcrumbs is defined and breadcrumbs %}
+<nav class="rta-breadcrumbs" aria-label="Breadcrumb">
+  <a href="{{ resolved_home_url }}">{{ resolved_home_label }}</a>
+  {% for label, url in breadcrumbs %}
+    <span aria-hidden="true">&rsaquo;</span>
+    <a href="{{ url }}">{{ label }}</a>
+  {% endfor %}
+  <span aria-hidden="true">&rsaquo;</span>
+  <span>{{ resolved_current_title | striptags }}</span>
+</nav>
+{% elif show_breadcrumbs is defined and show_breadcrumbs %}
+<nav class="rta-breadcrumbs" aria-label="Breadcrumb">
+  <a href="{{ resolved_home_url }}">{{ resolved_home_label }}</a>
+  <span aria-hidden="true">&rsaquo;</span>
+  <span>{{ resolved_current_title | striptags }}</span>
+</nav>
+{% endif %}

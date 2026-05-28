@@ -4,6 +4,9 @@
 
 {% block content %}
 <div class="rta-content">
+  {% set current_title = post['title'] %}
+  {% include "_breadcrumbs.html" %}
+
   <h1 class="sr-only">{{ post['title'] | striptags }}</h1>
   {{ post['content'] | wp_clean | safe }}
 

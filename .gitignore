@@ -7,4 +7,5 @@ venv/
 *.env
 .idea/
 .vscode/
+.claude/
 GSC/
