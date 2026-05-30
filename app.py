@@ -459,250 +459,568 @@ def localized_compare_index_content() -> str:
     return content
 
 
+CC_ARTICLE_STYLE = """<style>
+.cc-hero{background:linear-gradient(135deg,#1a2a0a 0%,#2d5a1b 60%,#1a3a0a 100%);color:#fff;padding:48px 32px;border-radius:16px;text-align:center;margin-bottom:40px}
+.cc-hero .badge{display:inline-block;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;font-size:11px;font-weight:700;letter-spacing:2px;padding:6px 16px;border-radius:20px;margin-bottom:20px;text-transform:uppercase}
+.cc-hero h1{font-size:clamp(22px,4vw,40px);font-weight:800;margin:0 0 14px;line-height:1.2}
+.cc-hero p{font-size:16px;opacity:.85;max-width:600px;margin:0 auto 24px}
+.cc-hero-stats{display:flex;justify-content:center;gap:40px;flex-wrap:wrap}
+.cc-hero-stats div{text-align:center}
+.cc-hero-stats strong{display:block;font-size:26px;font-weight:800;color:#a8e063}
+.cc-hero-stats span{font-size:12px;opacity:.7;text-transform:uppercase;letter-spacing:1px}
+.cc-toc{background:#f8fef4;border-left:4px solid #2d7d1b;border-radius:8px;padding:22px 28px;margin-bottom:36px}
+.cc-toc h3{margin:0 0 10px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#555}
+.cc-toc ol{margin:0;padding-left:20px}
+.cc-toc li{margin-bottom:5px}
+.cc-toc a{color:#2d7d1b;text-decoration:none;font-weight:500}
+.cc-toc a:hover{text-decoration:underline}
+.cc-table-wrap{overflow-x:auto;margin:32px 0}
+.cc-table{width:100%;border-collapse:collapse;font-size:14px}
+.cc-table th{background:#1a2a0a;color:#fff;padding:11px 14px;text-align:left;font-weight:600;white-space:nowrap}
+.cc-table td{padding:11px 14px;border-bottom:1px solid #eee;vertical-align:middle}
+.cc-table tr:hover td{background:#f6fff2}
+.cc-table .rank{font-weight:800;color:#2d7d1b;font-size:15px}
+.cc-table .flag{font-size:20px}
+.cc-table .cname{font-weight:700}
+.cc-table .budget-pill{display:inline-block;background:#e8f8e0;color:#1a5c0a;font-weight:700;font-size:12px;padding:4px 10px;border-radius:12px}
+.cc-table .tier{display:inline-block;font-size:10px;font-weight:700;padding:3px 8px;border-radius:10px}
+.tier-ultra{background:#fff0ee;color:#c0392b}
+.tier-low{background:#e8f4f8;color:#1a4a6c}
+.tier-mid{background:#fdf8e8;color:#7a5c00}
+.cc-country{border:1px solid #e0eed8;border-radius:12px;padding:30px;margin-bottom:28px}
+.cc-country-header{display:flex;align-items:flex-start;gap:18px;margin-bottom:22px;flex-wrap:wrap}
+.cc-rank-num{background:#2d7d1b;color:#fff;font-size:20px;font-weight:900;width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cc-country-info{flex:1}
+.cc-country-info h2{margin:0 0 4px;font-size:22px;font-weight:800}
+.cc-country-info .tag{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#2d7d1b;background:#f0ffe8;padding:3px 10px;border-radius:10px;display:inline-block}
+.cc-budget-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:16px 0;background:#f6fff2;border-radius:8px;padding:16px}
+.cc-budget-item{text-align:center}
+.cc-budget-item .val{font-size:17px;font-weight:800;color:#2d7d1b;display:block}
+.cc-budget-item .lbl{font-size:10px;color:#888;text-transform:uppercase;letter-spacing:.5px}
+.cc-breakdown{margin:16px 0}
+.cc-breakdown h4{font-size:13px;font-weight:700;color:#333;margin:0 0 10px;text-transform:uppercase;letter-spacing:.5px}
+.cc-breakdown table{width:100%;font-size:13px;border-collapse:collapse}
+.cc-breakdown td{padding:6px 10px;border-bottom:1px solid #f0eed8}
+.cc-breakdown td:last-child{text-align:right;font-weight:600;color:#2d7d1b}
+.cc-breakdown tr:last-child td{border:none;font-weight:800;font-size:14px;color:#1a2a0a}
+.cc-cols{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:14px 0}
+@media(max-width:580px){.cc-cols{grid-template-columns:1fr}}
+.cc-pros,.cc-cons{padding:14px;border-radius:8px}
+.cc-pros{background:#f0fdf4}
+.cc-cons{background:#fff8f8}
+.cc-pros h4,.cc-cons h4{margin:0 0 8px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px}
+.cc-pros h4{color:#16a34a}.cc-cons h4{color:#dc2626}
+.cc-pros ul,.cc-cons ul{margin:0;padding-left:16px}
+.cc-pros li,.cc-cons li{margin-bottom:5px;font-size:13px}
+.cc-cta{background:#1a2a0a;color:#fff;border-radius:8px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:16px}
+.cc-cta p{margin:0;font-size:13px;opacity:.85}
+.cc-cta a{background:#2d7d1b;color:#fff;padding:9px 18px;border-radius:6px;text-decoration:none;font-weight:700;font-size:13px;white-space:nowrap}
+.cc-tips{background:#fffbea;border:1px solid #f0d060;border-radius:10px;padding:24px 28px;margin:36px 0}
+.cc-tips h3{margin:0 0 14px;font-size:16px;font-weight:800;color:#7a5c00}
+.cc-tips ul{margin:0;padding-left:20px}
+.cc-tips li{margin-bottom:8px;font-size:14px;color:#444}
+.cc-faq{margin-top:36px}
+.cc-faq h2{font-size:22px;font-weight:800;margin-bottom:20px}
+.cc-faq-item{border-bottom:1px solid #eee;padding:18px 0}
+.cc-faq-item h3{font-size:16px;font-weight:700;margin:0 0 8px;color:#1a2a0a}
+.cc-faq-item p{margin:0;color:#444;font-size:14px;line-height:1.7}
+.cc-summary{background:#f6fff2;border-radius:10px;padding:28px;margin-top:36px}
+.cc-summary h2{margin-top:0;font-size:20px;font-weight:800}
+</style>"""
+
+
 def ru_cheapest_countries_article() -> tuple[str, str]:
-    countries = [
-        {
-            "id": "cambodia",
-            "rank": 1,
-            "tag": "самый дешёвый старт",
-            "flag": "🇰🇭",
-            "name": "Камбоджа",
-            "ultra": "$550",
-            "comfort": "$800",
-            "plus": "$1,200",
-            "currency": "USD / KHR",
-            "city": "Пномпень",
-            "text": [
-                "Камбоджа часто оказывается самым мягким входом по деньгам. Пномпень даёт городскую базу с квартирами, кафе, интернетом и растущим сообществом экспатов. Сиемреап спокойнее и дешевле, но там меньше городской инфраструктуры.",
-                "Практический смысл простой: Камбоджа хороша, если бюджет действительно главный фильтр. Но экономия не должна закрывать глаза на медицину, качество жилья и визовую логику. Для долгого проживания сначала считайте не аренду, а весь месяц вместе со страховкой и запасом.",
-            ],
-            "rows": [("Студия / 1BR", "$200-350"), ("Еда: местная + западная", "$150-250"), ("Транспорт", "$40-80"), ("Коммунальные услуги и интернет", "$50-80"), ("Досуг и прочее", "$80-150")],
-            "pros": ["низкая аренда", "USD часто используют в быту", "простая бытовая логика для одного человека"],
-            "cons": ["медицина слабее за пределами столицы", "инфраструктура неровная", "жара и сезонность могут утомлять"],
-        },
-        {
-            "id": "laos",
-            "rank": 2,
-            "tag": "спокойно и недорого",
-            "flag": "🇱🇦",
-            "name": "Лаос",
-            "ultra": "$600",
-            "comfort": "$850",
-            "plus": "$1,300",
-            "currency": "LAK / USD",
-            "city": "Вьентьян",
-            "text": [
-                "Лаос не про быстрый карьерный ритм и не про огромную среду экспатов. Его сила в другом: тише, дешевле, медленнее. Вьентьян подходит тем, кому нужна спокойная база, а Луангпхабанг чаще выбирают за атмосферу, природу и размеренный темп.",
-                "На практике Лаос стоит рассматривать только если вы нормально переносите меньший выбор сервисов. Интернет и инфраструктура стали лучше, но это всё ещё не Бангкок и не Куала-Лумпур. Экономия реальная, но вместе с ней идут компромиссы.",
-            ],
-            "rows": [("Студия / 1BR", "$150-300"), ("Еда: местная + редкая западная", "$130-220"), ("Транспорт", "$30-70"), ("Коммунальные услуги и интернет", "$45-90"), ("Досуг и прочее", "$80-160")],
-            "pros": ["очень спокойный ритм", "низкие базовые расходы", "мало туристической перегрузки"],
-            "cons": ["меньше сервисов", "слабее медицина", "не всем подходит медленный темп"],
-        },
-        {
-            "id": "nepal",
-            "rank": 3,
-            "tag": "горы и низкие расходы",
-            "flag": "🇳🇵",
-            "name": "Непал",
-            "ultra": "$650",
-            "comfort": "$900",
-            "plus": "$1,300",
-            "currency": "NPR",
-            "city": "Катманду",
-            "text": [
-                "Непал может быть очень дешёвым, особенно если жить просто и не пытаться копировать западный городской комфорт. Катманду даёт больше сервисов, Покхара спокойнее и приятнее для части удалённых специалистов.",
-                "Но Непал нельзя выбирать только по цене. Важны качество воздуха, медицина, электричество, интернет, район и сезон. Если работа требует стабильных звонков и предсказуемого дня, тестовый месяц здесь почти обязателен.",
-            ],
-            "rows": [("Студия / 1BR", "$180-350"), ("Еда", "$150-260"), ("Транспорт", "$25-60"), ("Интернет и коммунальные", "$50-90"), ("Досуг и поездки", "$100-180")],
-            "pros": ["низкая стоимость жизни", "сильная природа", "много простых бытовых сценариев"],
-            "cons": ["качество воздуха", "нестабильность инфраструктуры", "медицина требует осторожности"],
-        },
-        {
-            "id": "vietnam",
-            "rank": 4,
-            "tag": "лучший бюджетный городский тест",
-            "flag": "🇻🇳",
-            "name": "Вьетнам",
-            "ultra": "$700",
-            "comfort": "$1,000",
-            "plus": "$1,500",
-            "currency": "VND",
-            "city": "Дананг",
-            "text": [
-                "Вьетнам часто сильнее Лаоса и Камбоджи для удалённой работы: больше городов, лучше еда и кофе-сцена, больше жилья, выше динамика. Дананг удобен для теста, Ханой и Хошимин дают больше энергии, но и больше шума.",
-                "Главный риск — принять дешёвый тест за готовую релокацию. Вьетнам может быть отличным первым шагом, но визовый ритм, медицина, банковские вопросы и долгий статус нужно проверять отдельно.",
-            ],
-            "rows": [("Студия / 1BR", "$250-500"), ("Еда", "$180-320"), ("Транспорт", "$40-100"), ("Связь и коммунальные", "$60-110"), ("Досуг", "$120-250")],
-            "pros": ["очень хорошее соотношение цена / быт", "сильные города для теста", "быстрый повседневный ритм"],
-            "cons": ["визовый горизонт требует проверки", "шум и трафик", "качество жилья сильно зависит от района"],
-        },
-        {
-            "id": "india",
-            "rank": 5,
-            "tag": "дёшево, но не для всех",
-            "flag": "🇮🇳",
-            "name": "Индия",
-            "ultra": "$700",
-            "comfort": "$1,100",
-            "plus": "$1,600",
-            "currency": "INR",
-            "city": "Гоа / Бангалор",
-            "text": [
-                "Индия может быть очень доступной, но разброс огромный. Гоа, Бангалор, Хайдарабад, Дели и маленькие города — это разные бюджеты и разный уровень стресса. Для tech-профилей Бангалор может быть логичнее, для спокойного теста часто смотрят Гоа.",
-                "Сильная сторона Индии — цена и масштаб. Слабая — бытовая нагрузка. Если вы впервые едете в Азию, лучше не строить долгий план без короткого теста на месте.",
-            ],
-            "rows": [("Жильё", "$250-550"), ("Еда", "$150-300"), ("Транспорт", "$40-120"), ("Коммунальные и связь", "$50-120"), ("Досуг", "$120-250")],
-            "pros": ["низкие расходы", "английский встречается часто", "много разных городских сценариев"],
-            "cons": ["высокая бытовая нагрузка", "качество воздуха и шум", "город нужно выбирать очень внимательно"],
-        },
-        {
-            "id": "philippines",
-            "rank": 6,
-            "tag": "английский и островной быт",
-            "flag": "🇵🇭",
-            "name": "Филиппины",
-            "ultra": "$750",
-            "comfort": "$1,150",
-            "plus": "$1,700",
-            "currency": "PHP",
-            "city": "Себу",
-            "text": [
-                "Филиппины удобны тем, кому важен английский язык и более мягкая социальная адаптация. Себу, Давао и отдельные районы Манилы дают разные бюджеты. Островной сценарий может быть приятным, но не всегда дешёвым.",
-                "Для пенсионеров Филиппины интересны отдельно из-за SRRV, но бюджетная статья не должна подменять визовую проверку. Медицину, страховку, город и расстояние до аэропорта нужно считать заранее.",
-            ],
-            "rows": [("Жильё", "$280-600"), ("Еда", "$200-350"), ("Транспорт", "$50-120"), ("Коммунальные и интернет", "$70-140"), ("Досуг", "$150-300")],
-            "pros": ["английский в быту", "дружелюбная среда", "есть пенсионные сценарии"],
-            "cons": ["островная логистика", "дороже хороший район", "погода и тайфуны"],
-        },
-        {
-            "id": "indonesia",
-            "rank": 7,
-            "tag": "Бали дороже, чем кажется",
-            "flag": "🇮🇩",
-            "name": "Индонезия / Бали",
-            "ultra": "$800",
-            "comfort": "$1,300",
-            "plus": "$2,000",
-            "currency": "IDR",
-            "city": "Бали",
-            "text": [
-                "Бали часто попадает в бюджетные списки, но это спорно. Да, можно жить относительно недорого, если выбрать простой район и умеренный ритм. Но Чангу, Семиньяк, частые кафе, байк, спорт, виза и хорошее жильё быстро поднимают бюджет.",
-                "Индонезия подходит тем, кто честно считает образ жизни. Если вам нужен Бали как картинка из соцсетей, $800 почти наверняка будет мало. Если нужен спокойный быт вне дорогих районов, сценарий становится реалистичнее.",
-            ],
-            "rows": [("Жильё", "$350-800"), ("Еда", "$220-450"), ("Транспорт", "$60-150"), ("Связь и коммунальные", "$70-160"), ("Досуг", "$200-450")],
-            "pros": ["сильное сообщество удалёнщиков", "много жилья и сервисов", "приятная среда при нормальном бюджете"],
-            "cons": ["популярные районы дорогие", "трафик", "виза и страховка влияют на итог"],
-        },
-        {
-            "id": "thailand",
-            "rank": 8,
-            "tag": "лучший баланс цены и инфраструктуры",
-            "flag": "🇹🇭",
-            "name": "Таиланд",
-            "ultra": "$850",
-            "comfort": "$1,400",
-            "plus": "$2,200",
-            "currency": "THB",
-            "city": "Чиангмай / Бангкок",
-            "text": [
-                "Таиланд редко самый дешёвый, зато часто самый сбалансированный. Чиангмай может быть мягким по бюджету, Бангкок дороже, но даёт медицину, транспорт, сервисы и выбор районов. Острова быстро поднимают расходы.",
-                "Если выбирать страну для долгого теста, Таиланд сильнее многих дешёвых альтернатив. Но визовый маршрут нельзя оставлять на потом: DTV, LTR, Elite и туристические варианты решают разные задачи.",
-            ],
-            "rows": [("Жильё", "$350-750"), ("Еда", "$220-400"), ("Транспорт", "$60-150"), ("Коммунальные и интернет", "$80-160"), ("Досуг", "$180-400")],
-            "pros": ["сильная инфраструктура", "медицина в крупных городах", "много городов и районов"],
-            "cons": ["не самый дешёвый вариант", "сложнее логика долгого проживания", "сезонное загрязнение воздуха"],
-        },
-        {
-            "id": "malaysia",
-            "rank": 9,
-            "tag": "городской комфорт за разумные деньги",
-            "flag": "🇲🇾",
-            "name": "Малайзия",
-            "ultra": "$900",
-            "comfort": "$1,500",
-            "plus": "$2,300",
-            "currency": "MYR",
-            "city": "Куала-Лумпур / Пенанг",
-            "text": [
-                "Малайзия не всегда выглядит самой дешёвой, но часто выигрывает по качеству за свои деньги. Куала-Лумпур даёт большие квартиры, английский, транспорт, торговые центры, медицину и перелёты. Пенанг спокойнее и может быть дешевле.",
-                "Сильная сторона Малайзии — предсказуемость. Для семьи, долгого проживания или спокойного городского быта это может быть важнее, чем минимальная аренда в другой стране.",
-            ],
-            "rows": [("Жильё", "$400-850"), ("Еда", "$250-450"), ("Транспорт", "$70-160"), ("Коммунальные и интернет", "$80-170"), ("Досуг", "$200-450")],
-            "pros": ["английский в быту", "хорошая городская инфраструктура", "сильная медицина"],
-            "cons": ["Куала-Лумпур не всегда дешёвый", "виза зависит от профиля", "автомобильная логика вне центра"],
-        },
-        {
-            "id": "sri-lanka",
-            "rank": 10,
-            "tag": "недорогой островной тест",
-            "flag": "🇱🇰",
-            "name": "Шри-Ланка",
-            "ultra": "$900",
-            "comfort": "$1,400",
-            "plus": "$2,000",
-            "currency": "LKR",
-            "city": "Коломбо / Галле",
-            "text": [
-                "Шри-Ланка может быть недорогой, если не жить только в туристических местах и не строить премиальный пляжный быт. Коломбо практичнее, южное побережье приятнее, но сезон и район сильно меняют расходы.",
-                "Для релокации Шри-Ланку лучше читать как тестовый вариант, а не как автоматический ответ для долгого проживания. Проверяйте ETA, продление, медицину и стабильность жилья до того, как считать страну дешёвой.",
-            ],
-            "rows": [("Жильё", "$350-750"), ("Еда", "$200-400"), ("Транспорт", "$50-130"), ("Коммунальные и интернет", "$70-150"), ("Досуг", "$180-400")],
-            "pros": ["красивая среда", "можно жить недорого", "есть городские и пляжные сценарии"],
-            "cons": ["сезонность", "инфраструктура неровная", "туристические районы дорожают"],
-        },
-    ]
-
-    toc = "\n".join(
-        f'<li><a href="#{item["id"]}">{item["name"]} — от {item["ultra"]}/мес.</a></li>'
-        for item in countries
-    )
-    cards = []
-    table_rows = []
-    for item in countries:
-        rows = "\n".join(f"<tr><td>{html.escape(label)}</td><td>{html.escape(value)}</td></tr>" for label, value in item["rows"])
-        pros = "".join(f"<li>{html.escape(text)}</li>" for text in item["pros"])
-        cons = "".join(f"<li>{html.escape(text)}</li>" for text in item["cons"])
-        paragraphs = "\n".join(f"<p>{html.escape(text)}</p>" for text in item["text"])
-        cards.append(f"""
-<section class="cc-country" id="{item['id']}">
-  <div class="cc-country-header">
-    <div class="cc-rank-num">{item['rank']}</div>
-    <div class="cc-country-info"><span class="tag">{html.escape(item['tag'])}</span><h2>{item['flag']} {html.escape(item['name'])}</h2></div>
-  </div>
-  <div class="cc-budget-grid">
-    <div class="cc-budget-item"><span class="val">{item['ultra']}</span><span class="lbl">ультрабюджет</span></div>
-    <div class="cc-budget-item"><span class="val">{item['comfort']}</span><span class="lbl">комфортно</span></div>
-    <div class="cc-budget-item"><span class="val">{item['plus']}</span><span class="lbl">комфорт+</span></div>
-    <div class="cc-budget-item"><span class="val">{item['currency']}</span><span class="lbl">валюта</span></div>
-  </div>
-  {paragraphs}
-  <div class="cc-breakdown"><h4>Разбивка расходов за месяц — {html.escape(item['city'])} 2026</h4><table>{rows}</table></div>
-  <div class="bcm-cols"><div class="bcm-pros"><h3>Плюсы</h3><ul>{pros}</ul></div><div class="bcm-cons"><h3>Минусы</h3><ul>{cons}</ul></div></div>
-</section>
-""")
-        table_rows.append(
-            f"<tr><td>{item['rank']}</td><td>{item['flag']} {html.escape(item['name'])}</td><td>{item['ultra']}-{item['comfort']}</td><td>{item['plus']}</td><td>{html.escape(item['city'])}</td></tr>"
-        )
-
     title = "Самые дешёвые страны Азии для жизни в 2026 году"
-    content = f"""
-<div class="cc-page">
-  <section class="cc-hero">
-    <span class="badge">Проверено в марте 2026 · расходы, визы и бытовые риски</span>
-    <h1>{title}</h1>
-    <p>Дешёвая страна не всегда даёт дешёвую релокацию. Считать нужно не только аренду, а весь месяц: жильё, еду, транспорт, страховку, визовый ритм, интернет и запас на ошибку.</p>
-    <div class="cc-stats"><div><strong>$550</strong><span>минимальный бюджет</span></div><div><strong>10</strong><span>стран в рейтинге</span></div><div><strong>2026</strong><span>обновлённые ориентиры</span></div></div>
-  </section>
-  <div class="guide-note"><strong>Короткий вывод:</strong> если нужен самый дешёвый старт, смотрите Камбоджу, Лаос, Непал и Вьетнам. Если нужен баланс цены, медицины, интернета и городской инфраструктуры, чаще сильнее Таиланд или Малайзия.</div>
-  <section class="table-of-contents"><h2>Содержание</h2><ol>{toc}<li><a href="#table">Сводная таблица расходов</a></li><li><a href="#tips">Как не ошибиться с дешёвой страной</a></li><li><a href="#faq">FAQ</a></li></ol></section>
-  {''.join(cards)}
-  <section id="table" class="cc-country"><h2>Сводная таблица расходов</h2><p>Цифры ниже — рабочие диапазоны для одного человека. Семья, международная школа, премиальное жильё, частая медицина и островной быт быстро меняют итог.</p><table><tr><th>#</th><th>Страна</th><th>Базовый / комфортный месяц</th><th>Комфорт+</th><th>Город для первого теста</th></tr>{''.join(table_rows)}</table></section>
-  <section id="tips" class="cc-country"><h2>Как не ошибиться с дешёвой страной</h2><p>Первый риск — сравнивать только аренду. Второй — забыть про визу. Третий — считать, что дешёвый туристический месяц равен нормальной жизни. Перед переездом проверьте срок пребывания, продление, страховку, медицину, интернет, район, депозит, перелёты и стоимость выхода из страны, если план не сработает.</p><p>Для одного человека с удалённой работой дешёвая страна может быть отличным фильтром. Для семьи, пенсионера или человека с регулярным лечением дешёвый вариант иногда становится дорогим именно из-за слабой инфраструктуры.</p></section>
-  <section id="faq" class="cc-country"><h2>FAQ</h2><div class="faq-item"><h3>Какая страна Азии самая дешёвая для жизни?</h3><p>Чаще всего самый дешёвый старт даёт Камбоджа, но всё зависит от города, жилья, визового сценария и уровня комфорта.</p></div><div class="faq-item"><h3>Можно ли жить в Азии на $600 в месяц?</h3><p>Можно, но это ультрабюджетный сценарий для одного человека. В нём мало запаса на медицину, перелёты, плохое жильё или визовые расходы.</p></div><div class="faq-item"><h3>Какая страна лучше по балансу цены и качества?</h3><p>Для многих сильнее выглядят Вьетнам, Таиланд и Малайзия. Они не всегда самые дешёвые, зато дают больше инфраструктуры.</p></div><div class="faq-item"><h3>Бали входит в список дешёвых стран?</h3><p>Да, но с оговоркой. Бали может быть доступным вне дорогих районов, но популярный образ жизни быстро делает его заметно дороже.</p></div><div class="faq-item"><h3>Что проверить перед выбором?</h3><p>Визу, срок пребывания, продление, страховку, медицину, район, интернет, депозит и бюджет первого месяца.</p></div></section>
+    content = """
+<div class="cc-hero">
+<div class="badge">Проверено в марте 2026 · Реальные данные экспатов</div>
+<h1>Самые дешёвые страны Азии для жизни в 2026 году</h1>
+<p>Рейтинг по реальным ежемесячным расходам — жильё, еда, транспорт и образ жизни — для комфортной жизни одного экспата.</p>
+<div class="cc-hero-stats">
+<div><strong>$550</strong><span>Минимальный бюджет</span></div>
+<div><strong>10</strong><span>Стран в рейтинге</span></div>
+<div><strong>2026</strong><span>Актуальные данные</span></div>
+</div>
+</div>
+<p>В Азии находятся одни из самых доступных мест для жизни в мире — без жертв комфортом, безопасностью или качеством жизни. Независимо от того, являетесь ли вы бюджетным путешественником, цифровым кочевником или ранним пенсионером, страны в этом списке позволяют жить хорошо за долю того, что вы потратили бы на Западе.</p>
+<p>Все бюджеты ниже представляют <strong>комфортный образ жизни одного человека</strong>: отдельная квартира, питание в кафе, местный транспорт, хороший интернет и редкие развлечения. Ультрабюджетные цифры рассчитаны на совместное жильё и готовку дома.</p>
+<div class="cc-toc">
+<h3>Содержание</h3>
+<ol>
+<li><a href="#cambodia">Камбоджа — от $550/мес.</a></li>
+<li><a href="#laos">Лаос — от $600/мес.</a></li>
+<li><a href="#myanmar">Мьянма — от $600/мес.</a></li>
+<li><a href="#nepal">Непал — от $650/мес.</a></li>
+<li><a href="#vietnam">Вьетнам — от $700/мес.</a></li>
+<li><a href="#india">Индия — от $700/мес.</a></li>
+<li><a href="#philippines">Филиппины — от $750/мес.</a></li>
+<li><a href="#indonesia">Индонезия (Бали) — от $800/мес.</a></li>
+<li><a href="#thailand">Таиланд — от $850/мес.</a></li>
+<li><a href="#malaysia">Малайзия — от $900/мес.</a></li>
+<li><a href="#table">Полная таблица сравнения расходов</a></li>
+<li><a href="#tips">Советы по экономии</a></li>
+<li><a href="#faq">FAQ</a></li>
+</ol>
+</div>
+<div class="cc-country" id="cambodia">
+<div class="cc-country-header">
+<div class="cc-rank-num">1</div>
+<div class="cc-country-info">
+<span class="tag">🥇 Самая доступная в Азии</span>
+<h2>🇰🇭 Камбоджа</h2>
+</div>
+</div>
+<div class="cc-budget-grid">
+<div class="cc-budget-item"><span class="val">$550</span><span class="lbl">Ультрабюджет</span></div>
+<div class="cc-budget-item"><span class="val">$800</span><span class="lbl">Комфорт</span></div>
+<div class="cc-budget-item"><span class="val">$1,200</span><span class="lbl">Комфорт+</span></div>
+<div class="cc-budget-item"><span class="val">USD</span><span class="lbl">Валюта</span></div>
+</div>
+<p>Камбоджа стабильно остаётся самой дешёвой страной Азии для экспатов. Пномпень предлагает современные квартиры, хороший интернет и растущее сообщество экспатов по минимальным ценам. Сиемреап тише и ещё дешевле. Доллар США — де-факто основная валюта, что упрощает планирование бюджета.</p>
+<div class="cc-breakdown">
+<h4>Разбивка расходов за месяц — Пномпень 2026</h4>
+<table>
+<tr><td>Студия (центр)</td><td>$200–350</td></tr>
+<tr><td>Еда (местная + западная)</td><td>$150–250</td></tr>
+<tr><td>Транспорт (скутер/тук-тук)</td><td>$40–80</td></tr>
+<tr><td>Коммунальные + интернет</td><td>$50–80</td></tr>
+<tr><td>Развлечения и прочее</td><td>$80–150</td></tr>
+<tr><td><strong>Итого</strong></td><td><strong>$520–910</strong></td></tr>
+</table></div>
+<div class="cc-cols">
+<div class="cc-pros"><h4>✓ Плюсы</h4><ul>
+<li>USD принимают повсеместно</li>
+<li>Бизнес-виза продлевается бессрочно</li>
+<li>Очень низкая стоимость еды и аренды</li>
+<li>Тёплая, гостеприимная культура</li>
+</ul></div>
+<div class="cc-cons"><h4>✗ Минусы</h4><ul>
+<li>Медицина ограничена за пределами столицы</li>
+<li>Инфраструктура ещё развивается</li>
+<li>Политическая нестабильность</li>
+<li>Меньше экспат-инфраструктуры, чем в Таиланде</li>
+</ul></div></div>
+<div class="cc-cta">
+<p>Полный гид по Камбодже — виза, районы, жизнь экспата</p>
+<a href="/ru/countries/move-to-cambodia/">Изучить Камбоджу →</a>
+</div>
+</div>
+<div class="cc-country" id="laos">
+<div class="cc-country-header">
+<div class="cc-rank-num">2</div>
+<div class="cc-country-info">
+<span class="tag">🌿 Спокойно и доступно</span>
+<h2>🇱🇦 Лаос</h2>
+</div>
+</div>
+<div class="cc-budget-grid">
+<div class="cc-budget-item"><span class="val">$600</span><span class="lbl">Ультрабюджет</span></div>
+<div class="cc-budget-item"><span class="val">$850</span><span class="lbl">Комфорт</span></div>
+<div class="cc-budget-item"><span class="val">$1,300</span><span class="lbl">Комфорт+</span></div>
+<div class="cc-budget-item"><span class="val">LAK/USD</span><span class="lbl">Валюта</span></div>
+</div>
+<p>Лаос — скрытая жемчужина Юго-Восточной Азии: почти без туристических толп, подлинно спокойный и невероятно доступный. Вьентьян — неспешная столица с приятной экспат-средой. Луангпхабанг — объект наследия ЮНЕСКО, который любят медленные путешественники. Интернет и инфраструктура заметно улучшились к 2026 году.</p>
+<div class="cc-breakdown">
+<h4>Разбивка расходов за месяц — Вьентьян 2026</h4>
+<table>
+<tr><td>Студия</td><td>$150–300</td></tr>
+<tr><td>Еда (местная + иногда западная)</td><td>$130–220</td></tr>
+<tr><td>Транспорт</td><td>$40–70</td></tr>
+<tr><td>Коммунальные + интернет</td><td>$50–90</td></tr>
+<tr><td>Развлечения и прочее</td><td>$70–130</td></tr>
+<tr><td><strong>Итого</strong></td><td><strong>$440–810</strong></td></tr>
+</table></div>
+<div class="cc-cols">
+<div class="cc-pros"><h4>✓ Плюсы</h4><ul>
+<li>Крайне низкая стоимость жизни</li>
+<li>Расслабленный, неторопливый темп жизни</li>
+<li>Красивая природа и храмы</li>
+<li>Очень мало туристов</li>
+</ul></div>
+<div class="cc-cons"><h4>✗ Минусы</h4><ul>
+<li>Очень ограниченная экспат-инфраструктура</li>
+<li>Плохая медицина за пределами столицы</li>
+<li>Мало вариантов для долгосрочного проживания</li>
+<li>Небольшая экономика, мало вакансий</li>
+</ul></div></div>
+<div class="cc-cta">
+<p>Гид по Лаосу — визы, жизнь во Вьентьяне, советы</p>
+<a href="/ru/countries/move-to-laos/">Изучить Лаос →</a>
+</div>
+</div>
+<div class="cc-country" id="nepal">
+<div class="cc-country-header">
+<div class="cc-rank-num">3</div>
+<div class="cc-country-info">
+<span class="tag">🏔️ Лучшее соотношение цены и качества в Южной Азии</span>
+<h2>🇳🇵 Непал</h2>
+</div>
+</div>
+<div class="cc-budget-grid">
+<div class="cc-budget-item"><span class="val">$650</span><span class="lbl">Ультрабюджет</span></div>
+<div class="cc-budget-item"><span class="val">$900</span><span class="lbl">Комфорт</span></div>
+<div class="cc-budget-item"><span class="val">$1,400</span><span class="lbl">Комфорт+</span></div>
+<div class="cc-budget-item"><span class="val">NPR</span><span class="lbl">Валюта</span></div>
+</div>
+<p>Непал катастрофически недооценён как долгосрочная база. В Катманду активное сообщество экспатов и НКО, отличный доступ к треккинговым маршрутам и одна из самых низких стоимостей жизни в Азии. Покхара ещё дешевле и окружена Гималаями. Английский широко распространён, а культура тёплая и гостеприимная.</p>
+<div class="cc-breakdown">
+<h4>Разбивка расходов за месяц — Катманду 2026</h4>
+<table>
+<tr><td>Квартира 1BR</td><td>$180–350</td></tr>
+<tr><td>Еда</td><td>$120–200</td></tr>
+<tr><td>Транспорт</td><td>$30–60</td></tr>
+<tr><td>Коммунальные + интернет</td><td>$40–80</td></tr>
+<tr><td>Развлечения и прочее</td><td>$80–150</td></tr>
+<tr><td><strong>Итого</strong></td><td><strong>$450–840</strong></td></tr>
+</table></div>
+<div class="cc-cols">
+<div class="cc-pros"><h4>✓ Плюсы</h4><ul>
+<li>Потрясающие виды на Гималаи</li>
+<li>Английский широко распространён</li>
+<li>Очень низкая аренда и стоимость еды</li>
+<li>Сильное сообщество НКО и экспатов</li>
+</ul></div>
+<div class="cc-cons"><h4>✗ Минусы</h4><ul>
+<li>Нестабильное электро- и интернет-снабжение</li>
+<li>Проблемы с качеством воздуха в Катманду</li>
+<li>Ограниченные варианты долгосрочных виз</li>
+<li>Медицина ниже регионального уровня</li>
+</ul></div></div>
+<div class="cc-cta">
+<p>Гид по Непалу — визы, Катманду vs Покхара, советы</p>
+<a href="/ru/countries/move-to-nepal/">Изучить Непал →</a>
+</div>
+</div>
+<div class="cc-country" id="vietnam">
+<div class="cc-country-header">
+<div class="cc-rank-num">4</div>
+<div class="cc-country-info">
+<span class="tag">⚡ Лучшая инфраструктура за свои деньги</span>
+<h2>🇻🇳 Вьетнам</h2>
+</div>
+</div>
+<div class="cc-budget-grid">
+<div class="cc-budget-item"><span class="val">$700</span><span class="lbl">Ультрабюджет</span></div>
+<div class="cc-budget-item"><span class="val">$1,000</span><span class="lbl">Комфорт</span></div>
+<div class="cc-budget-item"><span class="val">$1,600</span><span class="lbl">Комфорт+</span></div>
+<div class="cc-budget-item"><span class="val">VND</span><span class="lbl">Валюта</span></div>
+</div>
+<p>Вьетнам — оптимальное сочетание дешёвой жизни и отличной инфраструктуры. Дананг предлагает одни из самых быстрых интернет-соединений в ЮВА, красивые пляжи и современный образ жизни за $800–1,100/месяц. Хошимин дороже, но полон коворкингов и стартап-среды. Ханой сочетает традиции и доступность.</p>
+<div class="cc-breakdown">
+<h4>Разбивка расходов за месяц — Дананг 2026</h4>
+<table>
+<tr><td>Квартира 1BR (центр)</td><td>$250–400</td></tr>
+<tr><td>Еда (местная + западная)</td><td>$180–300</td></tr>
+<tr><td>Аренда скутера + бензин</td><td>$60–100</td></tr>
+<tr><td>Коммунальные + быстрый интернет</td><td>$50–80</td></tr>
+<tr><td>Развлечения и прочее</td><td>$100–180</td></tr>
+<tr><td><strong>Итого</strong></td><td><strong>$640–1,060</strong></td></tr>
+</table></div>
+<div class="cc-cols">
+<div class="cc-pros"><h4>✓ Плюсы</h4><ul>
+<li>Быстрейший интернет в ЮВА (Дананг)</li>
+<li>Невероятная кухня</li>
+<li>Электронная виза на 90 дней для большинства</li>
+<li>Растущее сообщество номадов и экспатов</li>
+</ul></div>
+<div class="cc-cons"><h4>✗ Минусы</h4><ul>
+<li>Нет долгосрочной визы резидента пока</li>
+<li>Языковой барьер за пределами туристических зон</li>
+<li>Пробки в ХCMB и Ханое</li>
+<li>Проблемы с качеством воздуха в крупных городах</li>
+</ul></div></div>
+<div class="cc-cta">
+<p>Гид по Вьетнаму — визы, сравнение городов, советы номадам</p>
+<a href="/ru/countries/move-to-vietnam/">Изучить Вьетнам →</a>
+</div>
+</div>
+<div class="cc-country" id="india">
+<div class="cc-country-header">
+<div class="cc-rank-num">5</div>
+<div class="cc-country-info">
+<span class="tag">🏛️ Лучшая ценность для долгосрочного проживания</span>
+<h2>🇮🇳 Индия</h2>
+</div>
+</div>
+<div class="cc-budget-grid">
+<div class="cc-budget-item"><span class="val">$700</span><span class="lbl">Ультрабюджет</span></div>
+<div class="cc-budget-item"><span class="val">$1,000</span><span class="lbl">Комфорт</span></div>
+<div class="cc-budget-item"><span class="val">$1,800</span><span class="lbl">Комфорт+</span></div>
+<div class="cc-budget-item"><span class="val">INR</span><span class="lbl">Валюта</span></div>
+</div>
+<p>Огромные размеры Индии означают сильный разброс цен по регионам. Гоа остаётся любимым местом экспатов — пляжный образ жизни, хорошая еда и повсеместный английский за $900–1,400/месяц. Бангалор — технологический хаб с отличной инфраструктурой. Ришикеш и Дхарамсала привлекают любителей йоги при очень низких расходах. Электронная виза действительна до 365 дней.</p>
+<div class="cc-breakdown">
+<h4>Разбивка расходов за месяц — Гоа 2026</h4>
+<table>
+<tr><td>Квартира 1BR</td><td>$250–500</td></tr>
+<tr><td>Еда</td><td>$150–280</td></tr>
+<tr><td>Транспорт (скутер)</td><td>$50–90</td></tr>
+<tr><td>Коммунальные + интернет</td><td>$50–80</td></tr>
+<tr><td>Развлечения и прочее</td><td>$100–200</td></tr>
+<tr><td><strong>Итого</strong></td><td><strong>$600–1,150</strong></td></tr>
+</table></div>
+<div class="cc-cols">
+<div class="cc-pros"><h4>✓ Плюсы</h4><ul>
+<li>Английский — официальный язык</li>
+<li>Огромное разнообразие климата и образа жизни</li>
+<li>Электронная виза до 365 дней</li>
+<li>Технологические города мирового класса (Бангалор)</li>
+</ul></div>
+<div class="cc-cons"><h4>✗ Минусы</h4><ul>
+<li>Нет долгосрочного вида на жительство для большинства</li>
+<li>Непоследовательная инфраструктура</li>
+<li>Загрязнение и толпы в крупных городах</li>
+<li>Бюрократия может быть сложной</li>
+</ul></div></div>
+<div class="cc-cta">
+<p>Гид по Индии — визы, лучшие города, советы экспатам</p>
+<a href="/ru/countries/move-to-india/">Изучить Индию →</a>
+</div>
+</div>
+<div class="cc-country" id="philippines">
+<div class="cc-country-header">
+<div class="cc-rank-num">6</div>
+<div class="cc-country-info">
+<span class="tag">🗣️ Лучший выбор для англоговорящих с бюджетом</span>
+<h2>🇵🇭 Филиппины</h2>
+</div>
+</div>
+<div class="cc-budget-grid">
+<div class="cc-budget-item"><span class="val">$750</span><span class="lbl">Ультрабюджет</span></div>
+<div class="cc-budget-item"><span class="val">$1,100</span><span class="lbl">Комфорт</span></div>
+<div class="cc-budget-item"><span class="val">$1,800</span><span class="lbl">Комфорт+</span></div>
+<div class="cc-budget-item"><span class="val">PHP</span><span class="lbl">Валюта</span></div>
+</div>
+<p>Филиппины — самая доступная страна Азии для англоговорящих. Себу предлагает современный город с пляжами неподалёку меньше чем за $1,000/месяц. Давао ещё дешевле и всё популярнее среди экспатов. Островной образ жизни на Сиаргао или Эль-Нидо возможен от $800/месяц. Туристические визы продлеваются до 36 месяцев без выезда из страны.</p>
+<div class="cc-breakdown">
+<h4>Разбивка расходов за месяц — Себу 2026</h4>
+<table>
+<tr><td>Квартира 1BR</td><td>$250–450</td></tr>
+<tr><td>Еда</td><td>$180–300</td></tr>
+<tr><td>Транспорт</td><td>$60–100</td></tr>
+<tr><td>Коммунальные + интернет</td><td>$60–100</td></tr>
+<tr><td>Развлечения и прочее</td><td>$100–200</td></tr>
+<tr><td><strong>Итого</strong></td><td><strong>$650–1,150</strong></td></tr>
+</table></div>
+<div class="cc-cols">
+<div class="cc-pros"><h4>✓ Плюсы</h4><ul>
+<li>Английский официальный — нет языкового барьера</li>
+<li>Дружелюбная, тёплая культура</li>
+<li>Пенсионная виза SRRV от депозита $10,000</li>
+<li>7,000+ островов для исследования</li>
+</ul></div>
+<div class="cc-cons"><h4>✗ Минусы</h4><ul>
+<li>Сезон тайфунов июнь–ноябрь</li>
+<li>Нестабильный интернет за пределами городов</li>
+<li>Пробки в Метро Маниле</li>
+<li>Разрыв в инфраструктуре между городами и островами</li>
+</ul></div></div>
+<div class="cc-cta">
+<p>Гид по Филиппинам — визы, острова, информация для пенсионеров</p>
+<a href="/ru/countries/move-to-philippines/">Изучить Филиппины →</a>
+</div>
+</div>
+<div class="cc-country" id="indonesia">
+<div class="cc-country-header">
+<div class="cc-rank-num">7</div>
+<div class="cc-country-info">
+<span class="tag">🌴 Лучший образ жизни за свои деньги</span>
+<h2>🇮🇩 Индонезия (Бали)</h2>
+</div>
+</div>
+<div class="cc-budget-grid">
+<div class="cc-budget-item"><span class="val">$800</span><span class="lbl">Ультрабюджет</span></div>
+<div class="cc-budget-item"><span class="val">$1,200</span><span class="lbl">Комфорт</span></div>
+<div class="cc-budget-item"><span class="val">$2,000</span><span class="lbl">Комфорт+</span></div>
+<div class="cc-budget-item"><span class="val">IDR</span><span class="lbl">Валюта</span></div>
+</div>
+<p>Бали предлагает непревзойдённую ценность образа жизни — коворкинги мирового класса, потрясающая природа, огромное международное сообщество и невероятная еда по ценам ЮВА. Чангу — столица номадов; Убуд — для творческих и духовных; Семиньяк — для вечеринок. Виза цифрового номада (E33G) освобождает иностранный доход от индонезийского налога на 60–180 дней.</p>
+<div class="cc-breakdown">
+<h4>Разбивка расходов за месяц — Чангу, Бали 2026</h4>
+<table>
+<tr><td>Вилла/квартира 1BR</td><td>$400–700</td></tr>
+<tr><td>Еда (варунги + кафе)</td><td>$200–350</td></tr>
+<tr><td>Аренда скутера + бензин</td><td>$80–130</td></tr>
+<tr><td>Коммунальные + интернет</td><td>$60–100</td></tr>
+<tr><td>Развлечения + коворкинг</td><td>$120–250</td></tr>
+<tr><td><strong>Итого</strong></td><td><strong>$860–1,530</strong></td></tr>
+</table></div>
+<div class="cc-cols">
+<div class="cc-pros"><h4>✓ Плюсы</h4><ul>
+<li>Лучшее сообщество номадов в мире</li>
+<li>Иностранный доход освобождён от налога (E33G)</li>
+<li>Невероятная еда и кафе-сцена</li>
+<li>Йога, велнес, сёрф-культура</li>
+</ul></div>
+<div class="cc-cons"><h4>✗ Минусы</h4><ul>
+<li>Чангу дорожает и становится переполненным</li>
+<li>Сложность визы для длительного пребывания</li>
+<li>Пробки на юге Бали</li>
+<li>Сезон дождей может быть интенсивным</li>
+</ul></div></div>
+<div class="cc-cta">
+<p>Гид по Бали — визы, районы, советы цифровым номадам</p>
+<a href="/ru/countries/move-to-bali/">Изучить Бали →</a>
+</div>
+</div>
+<div class="cc-country" id="thailand">
+<div class="cc-country-header">
+<div class="cc-rank-num">8</div>
+<div class="cc-country-info">
+<span class="tag">🏆 Лучшее соотношение цены и качества</span>
+<h2>🇹🇭 Таиланд</h2>
+</div>
+</div>
+<div class="cc-budget-grid">
+<div class="cc-budget-item"><span class="val">$850</span><span class="lbl">Ультрабюджет</span></div>
+<div class="cc-budget-item"><span class="val">$1,200</span><span class="lbl">Комфорт</span></div>
+<div class="cc-budget-item"><span class="val">$2,000</span><span class="lbl">Комфорт+</span></div>
+<div class="cc-budget-item"><span class="val">THB</span><span class="lbl">Валюта</span></div>
+</div>
+<p>Чиангмай остаётся самым доступным из крупных экспат-городов Таиланда — от $850/месяц в комфортном режиме. Бангкок дороже ($1,200–1,800 для комфортного образа жизни), но предлагает инфраструктуру и ночную жизнь мирового класса. Хуахин, Паттайя и Самуи привлекают пенсионеров пляжным образом жизни. Виза LTR и Thailand Elite предлагают отличные долгосрочные варианты.</p>
+<div class="cc-breakdown">
+<h4>Разбивка расходов за месяц — Чиангмай 2026</h4>
+<table>
+<tr><td>Квартира 1BR (центр)</td><td>$250–450</td></tr>
+<tr><td>Еда (уличная еда + рестораны)</td><td>$200–350</td></tr>
+<tr><td>Скутер + транспорт</td><td>$80–130</td></tr>
+<tr><td>Коммунальные + быстрый интернет</td><td>$60–90</td></tr>
+<tr><td>Коворкинг + развлечения</td><td>$120–220</td></tr>
+<tr><td><strong>Итого</strong></td><td><strong>$710–1,240</strong></td></tr>
+</table></div>
+<div class="cc-cols">
+<div class="cc-pros"><h4>✓ Плюсы</h4><ul>
+<li>Развитая экспат-инфраструктура</li>
+<li>Отличная медицина (больницы JCI)</li>
+<li>Несколько вариантов долгосрочных виз</li>
+<li>Невероятная кулинарная культура</li>
+</ul></div>
+<div class="cc-cons"><h4>✗ Минусы</h4><ul>
+<li>Дороже Вьетнама и Камбоджи</li>
+<li>Сезон дыма в Чиангмае (февр.–апр.)</li>
+<li>Нет простого пути к постоянному ВНЖ</li>
+<li>Языковой барьер за пределами туристических зон</li>
+</ul></div></div>
+<div class="cc-cta">
+<p>Гид по Таиланду — виза LTR, Чиангмай vs Бангкок</p>
+<a href="/ru/countries/move-to-thailand/">Изучить Таиланд →</a>
+</div>
+</div>
+<div class="cc-country" id="malaysia">
+<div class="cc-country-header">
+<div class="cc-rank-num">9</div>
+<div class="cc-country-info">
+<span class="tag">🏡 Лучшая ценность с английским + современной жизнью</span>
+<h2>🇲🇾 Малайзия</h2>
+</div>
+</div>
+<div class="cc-budget-grid">
+<div class="cc-budget-item"><span class="val">$900</span><span class="lbl">Ультрабюджет</span></div>
+<div class="cc-budget-item"><span class="val">$1,300</span><span class="lbl">Комфорт</span></div>
+<div class="cc-budget-item"><span class="val">$2,200</span><span class="lbl">Комфорт+</span></div>
+<div class="cc-budget-item"><span class="val">MYR</span><span class="lbl">Валюта</span></div>
+</div>
+<p>Малайзия — самая дорогая в этом списке, но предлагает то, чего нет в других доступных странах Азии: повсеместный английский, инфраструктуру первого мира, отличную частную медицину и лучшую долгосрочную визу в регионе (MM2H). Куала-Лумпур обходится в $1,200–2,000/месяц в комфортном режиме; Пенанг и Ипох предлагают то же качество на 20–30% дешевле.</p>
+<div class="cc-breakdown">
+<h4>Разбивка расходов за месяц — Куала-Лумпур 2026</h4>
+<table>
+<tr><td>Квартира 1BR (район KLCC)</td><td>$400–700</td></tr>
+<tr><td>Еда (хокер + рестораны)</td><td>$200–380</td></tr>
+<tr><td>Транспорт (Grab + MRT)</td><td>$60–120</td></tr>
+<tr><td>Коммунальные + интернет</td><td>$70–110</td></tr>
+<tr><td>Развлечения и прочее</td><td>$120–250</td></tr>
+<tr><td><strong>Итого</strong></td><td><strong>$850–1,560</strong></td></tr>
+</table></div>
+<div class="cc-cols">
+<div class="cc-pros"><h4>✓ Плюсы</h4><ul>
+<li>Английский широко распространён</li>
+<li>MM2H — лучшая долгосрочная виза в ЮВА</li>
+<li>Отличная частная медицина</li>
+<li>Современная инфраструктура и метро</li>
+</ul></div>
+<div class="cc-cons"><h4>✗ Минусы</h4><ul>
+<li>MM2H требует подтверждения дохода $40,000+</li>
+<li>Дороже соседей по ЮВА</li>
+<li>Жара и влажность круглый год</li>
+<li>Консервативные законы об алкоголе и поведении</li>
+</ul></div></div>
+<div class="cc-cta">
+<p>Гид по Малайзии — виза MM2H, КЛ vs Пенанг</p>
+<a href="/ru/countries/move-to-malaysia/">Изучить Малайзию →</a>
+</div>
+</div>
+<div class="cc-table-wrap" id="table">
+<h2>Полная таблица сравнения расходов 2026</h2>
+<table class="cc-table">
+<thead>
+<tr><th>#</th><th>Страна</th><th>Ультрабюджет</th><th>Комфорт</th><th>Лёгкость визы</th><th>Английский</th><th>Категория</th></tr>
+</thead>
+<tbody>
+<tr><td class="rank">1</td><td><span class="flag">🇰🇭</span> <span class="cname">Камбоджа</span></td><td><span class="budget-pill">$550</span></td><td>$800</td><td>⭐⭐⭐⭐⭐</td><td>Базовый</td><td><span class="tier tier-ultra">Ультра дёшево</span></td></tr>
+<tr><td class="rank">2</td><td><span class="flag">🇱🇦</span> <span class="cname">Лаос</span></td><td><span class="budget-pill">$600</span></td><td>$850</td><td>⭐⭐⭐</td><td>Ограниченный</td><td><span class="tier tier-ultra">Ультра дёшево</span></td></tr>
+<tr><td class="rank">3</td><td><span class="flag">🇳🇵</span> <span class="cname">Непал</span></td><td><span class="budget-pill">$650</span></td><td>$900</td><td>⭐⭐⭐</td><td>Хороший</td><td><span class="tier tier-ultra">Ультра дёшево</span></td></tr>
+<tr><td class="rank">4</td><td><span class="flag">🇻🇳</span> <span class="cname">Вьетнам</span></td><td><span class="budget-pill">$700</span></td><td>$1,000</td><td>⭐⭐⭐⭐</td><td>Ограниченный</td><td><span class="tier tier-low">Бюджет</span></td></tr>
+<tr><td class="rank">5</td><td><span class="flag">🇮🇳</span> <span class="cname">Индия</span></td><td><span class="budget-pill">$700</span></td><td>$1,000</td><td>⭐⭐⭐⭐</td><td>Официальный</td><td><span class="tier tier-low">Бюджет</span></td></tr>
+<tr><td class="rank">6</td><td><span class="flag">🇵🇭</span> <span class="cname">Филиппины</span></td><td><span class="budget-pill">$750</span></td><td>$1,100</td><td>⭐⭐⭐⭐</td><td>Официальный</td><td><span class="tier tier-low">Бюджет</span></td></tr>
+<tr><td class="rank">7</td><td><span class="flag">🇮🇩</span> <span class="cname">Бали</span></td><td><span class="budget-pill">$800</span></td><td>$1,200</td><td>⭐⭐⭐</td><td>Туристический</td><td><span class="tier tier-low">Бюджет</span></td></tr>
+<tr><td class="rank">8</td><td><span class="flag">🇹🇭</span> <span class="cname">Таиланд</span></td><td><span class="budget-pill">$850</span></td><td>$1,200</td><td>⭐⭐⭐⭐⭐</td><td>Туристический</td><td><span class="tier tier-mid">Средний</span></td></tr>
+<tr><td class="rank">9</td><td><span class="flag">🇲🇾</span> <span class="cname">Малайзия</span></td><td><span class="budget-pill">$900</span></td><td>$1,300</td><td>⭐⭐⭐⭐⭐</td><td>Широко распространён</td><td><span class="tier tier-mid">Средний</span></td></tr>
+</tbody>
+</table>
+</div>
+<div class="cc-tips" id="tips">
+<h3>💡 10 советов как жить дёшево в Азии в 2026 году</h3>
+<ul>
+<li><strong>Ешьте местное:</strong> уличная еда и рынки обходятся в 3–5 раз дешевле западных ресторанов. Во Вьетнаме или Камбодже $3–5 хватит на полноценный обед.</li>
+<li><strong>Снимайте долгосрочно:</strong> месячные ставки на 30–50% ниже недельных. Договаривайтесь с арендодателями напрямую при личной встрече.</li>
+<li><strong>Используйте скутер:</strong> в большинстве стран Азии аренда скутера стоит $50–80/месяц и покрывает почти все транспортные расходы.</li>
+<li><strong>Держитесь подальше от туристических зон:</strong> жилье в квартале от туристических мест на 30–40% дешевле при минимальной разнице в образе жизни.</li>
+<li><strong>Купите местную SIM-карту:</strong> тарифы на данные стоят $5–15/месяц во всех этих странах — намного дешевле роуминга.</li>
+<li><strong>Используйте дневные пропуска в коворкинг:</strong> выгоднее месячного абонемента, если ходите меньше 5 дней в неделю. Многие отличные пространства предлагают хот-дески от $5–10/день.</li>
+<li><strong>Снимайте крупные суммы в банкоматах:</strong> комиссии накапливаются. Снимайте максимум за раз или используйте карту Wise/Revolut без комиссии за снятие.</li>
+<li><strong>Иногда готовьте сами:</strong> даже 3–4 домашних приёма пищи в неделю с продуктами с местных рынков сократят расходы на еду на 20–30%.</li>
+<li><strong>Путешествуйте в межсезонье:</strong> перелёты по Азии на 40–60% дешевле в не пиковый сезон. Изучите низкий сезон каждой страны.</li>
+<li><strong>Используйте калькулятор расходов:</strong> наш <a href="/ru/tools/cost-calculator/">бесплатный инструмент</a> позволяет смоделировать точный ежемесячный бюджет для любой азиатской страны исходя из вашего образа жизни.</li>
+</ul>
+</div>
+<div class="cc-faq" id="faq">
+<h2>Часто задаваемые вопросы</h2>
+<div class="cc-faq-item">
+<h3>Какая самая дешёвая страна Азии для жизни?</h3>
+<p>Камбоджа — самая дешёвая страна Азии для экспатов в 2026 году. Комфортный образ жизни в Пномпене стоит $700–900/месяц, а жить на $550–650/месяц возможно при совместном жилье и местной еде. USD широко используется, что упрощает планирование бюджета.</p>
+</div>
+<div class="cc-faq-item">
+<h3>Можно ли жить в Азии на $1,000 в месяц?</h3>
+<p>Да — вполне комфортно в Камбодже, Лаосе, Непале, Вьетнаме и Индии. Во Вьетнаме и на Филиппинах $1,000/месяц дают современную квартиру, регулярные обеды в ресторанах, быстрый интернет и редкие поездки. На Бали и в Таиланде $1,000 — скромный, но рабочий бюджет, если избегать самых дорогих туристических зон.</p>
+</div>
+<div class="cc-faq-item">
+<h3>В какой дешёвой азиатской стране лучший интернет для удалённой работы?</h3>
+<p>Вьетнам (особенно Дананг) и Бали (Чангу) имеют лучший интернет среди доступных направлений Азии. Дананг регулярно входит в топ-10 городов мира по скорости интернета для удалённой работы. Таиланд (Чиангмай) тоже отличный вариант. Камбоджа и Лаос значительно улучшились, но остаются слабее для требовательной удалённой работы.</p>
+</div>
+<div class="cc-faq-item">
+<h3>В какой дешёвой азиатской стране проще всего получить долгосрочную визу?</h3>
+<p>Камбоджа — самый простой вариант: бизнес-виза продлевается бессрочно без требований к доходу. Таиланд предлагает наибольший выбор (LTR, Elite, пенсионная, образовательная, SMART-виза). MM2H Малайзии — лучшая структурированная долгосрочная виза, но с требованиями к доходу. Вьетнам и Филиппины позволяют продлевать туристические визы на длительный срок.</p>
+</div>
+<div class="cc-faq-item">
+<h3>Безопасно ли жить в Азии с минимальным бюджетом?</h3>
+<p>Как правило, да — большинство доступных стран Азии очень безопасны для экспатов. Вьетнам, Филиппины, Малайзия, Таиланд и Бали имеют высокие рейтинги личной безопасности. Камбоджа и Непал также в целом безопасны, хотя в туристических зонах встречается мелкое воровство. Основные риски связаны со здоровьем (безопасность еды, доступность медицины), а не с преступностью.</p>
+</div>
+</div>
+<div class="cc-summary">
+<h2>Какая дешёвая азиатская страна подходит именно вам?</h2>
+<ul>
+<li><strong>Абсолютный минимальный бюджет (&lt;$700/мес.):</strong> Камбоджа или Лаос</li>
+<li><strong>Лучшая инфраструктура с бюджетом:</strong> Вьетнам (Дананг)</li>
+<li><strong>Лучший английский + дёшево:</strong> Филиппины или Индия (Гоа)</li>
+<li><strong>Лучший образ жизни за деньги:</strong> Бали или Таиланд (Чиангмай)</li>
+<li><strong>Лучшая долгосрочная виза + доступно:</strong> Малайзия или Таиланд</li>
+<li><strong>Лучший вариант для пенсионеров с бюджетом:</strong> Филиппины (SRRV) или Таиланд</li>
+</ul>
+<p>Используйте наш <a href="/ru/tools/cost-calculator/">Калькулятор стоимости жизни</a>, чтобы получить персональную оценку бюджета для любой азиатской страны, или <a href="/ru/countries/">просмотрите все 20 страновых гидов</a> для подробной информации о переезде.</p>
 </div>
 """
-    return title, content
+    return title, CC_ARTICLE_STYLE + content
+
 
 
 def localized_compare_pair_content(slug: str, title: str, content: str) -> tuple[str, str]:
@@ -7507,18 +7825,61 @@ def ru_tool(slug: str):
     )
 
 
-BCM_ARTICLE_STYLE = """
-<style>
-.bcm-hero{background:linear-gradient(135deg,#0a1628 0%,#1a3a5c 100%);color:#fff;padding:48px 32px;border-radius:16px;text-align:center;margin-bottom:36px}
-.bcm-hero .badge{display:inline-block;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;font-size:11px;font-weight:700;letter-spacing:1.6px;padding:6px 16px;border-radius:20px;margin-bottom:20px;text-transform:uppercase}
-.bcm-hero h1{font-size:clamp(28px,4vw,44px);font-weight:800;margin:0 0 16px;line-height:1.15}.bcm-hero p{font-size:17px;opacity:.9;max-width:760px;margin:0 auto}
-.bcm-stats{display:flex;justify-content:center;gap:34px;flex-wrap:wrap;margin-top:26px}.bcm-stats strong{display:block;font-size:28px;color:#5db8f5}.bcm-stats span{font-size:12px;text-transform:uppercase;letter-spacing:1px;opacity:.75}
-.bcm-note{background:#fff8e8;border:1px solid #f4c56b;border-radius:10px;padding:18px 22px;margin:28px 0;color:#6b4600}.bcm-table-wrap{overflow-x:auto;margin:28px 0}.bcm-table{width:100%;border-collapse:collapse;font-size:14px}.bcm-table th{background:#0a1628;color:#fff;padding:12px 14px;text-align:left}.bcm-table td{padding:12px 14px;border-bottom:1px solid #e7edf5;vertical-align:top}.bcm-table .rank{font-weight:800;color:#c0392b}
-.bcm-country{border:1px solid #e1e8f3;border-radius:12px;padding:28px;margin:28px 0;background:#fff}.bcm-country h2{margin-top:0}.bcm-stats-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;background:#f8fafc;border-radius:8px;padding:16px;margin:18px 0}.bcm-stat-item{text-align:center}.bcm-stat-item .val{display:block;font-size:19px;font-weight:800;color:#c0392b}.bcm-stat-item .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:#687385}
-.bcm-cols{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:18px 0}.bcm-pros,.bcm-cons{border-radius:8px;padding:16px}.bcm-pros{background:#f0fdf4}.bcm-cons{background:#fff8f8}.bcm-pros h3,.bcm-cons h3{font-size:14px;text-transform:uppercase;letter-spacing:1px;margin-top:0}.bcm-pros h3{color:#15803d}.bcm-cons h3{color:#b91c1c}.bcm-faq-item{border-bottom:1px solid #e7edf5;padding:18px 0}.bcm-faq-item h3{font-size:18px;margin:0 0 8px}
-@media(max-width:700px){.bcm-cols{grid-template-columns:1fr}.bcm-country{padding:20px}.bcm-hero{padding:34px 18px}}
-</style>
-"""
+BCM_ARTICLE_STYLE = """<style>
+.bcm-hero{background:linear-gradient(135deg,#0a1628 0%,#1a3a5c 100%);color:#fff;padding:48px 32px;border-radius:16px;text-align:center;margin-bottom:40px}
+.bcm-hero .badge{display:inline-block;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;font-size:11px;font-weight:700;letter-spacing:2px;padding:6px 16px;border-radius:20px;margin-bottom:20px;text-transform:uppercase}
+.bcm-hero h1{font-size:clamp(24px,4vw,42px);font-weight:800;margin:0 0 16px;line-height:1.2}
+.bcm-hero p{font-size:16px;opacity:.85;max-width:600px;margin:0 auto 24px}
+.bcm-stats{display:flex;justify-content:center;gap:40px;flex-wrap:wrap;margin-top:8px}
+.bcm-stats div{text-align:center}
+.bcm-stats strong{display:block;font-size:28px;font-weight:800;color:#5db8f5}
+.bcm-stats span{font-size:12px;opacity:.7;text-transform:uppercase;letter-spacing:1px}
+.bcm-toc{background:#f8f9fa;border-left:4px solid #c0392b;border-radius:8px;padding:24px 28px;margin-bottom:40px}
+.bcm-toc h3{margin:0 0 12px;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#666}
+.bcm-toc ol{margin:0;padding-left:20px}
+.bcm-toc li{margin-bottom:6px}
+.bcm-toc a{color:#c0392b;text-decoration:none;font-weight:500}
+.bcm-toc a:hover{text-decoration:underline}
+.bcm-table-wrap{overflow-x:auto;margin:32px 0}
+.bcm-table{width:100%;border-collapse:collapse;font-size:14px}
+.bcm-table th{background:#0a1628;color:#fff;padding:12px 16px;text-align:left;font-weight:600;white-space:nowrap}
+.bcm-table td{padding:12px 16px;border-bottom:1px solid #eee;vertical-align:top}
+.bcm-table tr:hover td{background:#f8f9ff}
+.bcm-table .rank{font-weight:800;color:#c0392b;font-size:16px}
+.bcm-table .country-name{font-weight:700}
+.bcm-table .badge-sm{display:inline-block;font-size:10px;font-weight:700;padding:3px 8px;border-radius:10px;background:#e8f4f8;color:#1a3a5c;white-space:nowrap}
+.bcm-country{border:1px solid #e8e8e8;border-radius:12px;padding:32px;margin-bottom:32px;position:relative}
+.bcm-country-header{display:flex;align-items:flex-start;gap:20px;margin-bottom:24px;flex-wrap:wrap}
+.bcm-rank-badge{background:#c0392b;color:#fff;font-size:22px;font-weight:900;width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.bcm-country-title{flex:1}
+.bcm-country-title h2{margin:0 0 4px;font-size:24px;font-weight:800}
+.bcm-country-title .tag{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#c0392b;background:#fff0ee;padding:4px 10px;border-radius:10px;display:inline-block}
+.bcm-stats-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;background:#f8f9fa;border-radius:8px;padding:16px;margin-bottom:20px}
+.bcm-stat-item{text-align:center}
+.bcm-stat-item .val{font-size:18px;font-weight:800;color:#c0392b;display:block}
+.bcm-stat-item .lbl{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:.5px}
+.bcm-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:16px 0}
+@media(max-width:600px){.bcm-cols{grid-template-columns:1fr}}
+.bcm-pros,.bcm-cons{padding:16px}
+.bcm-pros{background:#f0fdf4;border-radius:8px}
+.bcm-cons{background:#fff8f8;border-radius:8px}
+.bcm-pros h4,.bcm-cons h4{margin:0 0 10px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px}
+.bcm-pros h4{color:#16a34a}
+.bcm-cons h4{color:#dc2626}
+.bcm-pros ul,.bcm-cons ul{margin:0;padding-left:18px}
+.bcm-pros li,.bcm-cons li{margin-bottom:6px;font-size:14px}
+.bcm-cta-box{background:#0a1628;color:#fff;border-radius:10px;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:20px}
+.bcm-cta-box p{margin:0;font-size:14px;opacity:.85}
+.bcm-cta-box a{background:#c0392b;color:#fff;padding:10px 20px;border-radius:6px;text-decoration:none;font-weight:700;font-size:14px;white-space:nowrap}
+.bcm-faq{margin-top:40px}
+.bcm-faq h2{font-size:24px;font-weight:800;margin-bottom:24px}
+.bcm-faq-item{border-bottom:1px solid #eee;padding:20px 0}
+.bcm-faq-item h3{font-size:17px;font-weight:700;margin:0 0 10px;color:#0a1628}
+.bcm-faq-item p{margin:0;color:#444;line-height:1.7}
+.bcm-conclusion{background:#f8f9fa;border-radius:12px;padding:32px;margin-top:40px}
+.bcm-conclusion h2{margin-top:0}
+@media(max-width:700px){.bcm-country{padding:20px}.bcm-hero{padding:34px 18px}}
+</style>"""
 
 
 def cost_of_living_asia_article(lang: str = "en") -> tuple[str, str]:
@@ -7864,43 +8225,441 @@ def enhanced_compare_article(slug: str, lang: str = "en") -> tuple[str, str] | N
 
 
 def ru_best_countries_move_article() -> tuple[str, str]:
-    return (
-        "Лучшие страны Азии для переезда в 2026 году",
-        BCM_ARTICLE_STYLE + """
-<div class="bcm-hero"><div class="badge">Обновлено в мае 2026 - экспертный гид</div><h1>Лучшие Страны Азии Для Переезда В 2026 Году</h1><p>Выбор страны в Азии начинается не с пляжей и не с рейтингов. Сначала нужно понять бюджет, визовый маршрут, медицину, городскую инфраструктуру и то, насколько страна подходит именно вашему сценарию.</p><div class="bcm-stats"><div><strong>10</strong><span>стран в рейтинге</span></div><div><strong>$600+</strong><span>стартовый бюджет</span></div><div><strong>2026</strong><span>правила проверены</span></div></div></div>
-<div class="bcm-note"><strong>Короткий вывод:</strong> лучшей страны для всех нет. Таиланд силён балансом, Малайзия - предсказуемостью, Вьетнам - ценой, Тайвань - профессиональным маршрутом, Япония - качеством короткого пребывания. Ошибка начинается там, где человек выбирает страну по настроению, а визу проверяет потом.</div>
-<h2>Быстрое сравнение: лучшие страны для релокации</h2>
-<div class="bcm-table-wrap"><table class="bcm-table"><thead><tr><th>#</th><th>Страна</th><th>Бюджет / месяц</th><th>Сильная сторона</th><th>Кому подходит</th></tr></thead><tbody>
-<tr><td class="rank">1</td><td>Таиланд</td><td>$900-1,800</td><td>баланс быта, медицины и городов</td><td>удалёнщики, пары, ранняя пенсия</td></tr>
-<tr><td class="rank">2</td><td>Малайзия</td><td>$900-1,900</td><td>английский, медицина, городская инфраструктура</td><td>семьи, долгое проживание, спокойная релокация</td></tr>
-<tr><td class="rank">3</td><td>Вьетнам</td><td>$700-1,300</td><td>цена и энергия городов</td><td>тест Азии, бюджетная удалённая работа</td></tr>
-<tr><td class="rank">4</td><td>Бали / Индонезия</td><td>$1,100-2,200</td><td>сообщество и среда</td><td>креативные специалисты, предприниматели</td></tr>
-<tr><td class="rank">5</td><td>Тайвань</td><td>$1,400-2,600</td><td>безопасность и Gold Card</td><td>квалифицированные специалисты</td></tr>
-<tr><td class="rank">6</td><td>Япония</td><td>$1,800-3,200</td><td>качество жизни и порядок</td><td>короткое проживание с высоким уровнем сервиса</td></tr>
-<tr><td class="rank">7</td><td>Филиппины</td><td>$900-1,700</td><td>английский и пенсионный маршрут</td><td>пенсионеры, англоязычный быт</td></tr>
-<tr><td class="rank">8</td><td>Сингапур</td><td>$2,500-5,000+</td><td>карьера и инфраструктура</td><td>люди с высоким доходом, основатели проектов, специалисты</td></tr>
-<tr><td class="rank">9</td><td>Камбоджа</td><td>$600-1,100</td><td>низкая стоимость</td><td>ультрабюджет, осторожный план долгого проживания</td></tr>
-<tr><td class="rank">10</td><td>ОАЭ</td><td>$2,500-5,000+</td><td>налоговая и бизнес-логика</td><td>предприниматели, высокий доход</td></tr>
-</tbody></table></div>
-<div class="bcm-country"><h2>1. Таиланд: Лучший Баланс Для Большинства</h2><div class="bcm-stats-bar"><div class="bcm-stat-item"><span class="val">$900+</span><span class="lbl">старт</span></div><div class="bcm-stat-item"><span class="val">DTV / LTR</span><span class="lbl">проверить визу</span></div><div class="bcm-stat-item"><span class="val">Bangkok</span><span class="lbl">главный хаб</span></div></div><p>Таиланд редко выигрывает по одной цифре. Он выигрывает суммой факторов: медицина, перелёты, еда, сервисы, аренда, среда экспатов, острова и большие города. Для многих это самый понятный первый шаг в Азии. Но визовую часть нельзя оставлять на потом. DTV, LTR, пенсионные и другие маршруты работают по разной логике. Если человек хочет жить долго, ему нужно проверить официальный маршрут до аренды квартиры.</p><div class="bcm-cols"><div class="bcm-pros"><h3>Плюсы</h3><ul><li>сильная медицина и инфраструктура;</li><li>много городов под разные бюджеты;</li><li>большое сообщество экспатов и удалённых специалистов.</li></ul></div><div class="bcm-cons"><h3>Минусы</h3><ul><li>острова быстро дорожают;</li><li>визовые маршруты нельзя смешивать;</li><li>Бангкок и Чиангмай дают разный опыт.</li></ul></div></div></div>
-<div class="bcm-country"><h2>2. Малайзия: Практичный Вариант Для Семьи И Города</h2><p>Малайзия не всегда выглядит самой яркой, но часто оказывается самой спокойной. В Куала-Лумпуре легче с английским, медициной, торговыми центрами, международной средой и обычной городской жизнью. Пенанг может быть мягче по ритму. Для семьи это часто важнее, чем «самая дешёвая страна». Слабое место - не цена, а совпадение с визовым маршрутом. DE Rantau, MM2H и employment pass не заменяют друг друга.</p></div>
-<div class="bcm-country"><h2>3. Вьетнам: Сильная Цена, Но Не Универсальная Резиденция</h2><p>Вьетнам хорош для теста Азии. Дананг, Ханой и Хошимин дают разный баланс цены, работы и быта. Интернет и кафе-среда в крупных городах подходят многим удалёнщикам. Но Вьетнам не стоит продавать себе как «дешёвый Таиланд». Главный вопрос - срок и легальность пребывания. Если нужен стабильный маршрут на несколько лет, Вьетнам требует более осторожного планирования.</p></div>
-<div class="bcm-country"><h2>4. Бали: Сильная Среда, Но Бюджет Уже Не Низкий</h2><p>Бали остаётся магнитом для удалённых специалистов, основателей проектов, креативных команд и людей, которым важна среда. Но дешёвым Бали уже нельзя считать автоматически. Чангу, Убуд и Семиньяк живут по своей логике цен. Плюс нужно внимательно смотреть индонезийский визовый маршрут, потому что образ жизни не заменяет легальный статус.</p></div>
-<div class="bcm-country"><h2>5. Тайвань: Для Специалистов, Которым Нужен Горизонт</h2><p>Тайвань подходит не всем, но для квалифицированных специалистов может быть одним из самых сильных вариантов. Employment Gold Card объединяет несколько разрешений и может дать более длинный горизонт, чем многие «nomad» визы. Но это не маршрут «для всех удалёнщиков». Нужны документы, категория и подтверждаемая квалификация.</p></div>
-<div class="bcm-country"><h2>6. Япония: Отлично На Полгода, Сложнее Для Переезда</h2><p>Япония привлекательна почти всем: порядок, транспорт, безопасность, культура, города. Но digital nomad visa в Японию - короткий и строгий маршрут. Официальные правила говорят о шести месяцах и отсутствии продления. Значит, Япония хороша как качественное короткое пребывание, но не как автоматический путь к резиденции.</p></div>
-<h2>Как выбрать подходящую страну в Азии</h2>
-<p>Сначала проверьте не страну, а свой сценарий. Один человек с удалённым доходом, семья с детьми, пенсионер, основатель проекта и специалист с оффером - это пять разных решений. Дешёвый город может быть плохим, если там нет нужной медицины. Дорогая страна может быть разумной, если даёт рабочий статус, безопасность и предсказуемость. В Азии особенно важно не путать впечатление от поездки с планом релокации.</p>
-<p>Практический порядок такой: срок пребывания, право работать или жить, доход и документы, страхование, город, жильё, школа или медицина, потом образ жизни. Если порядок перевернуть, легко выбрать красивую страну и потом обнаружить, что легального маршрута нет.</p>
-<h2>FAQ</h2>
-<div class="bcm-faq-item"><h3>Какая Страна Азии Лучшая Для Переезда В 2026 Году?</h3><p>Для большинства первым shortlist остаются Таиланд, Малайзия, Вьетнам, Тайвань и Бали. Но «лучшая» зависит от визы, дохода, семьи, медицины и срока проживания.</p></div>
-<div class="bcm-faq-item"><h3>Где В Азии Дешевле Всего Жить?</h3><p>По базовым расходам часто выигрывают Камбоджа, Вьетнам, часть Индии и Непала. Но низкая цена не всегда означает лучший переезд.</p></div>
-<div class="bcm-faq-item"><h3>Какая Страна Лучше Для Digital Nomads?</h3><p>Таиланд и Бали сильны по среде, Малайзия - по городскому комфорту, Тайвань - по профессиональному маршруту, Япония - по короткому пребыванию с высоким уровнем сервиса.</p></div>
-<div class="bcm-faq-item"><h3>Какая Страна Лучше Для Семьи?</h3><p>Малайзия и Тайвань часто выглядят сильнее из-за инфраструктуры, медицины и предсказуемого быта. Но всё зависит от школы, района и визового маршрута.</p></div>
-<div class="bcm-faq-item"><h3>Можно Ли Сначала Приехать Туристом И Решить На Месте?</h3><p>Можно для разведки. Но платить за долгую аренду, перевозить семью или закрывать дела дома лучше только после проверки официального визового маршрута.</p></div>
-""",
-    )
-
-
+    content = """
+<div class="bcm-hero">
+<div class="badge">Обновлено в марте 2026 · Экспертный гид</div>
+<h1>Лучшие страны Азии для переезда в 2026 году</h1>
+<p>Сравните расходы, визы, образ жизни и возможности в лучших направлениях Азии для переезда — рейтинг на основе реальных данных экспатов.</p>
+<div class="bcm-stats">
+<div><strong>20</strong><span>Стран сравнено</span></div>
+<div><strong>$600</strong><span>Мин. бюджет/мес.</span></div>
+<div><strong>10</strong><span>Лучших в рейтинге</span></div>
+</div>
+</div>
+<p>В Азии находятся одни из самых привлекательных направлений для переезда в мире. Независимо от того, ищете ли вы образ жизни цифрового номада за $1,000/месяц, семья ищет хорошие школы и безопасность, или предприниматель преследует бизнес-возможности — в Азии найдётся страна под ваши цели.</p>
+<p>Этот гид составляет рейтинг <strong>10 лучших стран Азии для переезда в 2026 году</strong> по стоимости жизни, доступности виз, качеству жизни, инфраструктуре и силе сообщества экспатов.</p>
+<div class="bcm-toc">
+<h3>Содержание</h3>
+<ol>
+<li><a href="#thailand">Таиланд — лучший выбор для цифровых номадов</a></li>
+<li><a href="#malaysia">Малайзия — лучшая долгосрочная виза (MM2H)</a></li>
+<li><a href="#vietnam">Вьетнам — лучшее бюджетное направление</a></li>
+<li><a href="#bali">Бали, Индонезия — лучшее для сообщества и образа жизни</a></li>
+<li><a href="#philippines">Филиппины — лучший для англоговорящих</a></li>
+<li><a href="#japan">Япония — лучшее качество жизни</a></li>
+<li><a href="#south-korea">Южная Корея — лучшая для технологий и инноваций</a></li>
+<li><a href="#singapore">Сингапур — лучший для высоких доходов</a></li>
+<li><a href="#cambodia">Камбоджа — лучшая бюджетная гибкость</a></li>
+<li><a href="#uae">ОАЭ (Дубай) — лучший безналоговый доход</a></li>
+<li><a href="#comparison">Полная таблица сравнения</a></li>
+<li><a href="#faq">FAQ</a></li>
+</ol>
+</div>
+<div class="bcm-table-wrap" id="comparison">
+<h2>Быстрое сравнение: топ-10 стран Азии для переезда</h2>
+<table class="bcm-table">
+<thead>
+<tr><th>#</th><th>Страна</th><th>Бюджет/мес.</th><th>Лёгкость визы</th><th>Английский</th><th>Лучше всего для</th></tr>
+</thead>
+<tbody>
+<tr><td class="rank">1</td><td class="country-name">🇹🇭 Таиланд</td><td>$800–1,800</td><td>⭐⭐⭐⭐⭐</td><td>Туристические зоны</td><td><span class="badge-sm">Цифровые номады</span></td></tr>
+<tr><td class="rank">2</td><td class="country-name">🇲🇾 Малайзия</td><td>$700–1,500</td><td>⭐⭐⭐⭐⭐</td><td>Широко распространён</td><td><span class="badge-sm">Семьи и долгий срок</span></td></tr>
+<tr><td class="rank">3</td><td class="country-name">🇻🇳 Вьетнам</td><td>$600–1,200</td><td>⭐⭐⭐⭐</td><td>Ограниченный</td><td><span class="badge-sm">Бюджетные номады</span></td></tr>
+<tr><td class="rank">4</td><td class="country-name">🇮🇩 Бали</td><td>$800–1,600</td><td>⭐⭐⭐</td><td>Туристические зоны</td><td><span class="badge-sm">Образ жизни и сообщество</span></td></tr>
+<tr><td class="rank">5</td><td class="country-name">🇵🇭 Филиппины</td><td>$700–1,400</td><td>⭐⭐⭐⭐</td><td>Официальный язык</td><td><span class="badge-sm">Англоговорящие</span></td></tr>
+<tr><td class="rank">6</td><td class="country-name">🇯🇵 Япония</td><td>$1,600–3,000</td><td>⭐⭐⭐</td><td>Ограниченный</td><td><span class="badge-sm">Качество жизни</span></td></tr>
+<tr><td class="rank">7</td><td class="country-name">🇰🇷 Южная Корея</td><td>$1,800–3,200</td><td>⭐⭐⭐</td><td>Растёт</td><td><span class="badge-sm">Технологии и культура</span></td></tr>
+<tr><td class="rank">8</td><td class="country-name">🇸🇬 Сингапур</td><td>$2,500–5,000</td><td>⭐⭐⭐⭐</td><td>Официальный язык</td><td><span class="badge-sm">Высокие доходы</span></td></tr>
+<tr><td class="rank">9</td><td class="country-name">🇰🇭 Камбоджа</td><td>$600–1,000</td><td>⭐⭐⭐⭐⭐</td><td>Туристические зоны</td><td><span class="badge-sm">Ультрабюджет</span></td></tr>
+<tr><td class="rank">10</td><td class="country-name">🇦🇪 ОАЭ</td><td>$2,500–5,000</td><td>⭐⭐⭐⭐</td><td>Язык бизнеса</td><td><span class="badge-sm">Безналоговый доход</span></td></tr>
+</tbody>
+</table>
+</div>
+<div class="bcm-country" id="thailand">
+<div class="bcm-country-header">
+<div class="bcm-rank-badge">1</div>
+<div class="bcm-country-title">
+<span class="tag">🏆 Лучший выбор для цифровых номадов</span>
+<h2>Таиланд</h2>
+</div>
+</div>
+<div class="bcm-stats-bar">
+<div class="bcm-stat-item"><span class="val">$800</span><span class="lbl">Стартовый бюджет</span></div>
+<div class="bcm-stat-item"><span class="val">LTR + Elite</span><span class="lbl">Лучшие визы</span></div>
+<div class="bcm-stat-item"><span class="val">Тёплый</span><span class="lbl">Климат</span></div>
+<div class="bcm-stat-item"><span class="val">Топ-3</span><span class="lbl">Рейтинг номадов</span></div>
+</div>
+<p>Таиланд занимает 1-е место среди экспат-направлений Азии уже более десяти лет — и не без причин. Бангкок предлагает инфраструктуру мирового класса, международные больницы и коворкинги за долю западных цен. Чиангмай остаётся духовным домом цифровых номадов, а Пхукет и Самуи привлекают экспатов, ориентированных на образ жизни.</p>
+<p><strong>Виза LTR (Long Term Resident)</strong> позволяет квалифицированным заявителям жить в Таиланде до 10 лет. <strong>Thailand Elite</strong> предлагает членство на 5–20 лет для тех, кто предпочитает простоту требованиям к квалификации.</p>
+<div class="bcm-cols">
+<div class="bcm-pros"><h4>✓ Плюсы</h4><ul>
+<li>Великолепная кухня по низким ценам</li>
+<li>Отличная медицина (больницы JCI)</li>
+<li>Развитая инфраструктура для номадов</li>
+<li>Тропический климат круглый год</li>
+<li>Несколько вариантов долгосрочных виз</li>
+</ul></div>
+<div class="bcm-cons"><h4>✗ Минусы</h4><ul>
+<li>Языковой барьер вне туристических зон</li>
+<li>Нет простого пути к ПМЖ</li>
+<li>Пробки в Бангкоке</li>
+<li>Жаркое и влажное лето</li>
+</ul></div></div>
+<div class="bcm-cta-box">
+<p>Полный визовый гид, разбивка расходов по городам и лучшие районы</p>
+<a href="/ru/countries/move-to-thailand/">Изучить Таиланд →</a>
+</div>
+</div>
+<div class="bcm-country" id="malaysia">
+<div class="bcm-country-header">
+<div class="bcm-rank-badge">2</div>
+<div class="bcm-country-title">
+<span class="tag">🏡 Лучшая долгосрочная виза (MM2H)</span>
+<h2>Малайзия</h2>
+</div>
+</div>
+<div class="bcm-stats-bar">
+<div class="bcm-stat-item"><span class="val">$700</span><span class="lbl">Стартовый бюджет</span></div>
+<div class="bcm-stat-item"><span class="val">MM2H</span><span class="lbl">Лучшая виза</span></div>
+<div class="bcm-stat-item"><span class="val">Английский</span><span class="lbl">Широко распространён</span></div>
+<div class="bcm-stat-item"><span class="val">Топ-5</span><span class="lbl">Рейтинг экспатов</span></div>
+</div>
+<p>Малайзия стабильно входит в число лучших стран для экспатов во всём мире. Программа <strong>Malaysia My Second Home (MM2H)</strong> широко считается лучшей долгосрочной визой резидента в ЮВА — многократный въезд на 5–10 лет с возможностью продления. Куала-Лумпур обеспечивает современную мультикультурную городскую жизнь по ценам ЮВА.</p>
+<p>Английский широко распространён, медицина отличная и доступная, международные школы — одни из лучших в регионе. Малайзия особенно популярна среди семей, пенсионеров и удалённых работников, ищущих стабильности.</p>
+<div class="bcm-cols">
+<div class="bcm-pros"><h4>✓ Плюсы</h4><ul>
+<li>Виза MM2H — лучший долгосрочный вариант в ЮВА</li>
+<li>Английский повсеместно распространён</li>
+<li>Отличные международные школы</li>
+<li>Современная инфраструктура в КЛ</li>
+<li>Мультикультурное, толерантное общество</li>
+</ul></div>
+<div class="bcm-cons"><h4>✗ Минусы</h4><ul>
+<li>MM2H требует подтверждения дохода ($40k+)</li>
+<li>Консервативные законы (алкоголь и т.д.)</li>
+<li>Пробки в КЛ</li>
+<li>Менее активная ночная жизнь, чем в Таиланде</li>
+</ul></div></div>
+<div class="bcm-cta-box">
+<p>Требования MM2H, стоимость жизни в КЛ и районы для экспатов</p>
+<a href="/ru/countries/move-to-malaysia/">Изучить Малайзию →</a>
+</div>
+</div>
+<div class="bcm-country" id="vietnam">
+<div class="bcm-country-header">
+<div class="bcm-rank-badge">3</div>
+<div class="bcm-country-title">
+<span class="tag">💰 Лучшее бюджетное направление</span>
+<h2>Вьетнам</h2>
+</div>
+</div>
+<div class="bcm-stats-bar">
+<div class="bcm-stat-item"><span class="val">$600</span><span class="lbl">Стартовый бюджет</span></div>
+<div class="bcm-stat-item"><span class="val">Э-виза</span><span class="lbl">90 дней</span></div>
+<div class="bcm-stat-item"><span class="val">Быстрый</span><span class="lbl">Интернет</span></div>
+<div class="bcm-stat-item"><span class="val">Растущий</span><span class="lbl">Рынок</span></div>
+</div>
+<p>Вьетнам предлагает один из самых низких прожиточных минимумов в Азии без потери качества образа жизни. Хошимин (Сайгон) — оживлённый мегаполис с процветающей стартап-средой. Дананг — хаб цифровых номадов с пляжным образом жизни и современной инфраструктурой коворкингов. Ханой сочетает традиции и доступность.</p>
+<p><strong>Электронная виза</strong> Вьетнама позволяет пребывание до 90 дней для большинства национальностей. Долгосрочные резиденты обычно используют бизнес-визы или спонсорские схемы.</p>
+<div class="bcm-cols">
+<div class="bcm-pros"><h4>✓ Плюсы</h4><ul>
+<li>Исключительно низкая стоимость жизни</li>
+<li>Быстрый интернет (особенно Дананг)</li>
+<li>Невероятная кулинарная культура</li>
+<li>Молодая, динамичная экономика</li>
+<li>Красивая природа (пляжи, горы)</li>
+</ul></div>
+<div class="bcm-cons"><h4>✗ Минусы</h4><ul>
+<li>Нет долгосрочной визы для номадов пока</li>
+<li>Языковой барьер</li>
+<li>Пробки в крупных городах</li>
+<li>Качество воздуха в Ханое и ХCMБ</li>
+</ul></div></div>
+<div class="bcm-cta-box">
+<p>Варианты виз Вьетнама, сравнение городов и хаты номадов</p>
+<a href="/ru/countries/move-to-vietnam/">Изучить Вьетнам →</a>
+</div>
+</div>
+<div class="bcm-country" id="bali">
+<div class="bcm-country-header">
+<div class="bcm-rank-badge">4</div>
+<div class="bcm-country-title">
+<span class="tag">🌴 Лучшее для сообщества и образа жизни</span>
+<h2>Бали, Индонезия</h2>
+</div>
+</div>
+<div class="bcm-stats-bar">
+<div class="bcm-stat-item"><span class="val">$800</span><span class="lbl">Стартовый бюджет</span></div>
+<div class="bcm-stat-item"><span class="val">B211A</span><span class="lbl">Социальная виза</span></div>
+<div class="bcm-stat-item"><span class="val">Тропический</span><span class="lbl">Климат</span></div>
+<div class="bcm-stat-item"><span class="val">#1</span><span class="lbl">Столица номадов</span></div>
+</div>
+<p>Бали — мировая столица цифровых номадов. Чангу стал культовым хабом с десятками коворкингов мирового класса, исключительными кафе и сообществом из 50 000+ удалённых работников. Убуд предлагает более спокойный, духовный опыт среди рисовых террас. Семиньяк и Улувату привлекают любителей образа жизни.</p>
+<p>Индонезия запустила <strong>Визу цифрового номада (E33G)</strong> с пребыванием 60 дней, продлеваемых до 180 дней, и освобождением иностранного дохода от индонезийского налога. <strong>Виза второго дома</strong> обеспечивает 5 или 10-летнее пребывание для инвесторов в недвижимость.</p>
+<div class="bcm-cols">
+<div class="bcm-pros"><h4>✓ Плюсы</h4><ul>
+<li>Лучшее сообщество цифровых номадов в мире</li>
+<li>Невероятная коворкинг-сцена в Чангу</li>
+<li>Иностранный доход освобождён от налога (виза E33G)</li>
+<li>Духовная, велнес-ориентированная культура</li>
+<li>Красивая природа и пляжи</li>
+</ul></div>
+<div class="bcm-cons"><h4>✗ Минусы</h4><ul>
+<li>Сложность визы (не простая)</li>
+<li>Пробки в Чангу</li>
+<li>Дороже Вьетнама и Камбоджи</li>
+<li>Интенсивный сезон дождей</li>
+</ul></div></div>
+<div class="bcm-cta-box">
+<p>Варианты виз Бали, гид по районам (Чангу vs Убуд) и разбивка расходов</p>
+<a href="/ru/countries/move-to-bali/">Изучить Бали →</a>
+</div>
+</div>
+<div class="bcm-country" id="philippines">
+<div class="bcm-country-header">
+<div class="bcm-rank-badge">5</div>
+<div class="bcm-country-title">
+<span class="tag">🗣️ Лучший для англоговорящих</span>
+<h2>Филиппины</h2>
+</div>
+</div>
+<div class="bcm-stats-bar">
+<div class="bcm-stat-item"><span class="val">$700</span><span class="lbl">Стартовый бюджет</span></div>
+<div class="bcm-stat-item"><span class="val">SRRV</span><span class="lbl">Пенсионная виза</span></div>
+<div class="bcm-stat-item"><span class="val">Английский</span><span class="lbl">Официальный язык</span></div>
+<div class="bcm-stat-item"><span class="val">7,641</span><span class="lbl">Островов</span></div>
+</div>
+<p>Филиппины — самая дружелюбная к английскому языку страна в Азии: он является официальным, и практически все им владеют. Это делает страну уникально доступной для экспатов, не желающих сталкиваться с языковым барьером. В Себу, Маниле и Давао сложились устоявшиеся экспат-сообщества, а острова вроде Сиаргао привлекают серферов и любителей образа жизни.</p>
+<p><strong>SRRV (Special Resident Retiree's Visa)</strong> доступна от 35 лет с банковским депозитом от $10,000 до $50,000. Для остальных туристические визы могут продлеваться до 36 месяцев.</p>
+<div class="bcm-cols">
+<div class="bcm-pros"><h4>✓ Плюсы</h4><ul>
+<li>Английский официальный — нет языкового барьера</li>
+<li>Крайне дружелюбная, гостеприимная культура</li>
+<li>Низкая стоимость жизни</li>
+<li>Потрясающие островные направления</li>
+<li>Сильное экспат-пенсионное сообщество</li>
+</ul></div>
+<div class="bcm-cons"><h4>✗ Минусы</h4><ul>
+<li>Риск сезона тайфунов</li>
+<li>Инфраструктура существенно варьируется</li>
+<li>Нестабильный интернет вне городов</li>
+<li>Пробки в Метро Маниле</li>
+</ul></div></div>
+<div class="bcm-cta-box">
+<p>Визовый гид по Филиппинам, лучшие острова для жизни, экспат-сообщество</p>
+<a href="/ru/countries/move-to-philippines/">Изучить Филиппины →</a>
+</div>
+</div>
+<div class="bcm-country" id="japan">
+<div class="bcm-country-header">
+<div class="bcm-rank-badge">6</div>
+<div class="bcm-country-title">
+<span class="tag">🎌 Лучшее качество жизни</span>
+<h2>Япония</h2>
+</div>
+</div>
+<div class="bcm-stats-bar">
+<div class="bcm-stat-item"><span class="val">$1,600</span><span class="lbl">Стартовый бюджет</span></div>
+<div class="bcm-stat-item"><span class="val">Digital Nomad</span><span class="lbl">Виза есть</span></div>
+<div class="bcm-stat-item"><span class="val">Отличная</span><span class="lbl">Безопасность</span></div>
+<div class="bcm-stat-item"><span class="val">#1</span><span class="lbl">Рейтинг безопасности</span></div>
+</div>
+<p>Япония предлагает непревзойдённое качество жизни — безупречный общественный транспорт, лучшую в мире кулинарную сцену, абсолютную безопасность и культуру, ценящую мастерство и порядок. Токио, Осака и Киото дают разный опыт. В 2024 году Япония запустила <strong>Визу цифрового номада</strong> с 6-месячным пребыванием для удалённых работников с доходом ¥10 млн+ в год.</p>
+<p>Долгосрочное проживание требует трудоустройства или бизнес-инвестиций, но рабочая культура Японии быстро меняется, и международные таланты всё более востребованы, особенно в IT.</p>
+<div class="bcm-cols">
+<div class="bcm-pros"><h4>✓ Плюсы</h4><ul>
+<li>Самая безопасная страна в Азии (возможно, в мире)</li>
+<li>Лучшая в мире кухня и культура сервиса</li>
+<li>Исключительный общественный транспорт</li>
+<li>Всеобщее медицинское страхование для резидентов</li>
+<li>Уникальный, богатый культурный опыт</li>
+</ul></div>
+<div class="bcm-cons"><h4>✗ Минусы</h4><ul>
+<li>Высокая стоимость жизни vs. ЮВА</li>
+<li>Языковой барьер (нужен японский)</li>
+<li>Виза сложная для не-сотрудников</li>
+<li>Рабочая культура может быть требовательной</li>
+</ul></div></div>
+<div class="bcm-cta-box">
+<p>Визовый гид по Японии, стоимость жизни Токио vs Осака, жизнь экспатов</p>
+<a href="/ru/countries/move-to-japan/">Изучить Японию →</a>
+</div>
+</div>
+<div class="bcm-country" id="south-korea">
+<div class="bcm-country-header">
+<div class="bcm-rank-badge">7</div>
+<div class="bcm-country-title">
+<span class="tag">💻 Лучшая для технологий и инноваций</span>
+<h2>Южная Корея</h2>
+</div>
+</div>
+<div class="bcm-stats-bar">
+<div class="bcm-stat-item"><span class="val">$1,800</span><span class="lbl">Стартовый бюджет</span></div>
+<div class="bcm-stat-item"><span class="val">D-10</span><span class="lbl">Стартап-виза</span></div>
+<div class="bcm-stat-item"><span class="val">Мировой рекорд</span><span class="lbl">Интернет</span></div>
+<div class="bcm-stat-item"><span class="val">Топ-10</span><span class="lbl">Индекс инноваций</span></div>
+</div>
+<p>Южная Корея — Сеул в особенности — один из самых технологически развитых городов мира. Интернет здесь самый быстрый на планете, K-культура создала глобально связанное общество, а стартап-экосистема процветает. <strong>Стартап-виза D-10</strong> и различные предпринимательские программы делают Корею доступной для бизнес-ориентированных экспатов.</p>
+<div class="bcm-cols">
+<div class="bcm-pros"><h4>✓ Плюсы</h4><ul>
+<li>Самый быстрый интернет в мире</li>
+<li>Передовая технологическая инфраструктура</li>
+<li>Отличная система здравоохранения</li>
+<li>Динамичная культура (K-pop, еда, мода)</li>
+<li>Сильная стартап-экосистема</li>
+</ul></div>
+<div class="bcm-cons"><h4>✗ Минусы</h4><ul>
+<li>Высокая стоимость жизни в Сеуле</li>
+<li>Языковой барьер</li>
+<li>Консерватизм в некоторых сферах</li>
+<li>Холодные зимы</li>
+</ul></div></div>
+<div class="bcm-cta-box">
+<p>Варианты виз Южной Кореи, Сеул vs Пусан, жизнь цифрового номада</p>
+<a href="/ru/countries/move-to-south-korea/">Изучить Южную Корею →</a>
+</div>
+</div>
+<div class="bcm-country" id="singapore">
+<div class="bcm-country-header">
+<div class="bcm-rank-badge">8</div>
+<div class="bcm-country-title">
+<span class="tag">💼 Лучший для высоких доходов</span>
+<h2>Сингапур</h2>
+</div>
+</div>
+<div class="bcm-stats-bar">
+<div class="bcm-stat-item"><span class="val">$2,500</span><span class="lbl">Стартовый бюджет</span></div>
+<div class="bcm-stat-item"><span class="val">EP / ONE Pass</span><span class="lbl">Рабочие визы</span></div>
+<div class="bcm-stat-item"><span class="val">Английский</span><span class="lbl">Официальный язык</span></div>
+<div class="bcm-stat-item"><span class="val">#1</span><span class="lbl">Финансовый хаб Азии</span></div>
+</div>
+<p>Сингапур — финансовая столица Азии: город-государство с инфраструктурой мирового класса, нулевой коррупцией, английским как официальным языком и одними из самых высоких зарплат в регионе. Дорого, но для работников финансового сектора, IT и профессиональных услуг компенсация более чем оправдывает затраты. <strong>ONE Pass</strong> и <strong>EntrePass</strong> — ключевые визы для топ-специалистов и основателей.</p>
+<div class="bcm-cols">
+<div class="bcm-pros"><h4>✓ Плюсы</h4><ul>
+<li>Финансовый и бизнес-хаб Азии №1</li>
+<li>Нулевая преступность, невероятная безопасность</li>
+<li>Английский официальный язык</li>
+<li>Инфраструктура мирового класса</li>
+<li>Ворота во всю Азию</li>
+</ul></div>
+<div class="bcm-cons"><h4>✗ Минусы</h4><ul>
+<li>Очень высокая стоимость жизни</li>
+<li>Маленький размер — мало природы</li>
+<li>Жара и влажность круглый год</li>
+<li>Строгие законы и регуляции</li>
+</ul></div></div>
+<div class="bcm-cta-box">
+<p>Гид по визе EP Сингапура, ожидания по зарплате и жизнь экспатов</p>
+<a href="/ru/countries/move-to-singapore/">Изучить Сингапур →</a>
+</div>
+</div>
+<div class="bcm-country" id="cambodia">
+<div class="bcm-country-header">
+<div class="bcm-rank-badge">9</div>
+<div class="bcm-country-title">
+<span class="tag">🪙 Лучшая бюджетная гибкость</span>
+<h2>Камбоджа</h2>
+</div>
+</div>
+<div class="bcm-stats-bar">
+<div class="bcm-stat-item"><span class="val">$600</span><span class="lbl">Стартовый бюджет</span></div>
+<div class="bcm-stat-item"><span class="val">Э-виза</span><span class="lbl">Простой въезд</span></div>
+<div class="bcm-stat-item"><span class="val">USD</span><span class="lbl">Используемая валюта</span></div>
+<div class="bcm-stat-item"><span class="val">Растущий</span><span class="lbl">Экспат-сцена</span></div>
+</div>
+<p>Камбоджа — одна из самых дешёвых стран Азии для жизни, при этом доллар США широко используется как повседневная валюта (что упрощает планирование бюджета). Пномпень — быстро развивающаяся столица с растущей экспат-сценой, а Сиемреап предлагает более спокойный, культурный опыт вблизи Ангкор-Вата. Бизнес-виза продлевается бессрочно.</p>
+<div class="bcm-cols">
+<div class="bcm-pros"><h4>✓ Плюсы</h4><ul>
+<li>Крайне низкая стоимость жизни</li>
+<li>USD широко принимается</li>
+<li>Бизнес-виза продлевается бессрочно</li>
+<li>Простая, дружелюбная бюрократия</li>
+<li>Богатая история и культура</li>
+</ul></div>
+<div class="bcm-cons"><h4>✗ Минусы</h4><ul>
+<li>Менее развитая инфраструктура</li>
+<li>Медицина ограничена вне Пномпеня</li>
+<li>Политическая нестабильность</li>
+<li>Ограниченная международная связность</li>
+</ul></div></div>
+<div class="bcm-cta-box">
+<p>Информация о визах Камбоджи, гид по стоимости жизни и районы для экспатов</p>
+<a href="/ru/countries/move-to-cambodia/">Изучить Камбоджу →</a>
+</div>
+</div>
+<div class="bcm-country" id="uae">
+<div class="bcm-country-header">
+<div class="bcm-rank-badge">10</div>
+<div class="bcm-country-title">
+<span class="tag">💎 Лучший безналоговый доход</span>
+<h2>ОАЭ (Дубай)</h2>
+</div>
+</div>
+<div class="bcm-stats-bar">
+<div class="bcm-stat-item"><span class="val">$2,500</span><span class="lbl">Стартовый бюджет</span></div>
+<div class="bcm-stat-item"><span class="val">Golden Visa</span><span class="lbl">10-летний вариант</span></div>
+<div class="bcm-stat-item"><span class="val">0%</span><span class="lbl">Подоходный налог</span></div>
+<div class="bcm-stat-item"><span class="val">85%</span><span class="lbl">Население — экспаты</span></div>
+</div>
+<p>Дубай и ОАЭ предлагают нулевой личный подоходный налог, что делает эту страну главным направлением для высокооплачиваемых специалистов, желающих сохранить свой заработок. Страна на 85% состоит из экспатов — она создана для международных жителей. <strong>Золотая виза</strong> обеспечивает 10-летнее резидентство для инвесторов, предпринимателей и квалифицированных специалистов. Абу-Даби предлагает более спокойную, семейно-ориентированную альтернативу Дубаю.</p>
+<div class="bcm-cols">
+<div class="bcm-pros"><h4>✓ Плюсы</h4><ul>
+<li>Нулевой личный подоходный налог</li>
+<li>Инфраструктура мирового класса</li>
+<li>Подлинно глобальное экспат-сообщество</li>
+<li>Безопасно, современно, хорошо организовано</li>
+<li>Доступна 10-летняя Золотая виза</li>
+</ul></div>
+<div class="bcm-cons"><h4>✗ Минусы</h4><ul>
+<li>Высокая стоимость жизни</li>
+<li>Экстремальная летняя жара (45°C+)</li>
+<li>Консервативные законы об алкоголе и одежде</li>
+<li>Зависимость от автомобиля</li>
+</ul></div></div>
+<div class="bcm-cta-box">
+<p>Гид по Золотой визе ОАЭ, стоимость жизни в Дубае и жизнь экспатов</p>
+<a href="/ru/countries/move-to-uae/">Изучить ОАЭ →</a>
+</div>
+</div>
+<div class="bcm-faq" id="faq">
+<h2>Часто задаваемые вопросы</h2>
+<div class="bcm-faq-item">
+<h3>В какую азиатскую страну проще всего переехать?</h3>
+<p>Таиланд, Камбоджа и Филиппины — самые простые страны для переезда в Азии. Таиланд предлагает широко используемую туристическую визу, которую можно продлить, бизнес-виза Камбоджи продлевается бессрочно. На Филиппинах туристические визы можно продлевать до 36 месяцев. MM2H Малайзии — лучшая формальная долгосрочная виза, когда выполнены требования к доходу.</p>
+</div>
+<div class="bcm-faq-item">
+<h3>Какая самая дешёвая страна Азии для жизни?</h3>
+<p>Камбоджа и Вьетнам — самые дешёвые страны Азии для комфортной жизни. Комфортный образ жизни в Пномпене или Данange может стоить от $700–900/месяц включая аренду, еду, транспорт и развлечения. Лаос ещё дешевле, но инфраструктура для экспатов очень ограничена.</p>
+</div>
+<div class="bcm-faq-item">
+<h3>Какая азиатская страна лучшая для цифровых номадов?</h3>
+<p>Таиланд (Чиангмай и Бангкок) и Бали (Чангу) — два главных направления для цифровых номадов в Азии. В обоих огромные устоявшиеся сообщества, отличные коворкинги, быстрый интернет и высокая концентрация экспат-сервисов. Дананг (Вьетнам) — восходящий конкурент с отличным интернетом и очень низкими ценами.</p>
+</div>
+<div class="bcm-faq-item">
+<h3>Можно ли выйти на пенсию в Азии недорого?</h3>
+<p>Да — несколько азиатских стран предлагают пенсионные визы с относительно низкими требованиями. Пенсионная виза Таиланда требует $25,000 на тайском банковском счёте или подтверждения пенсии $2,000/месяц. MM2H Малайзии отлично подходит для пенсионеров. SRRV Филиппин начинается с депозита $10,000 для лиц от 35 лет. Все три страны предлагают очень комфортный выход на пенсию за $1,200–2,000/месяц.</p>
+</div>
+<div class="bcm-faq-item">
+<h3>В какой азиатской стране лучшая медицина для экспатов?</h3>
+<p>У Сингапура лучшая в мире система здравоохранения, но по высокой цене. Таиланд — лучший выбор по соотношению цены и качества: частные больницы Бангкока (Bumrungrad, Bangkok Hospital) имеют международную аккредитацию, а расходы на 60–80% ниже, чем в США или Великобритании. В Малайзии тоже отличные частные больницы, особенно в Куала-Лумпуре и Пенанге.</p>
+</div>
+</div>
+<div class="bcm-conclusion">
+<h2>Как выбрать подходящую азиатскую страну для вас</h2>
+<p>Лучшая страна в Азии для переезда полностью зависит от ваших приоритетов:</p>
+<ul>
+<li><strong>Бюджет до $1,000/мес.:</strong> Вьетнам, Камбоджа или Лаос</li>
+<li><strong>Семья с детьми:</strong> Малайзия (школы) или Сингапур (безопасность)</li>
+<li><strong>Цифровой номад:</strong> Таиланд (Чиангмай) или Бали (Чангу)</li>
+<li><strong>Высокий доход и налоговая эффективность:</strong> ОАЭ или Сингапур</li>
+<li><strong>Пенсионер:</strong> Таиланд, Филиппины или Малайзия</li>
+<li><strong>Предприниматель:</strong> Сингапур, ОАЭ или Южная Корея</li>
+<li><strong>Только английский:</strong> Филиппины, Сингапур или Малайзия</li>
+</ul>
+<p>Используйте наш <a href="/ru/tools/cost-calculator/">Калькулятор стоимости жизни</a>, чтобы рассчитать точный ежемесячный бюджет для любой азиатской страны, или <a href="/ru/countries/">просмотрите все 20 страновых гидов</a>, чтобы найти идеальное направление.</p>
+</div>
+"""
+    return "Лучшие страны Азии для переезда в 2026 году", BCM_ARTICLE_STYLE + content
 @app.route("/compare/")
 def compare_index():
     row = page_or_404("compare")
