@@ -4,14 +4,74 @@ import re
 import sqlite3
 import json
 import html
+import threading
+import time
 from pathlib import Path
 
-from flask import Flask, Response, abort, redirect, render_template, request
+from flask import Flask, Response, abort, make_response, redirect, render_template, request
 
 APP_DIR = Path(__file__).resolve().parent
 DB_PATH = APP_DIR / "content.db"
 
 app = Flask(__name__)
+
+# ── In-process page cache ────────────────────────────────────────────────────
+# Caches fully rendered HTML for static public GET pages.
+# TTL = 10 min; invalidated on process restart (deploy).
+_PAGE_CACHE: dict[str, tuple[bytes, str, float]] = {}  # path -> (body, content_type, ts)
+_PAGE_CACHE_LOCK = threading.Lock()
+_PAGE_CACHE_TTL = 600  # seconds
+
+# Paths that must NOT be cached (dynamic / admin / API)
+_CACHE_SKIP_PREFIXES = ("/admin", "/api", "/auth", "/ping", "/db-check",
+                        "/tools/", "/ru/tools/")
+
+
+def _cache_eligible(path: str) -> bool:
+    if any(path.startswith(p) for p in _CACHE_SKIP_PREFIXES):
+        return False
+    return True
+
+
+@app.before_request
+def _serve_from_cache():
+    if request.method != "GET":
+        return None
+    path = request.path
+    if not _cache_eligible(path):
+        return None
+    with _PAGE_CACHE_LOCK:
+        entry = _PAGE_CACHE.get(path)
+    if entry is None:
+        return None
+    body, ct, ts = entry
+    if time.monotonic() - ts > _PAGE_CACHE_TTL:
+        with _PAGE_CACHE_LOCK:
+            _PAGE_CACHE.pop(path, None)
+        return None
+    resp = make_response(body)
+    resp.content_type = ct
+    resp.headers["Cache-Control"] = "public, max-age=600, stale-while-revalidate=3600"
+    resp.headers["X-Cache"] = "HIT"
+    return resp
+
+
+@app.after_request
+def _store_in_cache_and_add_headers(response: Response) -> Response:
+    path = request.path
+    # Add Cache-Control to all public 200 GET responses
+    if request.method == "GET" and response.status_code == 200:
+        if _cache_eligible(path):
+            response.headers.setdefault(
+                "Cache-Control", "public, max-age=600, stale-while-revalidate=3600"
+            )
+            # Store in cache only for HTML pages
+            ct = response.content_type or ""
+            if "text/html" in ct and response.is_sequence:
+                body = response.get_data()
+                with _PAGE_CACHE_LOCK:
+                    _PAGE_CACHE[path] = (body, ct, time.monotonic())
+    return response
 
 SITE_NAME = "Relocate to Asia"
 SITE_URL = "https://www.marharuta.online"
@@ -2279,7 +2339,7 @@ def ru_hub_content(slug: str) -> str | None:
     if not data:
         return None
     title, intro, cards = data
-    card_html = "\n".join(f'<div class="rta-linkhub-card"><h3>{html.escape(card_title)}</h3><p>{html.escape(text)}</p></div>' for card_title, text in cards)
+    card_html = "\n".join(f'<div class="rta-hub-card"><h3>{html.escape(card_title)}</h3><p>{html.escape(text)}</p></div>' for card_title, text in cards)
     default_copy = (
         "Смотрите на страницу как на первый фильтр, а не как на готовый ответ. Если визовый маршрут, бюджет и срок проживания не сходятся, красивое направление лучше убрать из shortlist до оплаты жилья и билетов.",
         "Как принимать решение",
@@ -2379,16 +2439,16 @@ def ru_hub_content(slug: str) -> str | None:
         ),
     }.get(slug, default_copy)
     summary, decision_title, decision_one, decision_two, next_title, next_text = hub_copy
-    return f"""
-<section class="rta-article">
-  <div class="rta-hero-card">
-    <span class="rta-pill">Гид 2026</span>
+    return f"""<style>.rta-hub{{max-width:1040px;margin:0 auto}}.rta-hub-hero{{background:linear-gradient(135deg,#0a1628,#1a3a6c);color:#fff;padding:46px 32px;border-radius:8px;margin-bottom:28px;box-shadow:0 10px 30px rgba(15,52,96,.12)}}.rta-hub-hero .badge{{display:inline-block;border:1px solid rgba(255,255,255,.3);border-radius:8px;padding:5px 12px;margin-bottom:14px;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}}.rta-hub-hero h1{{color:#fff!important;margin:0 0 12px;font-size:clamp(30px,4vw,46px);line-height:1.12}}.rta-hub-hero p{{max-width:760px;margin:0;color:rgba(255,255,255,.86);font-size:17px;line-height:1.7}}.rta-hub h2{{color:#0a1628;font-size:clamp(24px,3vw,34px);line-height:1.18;margin:30px 0 14px}}.rta-hub>p{{color:#4f5f73;line-height:1.7;font-size:16px;margin:0 0 16px}}.rta-hub-grid{{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:18px 0 28px}}.rta-hub-card{{background:#fff;border:1px solid #e3e9f2;border-radius:8px;padding:18px;box-shadow:0 8px 24px rgba(15,52,96,.06)}}.rta-hub-card h3{{margin:0 0 8px;color:#0a1628;font-size:18px;line-height:1.3}}.rta-hub-card p{{margin:0;color:#4f5f73;line-height:1.7}}@media(max-width:720px){{.rta-hub-grid{{grid-template-columns:1fr}}.rta-hub-hero{{padding:32px 18px}}}}</style>
+<section class="rta-hub">
+  <div class="rta-hub-hero">
+    <div class="badge">Гид 2026</div>
     <h1>{html.escape(title)}</h1>
     <p>{html.escape(intro)}</p>
   </div>
   <h2>Короткий вывод</h2>
   <p>{html.escape(summary)}</p>
-  <div class="rta-linkhub-grid">{card_html}</div>
+  <div class="rta-hub-grid">{card_html}</div>
   <h2>{html.escape(decision_title)}</h2>
   <p>{html.escape(decision_one)}</p>
   <p>{html.escape(decision_two)}</p>
@@ -4339,9 +4399,20 @@ def post_alternates(row: sqlite3.Row, *, lang: str, canonical_path: str) -> list
     if len(alternates) == 1:
         paired_lang = "ru" if lang == "en" else "en"
         paired_prefix = "/ru/blog" if paired_lang == "ru" else "/blog"
+        # 1. Same slug in paired language
         paired = one("SELECT slug FROM posts WHERE slug = ? AND lang = ?", (row["slug"], paired_lang))
         if paired:
             alternates.append({"lang": paired_lang, "url": absolute_url(f"{paired_prefix}/{paired['slug']}/")})
+        elif lang == "ru":
+            # 2. Find EN post whose content links to this RU URL (relative or absolute)
+            ru_slug = row["slug"]
+            paired_en = one(
+                "SELECT slug FROM posts WHERE lang = 'en' AND "
+                "(content LIKE ? OR content LIKE ?)",
+                (f'%/ru/blog/{ru_slug}/%', f'%ru/blog/{ru_slug}/%',)
+            )
+            if paired_en:
+                alternates.append({"lang": "en", "url": absolute_url(f"/blog/{paired_en['slug']}/")})
     english = next((item for item in alternates if item["lang"] == "en"), alternates[0])
     alternates.append({"lang": "x-default", "url": english["url"]})
     return alternates
@@ -4592,6 +4663,13 @@ def wp_clean(content: str | None) -> str:
     )
     cleaned = re.sub(
         r"<(?P<tag>div|p|span|section)\b(?=[^>]*class=[\"'][^\"']*\b(?:art-ru-link|fc-lang)\b[^\"']*[\"'])[^>]*>.*?</(?P=tag)>",
+        "",
+        cleaned,
+        flags=re.IGNORECASE | re.DOTALL,
+    )
+    # Remove WordPress-imported breadcrumbs (duplicated by the template's own breadcrumb)
+    cleaned = re.sub(
+        r"<nav\b(?=[^>]*class=[\"'][^\"']*\bart-breadcrumb\b[^\"']*[\"'])[^>]*>.*?</nav>",
         "",
         cleaned,
         flags=re.IGNORECASE | re.DOTALL,
@@ -6651,7 +6729,14 @@ def render_page_row(row: sqlite3.Row | dict, **kwargs):
     breadcrumbs = kwargs.pop("breadcrumbs", [])
     lang = kwargs.get("lang", "ru" if request.path.startswith("/ru/") else "en")
     if lang == "ru":
+        # Preserve URL-critical fields before polish_ru_data translates all strings
+        _slug = row.get("slug", "")
+        _link = row.get("link", "")
         row = polish_ru_data(row)
+        if _slug:
+            row["slug"] = _slug
+        if _link:
+            row["link"] = _link
         if row.get("content"):
             row["content"] = sentence_case_ru_headings(row["content"])
             row["content"] = polish_ru_text(row["content"])
@@ -6740,12 +6825,15 @@ def render_post_row(row: sqlite3.Row, *, lang: str):
         row["excerpt"] = localized_post_content(row["excerpt"] or "")
         row["content"] = localized_post_content(row["content"])
     row = normalized_content_row(row)
+    # Preserve the original slug before polish_ru_data mutates all string fields
+    _slug = row["slug"]
     if lang == "ru":
         row = polish_ru_data(row)
+        row["slug"] = _slug  # restore — slug must never be translated
         if row.get("content"):
             row["content"] = sentence_case_ru_headings(row["content"])
             row["content"] = polish_ru_text(row["content"])
-    canonical_path = f"/blog/{row['slug']}/" if lang == "en" else f"/ru/blog/{row['slug']}/"
+    canonical_path = f"/blog/{_slug}/" if lang == "en" else f"/ru/blog/{_slug}/"
     alternates = post_alternates(row, lang=lang, canonical_path=canonical_path)
     schema = [
         article_schema(row, lang=lang, canonical_path=canonical_path),
@@ -6785,7 +6873,12 @@ def render_post_row(row: sqlite3.Row, *, lang: str):
         article_seo = polish_ru_data(article_seo)
         article_sources = polish_ru_data(article_sources)
         article_trust = polish_ru_data(article_trust)
-        related = polish_ru_data(related)
+        # Polish display-only fields; preserve slug/lang so URL generation stays correct
+        related = [
+            {**dict(r), "title": polish_ru_text(r["title"] or ""),
+             "excerpt": polish_ru_text(r["excerpt"] or "")}
+            for r in related
+        ]
     return render_template(
         "post.html",
         post=row,
@@ -8012,12 +8105,19 @@ def render_blog_index(*, lang: str, page: int = 1):
         return redirect(f"{path}page/{query_page}/", 301)
     page = max(page, 1)
     per_page = 10
-    title = "Блог о релокации в Азию" if is_ru else "Asia Relocation Blog"
-    description = (
+    _base_title = "Блог о релокации в Азию" if is_ru else "Asia Relocation Blog"
+    _base_description = (
         "Русскоязычные гайды по визам, странам и релокации в Азию на основе официальных источников."
         if is_ru else
         "Guides, comparisons and practical relocation advice for expats moving across Asia."
     )
+    if page > 1:
+        _pg = f"Страница {page}" if is_ru else f"Page {page}"
+        title = f"{_base_title} — {_pg}"
+        description = f"{_base_description} {_pg}."
+    else:
+        title = _base_title
+        description = _base_description
     total_posts = one("SELECT COUNT(*) AS count FROM posts WHERE lang = ?", (lang,))["count"]
     total_pages = max((total_posts + per_page - 1) // per_page, 1)
     if page > total_pages:
@@ -8046,7 +8146,7 @@ def render_blog_index(*, lang: str, page: int = 1):
         trust_panel = polish_ru_data(trust_panel)
         depth_panel = polish_ru_data(depth_panel)
     blog_breadcrumb_title = f"Страница {page}" if is_ru and page > 1 else f"Page {page}" if page > 1 else title
-    blog_breadcrumbs = [(title, path)] if page > 1 else []
+    blog_breadcrumbs = [(_base_title, path)] if page > 1 else []
     schema_items = [
         breadcrumb_schema(blog_breadcrumbs, blog_breadcrumb_title, canonical_path),
         collection_schema(title, description, canonical_path),
