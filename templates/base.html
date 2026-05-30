@@ -891,25 +891,40 @@
 
     /* Blog index */
     .rta-blog-hero {
-      background: linear-gradient(135deg, #0f3460, #1a3a6e);
-      padding: 46px 28px;
+      background: linear-gradient(135deg, #0f2d52, #1a3a6e 60%, #1e4587);
+      padding: 52px 28px 44px;
       margin-bottom: 34px;
       color: #fff;
       text-align: center;
+      border-radius: var(--radius-lg);
     }
 
     .rta-blog-hero h1 {
-      margin: 0 0 12px;
+      margin: 0 0 14px;
       color: #fff;
-      font-size: 36px;
-      font-weight: 800;
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 900;
+      letter-spacing: -.5px;
     }
 
     .rta-blog-hero p {
-      max-width: 680px;
+      max-width: 620px;
       margin: 0 auto;
-      color: rgba(255,255,255,.86);
+      color: rgba(255,255,255,.82);
       font-size: 17px;
+      line-height: 1.6;
+    }
+
+    .rta-blog-hero-stats {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+      color: rgba(255,255,255,.55);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: .3px;
     }
 
     .rta-blog-lang {
@@ -1017,16 +1032,22 @@
       padding: 24px;
     }
 
+    .rta-blog-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
     .rta-blog-date {
       width: fit-content;
-      margin-bottom: 14px;
-      padding: 5px 10px;
-      border-radius: var(--radius);
+      padding: 4px 10px;
+      border-radius: var(--radius-sm);
       background: var(--blue-soft);
       color: var(--blue);
       font-size: 12px;
-      font-weight: 800;
-      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: .1px;
     }
 
     .rta-blog-card h2 {
@@ -2655,17 +2676,23 @@
     .rta-blog-card {
       border-radius: var(--radius-lg) !important;
       border: 1px solid var(--line);
-      box-shadow: var(--shadow);
+      box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 12px rgba(15,52,96,.06);
       transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+      min-height: 260px;
     }
     .rta-blog-card::before {
-      height: 4px;
-      background: linear-gradient(90deg, var(--blue), #60a5fa, #38bdf8);
+      height: 3px;
+      background: linear-gradient(90deg, #1a56db 0%, #3b82f6 50%, #06b6d4 100%);
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
     }
     .rta-blog-card:hover {
-      transform: translateY(-4px);
-      box-shadow: var(--shadow-lg);
-      border-color: #c7d9f5;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(15,52,96,.13);
+      border-color: #b8d0f0;
+    }
+    .rta-blog-card h2 {
+      font-size: 19px;
+      line-height: 1.3;
     }
 
     /* Better hero gradients */
@@ -3416,6 +3443,82 @@
       .ru-costs-grid { grid-template-columns: repeat(2, 1fr); }
       .ru-stat { min-width: 90px; padding: 8px 12px; }
       .ru-cost-val { font-size: 17px; }
+    }
+
+    /* ── Homepage country cards ── */
+    .rta-content .rta-cc {
+      border-radius: var(--radius-lg) !important;
+      overflow: hidden;
+      box-shadow: var(--shadow) !important;
+      transition: transform var(--transition), box-shadow var(--transition) !important;
+      text-decoration: none !important;
+    }
+    .rta-content .rta-cc:hover {
+      transform: translateY(-4px) !important;
+      box-shadow: var(--shadow-md) !important;
+    }
+    .rta-content .rta-cc-flag {
+      height: 160px !important;
+      overflow: hidden !important;
+      position: relative !important;
+    }
+    .rta-content .rta-cc-flag img {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover !important;
+      object-position: center !important;
+      display: block !important;
+    }
+    .rta-content .rta-cc-name {
+      font-size: 20px !important;
+      font-weight: 800 !important;
+      color: var(--dark) !important;
+      margin-bottom: 6px !important;
+    }
+    .rta-content .rta-cc-desc {
+      font-size: 14px !important;
+      line-height: 1.55 !important;
+      color: var(--text) !important;
+    }
+    .rta-content .rta-cc-price {
+      font-size: 18px !important;
+      font-weight: 800 !important;
+      color: var(--dark) !important;
+    }
+
+    /* ── Blog hero position fix ── */
+    .rta-blog-hero { position: relative; overflow: hidden; }
+
+    /* ── Depth panel card accent ── */
+    .rta-depth-grid article h3 {
+      font-size: 16px !important;
+      font-weight: 700 !important;
+      line-height: 1.35 !important;
+    }
+    .rta-depth-grid article p {
+      font-size: 14.5px !important;
+      line-height: 1.65 !important;
+    }
+
+    /* ── Source panel link cards ── */
+    .rta-source-grid a {
+      transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition) !important;
+    }
+    .rta-source-grid a:hover {
+      transform: translateY(-2px) !important;
+      border-color: #bfd0ee !important;
+      box-shadow: 0 4px 16px rgba(15,52,96,.1) !important;
+    }
+
+    /* ── SEO facts table ── */
+    .rta-seo-facts-row strong { font-weight: 700; color: var(--dark); }
+    .rta-seo-facts-row span { color: var(--muted); }
+
+    /* ── Pagination refinement ── */
+    .rta-page-numbers span.is-current {
+      background: var(--blue) !important;
+      color: #fff !important;
+      border-color: var(--blue) !important;
     }
   </style>
   {% block head %}{% endblock %}

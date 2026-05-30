@@ -2112,7 +2112,7 @@ def en_country_article(slug: str, facts: sqlite3.Row | None) -> str:
 </div>
 """
 
-    budget = ru_data["budget"]
+    budget = _normalize_budget_en(ru_data["budget"])
     climate = _CLIMATE_EN.get(ru_data["climate"], ru_data["climate"])
     english_level = _ENGLISH_EN.get(ru_data["english"], ru_data["english"])
     visa_label = ru_data["visa_label"]
@@ -4546,6 +4546,36 @@ def _localize_internal_links(text: str, *, lang: str) -> str:
     return text
 
 
+@app.template_filter("format_date")
+def format_date_filter(value: str | None, lang: str = "en") -> str:
+    """Format ISO date string into human-readable form: 2026-04-13 → Apr 13, 2026 / 13 апр. 2026."""
+    if not value:
+        return ""
+    try:
+        from datetime import datetime
+        d = datetime.strptime(str(value)[:10], "%Y-%m-%d")
+        if lang == "ru":
+            months_ru = ["янв.", "февр.", "марта", "апр.", "мая", "июня",
+                         "июля", "авг.", "сент.", "окт.", "нояб.", "дек."]
+            return f"{d.day} {months_ru[d.month - 1]} {d.year}"
+        months_en = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+        return f"{months_en[d.month - 1]} {d.day}, {d.year}"
+    except (ValueError, TypeError):
+        return str(value)[:10]
+
+
+def _normalize_budget_en(s: str) -> str:
+    """Replace space thousands-separator between digits with comma for EN display."""
+    out = []
+    chars = list(s)
+    for i, ch in enumerate(chars):
+        if ord(ch) in (0x20, 0xa0, 0x202f, 0x2009, 0x2007) and i > 0 and i < len(chars)-1 and chars[i-1].isdigit() and chars[i+1].isdigit():
+            out.append(",")
+        else:
+            out.append(ch)
+    return "".join(out)
+
 @app.template_filter("wp_clean")
 def wp_clean(content: str | None) -> str:
     if not content:
@@ -6423,9 +6453,6 @@ def content_quality_panel(path: str, row: sqlite3.Row | dict, *, lang: str) -> d
                     ("Медицина, язык и город", "Для solo remote worker слабый английский или медицина могут быть терпимым компромиссом. Для семьи, пенсионера или человека с регулярными медицинскими потребностями это уже ключевой фильтр. Поэтому страну нужно проверять через город, а не через среднюю картинку."),
                     ("Когда лучше выбрать другое направление", "Если нужный статус не подтверждается официально, доход не проходит по требованиям, бюджет держится без запаса или вы не понимаете, что делать после окончания stay, лучше сравнить альтернативу. Это дешевле, чем исправлять ошибку после переезда."),
                     ("Что проверить до оплаты", "До депозита за жильё, визового сбора или длинного перелёта откройте официальный источник по въезду, проверьте дату обновления, требования к документам и ограничения по работе. Если в правилах есть неоднозначность, не стройте на ней весь план."),
-                    ("Какой нужен план B", "План B — это не паника, а нормальная часть релокации: соседняя страна, другой город, запас денег на выезд, временное жильё и понимание, что делать, если продление не подтвердится или расходы окажутся выше расчёта."),
-                    ("С чем сравнивать", "Сравнивайте не только страны, но и сценарии. Один вариант может быть сильнее для короткой remote-work базы, другой — для семьи, третий — для пенсионного маршрута. Если критерий не связан с вашим реальным сценарием, он не должен решать выбор."),
-                    ("Когда вернуться к расчётам", "После выбора страны вернитесь к цифрам ещё раз: курс валют, цена жилья, страховка, перелёт и визовые сборы могли измениться. Для переезда это нормальная проверка перед каждым крупным платежом."),
                 ],
             }
         country = COUNTRY_EN_NAMES.get(slug, title.replace("Move to ", "").replace(": Complete Relocation Guide 2026", ""))
@@ -6438,9 +6465,6 @@ def content_quality_panel(path: str, row: sqlite3.Row | dict, *, lang: str) -> d
                 ("Healthcare, Language And City Fit", "For a solo remote worker, weak English or uneven healthcare may be manageable. For a family, retiree or anyone with recurring medical needs, those details become primary filters. Judge the country through the city where you would actually live."),
                 ("When To Choose Another Direction", "If the status is not confirmed by official rules, your income does not fit, the budget has no buffer or the exit plan is unclear, compare another country before spending money. That is not pessimism. It is basic risk control."),
                 ("What To Check Before Paying", "Before a housing deposit, visa fee or long flight, open the official entry source, check the update date, document requirements and work restrictions. If the rule is ambiguous, do not build the whole move on that ambiguity."),
-                ("What A Plan B Looks Like", "A fallback plan is not panic. It is normal relocation hygiene: another country, another city, money to leave, temporary housing and a clear answer for what happens if renewal is unavailable or costs run higher than expected."),
-                ("What To Compare It Against", "Compare scenarios, not only countries. One option may be stronger for a short remote-work base, another for a family move and another for retirement. If a criterion does not match your real scenario, it should not decide the move."),
-                ("When To Recheck The Numbers", "After choosing a country, run the numbers again: exchange rates, housing prices, insurance, flights and visa fees may have changed. For relocation, this is normal due diligence before every large payment."),
             ],
         }
 
@@ -7213,7 +7237,7 @@ def country(slug: str):
     return render_template(
         "country.html",
         page=row,
-        facts=country_facts_for_display(facts, slug, "en"),
+        facts=None if generated else country_facts_for_display(facts, slug, "en"),
         seo=seo,
         breadcrumbs=[("Countries", "/countries/")],
         internal_links=internal_links,
