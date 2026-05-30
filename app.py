@@ -26,8 +26,44 @@ def redirect_to_www():
     host = request.host.split(":")[0]  # strip port if any
     if host == "marharuta.online":
         url = request.url.replace("://marharuta.online", "://www.marharuta.online", 1)
-        from flask import redirect
         return redirect(url, 301)
+
+
+@app.before_request
+def handle_legacy_urls():
+    """Redirect old WordPress URL patterns that are generating 404s."""
+    path = request.path
+
+    # /en/* — old WordPress English-prefix URLs (no /en/ in current app)
+    if path.startswith("/en/") or path == "/en":
+        return redirect("/", 301)
+
+    # /uk/* — Ukrainian version no longer exists
+    if path.startswith("/uk/") or path == "/uk":
+        return redirect("/", 301)
+
+    # WordPress RSS feeds  (e.g. /something/feed/ or /feed/)
+    if "/feed/" in path or path.endswith("/feed"):
+        return redirect("/", 301)
+
+    # WordPress category / author / tag archive pages
+    if re.search(r"/(category|author|tag)/", path):
+        dest = "/ru/blog/" if path.startswith("/ru/") else "/blog/"
+        return redirect(dest, 301)
+
+    # WordPress date archives: /2025/, /2025/10/, /ru/2025/09/, etc.
+    if re.search(r"/20\d\d(/\d{1,2})?/?$", path):
+        dest = "/ru/blog/" if path.startswith("/ru/") else "/blog/"
+        return redirect(dest, 301)
+
+    # /countries/<slug>/ missing the move-to- prefix
+    m = re.match(r"^/countries/(?!move-to-)([a-z0-9-]+)/?$", path)
+    if m:
+        return redirect(f"/countries/move-to-{m.group(1)}/", 301)
+
+    # WordPress / bot scanner paths — just 404 quickly without template
+    if path.startswith("/wp-") or path == "/xmlrpc.php" or path.endswith(".php"):
+        abort(404)
 
 
 @app.route("/favicon.ico")
@@ -8518,23 +8554,9 @@ def robots_txt():
 
 @app.errorhandler(404)
 def not_found(error):
-    is_ru = request.path.startswith("/ru/")
-    lang = "ru" if is_ru else "en"
-    en_path = "/"
-    ru_path = "/ru/"
-    seo = seo_payload(
-        title="Страница не найдена" if is_ru else "Page Not Found",
-        description=(
-            "Страница не найдена. Используйте навигацию Relocate to Asia, чтобы перейти к странам, визам, сравнениям, инструментам и гайдам."
-            if is_ru else
-            "The page could not be found. Use Relocate to Asia navigation to browse countries, visas, comparisons, tools and relocation guides."
-        ),
-        lang=lang,
-        canonical_path=request.path,
-        alternates=localized_page_alternates(en_path=en_path, ru_path=ru_path),
-    )
-    seo["meta_robots"] = "noindex,follow"
-    return render_template("404.html", seo=seo, lang_code=lang), 404
+    """Redirect any remaining 404 to the appropriate homepage."""
+    dest = "/ru/" if request.path.startswith("/ru/") else "/"
+    return redirect(dest, 301)
 
 
 if __name__ == "__main__":
