@@ -102,7 +102,7 @@
   <section class="rta-seo-facts" aria-labelledby="article-facts-title">
     <h2 id="article-facts-title">{{ article_seo_panel.labels.title }}</h2>
     {% if article_seo_panel.country and article_seo_panel.country['flag_svg'] %}
-    <img class="rta-seo-facts-flag" src="{{ article_seo_panel.country['flag_svg'] }}" width="56" height="38" alt="{{ article_seo_panel.country['name'] }} flag">
+    <img class="rta-seo-facts-flag" src="{{ article_seo_panel.country['flag_svg'] }}" width="56" height="38" loading="lazy" decoding="async" alt="{{ article_seo_panel.country['name'] }} flag">
     {% endif %}
     <div class="rta-seo-facts-table" role="table">
       {% for row in article_seo_panel.rows %}

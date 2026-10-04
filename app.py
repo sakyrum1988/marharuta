@@ -35,7 +35,17 @@ def _cache_eligible(path: str) -> bool:
 
 @app.before_request
 def _serve_from_cache():
+    # Canonical-host redirects must happen before cache lookup. Otherwise a
+    # warmed www response can be served as a 200 from the apex host.
+    host = request.host.split(":")[0]
+    if host == "marharuta.online":
+        url = request.url.replace(f"{request.scheme}://marharuta.online", "https://www.marharuta.online", 1)
+        return redirect(url, 301)
     if request.method != "GET":
+        return None
+    # Query-aware routes (for example /blog/?page=2) must reach their view.
+    # Caching only the path would otherwise mix distinct requests.
+    if request.query_string:
         return None
     path = request.path
     if not _cache_eligible(path):
@@ -59,9 +69,26 @@ def _serve_from_cache():
 @app.after_request
 def _store_in_cache_and_add_headers(response: Response) -> Response:
     path = request.path
+    response.headers.setdefault("X-Content-Type-Options", "nosniff")
+    response.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
+    response.headers.setdefault("Permissions-Policy", "camera=(), microphone=(), geolocation=()")
+    response.headers.setdefault("X-Frame-Options", "DENY")
+    response.headers.setdefault("Strict-Transport-Security", "max-age=31536000; includeSubDomains")
+    response.headers.setdefault(
+        "Content-Security-Policy",
+        "default-src 'self'; "
+        "script-src 'self' 'unsafe-inline'; "
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+        "font-src 'self' https://fonts.gstatic.com; "
+        "img-src 'self' data: https://flagcdn.com; "
+        "connect-src 'self' https:; "
+        "object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'",
+    )
+    if path.startswith("/static/") and response.status_code == 200:
+        response.headers["Cache-Control"] = "public, max-age=604800"
     # Add Cache-Control to all public 200 GET responses
     if request.method == "GET" and response.status_code == 200:
-        if _cache_eligible(path):
+        if _cache_eligible(path) and not request.query_string:
             response.headers.setdefault(
                 "Cache-Control", "public, max-age=600, stale-while-revalidate=3600"
             )
@@ -76,7 +103,7 @@ def _store_in_cache_and_add_headers(response: Response) -> Response:
 SITE_NAME = "Relocate to Asia"
 SITE_URL = "https://www.marharuta.online"
 DEFAULT_OG_IMAGE = "/static/img/og-default.png"
-FAVICON_PATH = "/static/img/favicon.svg"
+FAVICON_PATH = "/static/img/favicon-512.png"
 GOOGLE_SITE_VERIFICATION_FILE = "google0cbfacb558cd5e85.html"
 
 
@@ -85,36 +112,38 @@ def redirect_to_www():
     """Redirect marharuta.online → www.marharuta.online (301)."""
     host = request.host.split(":")[0]  # strip port if any
     if host == "marharuta.online":
-        url = request.url.replace("://marharuta.online", "://www.marharuta.online", 1)
+        url = request.url.replace(f"{request.scheme}://marharuta.online", "https://www.marharuta.online", 1)
         return redirect(url, 301)
 
 
 @app.before_request
 def handle_legacy_urls():
-    """Redirect old WordPress URL patterns that are generating 404s."""
+    """Retire old WordPress URLs without transferring unrelated relevance."""
     path = request.path
 
-    # /en/* — old WordPress English-prefix URLs (no /en/ in current app)
-    if path.startswith("/en/") or path == "/en":
+    # The current English site lives at the root. Keep only the old language
+    # homepage redirect; old article URLs belonged to the previous religious
+    # site and have no relevant replacement in the relocation project.
+    if path in {"/en", "/en/"}:
         return redirect("/", 301)
+    if path.startswith("/en/"):
+        abort(410)
 
-    # /uk/* — Ukrainian version no longer exists
+    # The previous Ukrainian site is unrelated to the current project.
     if path.startswith("/uk/") or path == "/uk":
-        return redirect("/", 301)
+        abort(410)
 
     # WordPress RSS feeds  (e.g. /something/feed/ or /feed/)
     if "/feed/" in path or path.endswith("/feed"):
-        return redirect("/", 301)
+        abort(410)
 
     # WordPress category / author / tag archive pages
     if re.search(r"/(category|author|tag)/", path):
-        dest = "/ru/blog/" if path.startswith("/ru/") else "/blog/"
-        return redirect(dest, 301)
+        abort(410)
 
     # WordPress date archives: /2025/, /2025/10/, /ru/2025/09/, etc.
     if re.search(r"/20\d\d(/\d{1,2})?/?$", path):
-        dest = "/ru/blog/" if path.startswith("/ru/") else "/blog/"
-        return redirect(dest, 301)
+        abort(410)
 
     # /countries/<slug>/ missing the move-to- prefix
     m = re.match(r"^/countries/(?!move-to-)([a-z0-9-]+)/?$", path)
@@ -128,7 +157,9 @@ def handle_legacy_urls():
 
 @app.route("/favicon.ico")
 def favicon_ico():
-    return redirect(FAVICON_PATH, 301)
+    response = app.send_static_file("img/favicon.ico")
+    response.headers["Cache-Control"] = "public, max-age=604800"
+    return response
 
 
 @app.route(f"/{GOOGLE_SITE_VERIFICATION_FILE}")
@@ -141,6 +172,11 @@ def google_site_verification():
 
 DEFAULT_AUTHOR = "Relocate to Asia Editorial Team"
 EDITORIAL_TEAM_URL = "/authors/editorial-team/"
+MARGARITA_AUTHOR_SLUG = "margarita-yarovenko"
+MARGARITA_AUTHOR_NAME_EN = "Margarita Yarovenko"
+MARGARITA_AUTHOR_NAME_RU = "Маргарита Яровенко"
+MARGARITA_LINKEDIN_URL = "https://www.linkedin.com/in/margo-y/"
+MARGARITA_PROFILE_SOURCE_URL = "https://seokit.biz/margarita-yarovenko"
 CONTACT_EMAIL = "contact@marharuta.online"
 LAST_REVIEWED_EN = "May 2026"
 LAST_REVIEWED_RU = "май 2026"
@@ -149,6 +185,16 @@ DEFAULT_DESCRIPTION = (
     "moving costs across Asia."
 )
 PAGE_SEO_DESCRIPTIONS = {
+    "__home__": "Compare Asian countries, visas, living costs and relocation options with practical guides and free planning tools.",
+    "countries": "Compare Asian countries for relocation by visas, living costs, cities, infrastructure and everyday expat practicality.",
+    "tools": "Free tools for comparing Asian countries, estimating monthly living costs and planning a realistic relocation budget.",
+    "cost-calculator": "Calculate a realistic monthly cost of living across Asian countries and cities based on your preferred lifestyle.",
+    "budget-planner": "Plan the full cost of relocating to Asia, including visas, flights, housing, setup expenses and an emergency buffer.",
+    "compare-cities": "Compare Asian cities by cost of living, safety, internet, healthcare and quality of life for relocation.",
+    "best-countries-in-asia-to-move": "Compare the best Asian countries for relocation in 2026 by cost, visas, safety, infrastructure and lifestyle.",
+    "cheapest-countries-in-asia": "Compare the cheapest Asian countries for expats in 2026 by rent, food, transport, visas and practical living costs.",
+    "thailand-vs-malaysia": "Compare Thailand and Malaysia for expats in 2026 by visas, living costs, healthcare, English and lifestyle.",
+    "bali-vs-thailand": "Compare Bali and Thailand for expats in 2026 by visas, costs, infrastructure, community and lifestyle.",
     "compare": (
         "Compare Asian countries in 2026 by cost of living, visas, safety, healthcare, "
         "climate, English level and digital nomad practicality."
@@ -192,6 +238,14 @@ PAGE_SEO_DESCRIPTIONS = {
 }
 
 RU_PAGE_SEO_DESCRIPTIONS = {
+    "__home__": "Сравните страны Азии, визы, стоимость жизни и варианты релокации с практическими гайдами и бесплатными инструментами.",
+    "countries": "Сравните страны Азии для релокации по визам, расходам, городам, инфраструктуре и повседневной практичности.",
+    "tools": "Бесплатные инструменты для сравнения стран Азии, расчёта стоимости жизни и планирования бюджета переезда.",
+    "cost-calculator": "Рассчитайте реальную месячную стоимость жизни в странах и городах Азии с учётом своего образа жизни.",
+    "budget-planner": "Спланируйте полную стоимость переезда в Азию: визы, перелёт, жильё, первые расходы и финансовый резерв.",
+    "compare-cities": "Сравните города Азии по стоимости жизни, безопасности, интернету, медицине и качеству жизни.",
+    "best-countries-in-asia-to-move": "Сравните лучшие страны Азии для переезда в 2026 году по расходам, визам, безопасности и инфраструктуре.",
+    "cheapest-countries-in-asia": "Сравните самые дешёвые страны Азии для экспатов в 2026 году по аренде, питанию, транспорту и визам.",
     "compare": (
         "Сравнение стран Азии в 2026 году по стоимости жизни, визам, инфраструктуре, "
         "медицине, безопасности и практичности для релокации."
@@ -233,6 +287,9 @@ def strip_html(value: str | None) -> str:
     text = re.sub(r"<style\b[^>]*>.*?</style>", " ", value, flags=re.IGNORECASE | re.DOTALL)
     text = re.sub(r"<script\b[^>]*>.*?</script>", " ", text, flags=re.IGNORECASE | re.DOTALL)
     text = re.sub(r"<[^>]+>", " ", text)
+    # Imported WordPress content can contain nested entities such as
+    # &amp;middot;. Decode twice so metadata never exposes entity source.
+    text = html.unescape(html.unescape(text))
     text = re.sub(r"\s+", " ", text)
     return text.strip()
 
@@ -242,6 +299,13 @@ def trim_text(value: str, limit: int) -> str:
         return value
     trimmed = value[: limit - 1].rsplit(" ", 1)[0].strip()
     return f"{trimmed}..."
+
+
+def trim_meta_text(value: str, limit: int) -> str:
+    """Trim metadata on a word boundary without baking an ellipsis into it."""
+    if len(value) <= limit:
+        return value
+    return value[:limit].rsplit(" ", 1)[0].rstrip(" ,.;:—–-")
 
 
 def seo_payload(
@@ -258,13 +322,14 @@ def seo_payload(
 ) -> dict:
     clean_title = strip_html(title) or SITE_NAME
     description = strip_html(description) or DEFAULT_DESCRIPTION
-    short_title = trim_text(clean_title, 52)
+    title_suffix = f" | {SITE_NAME}"
+    short_title = trim_meta_text(clean_title, 60 - len(title_suffix))
     canonical_url = absolute_url(canonical_path or request.path)
     og_image_url = absolute_url(og_image) if "absolute_url" in globals() else f"{SITE_URL}{og_image}"
     return {
-        "page_title": f"{short_title} | {SITE_NAME}" if short_title != SITE_NAME else SITE_NAME,
+        "page_title": f"{short_title}{title_suffix}" if short_title != SITE_NAME else SITE_NAME,
         "meta_title": clean_title,
-        "meta_description": trim_text(description, 160),
+        "meta_description": trim_meta_text(description, 155),
         "meta_keywords": ", ".join(
             [
                 clean_title,
@@ -1140,7 +1205,13 @@ def normalize_ru_compare_content(content: str) -> str:
         ("Калькулятор Стоимости Жизни", "Калькулятор стоимости жизни"),
         ("Планировщик Бюджета", "Планировщик бюджета"),
     ]
-    return replace_many(content, replacements)
+    # Translate only visible text. Broad replacements over complete HTML also
+    # rewrite words inside href values and create invalid hybrid URLs.
+    parts = re.split(r"(<[^>]+>)", content)
+    return "".join(
+        part if part.startswith("<") else replace_many(part, replacements)
+        for part in parts
+    )
 
 
 RU_STATIC_TITLES = {
@@ -3264,6 +3335,7 @@ def localized_generic_content(content: str) -> str:
         ('Образ жизни and Entertainment', 'Образ жизни и досуг'),
         ('Health insurance est.', 'Оценка страховки'),
         ('Live rates:', 'Курсы:'),
+        ('Live rates as of', 'Курсы на'),
         ('Cost data:', 'Данные по расходам:'),
         ('ExchangeRate-API', 'актуальные курсы валют'),
         ('Rates:', 'Курсы валют:'),
@@ -4598,6 +4670,28 @@ def editorial_team_schema(lang: str = "en") -> dict:
     }
 
 
+def margarita_author_schema(lang: str = "en") -> dict:
+    is_ru = lang == "ru"
+    path = f"/ru/authors/{MARGARITA_AUTHOR_SLUG}/" if is_ru else f"/authors/{MARGARITA_AUTHOR_SLUG}/"
+    return {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": MARGARITA_AUTHOR_NAME_RU if is_ru else MARGARITA_AUTHOR_NAME_EN,
+        "alternateName": MARGARITA_AUTHOR_NAME_EN if is_ru else MARGARITA_AUTHOR_NAME_RU,
+        "url": absolute_url(path),
+        "jobTitle": "Автор и редактор Relocate to Asia" if is_ru else "Author and Editor at Relocate to Asia",
+        "description": (
+            "Автор и редактор материалов о релокации в Азию с опытом жизни и путешествий более чем в 15 странах."
+            if is_ru
+            else "Relocation author and editor with first-hand living and travel experience across more than 15 countries."
+        ),
+        "sameAs": [MARGARITA_LINKEDIN_URL, MARGARITA_PROFILE_SOURCE_URL],
+        "knowsAbout": ["relocation", "living abroad", "editorial review", "content management", "SEO content", "translation"],
+        "alumniOf": {"@type": "CollegeOrUniversity", "name": "Luhansk Taras Shevchenko National University"},
+        "worksFor": {"@type": "Organization", "name": SITE_NAME, "url": SITE_URL},
+    }
+
+
 def website_schema() -> dict:
     return {
         "@context": "https://schema.org",
@@ -4765,10 +4859,32 @@ def article_schema(row: sqlite3.Row, *, lang: str, canonical_path: str) -> dict:
     return schema
 
 
+POST_TRANSLATION_SLUGS = {
+    "best-countries-in-asia-for-expats-2026": "luchshie-strany-azii-dlya-ekspatov-2026",
+    "best-asian-countries-with-easy-visas-2026": "prostye-vizy-v-azii-dlya-ekspatov-2026",
+    "malaysia-digital-nomad-guide-2026": "malaysia-dlya-digital-nomads-2026",
+    "japan-digital-nomad-visa-2026": "yaponiya-digital-nomad-visa-2026",
+    "taiwan-gold-card-guide-2026": "taiwan-gold-card-2026",
+    "thailand-ltr-remote-workers-2026": "tailand-ltr-dlya-udalennyh-specialistov-2026",
+    "south-korea-workation-visa-2026": "yuzhnaya-koreya-workation-visa-2026",
+    "vietnam-evisa-guide-2026": "vietnam-evisa-2026",
+}
+POST_TRANSLATION_SLUGS_REVERSE = {ru: en for en, ru in POST_TRANSLATION_SLUGS.items()}
+
+
 def post_alternates(row: sqlite3.Row, *, lang: str, canonical_path: str) -> list[dict[str, str]]:
     alternates = [{"lang": lang, "url": absolute_url(canonical_path)}]
     content = row["content"] or ""
-    if lang == "en":
+    mapped_slug = (
+        POST_TRANSLATION_SLUGS.get(row["slug"])
+        if lang == "en"
+        else POST_TRANSLATION_SLUGS_REVERSE.get(row["slug"])
+    )
+    if mapped_slug:
+        mapped_prefix = "/ru/blog" if lang == "en" else "/blog"
+        mapped_lang = "ru" if lang == "en" else "en"
+        alternates.append({"lang": mapped_lang, "url": absolute_url(f"{mapped_prefix}/{mapped_slug}/")})
+    elif lang == "en":
         match = re.search(r'href="/ru/blog/([^"/]+)/"', content)
         if match:
             alternates.append({"lang": "ru", "url": absolute_url(f"/ru/blog/{match.group(1)}/")})
@@ -4881,6 +4997,7 @@ def static_localized_pairs() -> dict[str, str]:
         "/about/": "/ru/about/",
         "/authors/": "/ru/authors/",
         "/authors/editorial-team/": "/ru/authors/editorial-team/",
+        "/authors/margarita-yarovenko/": "/ru/authors/margarita-yarovenko/",
         "/contact/": "/ru/contact/",
         "/editorial-policy/": "/ru/editorial-policy/",
         "/how-we-verify-data/": "/ru/how-we-verify-data/",
@@ -4974,6 +5091,13 @@ def _external_links_nofollow(text: str) -> str:
 def _localize_internal_links(text: str, *, lang: str) -> str:
     if lang != "ru":
         return text
+
+    def localize_blog_link(match: re.Match[str]) -> str:
+        slug = match.group(1)
+        localized_slug = POST_TRANSLATION_SLUGS.get(slug, slug)
+        return f'href="/ru/blog/{localized_slug}/'
+
+    text = re.sub(r'href="/blog/([^"/]+)/', localize_blog_link, text)
     replacements = [
         ('href="/countries/', 'href="/ru/countries/'),
         ('href="/tools/', 'href="/ru/tools/'),
@@ -4994,7 +5118,42 @@ def _localize_internal_links(text: str, *, lang: str) -> str:
     ]
     for old, new in replacements:
         text = text.replace(old, new)
+
+    # Legacy localized content was translated before HTML attributes were
+    # protected, leaving a handful of mixed-language slugs in stored markup.
+    # Normalize them at render time so old database rows cannot emit 404 links.
+    url_repairs = {
+        "/ru/guides/best-asian-countries-with-easy-долгосрочный-visas/": "/ru/guides/best-asian-countries-with-easy-long-stay-visas/",
+        "/ru/guides/best-asian-countries-for-удалённыйers-with-family/": "/ru/guides/best-asian-countries-for-remote-workers-with-family/",
+        "/ru/blog/indonesia-e33g-для удалённой работы-visa-2026/": "/ru/blog/indonesia-e33g-remote-worker-visa-2026/",
+        "/ru/blog/thailand-ltr-удалённыйers-2026/": "/ru/blog/tailand-ltr-dlya-udalennyh-specialistov-2026/",
+        "/blog/thailand-ltr-удалённыйers-2026/": "/ru/blog/tailand-ltr-dlya-udalennyh-specialistov-2026/",
+        "/ru/blog/best-countries-in-asia-for-экспаты-2026/": "/ru/blog/luchshie-strany-azii-dlya-ekspatov-2026/",
+        "/blog/best-countries-in-asia-for-экспаты-2026/": "/ru/blog/luchshie-strany-azii-dlya-ekspatov-2026/",
+    }
+    for old, new in url_repairs.items():
+        text = text.replace(old, new)
     return text
+
+
+def _optimize_content_images(text: str) -> str:
+    """Add stable dimensions and native lazy loading to imported images."""
+    def repl(match: re.Match) -> str:
+        attrs = match.group(1)
+        if not re.search(r"\bloading=", attrs, flags=re.IGNORECASE):
+            attrs += ' loading="lazy"'
+        if not re.search(r"\bdecoding=", attrs, flags=re.IGNORECASE):
+            attrs += ' decoding="async"'
+        if not re.search(r"\bwidth=", attrs, flags=re.IGNORECASE):
+            flag = re.search(r"flagcdn\.com/w(\d+)/([a-z]{2})\.png", attrs, flags=re.IGNORECASE)
+            if flag:
+                width = int(flag.group(1))
+                ratio = 2.0 if flag.group(2).lower() == "my" else 1.5
+                height = round(width / ratio)
+                attrs += f' width="{width}" height="{height}"'
+        return f"<img{attrs}>"
+
+    return re.sub(r"<img\b([^>]*)>", repl, text, flags=re.IGNORECASE)
 
 
 @app.template_filter("format_date")
@@ -5068,6 +5227,7 @@ def wp_clean(content: str | None) -> str:
     cleaned = _flag_emojis_to_img(cleaned)
     cleaned = _localize_internal_links(cleaned, lang="ru" if request.path.startswith("/ru/") else "en")
     cleaned = _external_links_nofollow(cleaned)
+    cleaned = _optimize_content_images(cleaned)
     return cleaned
 
 
@@ -7137,6 +7297,14 @@ def render_page_row(row: sqlite3.Row | dict, **kwargs):
         quality_panel_data = polish_ru_data(quality_panel_data)
         source_panel_data = polish_ru_data(source_panel_data)
     internal_links = internal_links_for_page(row, current_path=path)
+    if path in {"/", "/ru/"}:
+        # The homepage already contains destination, tool, comparison and trust
+        # sections. Repeating generated support panels adds several screens of
+        # content without helping the primary journey.
+        depth_panel_data = None
+        quality_panel_data = None
+        source_panel_data = None
+        internal_links = []
     faq_schema = faq_schema_from_html(row["content"], lang=lang)
     if faq_schema:
         schema.append(faq_schema)
@@ -7163,6 +7331,8 @@ def render_page_row(row: sqlite3.Row | dict, **kwargs):
     }:
         schema.append(web_application_schema(row["title"], path, row["content"]))
     trust_panel_data = page_trust_panel(path, lang=lang)
+    if path in {"/", "/ru/"}:
+        trust_panel_data = None
     if trust_panel_data:
         schema.append(trust_page_schema(row["title"], path))
     extra_schema = kwargs.get("extra_schema")
@@ -7308,12 +7478,54 @@ def polish_ru_text(value: str | None) -> str:
     if not value:
         return ""
     text = str(value)
+    # URL fields are data, not prose. Translating tokens such as ``expats`` or
+    # ``remote-worker`` inside them produces mixed-language paths and 404s.
+    if re.fullmatch(r"(?:https?://|/)[^\s]+", text):
+        return text
     if "<" in text and ">" in text:
         return "".join(
             part if part.startswith("<") else polish_ru_text(part)
             for part in re.split(r"(<[^>]+>)", text)
         )
     replacements = [
+        (
+            "Проверено в марте 2026 · 5 стран · Бесплатные инструменты",
+            "Практические сравнения · 5 стран · Бесплатные инструменты",
+        ),
+        ("Проверено в марте 2026", "Практические сравнения"),
+        ("Релокационный ресёрч на основе данных", "Как проверяются данные"),
+        ("Месячный бюджет сравнение 2026", "Сравнение месячных бюджетов на 2026 год"),
+        ("Как подойти к переезду в азию", "Как подойти к переезду в Азию"),
+        ("Переезд в азию: короткая общая картина", "Переезд в Азию: короткая общая картина"),
+        ("Почему люди вообще выбирают азию?", "Почему люди выбирают Азию?"),
+        (
+            "Full comparison across costs, образ жизни, and visas.",
+            "Полное сравнение расходов, образа жизни и виз.",
+        ),
+        (
+            "A simple 4-step framework used by thousands of successful экспатов",
+            "Практическая система из четырёх шагов для подготовки к переезду",
+        ),
+        (
+            "If образ жизни matters most, Bali’s nomad ecosystem is unmatched.",
+            "Если важнее всего образ жизни, у Бали одна из самых развитых сред для удалённой работы.",
+        ),
+        (
+            "If образ жизни matters most, Bali&#8217;s nomad ecosystem is unmatched.",
+            "Если важнее всего образ жизни, у Бали одна из самых развитых сред для удалённой работы.",
+        ),
+        ("Use our ", "Используйте "),
+        (" to make a data-driven decision.", ", чтобы принять решение на основе данных."),
+        (
+            "Не мнения, а проверенные данные, обновлённые под 2026 год",
+            "Практические ориентиры со ссылками на официальные источники",
+        ),
+        ("Free все инструменты и гайды бесплатны", "Бесплатно: все инструменты и гайды"),
+        ("Free", "Бесплатно"),
+        ("Bali", "Бали"),
+        ("nomad-баз", "баз для удалённой работы"),
+        ("nomad-направлений", "направлений для удалённой работы"),
+        ("food-сценой", "гастрономической сценой"),
         ("long-stay маршруты", "маршруты долгого проживания"),
         ("long-stay маршрутов", "маршрутов долгого проживания"),
         ("long-stay маршрута", "маршрута долгого проживания"),
@@ -7352,6 +7564,12 @@ def polish_ru_text(value: str | None) -> str:
         ("expat-экосистема", "экосистема для экспатов"),
         ("expat-профилей", "профилей экспатов"),
         ("expat-поддержка", "поддержка экспатов"),
+        ("expat-районов", "районов для экспатов"),
+        ("expat-рынок", "рынок для экспатов"),
+        ("expat-сценария", "сценария переезда"),
+        ("expat-мест", "мест для экспатов"),
+        ("expat-хабов", "хабов для экспатов"),
+        ("expat-инфраструктуры", "инфраструктуры для экспатов"),
         ("expat budgets", "бюджеты экспатов"),
         ("expat ", "экспат "),
         ("expats", "экспаты"),
@@ -7533,7 +7751,7 @@ def sentence_case_ru_heading_text(text: str) -> str:
     lowered = text.lower()
     for token in RU_HEADING_KEEP_UPPER:
         lowered = re.sub(rf"\b{re.escape(token.lower())}\b", token, lowered, flags=re.I)
-    proper_forms = {"Азия", "Азии", "Бали", "Малайзия", "Малайзию", "Малайзии", "Таиланд", "Таиланду", "Таиланде", "Вьетнам", "Вьетнаму", "Вьетнаме", "Тайвань", "Тайваню", "Тайване", "Япония", "Японию", "Японии", "Камбоджа", "Камбоджу", "Камбодже", "Филиппины", "Филиппинам", "Филиппинах", "Сингапур", "Сингапуре", "ОАЭ"}
+    proper_forms = {"Азия", "Азии", "Бали", "Малайзия", "Малайзию", "Малайзии", "Таиланд", "Таиланду", "Таиланде", "Вьетнам", "Вьетнаму", "Вьетнаме", "Тайвань", "Тайваню", "Тайване", "Япония", "Японию", "Японии", "Камбоджа", "Камбоджу", "Камбодже", "Филиппины", "Филиппинам", "Филиппинах", "Сингапур", "Сингапуре", "ОАЭ", "Маргарита", "Яровенко"}
     for forms in COUNTRY_FORMS_RU.values():
         proper_forms.update(forms)
     for token in sorted(proper_forms, key=len, reverse=True):
@@ -8038,6 +8256,8 @@ def japan_vs_taiwan_article(lang: str = "en") -> tuple[str, str]:
 <h2>Какие официальные источники проверить перед решением</h2>
 <p>Для Японии сначала открывайте <a href="https://www.mofa.go.jp/ca/fna/pagewe_000001_00046.html" rel="nofollow noopener" target="_blank">MOFA Digital Nomad page</a> и страницу <a href="https://www.moj.go.jp/isa/applications/status/designatedactivities53_00001.html" rel="nofollow noopener" target="_blank">Immigration Services Agency</a>. Там важны срок, no extension, income proof, insurance и activity.</p>
 <p>Для Тайваня начинайте с <a href="https://goldcard.nat.gov.tw/en/about/" rel="nofollow noopener" target="_blank">официального объяснения Gold Card</a>, затем проверьте <a href="https://goldcard.nat.gov.tw/en/application/" rel="nofollow noopener" target="_blank">application information</a> и отдельные FAQ по квалификации. Если вы идёте по зарплате, salary FAQ обязателен.</p>
+<h2>Проверка решения перед переездом</h2>
+<p>Соберите две отдельные сметы на первые три месяца: аренда с депозитом, страховка, транспорт, связь, рабочее место, переводы документов и резерв на срочный выезд. Затем выпишите срок визы, право на работу, правила для семьи и условия продления ровно так, как они сформулированы официальным ведомством. Такая таблица быстро показывает слабое место. Если японский сценарий держится на несуществующем продлении, его нужно пересобрать. Если тайваньский сценарий держится на квалификации, которую нельзя подтвердить документами, подачу рано считать рабочим планом. Финальное решение стоит принимать только после проверки бюджета, документов и запасного маршрута, а не по впечатлению от города.</p>
 <h2>FAQ</h2>
 <div class="bcm-faq-item"><h3>Japan Digital Nomad Visa можно продлить?</h3><p>По официальной странице MOFA срок указан как 6 месяцев, и прямо сказано, что продление не предоставляется. Планировать продление как обычный сценарий нельзя.</p></div>
 <div class="bcm-faq-item"><h3>Taiwan Gold Card это digital nomad visa?</h3><p>Нет в прямом смысле. Это профессиональный маршрут 4-in-1: work permit, resident visa, ARC и re-entry permit. Он может подойти удалённому специалисту, но только если профиль проходит требования Gold Card.</p></div>
@@ -8183,6 +8403,10 @@ def enhanced_compare_article(slug: str, lang: str = "en") -> tuple[str, str] | N
 </tbody></table></div>
 <h2>Кому Не Подходит Такое Сравнение</h2>
 <p>Оно не подходит тем, кто уже выбрал страну и ищет подтверждение. Тогда любая таблица будет читаться с перекосом. Гораздо полезнее взять два реальных сценария и проверить слабое место: виза, доход, аренда, медицина, семья, налоговая логика или срок.</p>
+<h2>Практический Чек-лист Перед Решением</h2>
+<p>Сначала запишите желаемую дату переезда и максимально допустимый срок без стабильного дохода. Затем для каждой страны отдельно проверьте официальный тип въезда, право работать, срок действия статуса, продление, требования к страховке и правила для супруга или детей. Не объединяйте эти пункты в одно общее впечатление: сильная медицина не компенсирует неподходящую визу, а низкая аренда не помогает, если статус заканчивается через несколько месяцев.</p>
+<p>После этого составьте бюджет первого месяца и обычного месяца. В стартовую сумму включите перелёт, временное жильё, депозит, комиссию, документы, связь, транспорт, страховку и резерв на обратный билет. В обычный месяц включите аренду, коммунальные платежи, питание, медицину, налоги и расходы на продление статуса. Сравнивайте одинаковые города и одинаковый уровень комфорта, иначе результат будет ложным.</p>
+<p>Наконец, проверьте план отказа: что вы сделаете, если заявку отклонят, работодатель изменит условия или жильё окажется дороже расчёта. Рабочий сценарий должен выдерживать не только лучший исход. Сохраните ссылки на официальные страницы, дату проверки и список документов; перед оплатой услуг перепроверьте всё ещё раз. Так выбор между {data["a_ru"]} и {data["b_ru"]} превращается из рейтинга предпочтений в проверяемый план переезда.</p>
 <h2>FAQ</h2>
 <div class="bcm-faq-item"><h3>Что Выбрать: {data["a_ru"]} Или {data["b_ru"]}?</h3><p>{data["ru_verdict"]}</p></div>
 <div class="bcm-faq-item"><h3>Можно Ли Решать Только По Стоимости Жизни?</h3><p>Нет. Стоимость важна, но она не заменяет визу, страховку, медицину, работу и право оставаться в стране.</p></div>
@@ -8954,7 +9178,17 @@ def render_blog_index(*, lang: str, page: int = 1):
         (lang, per_page, (page - 1) * per_page),
     )
     if is_ru:
-        posts = [polish_ru_data(dict(post)) for post in posts]
+        # Only prose fields are translated. The slug is URL data and must stay
+        # byte-for-byte stable (for example ``remote-worker`` must not become
+        # a Russian phrase inside the path).
+        posts = [
+            {
+                **dict(post),
+                "title": polish_ru_text(post["title"] or ""),
+                "excerpt": polish_ru_text(post["excerpt"] or ""),
+            }
+            for post in posts
+        ]
     en_path = "/blog/" if page == 1 else f"/blog/page/{page}/"
     ru_path = "/ru/blog/" if page == 1 else f"/ru/blog/page/{page}/"
     alternates = localized_page_alternates(en_path=en_path, ru_path=ru_path)
@@ -9098,6 +9332,64 @@ def author_page_content(lang: str) -> tuple[str, str]:
     )
 
 
+def margarita_author_page_content(lang: str) -> tuple[str, str]:
+    if lang == "ru":
+        title = f"{MARGARITA_AUTHOR_NAME_RU} — автор и редактор"
+        role = "Автор и редактор Relocate to Asia"
+        lead = "Пишет и редактирует практические материалы о переезде, жизни за границей и выборе страны. Соединяет личный опыт релокации с редакционной проверкой, понятной структурой и вниманием к источникам."
+        initials = "МЯ"
+        facts = (("10+ лет", "в контенте, редактуре и переводе"), ("15+ стран", "личный опыт жизни и путешествий"), ("7 языков", "в профессиональном и редакционном фокусе"))
+        body = f"""
+<section><p class="rta-author-label">ОБ АВТОРЕ</p><h2>Опыт жизни в разных странах</h2>
+<p>Маргарита жила в Украине, Польше, Египте, Германии, Турции и Молдове. В общей сложности её личный опыт охватывает более 15 стран. Благодаря этому она рассматривает релокацию не как туристическую картинку, а как повседневную систему: документы, жильё, язык, медицина, бюджет, адаптация и неизбежные бытовые компромиссы.</p>
+<p>В материалах Relocate to Asia этот опыт помогает отделять привлекательное описание страны от вопросов, которые действительно влияют на решение о переезде.</p></section>
+<section><p class="rta-author-label">ПРОФЕССИОНАЛЬНЫЙ ОПЫТ</p><h2>Контент, редактура и языки</h2>
+<p>Маргарита более десяти лет работает с текстами, редактурой, переводом и управлением публикациями. Она окончила магистратуру по филологии в Луганском национальном университете имени Тараса Шевченко.</p>
+<p>В её языковой и редакционный фокус входят английский, немецкий, испанский, польский, чешский, русский и украинский. Этот опыт особенно полезен при работе с международными источниками, терминологией и неточными буквальными переводами.</p></section>
+<section><p class="rta-author-label">ПОДХОД К МАТЕРИАЛАМ</p><h2>Как Маргарита пишет статьи</h2>
+<div class="rta-author-principles"><div><strong>Начинает с решения читателя</strong><span>Сначала определяет, кому подходит страна или маршрут, а уже потом собирает детали.</span></div><div><strong>Разделяет факт и вывод</strong><span>Официальное правило не подменяется редакционной интерпретацией.</span></div><div><strong>Проверяет язык и логику</strong><span>Убирает кальки, двусмысленность и искусственно звучащие формулировки.</span></div><div><strong>Показывает компромиссы</strong><span>Стоимость жизни, визы и комфорт рассматриваются вместе, а не как отдельные красивые цифры.</span></div></div></section>
+<section class="rta-author-note"><h2>Редакционная ответственность</h2><p>Маргарита отвечает за авторскую и редакционную часть материалов. Визовые условия, государственные программы и другие изменчивые правила дополнительно сверяются с официальными источниками по стандартам Relocate to Asia.</p><p><a href="/ru/how-we-verify-data/">Как мы проверяем данные</a> · <a href="/ru/editorial-policy/">Редакционная политика</a> · <a href="/ru/contact/">Сообщить об ошибке</a></p></section>
+"""
+        topics = "<li>релокация и жизнь за границей;</li><li>адаптация и выбор страны;</li><li>структура практических гайдов;</li><li>редактура и фактчекинг;</li><li>SEO-контент и поисковый интент;</li><li>перевод и локализация.</li>"
+        countries_title = "Страны личного опыта"
+        countries = "Украина · Польша · Египет · Германия · Турция · Молдова · другие страны Европы, Азии и Ближнего Востока."
+        blog_label, blog_url = "Читать блог →", "/ru/blog/"
+        profile_label = "Профессиональный профиль ↗"
+        aside_label = "Экспертиза автора"
+        topics_title = "Темы"
+        facts_label = "Ключевые факты"
+    else:
+        title = f"{MARGARITA_AUTHOR_NAME_EN} — Author and Editor"
+        role = "Author and Editor at Relocate to Asia"
+        lead = "Writes and edits practical guides about relocation, living abroad and choosing a country. She combines first-hand relocation experience with editorial review, clear structure and careful sourcing."
+        initials = "MY"
+        facts = (("10+ years", "in content, editing and translation"), ("15+ countries", "first-hand living and travel experience"), ("7 languages", "in professional and editorial focus"))
+        body = f"""
+<section><p class="rta-author-label">ABOUT THE AUTHOR</p><h2>Living across countries</h2><p>Margarita has lived in Ukraine, Poland, Egypt, Germany, Türkiye and Moldova. Her broader first-hand experience covers more than 15 countries. This helps her treat relocation as an everyday system of documents, housing, language, healthcare, budget, adaptation and real-life trade-offs rather than a travel image.</p></section>
+<section><p class="rta-author-label">PROFESSIONAL BACKGROUND</p><h2>Content, editing and languages</h2><p>Margarita has more than ten years of experience in content, editing, translation and publication management. She holds a master's degree in Philology from Luhansk Taras Shevchenko National University.</p><p>Her language and editorial focus includes English, German, Spanish, Polish, Czech, Russian and Ukrainian.</p></section>
+<section><p class="rta-author-label">EDITORIAL APPROACH</p><h2>How Margarita approaches a guide</h2><div class="rta-author-principles"><div><strong>Starts with the reader's decision</strong><span>Defines who a route fits before adding detail.</span></div><div><strong>Separates facts from conclusions</strong><span>An official rule is not replaced by editorial interpretation.</span></div><div><strong>Checks language and logic</strong><span>Removes ambiguity, literal translation and artificial phrasing.</span></div><div><strong>Shows trade-offs</strong><span>Costs, visas and everyday comfort are evaluated together.</span></div></div></section>
+<section class="rta-author-note"><h2>Editorial responsibility</h2><p>Margarita is responsible for the authorial and editorial work. Visa rules, government programs and other changing requirements are additionally checked against official sources under the Relocate to Asia standards.</p><p><a href="/how-we-verify-data/">How we verify data</a> · <a href="/editorial-policy/">Editorial policy</a> · <a href="/contact/">Report an error</a></p></section>
+"""
+        topics = "<li>relocation and living abroad;</li><li>adaptation and country choice;</li><li>practical guide structure;</li><li>editing and fact-checking;</li><li>SEO content and search intent;</li><li>translation and localization.</li>"
+        countries_title = "Countries lived in"
+        countries = "Ukraine · Poland · Egypt · Germany · Türkiye · Moldova · other countries across Europe, Asia and the Middle East."
+        blog_label, blog_url = "Read the blog →", "/blog/"
+        profile_label = "Professional profile ↗"
+        aside_label = "Author expertise"
+        topics_title = "Topics"
+        facts_label = "Key facts"
+
+    facts_html = "".join(f"<div><strong>{value}</strong><span>{label}</span></div>" for value, label in facts)
+    content = f"""
+<article class="rta-author-profile">
+  <header class="rta-author-hero"><div class="rta-author-avatar" aria-hidden="true">{initials}</div><div><p class="rta-author-kicker">{role}</p><h1>{MARGARITA_AUTHOR_NAME_RU if lang == 'ru' else MARGARITA_AUTHOR_NAME_EN}</h1><p class="rta-author-lead">{lead}</p><div class="rta-author-links"><a href="{MARGARITA_LINKEDIN_URL}" rel="me noopener noreferrer" target="_blank">LinkedIn ↗</a><a href="{MARGARITA_PROFILE_SOURCE_URL}" rel="me noopener noreferrer" target="_blank">{profile_label}</a></div></div></header>
+  <section class="rta-author-facts" aria-label="{facts_label}">{facts_html}</section>
+  <div class="rta-author-layout"><div class="rta-author-main">{body}</div><aside class="rta-author-sidebar" aria-label="{aside_label}"><h2>{topics_title}</h2><ul>{topics}</ul><h2>{countries_title}</h2><p>{countries}</p><a class="rta-author-blog-link" href="{blog_url}">{blog_label}</a></aside></div>
+</article>
+"""
+    return title, content
+
+
 def contact_page_content(lang: str) -> tuple[str, str]:
     if lang == "ru":
         return (
@@ -9146,6 +9438,7 @@ def authors():
   <h1>Authors And Editorial Review</h1>
   <p>Relocate to Asia uses an editorial team model. Visa and relocation pages are written, edited and checked against official public sources before publication where possible.</p>
   <div class="rta-linkhub-grid">
+    <a class="rta-linkhub-card" href="/authors/margarita-yarovenko/"><h3>Margarita Yarovenko</h3><p>Author and editor with first-hand living and travel experience across more than 15 countries.</p></a>
     <a class="rta-linkhub-card" href="/authors/editorial-team/"><h3>Relocate to Asia Editorial Team</h3><p>Author, editor and fact-checking role for relocation guides.</p></a>
     <a class="rta-linkhub-card" href="/how-we-verify-data/"><h3>How We Verify Data</h3><p>Source standards, official references and update process.</p></a>
   </div>
@@ -9163,6 +9456,7 @@ def ru_authors():
   <h1>Авторы и редакционная проверка</h1>
   <p>Relocate to Asia работает по редакционной модели. Визовые и релокационные материалы пишутся, редактируются и по возможности сверяются с официальными публичными источниками до публикации.</p>
   <div class="rta-linkhub-grid">
+    <a class="rta-linkhub-card" href="/ru/authors/margarita-yarovenko/"><h3>Маргарита Яровенко</h3><p>Автор и редактор с личным опытом жизни и путешествий более чем в 15 странах.</p></a>
     <a class="rta-linkhub-card" href="/ru/authors/editorial-team/"><h3>Редакционная команда Relocate to Asia</h3><p>Автор, редактор и fact-checking role для гайдов по релокации.</p></a>
     <a class="rta-linkhub-card" href="/ru/how-we-verify-data/"><h3>Как мы проверяем данные</h3><p>Стандарты источников, официальные ссылки и процесс обновления.</p></a>
   </div>
@@ -9184,6 +9478,22 @@ def ru_editorial_team_author():
     title, content = author_page_content("ru")
     page = {"title": title, "content": content, "link": "/ru/authors/editorial-team/"}
     return render_page_row(page, lang="ru", canonical_path="/ru/authors/editorial-team/", breadcrumbs=[("Авторы", "/ru/authors/")], extra_schema=editorial_team_schema("ru"))
+
+
+@app.route("/authors/margarita-yarovenko/")
+def margarita_author():
+    title, content = margarita_author_page_content("en")
+    path = "/authors/margarita-yarovenko/"
+    page = {"title": title, "content": content, "link": path}
+    return render_page_row(page, canonical_path=path, breadcrumbs=[("Authors", "/authors/")], extra_schema=margarita_author_schema("en"))
+
+
+@app.route("/ru/authors/margarita-yarovenko/")
+def ru_margarita_author():
+    title, content = margarita_author_page_content("ru")
+    path = "/ru/authors/margarita-yarovenko/"
+    page = {"title": title, "content": content, "link": path}
+    return render_page_row(page, lang="ru", canonical_path=path, breadcrumbs=[("Авторы", "/ru/authors/")], extra_schema=margarita_author_schema("ru"))
 
 
 @app.route("/contact/")
@@ -9412,6 +9722,8 @@ def sitemap_paths() -> list[tuple[str, str]]:
         ("/ru/authors/", "monthly"),
         ("/authors/editorial-team/", "monthly"),
         ("/ru/authors/editorial-team/", "monthly"),
+        ("/authors/margarita-yarovenko/", "monthly"),
+        ("/ru/authors/margarita-yarovenko/", "monthly"),
         ("/contact/", "monthly"),
         ("/ru/contact/", "monthly"),
         ("/editorial-policy/", "monthly"),
@@ -9443,6 +9755,7 @@ def sitemap_paths() -> list[tuple[str, str]]:
 @app.route("/sitemap.xml")
 def sitemap_xml():
     from html import escape
+    from datetime import datetime, timezone
 
     alternate_map = post_pair_map()
     alternate_map.update(compare_pair_map())
@@ -9466,17 +9779,40 @@ def sitemap_xml():
         )
         alternate_map[f"/blog/page/{page_num}/"] = alternates
         alternate_map[f"/ru/blog/page/{page_num}/"] = alternates
+    paths = sitemap_paths()
+    seen_paths = {path for path, _ in paths}
+    # Every localized URL advertised through hreflang must also be discoverable
+    # as its own sitemap entry, including generated RU country/tool/guide pages.
+    for path, changefreq in list(paths):
+        alternates = alternate_map.get(path) or default_page_alternates(path) or []
+        for item in alternates:
+            alternate_path = local_path(item["url"])
+            if alternate_path not in seen_paths:
+                seen_paths.add(alternate_path)
+                paths.append((alternate_path, changefreq))
+
+    source_files = [Path(__file__), DB_PATH, APP_DIR / "templates" / "base.html"]
+    latest_source_mtime = max(path.stat().st_mtime for path in source_files if path.exists())
+    default_lastmod = datetime.fromtimestamp(latest_source_mtime, tz=timezone.utc).date().isoformat()
+
     urls = []
-    for path, changefreq in sitemap_paths():
+    for path, changefreq in paths:
         alternates = alternate_map.get(path) or default_page_alternates(path) or []
         links = "".join(
             f"<xhtml:link rel=\"alternate\" hreflang=\"{escape(item['lang'])}\" href=\"{escape(item['url'])}\" />"
             for item in alternates
         )
+        lastmod = default_lastmod
+        post_match = re.match(r"^/(?:ru/)?blog/([^/]+)/$", path)
+        if post_match:
+            post = one("SELECT date FROM posts WHERE slug = ? ORDER BY date DESC LIMIT 1", (post_match.group(1),))
+            if post and post["date"]:
+                lastmod = str(post["date"])[:10]
         urls.append(
             "  <url>"
             f"<loc>{escape(absolute_url(path))}</loc>"
             f"{links}"
+            f"<lastmod>{escape(lastmod)}</lastmod>"
             f"<changefreq>{changefreq}</changefreq>"
             "</url>"
         )
@@ -9499,9 +9835,32 @@ def robots_txt():
 
 @app.errorhandler(404)
 def not_found(error):
-    """Redirect any remaining 404 to the appropriate homepage."""
-    dest = "/ru/" if request.path.startswith("/ru/") else "/"
-    return redirect(dest, 301)
+    """Return a crawlable, helpful 404 without creating a soft redirect."""
+    lang = "ru" if request.path.startswith("/ru/") else "en"
+    title = "Страница не найдена" if lang == "ru" else "Page not found"
+    description = (
+        "Запрошенная страница не найдена. Вернитесь на главную или выберите другой раздел."
+        if lang == "ru"
+        else "The requested page could not be found. Return home or browse another section."
+    )
+    seo = seo_payload(title=title, description=description, lang=lang, canonical_path=request.path)
+    seo["meta_robots"] = "noindex,follow"
+    return render_template("404.html", seo=seo, lang_code=lang), 404
+
+
+@app.errorhandler(410)
+def gone(error):
+    """Retire unrelated legacy content with an explicit Gone response."""
+    lang = "ru" if request.path.startswith(("/ru/", "/uk/")) else "en"
+    title = "Страница удалена" if lang == "ru" else "Page removed"
+    description = (
+        "Эта страница относилась к прежней версии сайта и была окончательно удалена."
+        if lang == "ru"
+        else "This page belonged to a previous version of the site and has been permanently removed."
+    )
+    seo = seo_payload(title=title, description=description, lang=lang, canonical_path=request.path)
+    seo["meta_robots"] = "noindex,follow"
+    return render_template("404.html", seo=seo, lang_code=lang), 410
 
 
 if __name__ == "__main__":

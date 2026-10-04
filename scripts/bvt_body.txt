@@ -1,0 +1,484 @@
+
+<div class="bvt-hero">
+<div class="badge">Updated March 2026 · Digital Nomad Guide</div>
+<h1>Bali vs Thailand 2026: Which Is Better for Expats?</h1>
+<p>Two iconic expat destinations go head-to-head — compared across cost, visas, lifestyle, nomad scene, and long-term livability.</p>
+<div class="bvt-flags">
+<div class="bvt-flag-box"><span class="flag">🇮🇩</span><span class="name">Bali, Indonesia</span></div>
+<div class="bvt-vs">VS</div>
+<div class="bvt-flag-box"><span class="flag">🇹🇭</span><span class="name">Thailand</span></div>
+</p></div>
+</div>
+<div class="bvt-toc">
+<h3>Contents</h3>
+<ol>
+<li><a href="#quick">Quick Verdict</a></li>
+<li><a href="#cost">Cost of Living</a></li>
+<li><a href="#visas">Visas &amp; Residency</a></li>
+<li><a href="#nomad">Digital Nomad Scene</a></li>
+<li><a href="#lifestyle">Lifestyle &amp; Vibe</a></li>
+<li><a href="#healthcare">Healthcare</a></li>
+<li><a href="#safety">Safety</a></li>
+<li><a href="#internet">Internet &amp; Infrastructure</a></li>
+<li><a href="#climate">Climate</a></li>
+<li><a href="#longterm">Long-Term Living</a></li>
+<li><a href="#verdict">Final Verdict</a></li>
+<li><a href="#faq">FAQ</a></li>
+</ol>
+</div>
+<div id="quick">
+<h2>Quick Comparison: Bali vs Thailand</h2>
+<div class="bvt-quick">
+<div class="bvt-qhead cat">Category</div>
+<div class="bvt-qhead bali">🇮🇩 Bali</div>
+<div class="bvt-qhead thai">🇹🇭 Thailand</div>
+<div class="bvt-qcell label">Budget (comfortable)</div>
+<div class="bvt-qcell">$1,000–1,800</div>
+<div class="bvt-qcell thai-w w">$850–1,500 <span class="win-t">Cheaper</span></div>
+<div class="bvt-qcell label">Visa ease</div>
+<div class="bvt-qcell">Moderate (complex)</div>
+<div class="bvt-qcell thai-w w">More options <span class="win-t">Winner</span></div>
+<div class="bvt-qcell label">Nomad community</div>
+<div class="bvt-qcell bali-w w">World #1 <span class="win-b">Winner</span></div>
+<div class="bvt-qcell">Top 5 globally</div>
+<div class="bvt-qcell label">Wellness &amp; yoga</div>
+<div class="bvt-qcell bali-w w">Unmatched <span class="win-b">Winner</span></div>
+<div class="bvt-qcell">Good</div>
+<div class="bvt-qcell label">Beaches</div>
+<div class="bvt-qcell">Beautiful</div>
+<div class="bvt-qcell thai-w w">More variety <span class="win-t">Winner</span></div>
+<div class="bvt-qcell label">Healthcare</div>
+<div class="bvt-qcell">Limited outside Denpasar</div>
+<div class="bvt-qcell thai-w w">World-class <span class="win-t">Winner</span></div>
+<div class="bvt-qcell label">Long-term visa</div>
+<div class="bvt-qcell bali-w w">E33G + 2nd Home <span class="win-b">Nomad edge</span></div>
+<div class="bvt-qcell">LTR + Elite</div>
+<div class="bvt-qcell label">Food scene</div>
+<div class="bvt-qcell bali-w w">Incredible cafés <span class="win-b">Winner</span></div>
+<div class="bvt-qcell">World-class street food</div>
+<div class="bvt-qcell label">Nightlife</div>
+<div class="bvt-qcell">Good (Seminyak)</div>
+<div class="bvt-qcell thai-w w">Exceptional <span class="win-t">Winner</span></div>
+<div class="bvt-qcell label">Path to residency</div>
+<div class="bvt-qcell">Very difficult</div>
+<div class="bvt-qcell">Very difficult</div>
+</div>
+</div>
+<div class="bvt-section" id="cost">
+<h2><span class="icon">💰</span> Cost of Living <span class="win-tag thai">Thailand Cheaper Overall</span></h2>
+<p>Thailand (especially Chiang Mai) is generally <strong>10–20% cheaper</strong> than Bali for an equivalent lifestyle. Bali&#8217;s Canggu area has become expensive by Southeast Asian standards due to surging demand. Both are dramatically cheaper than Western countries.</p>
+<table class="bvt-cost-table">
+<thead>
+<tr>
+<th>Expense</th>
+<th>🇮🇩 Canggu, Bali</th>
+<th>🇮🇩 Ubud, Bali</th>
+<th>🇹🇭 Chiang Mai</th>
+<th>🇹🇭 Bangkok</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="cat">1-bed apartment/villa</td>
+<td>$500–900</td>
+<td class="bw">$300–550</td>
+<td class="tw">$250–450</td>
+<td>$500–900</td>
+</tr>
+<tr>
+<td class="cat">Local meal (warung/street)</td>
+<td>$2–5</td>
+<td class="bw">$1.5–4</td>
+<td class="tw">$1.5–4</td>
+<td>$2–5</td>
+</tr>
+<tr>
+<td class="cat">Western café meal</td>
+<td>$8–18</td>
+<td>$7–15</td>
+<td class="tw">$6–14</td>
+<td>$8–20</td>
+</tr>
+<tr>
+<td class="cat">Scooter rental/mo</td>
+<td>$80–130</td>
+<td>$70–110</td>
+<td class="tw">$50–80</td>
+<td>$60–100</td>
+</tr>
+<tr>
+<td class="cat">Coworking (monthly)</td>
+<td>$100–220</td>
+<td>$70–160</td>
+<td class="tw">$60–130</td>
+<td>$80–180</td>
+</tr>
+<tr>
+<td class="cat">Yoga class (drop-in)</td>
+<td class="bw">$5–12</td>
+<td class="bw">$4–10</td>
+<td>$6–15</td>
+<td>$8–18</td>
+</tr>
+<tr>
+<td class="cat">Massage (1hr)</td>
+<td>$10–20</td>
+<td>$8–15</td>
+<td class="tw">$6–12</td>
+<td class="tw">$7–14</td>
+</tr>
+<tr>
+<td class="cat"><strong>Total comfortable</strong></td>
+<td><strong>$1,100–1,800</strong></td>
+<td class="bw"><strong>$800–1,400</strong></td>
+<td class="tw"><strong>$800–1,300</strong></td>
+<td><strong>$1,200–1,800</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Verdict:</strong> Chiang Mai and Ubud are similarly priced and both cheaper than Canggu or Bangkok. If you&#8217;re comparing apples to apples (nomad hotspot to nomad hotspot), Chiang Mai beats Canggu on price by 15–25%.</p>
+</div>
+<div class="bvt-section" id="visas">
+<h2><span class="icon">🛂</span> Visas &amp; Residency <span class="win-tag thai">Thailand More Options</span></h2>
+<div class="bvt-grid">
+<div class="bvt-card bali">
+<h3>🇮🇩 Bali / Indonesia Visas</h3>
+<ul>
+<li><strong>Tourist Visa on Arrival</strong> — 30 days, extendable once to 60 days ($35)</li>
+<li><strong>Digital Nomad Visa (E33G)</strong> — 60 days + 2 extensions (max 180 days), foreign income tax exempt, ~$200 + requirements</li>
+<li><strong>Social/Cultural Visa (B211A)</strong> — 60 days, extendable up to 180 days via agent, popular workaround</li>
+<li><strong>Second Home Visa</strong> — 5 or 10 years, requires $130,000+ in Indonesian bank or property ownership</li>
+<li><strong>KITAS (work permit)</strong> — requires employer sponsorship</li>
+<li><em>No easy permanent residency path for most</em></li>
+<li><em>Visa rules have changed repeatedly — always verify current requirements</em></li>
+</ul></div>
+<div class="bvt-card thai">
+<h3>🇹🇭 Thailand Visas</h3>
+<ul>
+<li><strong>Tourist Visa</strong> — 60 days + 30-day extension, easy to get</li>
+<li><strong>LTR Visa</strong> — 10 years for remote workers ($80k+ income), retirees, specialists</li>
+<li><strong>Thailand Elite</strong> — 5–20 years, membership fee ($15,000–30,000)</li>
+<li><strong>Retirement Visa</strong> — age 50+, ฿800,000 in Thai bank (~$22,000)</li>
+<li><strong>Education Visa</strong> — flexible, requires enrollment</li>
+<li><strong>SMART Visa</strong> — startups and investors, 4 years</li>
+<li><em>No straightforward permanent residency path</em></li>
+</ul></div>
+</p></div>
+<p><strong>Verdict:</strong> Thailand wins on breadth of options and reliability. Bali&#8217;s E33G nomad visa offers a unique foreign income tax exemption, which is attractive, but the visa situation in Indonesia changes frequently and can be unpredictable. Thailand&#8217;s LTR and Elite visas are more stable long-term solutions.</p>
+</div>
+<div class="bvt-section" id="nomad">
+<h2><span class="icon">💻</span> Digital Nomad Scene <span class="win-tag bali">Bali Wins</span></h2>
+<div class="bvt-nomad">
+<h3>🏆 Bali (Canggu) — The World&#8217;s #1 Nomad Hub</h3>
+<div class="bvt-nomad-grid">
+<div class="bvt-nomad-item">
+<h4>Coworking Scene</h4>
+<p>50+ world-class coworking spaces. Dojo, Outpost, Potato Head, Hubud (Ubud) — some of the best in the world. Day passes from $8, monthly desks from $150.</p>
+</p></div>
+<div class="bvt-nomad-item">
+<h4>Community Size</h4>
+<p>50,000–80,000 remote workers estimated in Bali. The density in Canggu is unmatched globally — you&#8217;ll meet other nomads everywhere.</p>
+</p></div>
+<div class="bvt-nomad-item">
+<h4>Events &amp; Networking</h4>
+<p>Daily meetups, startup events, surf trips, yoga retreats, creator communities. Bali has an ecosystem built around nomadic life.</p>
+</p></div>
+<div class="bvt-nomad-item">
+<h4>Lifestyle Integration</h4>
+<p>Work, wellness, and social life seamlessly integrated. Cafés designed for working, pools at coworking spaces, sunset sessions built into the culture.</p>
+</p></div>
+</p></div>
+</p></div>
+<div class="bvt-grid">
+<div class="bvt-card thai">
+<h3>🇹🇭 Chiang Mai — The Original Nomad Capital</h3>
+<ul>
+<li>Pioneer nomad city — first digital nomad hotspot in the world</li>
+<li>CAMP (Maya Mall) coworking café open 24/7 — legendary</li>
+<li>30+ coworking spaces, good cafés with reliable WiFi</li>
+<li>Slightly smaller, quieter nomad scene than Canggu today</li>
+<li>Excellent value — more affordable than Bali</li>
+<li>Strong long-term expat community (not just nomads)</li>
+<li>Less &#171;Instagram nomad&#187; culture, more grounded</li>
+</ul></div>
+<div class="bvt-card thai">
+<h3>🇹🇭 Bangkok — Urban Nomad Base</h3>
+<ul>
+<li>World-class infrastructure, fastest urban internet in SE Asia</li>
+<li>100+ coworking spaces across city districts</li>
+<li>Huge variety of cafés, 24/7 convenience</li>
+<li>Best for nomads who want city energy + business opportunities</li>
+<li>More expensive than Chiang Mai</li>
+<li>Less community cohesion than Bali or Chiang Mai</li>
+</ul></div>
+</p></div>
+<p><strong>Verdict:</strong> Bali (Canggu) wins the nomad scene — it&#8217;s denser, more purpose-built, and the community energy is unmatched. But Chiang Mai is a serious alternative, especially for nomads who want more affordability and less hype.</p>
+</div>
+<div class="bvt-section" id="lifestyle">
+<h2><span class="icon">🌴</span> Lifestyle &amp; Vibe <span class="win-tag tie">Different Strokes</span></h2>
+<div class="bvt-grid">
+<div class="bvt-card bali">
+<h3>🇮🇩 Bali Lifestyle</h3>
+<ul>
+<li>Spiritual, wellness-focused culture — yoga, meditation, ceremonies</li>
+<li>World-class café and healthy food scene</li>
+<li>Surf culture — Uluwatu, Canggu, Medewi breaks</li>
+<li>Rice terrace walks, volcano hikes, waterfall chasing</li>
+<li>Strong creative community (art, music, photography)</li>
+<li>Nightlife: Seminyak, Ku De Ta, rooftop bars — good but not epic</li>
+<li>Traffic in Canggu can be brutally slow</li>
+<li>More expensive international food than Thailand</li>
+</ul></div>
+<div class="bvt-card thai">
+<h3>🇹🇭 Thailand Lifestyle</h3>
+<ul>
+<li>Buddhist culture — temples, muay thai, street markets</li>
+<li>World&#8217;s best street food — $1–3 pad thai, mango sticky rice</li>
+<li>Nightlife: Bangkok, Phuket, Koh Samui — among Asia&#8217;s best</li>
+<li>Island hopping: 1,000+ islands, some of Asia&#8217;s best beaches</li>
+<li>Muay thai gyms, fitness culture strong</li>
+<li>Full moon party, Songkran festival, Loy Krathong</li>
+<li>More affordable entertainment and drinks</li>
+<li>Less wellness/yoga focus than Bali</li>
+</ul></div>
+</p></div>
+<p><strong>Verdict:</strong> Bali wins for wellness, spirituality, and creative lifestyle. Thailand wins for nightlife, beaches (more variety), street food, and pure entertainment value. Your ideal destination depends entirely on your lifestyle priorities.</p>
+</div>
+<div class="bvt-section" id="healthcare">
+<h2><span class="icon">🏥</span> Healthcare <span class="win-tag thai">Thailand Wins Clearly</span></h2>
+<div class="bvt-grid">
+<div class="bvt-card bali">
+<h3>🇮🇩 Bali Healthcare</h3>
+<ul>
+<li>BIMC Hospital and Siloam are the main expat hospitals in Bali</li>
+<li>Good for minor issues, basic emergencies</li>
+<li>Serious cases often evacuated to Singapore or Bangkok</li>
+<li>Limited specialist availability outside Denpasar</li>
+<li>International health insurance strongly recommended</li>
+<li>Dental care: good quality, affordable</li>
+<li>Significant gap between Bali and Bangkok quality</li>
+</ul></div>
+<div class="bvt-card thai">
+<h3>🇹🇭 Thailand Healthcare</h3>
+<ul>
+<li>Bumrungrad International (Bangkok) — one of Asia&#8217;s top hospitals</li>
+<li>Bangkok Hospital, Samitivej — JCI accredited, world-class</li>
+<li>Medical tourism hub — millions visit for treatment annually</li>
+<li>GP visit: $20–50 | Specialist: $50–120</li>
+<li>Excellent dental, cosmetic, and elective care at low cost</li>
+<li>Good hospitals in Chiang Mai, Phuket, Koh Samui too</li>
+<li>International insurance: $1,200–3,000/year</li>
+</ul></div>
+</p></div>
+<p><strong>Verdict:</strong> Thailand wins convincingly. Bangkok&#8217;s private hospitals are among the best in Asia. Many expats in Bali maintain Thai health insurance and fly to Bangkok for serious treatment. For long-term expats with health concerns, this is a significant factor.</p>
+</div>
+<div class="bvt-section" id="safety">
+<h2><span class="icon">🛡️</span> Safety <span class="win-tag tie">Both Safe</span></h2>
+<div class="bvt-grid">
+<div class="bvt-card bali">
+<h3>🇮🇩 Bali Safety</h3>
+<ul>
+<li>Very safe for expats — violent crime extremely rare</li>
+<li>Petty theft exists (bag snatching, scooter theft)</li>
+<li>Drug laws are extremely strict — zero tolerance policy</li>
+<li>Traffic accidents are the #1 expat risk</li>
+<li>Rabidon Bali — rabies exists, get vaccinated</li>
+<li>Earthquakes: Bali is on Ring of Fire</li>
+<li>Scams targeting tourists exist but less aggressive than Thailand</li>
+</ul></div>
+<div class="bvt-card thai">
+<h3>🇹🇭 Thailand Safety</h3>
+<ul>
+<li>Generally very safe for expats</li>
+<li>Tourist scams common in Bangkok, Pattaya (tuk-tuk, gem scams)</li>
+<li>Petty theft in crowded tourist areas</li>
+<li>Road safety: motorbike accidents are high risk</li>
+<li>Drug laws strict but less harsh than Indonesia</li>
+<li>Occasional political protests in Bangkok — manageable</li>
+<li>Personal safety rating: 90th percentile globally</li>
+</ul></div>
+</p></div>
+<p><strong>Verdict:</strong> Both are safe for expats. Bali has stricter drug laws (Indonesia carries the death penalty for serious drug offences). Thailand has more tourist scams. Road safety is the primary real risk in both countries.</p>
+</div>
+<div class="bvt-section" id="internet">
+<h2><span class="icon">⚡</span> Internet &amp; Infrastructure <span class="win-tag thai">Thailand Wins</span></h2>
+<div class="bvt-grid">
+<div class="bvt-card bali">
+<h3>🇮🇩 Bali Internet</h3>
+<ul>
+<li>Fixed broadband improving but inconsistent — 30–100 Mbps typical</li>
+<li>Top coworking spaces have excellent dedicated lines (200+ Mbps)</li>
+<li>Mobile (Telkomsel, XL Axiata) — fast in Canggu/Denpasar, patchy elsewhere</li>
+<li>Power outages occasional, especially in rainy season</li>
+<li>SIM: ~$8–12/month for data</li>
+<li>Home internet can be unreliable — coworking recommended</li>
+</ul></div>
+<div class="bvt-card thai">
+<h3>🇹🇭 Thailand Internet</h3>
+<ul>
+<li>Fixed broadband: 200–500 Mbps in cities, very reliable</li>
+<li>AIS, True Move H — excellent mobile coverage nationwide</li>
+<li>Chiang Mai: consistent 4G/5G, reliable home internet</li>
+<li>Bangkok: some of SE Asia&#8217;s fastest urban connections</li>
+<li>SIM: ~$10/month unlimited data</li>
+<li>Power grid reliable — outages very rare in cities</li>
+</ul></div>
+</p></div>
+<p><strong>Verdict:</strong> Thailand wins on reliability and speed. Bali&#8217;s top coworking spaces have excellent internet, but home and café connections are less consistent. For critical remote work, Thailand&#8217;s infrastructure is more dependable.</p>
+</div>
+<div class="bvt-section" id="climate">
+<h2><span class="icon">☀️</span> Climate <span class="win-tag bali">Bali Slight Edge</span></h2>
+<div class="bvt-grid">
+<div class="bvt-card bali">
+<h3>🇮🇩 Bali Climate</h3>
+<ul>
+<li>Tropical: 26–32°C year-round</li>
+<li>Dry season: May–September — ideal (sunny, low humidity)</li>
+<li>Wet season: October–April — heavy rains, often afternoon only</li>
+<li>No typhoons or extreme weather events</li>
+<li>Less humid than Bangkok during dry season</li>
+<li>Ubud: cooler and greener than coast (24–29°C)</li>
+</ul></div>
+<div class="bvt-card thai">
+<h3>🇹🇭 Thailand Climate</h3>
+<ul>
+<li>Tropical: 28–38°C, more heat spikes than Bali</li>
+<li>Cool season (Nov–Feb): pleasant 25–30°C in north</li>
+<li>Hot season (Mar–May): 35–42°C in Bangkok — brutal</li>
+<li>Rainy season (May–Oct): heavy but manageable</li>
+<li>Chiang Mai smoke season: Feb–April (air quality poor)</li>
+<li>More climate variety across regions than Bali</li>
+</ul></div>
+</p></div>
+<p><strong>Verdict:</strong> Bali&#8217;s climate is more consistent and slightly more pleasant — no extreme heat spikes or smoke season. Thailand&#8217;s cool season (Nov–Feb) is exceptional, but the hot season and Chiang Mai smoke season are negatives.</p>
+</div>
+<div class="bvt-section" id="longterm">
+<h2><span class="icon">🏠</span> Long-Term Living <span class="win-tag thai">Thailand Wins</span></h2>
+<div class="bvt-grid">
+<div class="bvt-card bali">
+<h3>🇮🇩 Bali Long-Term</h3>
+<ul>
+<li>No freehold property ownership for foreigners (complex workarounds)</li>
+<li>Leasehold common — 25–30 year villa leases popular</li>
+<li>Visa complexity makes multi-year planning difficult</li>
+<li>Strong nomad community but high turnover</li>
+<li>E33G tax exemption is a significant financial benefit</li>
+<li>Growing infrastructure but still behind Thailand overall</li>
+<li>Cultural immersion more accessible — unique Hindu culture</li>
+</ul></div>
+<div class="bvt-card thai">
+<h3>🇹🇭 Thailand Long-Term</h3>
+<ul>
+<li>Condominiums can be foreign-owned (49% foreign quota)</li>
+<li>LTR and Elite visas provide genuine long-term security</li>
+<li>More mature expat infrastructure — schools, hospitals, services</li>
+<li>Larger established expat community (400,000+ registered)</li>
+<li>More city variety: Bangkok, Chiang Mai, Phuket, Hua Hin</li>
+<li>Healthcare advantage critical for long-term residents</li>
+<li>Thailand Elite visa available immediately — no income proof</li>
+</ul></div>
+</p></div>
+<p><strong>Verdict:</strong> Thailand wins for long-term living stability. Better visa options, superior healthcare, property ownership options for condos, and a larger, more established expat community make it the stronger choice for those settling in for years.</p>
+</div>
+<div class="bvt-verdict" id="verdict">
+<h2>🏆 Final Verdict: Bali or Thailand?</h2>
+<div class="bvt-verdict-grid">
+<div class="bvt-verdict-box bali">
+<h3>🇮🇩 Choose Bali if you&#8230;</h3>
+<ul>
+<li>Want the world&#8217;s best nomad community</li>
+<li>Prioritise wellness, yoga, and spiritual lifestyle</li>
+<li>Love surf culture and creative communities</li>
+<li>Want foreign income tax exemption (E33G)</li>
+<li>Prefer a unique Hindu cultural backdrop</li>
+<li>Are staying 6–12 months on a nomad visa</li>
+<li>Value café culture and healthy food scene</li>
+</ul></div>
+<div class="bvt-verdict-box thai">
+<h3>🇹🇭 Choose Thailand if you&#8230;</h3>
+<ul>
+<li>Want a stable long-term visa (LTR, Elite)</li>
+<li>Need reliable, world-class healthcare</li>
+<li>Want more nightlife and entertainment</li>
+<li>Value better internet and infrastructure</li>
+<li>Have a family (better schools and hospitals)</li>
+<li>Want more affordability (Chiang Mai)</li>
+<li>Plan to stay 2+ years with visa stability</li>
+</ul></div>
+</p></div>
+<div class="bvt-cta-row">
+    <a href="/countries/move-to-bali/" class="bali-btn">Full Bali Guide →</a><br />
+    <a href="/countries/move-to-thailand/" class="thai-btn">Full Thailand Guide →</a>
+  </div>
+</div>
+<div class="bvt-faq" id="faq">
+<h2>Frequently Asked Questions</h2>
+<div class="bvt-faq-item">
+<h3>Is Bali or Thailand cheaper to live in?</h3>
+<p>Thailand is generally cheaper, particularly Chiang Mai which is 15–25% less expensive than Canggu (Bali&#8217;s main nomad hub). Ubud (Bali) and Chiang Mai are roughly comparable. Bangkok is similar in price to Canggu. Both are dramatically cheaper than Western cities — a comfortable lifestyle runs $800–1,400/month in either destination.</p>
+</p></div>
+<div class="bvt-faq-item">
+<h3>Which is better for digital nomads — Bali or Thailand?</h3>
+<p>Bali (Canggu) wins on nomad community density and lifestyle integration — it&#8217;s widely considered the world&#8217;s #1 nomad hub. Thailand (Chiang Mai) is the runner-up and better value. For serious remote workers who need reliable internet and infrastructure, Thailand has the edge. For community, events, and nomad culture, Bali wins.</p>
+</p></div>
+<div class="bvt-faq-item">
+<h3>Which has easier visas — Bali or Thailand?</h3>
+<p>Thailand has more visa options and more stability. Bali&#8217;s E33G digital nomad visa is attractive for short stays with its tax exemption, but Indonesia&#8217;s visa rules change frequently and the bureaucracy can be complex. Thailand&#8217;s LTR, Elite, and retirement visas are more predictable for long-term planning.</p>
+</p></div>
+<div class="bvt-faq-item">
+<h3>Can I split time between Bali and Thailand?</h3>
+<p>Absolutely — and many expats do exactly this. A common pattern is spending the wet season in Thailand (the dry season there) and Bali&#8217;s dry season in Bali (May–September). Flights between Bali (DPS) and Bangkok (BKK/DMK) or Chiang Mai run from $80–200 depending on timing. Both countries reward this kind of seasonal rotation.</p>
+</p></div>
+<div class="bvt-faq-item">
+<h3>Which is better for long-term living — Bali or Thailand?</h3>
+<p>Thailand is better for long-term living. The visa options are more stable (LTR = 10 years, Elite = up to 20 years), healthcare is significantly better, and the expat infrastructure is more mature. Bali is excellent for 6–12 month stints on a nomad or social visa, but building a stable multi-year base is easier in Thailand.</p>
+</p></div>
+</div>
+<p><script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is Bali or Thailand cheaper to live in?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Thailand is generally cheaper, particularly Chiang Mai which is 15–25% less expensive than Canggu (Bali’s main nomad hub). Ubud (Bali) and Chiang Mai are roughly comparable. Bangkok is similar in price to Canggu. Both are dramatically cheaper than Western cities — a comfortable lifestyle runs $800–1,400/month in either destination."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which is better for digital nomads — Bali or Thailand?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Bali (Canggu) wins on nomad community density and lifestyle integration — it’s widely considered the world’s #1 nomad hub. Thailand (Chiang Mai) is the runner-up and better value. For serious remote workers who need reliable internet and infrastructure, Thailand has the edge. For community, events, and nomad culture, Bali wins."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which has easier visas — Bali or Thailand?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Thailand has more visa options and more stability. Bali’s E33G digital nomad visa is attractive for short stays with its tax exemption, but Indonesia’s visa rules change frequently and the bureaucracy can be complex. Thailand’s LTR, Elite, and retirement visas are more predictable for long-term planning."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I split time between Bali and Thailand?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Absolutely — and many expats do exactly this. A common pattern is spending the wet season in Thailand (the dry season there) and Bali’s dry season in Bali (May–September). Flights between Bali (DPS) and Bangkok (BKK/DMK) or Chiang Mai run from $80–200 depending on timing. Both countries reward this kind of seasonal rotation."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which is better for long-term living — Bali or Thailand?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Thailand is better for long-term living. The visa options are more stable (LTR = 10 years, Elite = up to 20 years), healthcare is significantly better, and the expat infrastructure is more mature. Bali is excellent for 6–12 month stints on a nomad or social visa, but building a stable multi-year base is easier in Thailand."
+      }
+    }
+  ]
+}
+</script></p>
