@@ -68,6 +68,23 @@ class TechnicalRegressionTests(unittest.TestCase):
             self.assertNotIn('href="#myanmar"', body)
             self.assertIn('<strong>9</strong>', body)
 
+    def test_ga4_tag_is_present_once_on_production_host_only(self):
+        production = self.client.get('/?ga-test=1', base_url='https://www.marharuta.online')
+        production_body = production.get_data(as_text=True)
+        tag_url = 'https://www.googletagmanager.com/gtag/js?id=G-QET2HP459Y'
+        self.assertEqual(production_body.count(tag_url), 1)
+        self.assertEqual(production_body.count("gtag('config', \"G-QET2HP459Y\")"), 1)
+
+        local = self.client.get('/?ga-test=1', base_url='http://127.0.0.1:5001')
+        self.assertNotIn('googletagmanager.com/gtag/js', local.get_data(as_text=True))
+
+    def test_csp_allows_ga4_script_and_collection_hosts(self):
+        response = self.client.get('/?ga-test=1', base_url='https://www.marharuta.online')
+        csp = response.headers['Content-Security-Policy']
+        self.assertIn('script-src', csp)
+        self.assertIn('https://www.googletagmanager.com', csp)
+        self.assertIn('https://www.google-analytics.com', csp)
+
 
 if __name__ == '__main__':
     unittest.main()

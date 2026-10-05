@@ -69,6 +69,15 @@ class EditorialTests(unittest.TestCase):
     def test_reading_time_ignores_css_and_script(self):
         self.assertEqual(reading_minutes('<style>' + 'x ' * 600 + '</style><p>' + 'word ' * 420 + '</p>'), 2)
 
+    def test_article_tables_keep_readable_columns(self):
+        page = self.client.get('/ru/blog/uae-virtual-work-visa-2026/').get_data(as_text=True)
+        self.assertGreaterEqual(page.count('class="table-scroll"'), 2)
+        css = (Path(__file__).resolve().parents[1] / 'static' / 'css' / 'editorial.css').read_text(encoding='utf-8')
+        self.assertIn('.table-scroll > table', css)
+        self.assertIn('min-width: 760px', css)
+        self.assertIn('word-break: normal', css)
+        self.assertIn('overflow-wrap: normal', css)
+
 
 if __name__ == '__main__':
     unittest.main()

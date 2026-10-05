@@ -4,6 +4,7 @@ import re
 import sqlite3
 import json
 import html
+import os
 import threading
 import time
 import hashlib
@@ -17,6 +18,7 @@ APP_DIR = Path(__file__).resolve().parent
 DB_PATH = APP_DIR / "content.db"
 
 app = Flask(__name__)
+app.config["GA4_MEASUREMENT_ID"] = os.getenv("GA4_MEASUREMENT_ID", "G-QET2HP459Y")
 
 
 @app.template_global()
@@ -91,10 +93,10 @@ def _store_in_cache_and_add_headers(response: Response) -> Response:
     response.headers.setdefault(
         "Content-Security-Policy",
         "default-src 'self'; "
-        "script-src 'self' 'unsafe-inline'; "
+        "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; "
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
         "font-src 'self' https://fonts.gstatic.com; "
-        "img-src 'self' data: https://flagcdn.com; "
+        "img-src 'self' data: https://flagcdn.com https://www.google-analytics.com; "
         "connect-src 'self' https:; "
         "object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'",
     )
@@ -7702,15 +7704,6 @@ def render_post_row(row: sqlite3.Row, *, lang: str):
     faq_schema = faq_schema_from_html(row["content"], lang=lang)
     if faq_schema:
         schema.append(faq_schema)
-    article_expansion = article_expansion_panel(row, lang=lang)
-    article_depth = article_depth_panel(row, lang=lang)
-    if lang == "ru":
-        article_expansion = polish_ru_data(article_expansion)
-        article_depth = polish_ru_data(article_depth)
-    if not faq_schema:
-        depth_schema = depth_panel_schema(article_depth, canonical_path, lang=lang)
-        if depth_schema:
-            schema.append(depth_schema)
     internal_links = internal_links_for_post(row, lang=lang)
     item_list = item_list_schema(f"Internal links for {strip_html(row['title'])}", internal_links)
     if item_list:
@@ -7745,7 +7738,7 @@ def render_post_row(row: sqlite3.Row, *, lang: str):
         post=row,
         article_body=article_body,
         article_toc=article_toc,
-        reading_time=reading_minutes(row["content"] + str(article_expansion or "") + str(article_depth or "")),
+        reading_time=reading_minutes(row["content"]),
         article_topic=article_topic(row, lang),
         seo=seo,
         lang_code=lang,
@@ -7755,8 +7748,6 @@ def render_post_row(row: sqlite3.Row, *, lang: str):
         article_seo_panel=article_seo,
         article_source_panel=article_sources,
         article_trust=article_trust,
-        article_expansion=article_expansion,
-        article_depth=article_depth,
         related_posts=related,
         internal_links=internal_links,
     )

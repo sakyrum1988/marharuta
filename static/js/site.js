@@ -49,13 +49,29 @@
     });
   }
 
-  /* Keep long article contents within a disclosure on smaller screens.
-     With JavaScript disabled the accessible native details remain open. */
-  var readingContents = document.querySelector('.rta-reading-nav details');
   var compactLayout = window.matchMedia('(max-width: 980px)');
-  if (readingContents) readingContents.open = !compactLayout.matches;
+  /* Long FAQ answers are progressive disclosure: questions stay scannable,
+     while the original answer nodes and their links remain in the document. */
+  document.querySelectorAll('.rta-reading-body .faq-item').forEach(function(item){
+    var heading = item.querySelector('h3');
+    if (!heading) return;
+
+    var disclosure = document.createElement('details');
+    disclosure.className = 'rta-faq-disclosure';
+    var summary = document.createElement('summary');
+    summary.textContent = heading.textContent.trim();
+    var answer = document.createElement('div');
+    answer.className = 'rta-faq-answer';
+
+    Array.from(item.childNodes).forEach(function(node){
+      if (node !== heading) answer.appendChild(node);
+    });
+    disclosure.appendChild(summary);
+    disclosure.appendChild(answer);
+    item.replaceWith(disclosure);
+  });
+
   compactLayout.addEventListener('change', function(event){
-    if (readingContents) readingContents.open = !event.matches;
     if (nav) nav.classList.remove('rta-nav--open');
     if (btn) btn.setAttribute('aria-expanded', 'false');
     closeSubmenus();
