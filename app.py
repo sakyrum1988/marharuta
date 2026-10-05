@@ -103,6 +103,11 @@ def _store_in_cache_and_add_headers(response: Response) -> Response:
 SITE_NAME = "Relocate to Asia"
 SITE_URL = "https://www.marharuta.online"
 DEFAULT_OG_IMAGE = "/static/img/og-default.png"
+OG_ASIA_RELOCATION = "/static/img/og-asia-relocation.png"
+OG_BALI_THAILAND = "/static/img/og-bali-thailand.png"
+OG_VIETNAM_RELOCATION = "/static/img/og-vietnam-relocation.png"
+OG_ASIA_VISAS = "/static/img/og-asia-visas.png"
+OG_MARGARITA_AUTHOR = "/static/img/og-margarita-yarovenko.png"
 FAVICON_PATH = "/static/img/favicon-512.png"
 GOOGLE_SITE_VERIFICATION_FILE = "google0cbfacb558cd5e85.html"
 
@@ -244,19 +249,24 @@ RU_PAGE_SEO_DESCRIPTIONS = {
     "cost-calculator": "Рассчитайте реальную месячную стоимость жизни в странах и городах Азии с учётом своего образа жизни.",
     "budget-planner": "Спланируйте полную стоимость переезда в Азию: визы, перелёт, жильё, первые расходы и финансовый резерв.",
     "compare-cities": "Сравните города Азии по стоимости жизни, безопасности, интернету, медицине и качеству жизни.",
-    "best-countries-in-asia-to-move": "Сравните лучшие страны Азии для переезда в 2026 году по расходам, визам, безопасности и инфраструктуре.",
+    "best-countries-in-asia-to-move": "Лучшие страны Азии для переезда в 2026 году: сравнение расходов, виз, безопасности, медицины и инфраструктуры.",
     "cheapest-countries-in-asia": "Сравните самые дешёвые страны Азии для экспатов в 2026 году по аренде, питанию, транспорту и визам.",
+    "move-to-asia": "Как переехать в Азию в 2026 году: выбор страны и визы, расчёт бюджета, сравнение городов и практический план подготовки.",
+    "visas": "Сравните визы стран Азии в 2026 году: маршруты для удалённой работы, долгого проживания, специалистов и пенсионеров.",
+    "digital-nomad-visas-asia": "Сравните digital nomad визы Азии в 2026 году по доходу, сроку пребывания, продлению, документам и семейным условиям.",
+    "retire-in-asia": "Сравните страны Азии для жизни на пенсии в 2026 году по визам, медицине, депозитам, расходам и устойчивости долгого проживания.",
+    "cost-of-living-asia": "Сравните стоимость жизни в странах Азии в 2026 году и рассчитайте бюджет аренды, питания, транспорта, страховки и переезда.",
     "compare": (
         "Сравнение стран Азии в 2026 году по стоимости жизни, визам, инфраструктуре, "
         "медицине, безопасности и практичности для релокации."
     ),
     "bali-vs-thailand": (
-        "Сравнение Бали и Таиланда для переезда в 2026 году: визовая логика, расходы, "
-        "инфраструктура и кому какой вариант подходит лучше."
+        "Бали или Таиланд в 2026 году: что дешевле и что лучше для переезда по визам, "
+        "расходам, инфраструктуре и образу жизни."
     ),
     "thailand-vs-malaysia": (
-        "Сравнение Таиланда и Малайзии для релокации в 2026 году: долгосрочные визы, "
-        "расходы, английский язык, медицина и семейный сценарий."
+        "Малайзия или Таиланд в 2026 году: что выбрать для переезда по стоимости жизни, "
+        "долгосрочным визам, английскому языку, медицине и семейному сценарию."
     ),
     "japan-vs-taiwan": (
         "Сравнение Японии и Тайваня для релокации в 2026 году: визовые маршруты, "
@@ -308,6 +318,19 @@ def trim_meta_text(value: str, limit: int) -> str:
     return value[:limit].rsplit(" ", 1)[0].rstrip(" ,.;:—–-")
 
 
+def trim_meta_title(value: str, limit: int) -> str:
+    """Trim a SERP title without leaving a dangling conjunction or preposition."""
+    trimmed = trim_meta_text(value, limit)
+    stopwords = {
+        "a", "an", "and", "for", "in", "of", "or", "the", "to", "with",
+        "в", "для", "и", "или", "как", "на", "по", "с", "что",
+    }
+    words = trimmed.split()
+    while len(words) > 1 and words[-1].casefold().strip(".,:;!?—–-") in stopwords:
+        words.pop()
+    return " ".join(words).rstrip(" ,.;:—–-")
+
+
 def seo_payload(
     *,
     title: str,
@@ -323,7 +346,7 @@ def seo_payload(
     clean_title = strip_html(title) or SITE_NAME
     description = strip_html(description) or DEFAULT_DESCRIPTION
     title_suffix = f" | {SITE_NAME}"
-    short_title = trim_meta_text(clean_title, 60 - len(title_suffix))
+    short_title = trim_meta_title(clean_title, 60 - len(title_suffix))
     canonical_url = absolute_url(canonical_path or request.path)
     og_image_url = absolute_url(og_image) if "absolute_url" in globals() else f"{SITE_URL}{og_image}"
     return {
@@ -365,7 +388,33 @@ def local_path(path: str) -> str:
     return path
 
 
+def og_image_for_path(path: str, slug: str = "") -> str:
+    """Choose a useful social preview instead of repeating one generic image."""
+    haystack = f"{path} {slug}".casefold()
+    if MARGARITA_AUTHOR_SLUG in haystack:
+        return OG_MARGARITA_AUTHOR
+    if "bali-vs-thailand" in haystack:
+        return OG_BALI_THAILAND
+    if "vietnam" in haystack:
+        return OG_VIETNAM_RELOCATION
+    visa_terms = (
+        "visa", "evisa", "eta", "gold-card", "srrv", "dtv", "ltr",
+        "one-pass", "hayya", "workation", "virtual-work", "remote-worker",
+    )
+    if any(term in haystack for term in visa_terms):
+        return OG_ASIA_VISAS
+    relocation_terms = (
+        "move-to-asia", "best-countries", "cheapest-countries",
+        "/countries/", "/compare/", "cost-of-living-asia",
+    )
+    if any(term in haystack for term in relocation_terms):
+        return OG_ASIA_RELOCATION
+    return DEFAULT_OG_IMAGE
+
+
 def page_meta_description(row: sqlite3.Row | dict, *, lang: str) -> str:
+    if "description" in row.keys() and row["description"]:
+        return row["description"]
     slug = row["slug"] if "slug" in row.keys() else ""
     normalized_slug = slug.removeprefix("ru-")
     if lang == "ru":
@@ -1303,6 +1352,17 @@ def ru_country_display(slug: str) -> str:
 def ru_country_accusative(slug: str) -> str:
     forms = COUNTRY_FORMS_RU.get(slug)
     return forms[1] if forms else ru_country_display(slug)
+
+
+def ru_country_destination(slug: str) -> str:
+    special = {
+        "move-to-bali": "на Бали",
+        "move-to-vietnam": "во Вьетнам",
+        "move-to-taiwan": "на Тайвань",
+        "move-to-philippines": "на Филиппины",
+        "move-to-sri-lanka": "на Шри-Ланку",
+    }
+    return special.get(slug, f"в {ru_country_accusative(slug)}")
 
 
 def ru_country_prep(slug: str) -> str:
@@ -2263,10 +2323,105 @@ COUNTRY_EN_DATA: dict[str, dict] = {
 }
 
 
+COUNTRY_SEARCH_FAQS: dict[str, dict[str, list[tuple[str, str]]]] = {
+    "move-to-thailand": {
+        "ru": [
+            ("Сколько денег нужно для переезда в Таиланд?", "Для одного человека разумно считать не только обычный месяц, но и старт. К месячному бюджету добавьте перелёт, временное жильё, депозит, визовые расходы, страховку и резерв минимум на один непредвиденный месяц."),
+            ("Как переехать в Таиланд в 2026 году?", "Сначала выберите законный маршрут под свой профиль и срок проживания. Затем проверьте документы и право на работу, рассчитайте первый месяц, выберите город и только после этого бронируйте долгосрочное жильё."),
+            ("Что выбрать для переезда: Бангкок, Чиангмай или Пхукет?", "Бангкок сильнее по работе, медицине и инфраструктуре. Чиангмай обычно спокойнее и дешевле. Пхукет подходит для пляжного сценария, но жильё и сезонные расходы могут быть выше."),
+        ],
+        "en": [
+            ("How much money do you need to relocate to Thailand?", "Budget for the first month separately from normal living costs. Include flights, temporary accommodation, a rental deposit, visa costs, insurance and at least one month of emergency reserve."),
+            ("What is the safest way to plan relocation to Thailand in 2026?", "Choose a legal stay route that fits your work, income and time horizon first. Then verify documents, calculate setup costs, compare cities and only then commit to long-term housing."),
+            ("Should you move to Bangkok, Chiang Mai or Phuket?", "Bangkok is strongest for jobs, hospitals and infrastructure. Chiang Mai is usually calmer and cheaper. Phuket fits a beach-first plan but housing and seasonal costs can be higher."),
+        ],
+    },
+    "move-to-vietnam": {
+        "ru": [
+            ("Как переехать во Вьетнам в 2026 году?", "Начните с подходящего основания для въезда и срока пребывания. После этого проверьте документы, правила работы, страховку и бюджет. Туристический въезд нельзя автоматически считать долгосрочным основанием для релокации."),
+            ("Что нужно для переезда во Вьетнам из России?", "Нужны действующий паспорт, подходящее разрешение на въезд, подтверждающие документы по выбранному маршруту, страховка и финансовый запас. Требования и доступность подачи необходимо перепроверить на официальных ресурсах перед поездкой."),
+            ("Сколько стоит переехать во Вьетнам?", "Кроме обычного месячного бюджета считайте перелёт, временное жильё, депозит, визовые сборы, страховку, связь и резерв. Ханой, Хошимин и Дананг дают разные уровни аренды и транспорта."),
+        ],
+        "en": [
+            ("How do you move to Vietnam in 2026?", "Start with an entry and stay route that matches your intended duration. Verify documents, work rules, insurance and the full setup budget before booking long-term accommodation."),
+            ("How much does it cost to relocate to Vietnam?", "Separate ongoing living costs from flights, temporary housing, a rental deposit, entry fees, insurance and emergency savings. Hanoi, Ho Chi Minh City and Da Nang have different cost profiles."),
+            ("Is a Vietnam eVisa a long-term relocation solution?", "Treat it as an entry route with a defined permitted stay, not automatically as a long-term residence or work route. Verify current official rules and your permitted activity before making commitments."),
+        ],
+    },
+    "move-to-bali": {
+        "ru": [
+            ("Как переехать на Бали в 2026 году?", "Сначала определите подходящий индонезийский визовый маршрут и разрешённый срок пребывания. Затем посчитайте жильё, страховку, транспорт, визовые продления и резерв на высокий сезон."),
+            ("Сколько стоит переезд на Бали?", "Стоимость сильно зависит от района. Чангу и Семиньяк обычно дороже, Убуд может быть спокойнее, но транспорт остаётся отдельной статьёй. К месячному бюджету добавьте депозит, перелёт, визу и страховку."),
+            ("Можно ли жить на Бали и работать удалённо?", "Нельзя исходить только из того, что работа выполняется онлайн. Проверьте, какой статус разрешает ваш сценарий, откуда приходит доход и какие действия допускает конкретная виза."),
+        ],
+        "en": [
+            ("What should you check before relocating to Bali?", "Choose the correct Indonesian visa route, verify permitted activity and stay length, and calculate housing, insurance, transport, extensions and a high-season buffer."),
+            ("How much does it cost to move to Bali?", "Costs vary sharply by area. Canggu and Seminyak are usually more expensive, while Ubud may be calmer. Add flights, a deposit, visa costs, insurance and transport to the monthly budget."),
+            ("Can you live in Bali while working remotely?", "Do not rely only on the fact that the work is online. Verify which status fits your activity, where the income comes from and what the specific visa permits."),
+        ],
+    },
+    "move-to-malaysia": {
+        "ru": [
+            ("Сколько стоит жить в Малайзии?", "Куала-Лумпур обычно дороже Пенанга и небольших городов. Считайте аренду, коммунальные платежи, питание, транспорт, страховку и визовые расходы, а стартовый месяц — отдельно с депозитом и временным жильём."),
+            ("Как переехать в Малайзию в 2026 году?", "Подберите маршрут под удалённую работу, трудоустройство, семью или долгосрочное проживание. Проверьте требования к доходу и работодателю, срок статуса, продление и правила для членов семьи."),
+            ("Малайзия подходит для долгого проживания?", "Она сильна английским языком, городской инфраструктурой и медициной, но устойчивость переезда зависит от конкретного визового маршрута. Краткий въезд не заменяет долгосрочный статус."),
+        ],
+        "en": [
+            ("How much does it cost to live in Malaysia?", "Kuala Lumpur is generally more expensive than Penang and smaller cities. Include rent, utilities, food, transport, insurance and visa costs, and calculate the setup month separately."),
+            ("How do you move to Malaysia in 2026?", "Match the route to remote work, local employment, family or long-term residence. Verify income or employer requirements, validity, renewal and dependant rules before committing."),
+            ("Is Malaysia suitable for long-term relocation?", "Malaysia is strong for English, urban infrastructure and healthcare, but the plan is only as stable as the visa route. Short entry permission is not a substitute for long-term status."),
+        ],
+    },
+    "move-to-taiwan": {
+        "ru": [
+            ("Как переехать на Тайвань в 2026 году?", "Сначала проверьте, подходит ли вам Gold Card, рабочий маршрут, учёба или другой тип резидентства. После этого рассчитайте жильё, страховку, налоги и стартовые расходы."),
+            ("Кому подходит Taiwan Gold Card?", "Это профессиональный маршрут, а не универсальная виза для любого удалёнщика. Нужно соответствовать критериям выбранной профессиональной категории и подтвердить квалификацию или доход."),
+            ("Сколько стоит жизнь на Тайване?", "Тайбэй заметно дороже других городов. Сравнивайте аренду, транспорт, питание, медицинское покрытие и налоги именно для города и статуса, которыми планируете пользоваться."),
+        ],
+        "en": [
+            ("How do you move to Taiwan in 2026?", "Check whether the Gold Card, an employment route, study or another residence category fits your profile. Then calculate housing, insurance, tax and first-month setup costs."),
+            ("Who qualifies for the Taiwan Gold Card?", "It is a skilled-professional route, not a universal remote-work visa. Applicants must meet the criteria and evidence requirements for an eligible professional field."),
+            ("How expensive is living in Taiwan?", "Taipei is materially more expensive than other cities. Compare rent, transport, food, healthcare coverage and taxes for the city and residence status you would actually use."),
+        ],
+    },
+    "move-to-south-korea": {
+        "ru": [
+            ("Как переехать в Южную Корею в 2026 году?", "Выберите основание под работу, учёбу, бизнес, семью или удалённый доход. Проверьте требования к документам и доходу, срок статуса, страховку и расходы на жильё до переезда."),
+            ("Подходит ли Южная Корея удалённому специалисту?", "Это зависит от подходящего визового маршрута и подтверждаемого иностранного дохода. Высокое качество инфраструктуры не отменяет требований к статусу и стоимости жизни."),
+            ("Сколько стоит переезд в Южную Корею?", "Главная нагрузка часто приходится на жильё и депозит. Отдельно считайте перелёт, временное размещение, страховку, связь и финансовый резерв."),
+        ],
+        "en": [
+            ("How do you move to South Korea in 2026?", "Choose a route for employment, study, business, family or qualifying remote income. Verify documents, income rules, validity, insurance and housing costs before moving."),
+            ("Can a foreign remote worker relocate to South Korea?", "It depends on eligibility for the relevant route and evidence of qualifying overseas income. Strong infrastructure does not replace immigration requirements or a realistic budget."),
+            ("How much does it cost to move to South Korea?", "Housing and the deposit are often the largest pressures. Calculate flights, temporary accommodation, insurance, connectivity and an emergency reserve separately."),
+        ],
+    },
+}
+
+
+def country_search_faq_html(slug: str, lang: str) -> str:
+    items = COUNTRY_SEARCH_FAQS.get(slug, {}).get(lang, [])
+    if not items:
+        return ""
+    title = "Частые вопросы о переезде" if lang == "ru" else "Relocation Questions"
+    label = "Ответы" if lang == "ru" else "Practical Answers"
+    faq_items = "".join(
+        f'<div class="faq-item"><h3>{html.escape(question)}</h3><p>{html.escape(answer)}</p></div>'
+        for question, answer in items
+    )
+    anchor = "ru-search-questions" if lang == "ru" else "en-search-questions"
+    return (
+        f'<div class="ep-section rta-depth-faq" id="{anchor}">'
+        f'<p class="ep-section-label">{label}</p>'
+        f'<h2 class="ep-h2">{title}</h2>{faq_items}</div>'
+    )
+
+
 def ru_country_article(slug: str, facts: sqlite3.Row | None) -> str:
     data = RU_COUNTRY_DATA.get(slug)
     country = ru_country_display(slug)
     acc = ru_country_accusative(slug)
+    destination = ru_country_destination(slug)
     capital = facts["capital"] if facts and facts["capital"] else "данные отсутствуют"
     currency = facts["currency_code"] if facts and facts["currency_code"] else "данные отсутствуют"
     languages = facts["languages"] if facts and facts["languages"] else "данные отсутствуют"
@@ -2282,6 +2437,8 @@ def ru_country_article(slug: str, facts: sqlite3.Row | None) -> str:
         ),
     )
 
+    search_faq = country_search_faq_html(slug, "ru")
+    search_faq_link = '<li><a href="#ru-search-questions">Частые вопросы</a></li>' if search_faq else ""
     sidebar_html = f"""
     <div class="ep-toc">
       <p class="ep-toc-title">На этой странице</p>
@@ -2291,6 +2448,7 @@ def ru_country_article(slug: str, facts: sqlite3.Row | None) -> str:
         <li><a href="#ru-costs">Стоимость жизни</a></li>
         <li><a href="#ru-proscons">Плюсы и минусы</a></li>
         <li><a href="#ru-facts">Факты о стране</a></li>
+        {search_faq_link}
       </ol>
     </div>
     <div class="ep-facts">
@@ -2308,7 +2466,7 @@ def ru_country_article(slug: str, facts: sqlite3.Row | None) -> str:
         return f"""
 <div class="rta-hero-card">
   <span class="rta-pill">Гид по стране · 2026</span>
-  <h1 style="color:#fff;font-size:clamp(24px,3.5vw,42px);font-weight:900;letter-spacing:-.5px;margin:16px 0;line-height:1.15;">Переезд в {html.escape(acc)}: визы, расходы и реальная логика выбора</h1>
+  <h1 style="color:#fff;font-size:clamp(24px,3.5vw,42px);font-weight:900;letter-spacing:-.5px;margin:16px 0;line-height:1.15;">Переезд {html.escape(destination)}: визы, расходы и реальная логика выбора</h1>
   <p style="color:rgba(255,255,255,.85);font-size:17px;line-height:1.6;margin:0;max-width:680px;">{html.escape(note)}</p>
 </div>
 <div class="ep-highlight" style="margin-top:28px;"><p><strong>Короткий вывод:</strong> {html.escape(risk)}</p></div>
@@ -2365,7 +2523,7 @@ def ru_country_article(slug: str, facts: sqlite3.Row | None) -> str:
     return f"""
 <div class="rta-hero-card">
   <span class="rta-pill">Гид по стране · 2026</span>
-  <h1 style="color:#fff;font-size:clamp(24px,3.5vw,42px);font-weight:900;letter-spacing:-.5px;margin:16px 0;line-height:1.15;">Переезд в {html.escape(acc)}: визы, расходы и реальная логика выбора</h1>
+  <h1 style="color:#fff;font-size:clamp(24px,3.5vw,42px);font-weight:900;letter-spacing:-.5px;margin:16px 0;line-height:1.15;">Переезд {html.escape(destination)}: визы, расходы и реальная логика выбора</h1>
   <p style="color:rgba(255,255,255,.85);font-size:17px;line-height:1.6;margin:0;max-width:680px;">{html.escape(description)}</p>
   <div style="display:flex;gap:16px;flex-wrap:wrap;color:rgba(255,255,255,.6);font-size:13px;margin-top:18px;">
     <span>📅 Обновлено 2026</span>
@@ -2466,6 +2624,8 @@ def ru_country_article(slug: str, facts: sqlite3.Row | None) -> str:
       <p class="ep-p">Данные World Bank ({html.escape(str(year))}). Используйте как контекст при планировании — актуальные цифры проверяйте перед принятием решений.</p>
     </div>
 
+    {search_faq}
+
     <div class="ep-cta">
       <h3>Готовы выбрать страну?</h3>
       <p>Сравните направления, посчитайте расходы, проверьте визу.</p>
@@ -2512,6 +2672,8 @@ def en_country_article(slug: str, facts: sqlite3.Row | None) -> str:
         ),
     )
 
+    search_faq = country_search_faq_html(slug, "en")
+    search_faq_link = '<li><a href="#en-search-questions">Relocation Questions</a></li>' if search_faq else ""
     sidebar_html = f"""
     <div class="ep-toc">
       <p class="ep-toc-title">On This Page</p>
@@ -2521,6 +2683,7 @@ def en_country_article(slug: str, facts: sqlite3.Row | None) -> str:
         <li><a href="#en-costs">Cost of Living</a></li>
         <li><a href="#en-proscons">Pros &amp; Cons</a></li>
         <li><a href="#en-facts">Country Facts</a></li>
+        {search_faq_link}
       </ol>
     </div>
     <div class="ep-facts">
@@ -2695,6 +2858,8 @@ def en_country_article(slug: str, facts: sqlite3.Row | None) -> str:
       <h2 class="ep-h2">About {html.escape(country)}</h2>
       <p class="ep-p">World Bank data ({html.escape(str(year))}). Use as planning context — verify current figures before making decisions.</p>
     </div>
+
+    {search_faq}
 
     <div class="ep-cta">
       <h3>Ready to Choose a Country?</h3>
@@ -2905,6 +3070,66 @@ def ru_hub_content(slug: str) -> str | None:
   <p>{html.escape(decision_two)}</p>
   <h2>{html.escape(next_title)}</h2>
   <p>{html.escape(next_text)}</p>
+</section>
+"""
+
+
+def move_to_asia_search_section(lang: str) -> str:
+    if lang == "ru":
+        return """
+<section class="ep-section rta-depth-faq" id="move-to-asia-plan">
+  <p class="ep-section-label">Практический план</p>
+  <h2 class="ep-h2">Как переехать в Азию в 2026 году</h2>
+  <p class="ep-p">Переезд в Азию начинается не со списка красивых стран. Сначала определите срок, источник дохода, состав семьи и максимальный бюджет. Эти четыре ограничения быстро показывают, какие направления действительно можно рассматривать.</p>
+  <p class="ep-p">Для короткого теста страны нужен один тип маршрута. Для работы на местного работодателя, удалённого дохода, семьи или пенсии — другие основания и документы. Не используйте туристический въезд как молчаливую замену долгосрочному статусу.</p>
+  <div class="ep-proscons">
+    <div class="ep-pros"><h3>Если вы работаете удалённо</h3><p>Сравните происхождение дохода, требования к работодателю, разрешённый срок пребывания, продление и правила для членов семьи. Начните с Таиланда, Малайзии, Тайваня, Индонезии и Южной Кореи, но проверяйте конкретный маршрут.</p></div>
+    <div class="ep-pros"><h3>Если переезжаете с семьёй</h3><p>Добавьте школы, медицинскую страховку, жильё с двумя спальнями, документы супруга и детей. Более дешёвая страна может оказаться дороже после школы и частной медицины.</p></div>
+    <div class="ep-pros"><h3>Если главный фактор — бюджет</h3><p>Считайте отдельно обычный месяц и старт: перелёт, временное жильё, депозит, визовые сборы, страховку и резерв. Вьетнам, часть Таиланда, Малайзия и Камбоджа часто входят в бюджетный список.</p></div>
+    <div class="ep-pros"><h3>Если нужен горизонт на годы</h3><p>Проверяйте не только первую визу, но и продление, работу, налоги, банковский доступ и возможность сохранить статус. Короткий удобный въезд ещё не означает устойчивый переезд.</p></div>
+  </div>
+  <h2 class="ep-h2">Порядок действий</h2>
+  <ol class="ep-p">
+    <li>Выберите две или три страны, которые подходят по визовому профилю.</li>
+    <li>Проверьте официальные требования и соберите список документов.</li>
+    <li>Посчитайте стартовый бюджет и три обычных месяца.</li>
+    <li>Сравните конкретные города, медицину, транспорт и районы.</li>
+    <li>Подготовьте запасной план на случай отказа, роста аренды или смены работы.</li>
+  </ol>
+  <p class="ep-p"><a href="/ru/best-countries-in-asia-to-move/">Сравнить лучшие страны Азии</a> · <a href="/ru/visas/">Проверить визовые маршруты</a> · <a href="/ru/tools/budget-planner/">Посчитать бюджет переезда</a></p>
+  <h2 class="ep-h2">Частые вопросы о переезде в Азию</h2>
+  <div class="faq-item"><h3>Какая страна Азии лучше всего подходит для переезда?</h3><p>Универсального ответа нет. Таиланд часто выбирают за города и медицину, Малайзию — за английский и инфраструктуру, Вьетнам — за бюджет, Тайвань — за профессиональные маршруты и качество городской среды.</p></div>
+  <div class="faq-item"><h3>Сколько денег нужно для переезда в Азию?</h3><p>Сложите три части: первый месяц, обычные расходы и резерв. Первый месяц обычно включает перелёт, временное жильё, депозит, документы и страховку, поэтому он заметно дороже обычного.</p></div>
+  <div class="faq-item"><h3>Можно ли сначала приехать туристом, а потом решить?</h3><p>Для знакомства со страной это может быть полезно, но туристический въезд не нужно считать гарантированным путём к долгому статусу или работе. Следующий законный маршрут проверяйте заранее.</p></div>
+  <div class="faq-item"><h3>Что выбирать сначала: страну, визу или город?</h3><p>Сначала профиль и законный маршрут, затем страну и только потом город. Иначе можно потратить время на направление, которое не подходит по документам или сроку.</p></div>
+</section>
+"""
+    return """
+<section class="ep-section rta-depth-faq" id="move-to-asia-plan">
+  <p class="ep-section-label">Practical Plan</p>
+  <h2 class="ep-h2">How to move to Asia in 2026</h2>
+  <p class="ep-p">Moving to Asia starts with constraints, not a list of attractive countries. Define your time horizon, income source, family situation and maximum budget first. Those four factors quickly narrow the realistic options.</p>
+  <p class="ep-p">A short country test, local employment, overseas remote income, family relocation and retirement all require different legal routes. Do not treat tourist entry as an automatic substitute for long-term residence or work permission.</p>
+  <div class="ep-proscons">
+    <div class="ep-pros"><h3>Remote workers</h3><p>Compare income-source rules, employer requirements, permitted stay, renewal and dependant eligibility. Thailand, Malaysia, Taiwan, Indonesia and South Korea are useful starting points, but the specific route matters more than the country label.</p></div>
+    <div class="ep-pros"><h3>Families</h3><p>Add schools, health insurance, larger housing and dependant documents. A cheaper country can become more expensive once education and private healthcare enter the budget.</p></div>
+    <div class="ep-pros"><h3>Budget-led moves</h3><p>Calculate normal monthly spending separately from flights, temporary housing, a deposit, visa fees, insurance and an emergency reserve. Vietnam, parts of Thailand, Malaysia and Cambodia often enter the budget shortlist.</p></div>
+    <div class="ep-pros"><h3>Long-term relocation</h3><p>Check renewal, work permission, tax exposure, banking and the ability to preserve status. Convenient short entry is not the same as a stable multi-year plan.</p></div>
+  </div>
+  <h2 class="ep-h2">A safer order of decisions</h2>
+  <ol class="ep-p">
+    <li>Shortlist two or three countries that fit your immigration profile.</li>
+    <li>Verify official requirements and build a document checklist.</li>
+    <li>Calculate setup costs plus three normal months.</li>
+    <li>Compare specific cities, healthcare, transport and districts.</li>
+    <li>Keep a fallback plan for refusal, rent increases or job changes.</li>
+  </ol>
+  <p class="ep-p"><a href="/best-countries-in-asia-to-move/">Compare the best Asian countries</a> · <a href="/visas/">Check visa routes</a> · <a href="/tools/budget-planner/">Build a relocation budget</a></p>
+  <h2 class="ep-h2">Frequently asked questions about moving to Asia</h2>
+  <div class="faq-item"><h3>What is the best Asian country to move to?</h3><p>There is no universal winner. Thailand is strong for city choice and healthcare, Malaysia for English and infrastructure, Vietnam for budget planning, and Taiwan for skilled-professional routes and urban quality.</p></div>
+  <div class="faq-item"><h3>How much money do you need to move to Asia?</h3><p>Calculate the setup month, normal monthly spending and an emergency reserve separately. Flights, temporary housing, a deposit, documents and insurance usually make the first month materially more expensive.</p></div>
+  <div class="faq-item"><h3>Can you arrive as a tourist and decide later?</h3><p>A short visit can help you test a country, but tourist entry should not be treated as a guaranteed route to residence or work permission. Verify the next legal step before committing.</p></div>
+  <div class="faq-item"><h3>Should you choose the country, visa or city first?</h3><p>Start with your profile and a viable legal route, then choose the country and finally the city. This prevents spending time on a destination that cannot support your documents or time horizon.</p></div>
 </section>
 """
 
@@ -4679,6 +4904,7 @@ def margarita_author_schema(lang: str = "en") -> dict:
         "name": MARGARITA_AUTHOR_NAME_RU if is_ru else MARGARITA_AUTHOR_NAME_EN,
         "alternateName": MARGARITA_AUTHOR_NAME_EN if is_ru else MARGARITA_AUTHOR_NAME_RU,
         "url": absolute_url(path),
+        "image": absolute_url(OG_MARGARITA_AUTHOR),
         "jobTitle": "Автор и редактор Relocate to Asia" if is_ru else "Author and Editor at Relocate to Asia",
         "description": (
             "Автор и редактор материалов о релокации в Азию с опытом жизни и путешествий более чем в 15 странах."
@@ -4690,6 +4916,12 @@ def margarita_author_schema(lang: str = "en") -> dict:
         "alumniOf": {"@type": "CollegeOrUniversity", "name": "Luhansk Taras Shevchenko National University"},
         "worksFor": {"@type": "Organization", "name": SITE_NAME, "url": SITE_URL},
     }
+
+
+def embedded_margarita_author_schema(lang: str = "en") -> dict:
+    schema = dict(margarita_author_schema(lang))
+    schema.pop("@context", None)
+    return schema
 
 
 def website_schema() -> dict:
@@ -4778,7 +5010,29 @@ def trust_page_schema(title: str, path: str, *, page_type: str = "WebPage") -> d
     }
 
 
+COUNTRY_META_DESCRIPTIONS_EN = {
+    "move-to-bali": "Relocating to Bali in 2026: visa routes, real living costs, Canggu vs Ubud, remote-work limits and first-month planning.",
+    "move-to-thailand": "Relocation to Thailand in 2026: visa routes, living costs, Bangkok vs Chiang Mai vs Phuket and a realistic moving budget.",
+    "move-to-vietnam": "Move to Vietnam in 2026: entry routes, living costs, Hanoi vs Ho Chi Minh City vs Da Nang and relocation planning.",
+    "move-to-malaysia": "Move to Malaysia in 2026: visa routes, cost of living, Kuala Lumpur vs Penang, healthcare and long-term planning.",
+    "move-to-taiwan": "Move to Taiwan in 2026: Gold Card and work routes, living costs, Taipei alternatives and practical relocation steps.",
+    "move-to-south-korea": "Move to South Korea in 2026: visa routes, Seoul living costs, housing deposits and planning for foreign professionals.",
+}
+
+COUNTRY_META_DESCRIPTIONS_RU = {
+    "move-to-bali": "Переезд на Бали в 2026 году: визовые маршруты, стоимость жизни, выбор района, удалённая работа и бюджет первого месяца.",
+    "move-to-thailand": "Переезд в Таиланд в 2026 году: сколько нужно денег, визовые маршруты, стоимость жизни и выбор между Бангкоком, Чиангмаем и Пхукетом.",
+    "move-to-vietnam": "Как переехать во Вьетнам в 2026 году: документы, въездные маршруты, стоимость переезда и сравнение Ханоя, Хошимина и Дананга.",
+    "move-to-malaysia": "Переезд в Малайзию в 2026 году: стоимость жизни, визовые маршруты, Куала-Лумпур или Пенанг, медицина и долгосрочный план.",
+    "move-to-taiwan": "Переезд на Тайвань в 2026 году: Gold Card, рабочие маршруты, стоимость жизни, документы и практические шаги.",
+    "move-to-south-korea": "Переезд в Южную Корею в 2026 году: визовые маршруты, стоимость жизни, жильё и план для иностранных специалистов.",
+}
+
+
 def country_meta_description(row: sqlite3.Row, facts: sqlite3.Row | None) -> str:
+    slug = row["slug"] if "slug" in row.keys() else ""
+    if slug in COUNTRY_META_DESCRIPTIONS_EN:
+        return COUNTRY_META_DESCRIPTIONS_EN[slug]
     title = strip_html(row["title"]).replace("—", "-").replace(":", " -")
     if facts:
         details = []
@@ -4794,6 +5048,8 @@ def country_meta_description(row: sqlite3.Row, facts: sqlite3.Row | None) -> str
 
 
 def country_meta_description_ru(slug: str, title: str, facts: sqlite3.Row | None) -> str:
+    if slug in COUNTRY_META_DESCRIPTIONS_RU:
+        return COUNTRY_META_DESCRIPTIONS_RU[slug]
     forms = COUNTRY_FORMS_RU.get(slug)
     country = forms[2] if forms else strip_html(title)
     details = []
@@ -4832,7 +5088,13 @@ def country_schema(row: sqlite3.Row, facts: sqlite3.Row | None, path: str) -> di
     return schema
 
 
-def article_schema(row: sqlite3.Row, *, lang: str, canonical_path: str) -> dict:
+def article_schema(
+    row: sqlite3.Row,
+    *,
+    lang: str,
+    canonical_path: str,
+    og_image: str = DEFAULT_OG_IMAGE,
+) -> dict:
     published = row["date"] or ""
     sources = extract_official_sources(row["content"])
     schema = {
@@ -4842,14 +5104,14 @@ def article_schema(row: sqlite3.Row, *, lang: str, canonical_path: str) -> dict:
         "description": trim_text(strip_html(row["excerpt"] or row["content"]), 200),
         "datePublished": published,
         "dateModified": published or "2026-05-13",
-        "author": editorial_team_schema(lang),
+        "author": embedded_margarita_author_schema(lang),
         "reviewedBy": editorial_team_schema(lang),
         "publisher": organization_schema(),
-        "editor": editorial_team_schema(lang),
+        "editor": embedded_margarita_author_schema(lang),
         "mainEntityOfPage": absolute_url(canonical_path),
         "url": absolute_url(canonical_path),
         "inLanguage": lang,
-        "image": [absolute_url(DEFAULT_OG_IMAGE)],
+        "image": [absolute_url(og_image)],
         "isAccessibleForFree": True,
         "publishingPrinciples": absolute_url("/editorial-policy/" if lang == "en" else "/ru/editorial-policy/"),
         "correction": absolute_url("/contact/" if lang == "en" else "/ru/contact/"),
@@ -5651,16 +5913,17 @@ def post_seo_panel(row: sqlite3.Row | dict, *, lang: str) -> dict:
 
 def article_trust_panel(row: sqlite3.Row | dict, *, lang: str) -> dict:
     sources = extract_official_sources(row["content"])
+    published = format_date_filter(row["date"], lang) if "date" in row.keys() else ""
     if lang == "ru":
         return {
             "eyebrow": "Проверка и ответственность",
             "author_label": "Автор",
-            "author": DEFAULT_AUTHOR,
-            "author_url": "/ru/authors/editorial-team/",
+            "author": MARGARITA_AUTHOR_NAME_RU,
+            "author_url": f"/ru/authors/{MARGARITA_AUTHOR_SLUG}/",
             "reviewer_label": "Проверка фактов",
             "reviewer": DEFAULT_AUTHOR,
-            "reviewed_label": "Последняя редакционная проверка",
-            "reviewed": LAST_REVIEWED_RU,
+            "reviewed_label": "Дата материала и редакционной проверки",
+            "reviewed": published or "указана в статье",
             "sources_label": "Официальных источников в материале",
             "sources_count": str(len(sources)) if sources else "1+",
             "methodology_label": "Как мы проверяем данные",
@@ -5672,12 +5935,12 @@ def article_trust_panel(row: sqlite3.Row | dict, *, lang: str) -> dict:
     return {
         "eyebrow": "Review And Accountability",
         "author_label": "Author",
-        "author": DEFAULT_AUTHOR,
-        "author_url": "/authors/editorial-team/",
+        "author": MARGARITA_AUTHOR_NAME_EN,
+        "author_url": f"/authors/{MARGARITA_AUTHOR_SLUG}/",
         "reviewer_label": "Fact checked by",
         "reviewer": DEFAULT_AUTHOR,
-        "reviewed_label": "Last editorial check",
-        "reviewed": LAST_REVIEWED_EN,
+        "reviewed_label": "Article and editorial review date",
+        "reviewed": published or "shown in the article",
         "sources_label": "Official sources in this guide",
         "sources_count": str(len(sources)) if sources else "1+",
         "methodology_label": "How We Verify Data",
@@ -5969,8 +6232,8 @@ def blog_trust_panel(*, lang: str) -> dict:
         return {
             "title": "Как проверяются материалы блога",
             "items": [
-                ("Редакция", DEFAULT_AUTHOR),
-                ("Последняя проверка", LAST_REVIEWED_RU),
+                ("Автор", MARGARITA_AUTHOR_NAME_RU),
+                ("Проверка", "дата указывается в каждом материале"),
                 ("Подход", "официальные источники, ручная редактура и пометка спорных мест"),
             ],
             "methodology_url": "/ru/how-we-verify-data/",
@@ -5982,8 +6245,8 @@ def blog_trust_panel(*, lang: str) -> dict:
     return {
         "title": "How Blog Articles Are Checked",
         "items": [
-            ("Editorial team", DEFAULT_AUTHOR),
-            ("Last checked", LAST_REVIEWED_EN),
+            ("Author", MARGARITA_AUTHOR_NAME_EN),
+            ("Review date", "shown on each article"),
             ("Method", "official sources, manual editing and clear limits where rules are uncertain"),
         ],
         "methodology_url": "/how-we-verify-data/",
@@ -6910,7 +7173,7 @@ def content_depth_panel(path: str, row: sqlite3.Row | dict, *, lang: str) -> dic
             country = ru_country_display(slug)
             _depth = COUNTRY_DEPTH_DATA.get(slug, {}).get("ru")
             return {
-                "title": f"Как оценивать переезд в {ru_country_accusative(slug)} без самообмана",
+                "title": f"Как оценивать переезд {ru_country_destination(slug)} без самообмана",
                 "intro": f"{country} может выглядеть привлекательно по цене, климату или визам, но решение о переезде должно выдерживать проверку по документам, деньгам и повседневной жизни.",
                 "sections": _depth["sections"] if _depth else [
                     ("Что является фактом", "Факт — это то, что подтверждается официальным источником или структурированными страновыми данными: столица, валюта, язык, население, визовый срок, условия продления, требования к доходу или депозиту. Всё остальное нужно читать как практическую интерпретацию."),
@@ -7063,7 +7326,7 @@ def content_quality_panel(path: str, row: sqlite3.Row | dict, *, lang: str) -> d
         if is_ru:
             country = ru_country_display(slug)
             return {
-                "title": f"Что проверить перед переездом в {ru_country_accusative(slug)}",
+                "title": f"Что проверить перед переездом {ru_country_destination(slug)}",
                 "intro": f"{country} нельзя оценивать только по аренде, климату или впечатлениям из короткой поездки. Для релокации важнее связка: легальный срок stay, понятный бюджет, медицина, городская среда и запасной план, если правила или расходы изменятся.",
                 "sections": [
                     ("Виза и срок пребывания", "Сначала проверьте, какой маршрут реально подходит вашему доходу, типу работы и семье. Если страна хороша по быту, но legal stay держится на коротких въездах или неясном продлении, это не долгосрочный план, а временная гипотеза."),
@@ -7344,10 +7607,12 @@ def render_page_row(row: sqlite3.Row | dict, **kwargs):
     seo = seo_payload(
         title=row["title"],
         description=page_meta_description(row, lang=lang),
+        author=kwargs.get("author", DEFAULT_AUTHOR),
         lang=lang,
         canonical_path=path,
         alternates=kwargs.get("alternates") or default_page_alternates(path),
         schema=schema,
+        og_image=og_image_for_path(path, slug),
     )
     return render_template(
         "page.html",
@@ -7385,8 +7650,9 @@ def render_post_row(row: sqlite3.Row, *, lang: str):
             row["content"] = polish_ru_text(row["content"])
     canonical_path = f"/blog/{_slug}/" if lang == "en" else f"/ru/blog/{_slug}/"
     alternates = post_alternates(row, lang=lang, canonical_path=canonical_path)
+    og_image = og_image_for_path(canonical_path, _slug)
     schema = [
-        article_schema(row, lang=lang, canonical_path=canonical_path),
+        article_schema(row, lang=lang, canonical_path=canonical_path, og_image=og_image),
         breadcrumb_schema([("Блог" if lang == "ru" else "Blog", "/ru/blog/" if lang == "ru" else "/blog/")], row["title"], canonical_path),
         organization_schema(),
     ]
@@ -7414,6 +7680,7 @@ def render_post_row(row: sqlite3.Row, *, lang: str):
         alternates=alternates,
         schema=schema,
         og_type="article",
+        og_image=og_image,
     )
     article_seo = post_seo_panel(row, lang=lang)
     article_sources = article_source_panel_for_post(row, lang=lang)
@@ -7539,13 +7806,13 @@ def polish_ru_text(value: str | None) -> str:
         ("long-stay", "долгое проживание"),
         ("long stay", "долгое проживание"),
         ("remote-work сообщество", "сообщество удалённых специалистов"),
+        ("remote workers", "удалённые специалисты"),
+        ("remote worker", "удалённый специалист"),
         ("remote work", "удалённая работа"),
         ("remote-worker маршрут", "маршрут для удалённой работы"),
         ("remote-worker", "для удалённой работы"),
         ("remote income", "удалённый доход"),
         ("remote employees", "удалённые сотрудники"),
-        ("remote worker", "удалённый специалист"),
-        ("remote workers", "удалённые специалисты"),
         ("solo remote worker", "удалённый специалист без семьи"),
         ("solo-сценарий", "сценарий для одного человека"),
         ("solo-сценария", "сценария для одного человека"),
@@ -7594,6 +7861,29 @@ def polish_ru_text(value: str | None) -> str:
         ("high earners", "люди с высоким доходом"),
         ("founders", "основатели проектов"),
         ("founder", "основатель проекта"),
+        ("one-year self-sponsored route", "годовой самостоятельный маршрут"),
+        ("годовой самостоятельный route", "годовой самостоятельный маршрут"),
+        ("self-sponsored route", "самостоятельный маршрут"),
+        ("remote-work route", "маршрут для удалённой работы"),
+        ("nomad route", "маршрут для удалённых специалистов"),
+        ("entry route", "маршрут въезда"),
+        ("tech workers", "технические специалисты"),
+        ("digital freelancers", "цифровые фрилансеры"),
+        ("consultants", "консультанты"),
+        ("nomad brand", "репутация среди удалённых специалистов"),
+        ("official paperwork", "официальное оформление"),
+        ("paperwork", "оформление документов"),
+        ("proof-of-work", "подтверждение занятости"),
+        ("proof of work", "подтверждение занятости"),
+        ("Duration", "Срок действия"),
+        ("Income threshold", "Минимальный доход"),
+        ("UAE Government virtual work residence visa", "Правительство ОАЭ: виза Virtual Work Residence"),
+        ("GDRFA virtual work residence permit", "GDRFA: разрешение Virtual Work Residence"),
+        ("Виза UAE Virtual Work Residence в 2026 году: годовой самостоятельный визовый маршрут для удалённой работы", "Виза UAE Virtual Work Residence в 2026 году: условия и доход"),
+        ("UAE Virtual Work Residence Visa Требования:", "Требования к UAE Virtual Work Residence Visa:"),
+        ("Официальные источники UAE Virtual Work Residence Visa", "Официальные источники по UAE Virtual Work Residence Visa"),
+        ("При сложных налогах, члены семьи или компании берите профильную консультацию.", "При сложных налоговых вопросах, вопросах статуса членов семьи или компании обратитесь за профильной консультацией."),
+        ("ОАЭ может быть хорошим направлением", "ОАЭ могут быть хорошим направлением"),
         ("self-sponsored", "самостоятельный"),
         ("low-barrier", "низкопороговый"),
         ("dependants", "члены семьи"),
@@ -7612,11 +7902,14 @@ def polish_ru_text(value: str | None) -> str:
         ("visa, work permit and residence permit", "виза, разрешение на работу и разрешение на проживание"),
         ("resident visa, work permit, Alien Resident Certificate и re-entry permit", "резидентская виза, разрешение на работу, Alien Resident Certificate и разрешение на повторный въезд"),
         ("work permit и residence permit", "разрешение на работу и разрешение на проживание"),
+        ("work permit", "разрешение на работу"),
+        ("residence route", "маршрут резидентства"),
         ("official portal, guidelines", "официальный портал и правила"),
         ("short visit правилам", "правилам короткого визита"),
         ("visitor permit", "разрешению на въезд"),
-        ("virtual work residence", "резидентскому маршруту для удалённой работы"),
         ("identity, citizenship и визовым сервисам", "идентификационным, гражданским и визовым сервисам"),
+        ("United Arab Emirates", "Объединённые Арабские Эмираты"),
+        ("Abu Dhabi", "Абу-Даби"),
         ("English widely spoken", "английский широко используется"),
         ("MM2H visa program", "программа MM2H"),
         ("Modern infrastructure", "современная инфраструктура"),
@@ -7713,6 +8006,16 @@ def polish_ru_text(value: str | None) -> str:
         "Если нужен серфинг и плотная рабочая среда, чаще смотрят Чангу. Если важнее спокойствие, рисовые террасы и культурная атмосфера — Убуд. Если хочется более дорогого пляжного быта — Семиньяк. Но во всех трёх случаях визу, район и бюджет нужно считать заранее.",
         text,
     )
+    text = re.sub(
+        r"Кому подходит ([^?.:<]{2,100}), а кому нет \1",
+        r"Кому подходит \1, а кому — нет",
+        text,
+        flags=re.I,
+    )
+    text = re.sub(r"\broute\b", "маршрут", text, flags=re.I)
+    text = re.sub(r"\bstay\b", "пребывание", text, flags=re.I)
+    text = text.replace("удалённая работаer", "Remote Worker")
+    text = re.sub(r"\b(Visa|eVisa) не обязан\b", r"\1 не обязана", text)
     return text
 
 
@@ -7740,6 +8043,8 @@ RU_HEADING_KEEP_UPPER = {
     "UAE",
     "ОАЭ",
     "ETA",
+    "Remote Worker Visa",
+    "Virtual Work Residence Visa",
 }
 
 
@@ -7751,7 +8056,7 @@ def sentence_case_ru_heading_text(text: str) -> str:
     lowered = text.lower()
     for token in RU_HEADING_KEEP_UPPER:
         lowered = re.sub(rf"\b{re.escape(token.lower())}\b", token, lowered, flags=re.I)
-    proper_forms = {"Азия", "Азии", "Бали", "Малайзия", "Малайзию", "Малайзии", "Таиланд", "Таиланду", "Таиланде", "Вьетнам", "Вьетнаму", "Вьетнаме", "Тайвань", "Тайваню", "Тайване", "Япония", "Японию", "Японии", "Камбоджа", "Камбоджу", "Камбодже", "Филиппины", "Филиппинам", "Филиппинах", "Сингапур", "Сингапуре", "ОАЭ", "Маргарита", "Яровенко"}
+    proper_forms = {"Азия", "Азии", "Бали", "Малайзия", "Малайзию", "Малайзии", "Таиланд", "Таиланду", "Таиланде", "Вьетнам", "Вьетнаму", "Вьетнаме", "Тайвань", "Тайваню", "Тайване", "Япония", "Японию", "Японии", "Камбоджа", "Камбоджу", "Камбодже", "Филиппины", "Филиппинам", "Филиппинах", "Сингапур", "Сингапуре", "ОАЭ", "Дубай", "Дубая", "Дубае", "Дубаю", "Абу-Даби", "Маргарита", "Яровенко", "Virtual Work Residence Visa", "Virtual Work Residence"}
     for forms in COUNTRY_FORMS_RU.values():
         proper_forms.update(forms)
     for token in sorted(proper_forms, key=len, reverse=True):
@@ -7891,6 +8196,8 @@ def ru_countries_index():
 def country(slug: str):
     source = page_or_404(slug, parent="countries")
     row = normalized_country_row(source)
+    country_name = COUNTRY_EN_NAMES.get(slug, slug.replace("move-to-", "").replace("-", " ").title())
+    row["title"] = f"Move to {country_name}: 2026 Guide"
     facts = one("SELECT * FROM country_facts WHERE slug = ?", (slug,))
     generated = en_country_article(slug, facts)
     if generated:
@@ -7908,9 +8215,13 @@ def country(slug: str):
         country_schema(row, facts, path),
         trust_page_schema(row["title"], path),
     ]
-    depth_schema = depth_panel_schema(depth_panel_data, path, lang="en")
-    if depth_schema:
-        schema.append(depth_schema)
+    faq_schema = faq_schema_from_html(row["content"], lang="en")
+    if faq_schema:
+        schema.append(faq_schema)
+    else:
+        depth_schema = depth_panel_schema(depth_panel_data, path, lang="en")
+        if depth_schema:
+            schema.append(depth_schema)
     item_list = item_list_schema(f"Internal links for {strip_html(row['title'])}", internal_links)
     if item_list:
         schema.append(item_list)
@@ -7924,6 +8235,7 @@ def country(slug: str):
         canonical_path=path,
         alternates=localized_page_alternates(en_path=f"/countries/{slug}/", ru_path=f"/ru/countries/{slug}/"),
         schema=schema,
+        og_image=og_image_for_path(path, slug),
     )
     return render_template(
         "country.html",
@@ -7945,7 +8257,7 @@ def ru_country(slug: str):
     source = page_or_404(slug, parent="countries")
     source = normalized_country_row(source)
     facts = one("SELECT * FROM country_facts WHERE slug = ?", (slug,))
-    title = f"Переезд в {ru_country_accusative(slug)}: полный гид 2026"
+    title = f"Переезд {ru_country_destination(slug)}: гид 2026"
     content = ru_country_article(slug, facts)
     row = localized_page_dict(slug=f"ru-{slug}", title=title, content=content, link=f"/ru/countries/{slug}/", parent="countries")
     row = polish_ru_data(row)
@@ -7967,9 +8279,13 @@ def ru_country(slug: str):
         country_schema(source, facts, path),
         trust_page_schema(row["title"], path),
     ]
-    depth_schema = depth_panel_schema(depth_panel_data, path, lang="ru")
-    if depth_schema:
-        schema.append(depth_schema)
+    faq_schema = faq_schema_from_html(row["content"], lang="ru")
+    if faq_schema:
+        schema.append(faq_schema)
+    else:
+        depth_schema = depth_panel_schema(depth_panel_data, path, lang="ru")
+        if depth_schema:
+            schema.append(depth_schema)
     item_list = item_list_schema(f"Internal links for {strip_html(row['title'])}", internal_links)
     if item_list:
         schema.append(item_list)
@@ -7984,6 +8300,7 @@ def ru_country(slug: str):
         canonical_path=path,
         alternates=localized_page_alternates(en_path=f"/countries/{slug}/", ru_path=path),
         schema=schema,
+        og_image=og_image_for_path(path, slug),
     )
     return render_template(
         "country.html",
@@ -8952,6 +9269,10 @@ def ru_compare(slug: str):
             title, content = enhanced
         else:
             title, content = localized_compare_pair_content(slug, translated["title"] if translated else source["title"], source["content"])
+    title = {
+        "bali-vs-thailand": "Бали или Таиланд: что выбрать?",
+        "thailand-vs-malaysia": "Таиланд или Малайзия: что выбрать?",
+    }.get(slug, title)
     row = localized_page_dict(
         slug=localized_compare_db_slug(slug),
         title=title,
@@ -9043,6 +9364,8 @@ def ru_cheapest_countries():
 @app.route("/move-to-asia/")
 def move_to_asia():
     row = page_or_404("move-to-asia")
+    row = dict(row)
+    row["content"] = f"{row['content']}\n{move_to_asia_search_section('en')}"
     return render_page_row(row, breadcrumbs=[])
 
 
@@ -9050,6 +9373,7 @@ def move_to_asia():
 def ru_move_to_asia():
     source = page_or_404("move-to-asia")
     title, content = localized_simple_page_content("move-to-asia", source["title"], source["content"])
+    content = f"{content}\n{move_to_asia_search_section('ru')}"
     row = localized_page_dict(slug="ru-move-to-asia", title=title, content=content, link="/ru/move-to-asia/")
     return render_page_row(row, lang="ru", canonical_path="/ru/move-to-asia/", breadcrumbs=[])
 
@@ -9484,16 +9808,39 @@ def ru_editorial_team_author():
 def margarita_author():
     title, content = margarita_author_page_content("en")
     path = "/authors/margarita-yarovenko/"
-    page = {"title": title, "content": content, "link": path}
-    return render_page_row(page, canonical_path=path, breadcrumbs=[("Authors", "/authors/")], extra_schema=margarita_author_schema("en"))
+    page = {
+        "title": title,
+        "description": "Margarita Yarovenko is the author and editor of Relocate to Asia, with 10+ years in content and first-hand experience across more than 15 countries.",
+        "content": content,
+        "link": path,
+    }
+    return render_page_row(
+        page,
+        canonical_path=path,
+        breadcrumbs=[("Authors", "/authors/")],
+        extra_schema=margarita_author_schema("en"),
+        author=MARGARITA_AUTHOR_NAME_EN,
+    )
 
 
 @app.route("/ru/authors/margarita-yarovenko/")
 def ru_margarita_author():
     title, content = margarita_author_page_content("ru")
     path = "/ru/authors/margarita-yarovenko/"
-    page = {"title": title, "content": content, "link": path}
-    return render_page_row(page, lang="ru", canonical_path=path, breadcrumbs=[("Авторы", "/ru/authors/")], extra_schema=margarita_author_schema("ru"))
+    page = {
+        "title": title,
+        "description": "Маргарита Яровенко — автор и редактор Relocate to Asia с опытом работы с контентом более 10 лет и личным опытом более чем в 15 странах.",
+        "content": content,
+        "link": path,
+    }
+    return render_page_row(
+        page,
+        lang="ru",
+        canonical_path=path,
+        breadcrumbs=[("Авторы", "/ru/authors/")],
+        extra_schema=margarita_author_schema("ru"),
+        author=MARGARITA_AUTHOR_NAME_RU,
+    )
 
 
 @app.route("/contact/")
