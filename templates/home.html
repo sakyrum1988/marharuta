@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}{{ seo.page_title }}{% endblock %}
+{% block content %}
+{% set ru = lang_code == 'ru' %}
+{% set prefix = '/ru' if ru else '' %}
+<div class="rta-content rta-home rta-home-premium">
+  {% include "_home_cover.html" %}
+
+  <section class="rta-destinations" id="countries" aria-labelledby="destinations-title">
+    <div class="rta-section-heading">
+      <div><p class="rta-overline">{{ 'Место имеет значение' if ru else 'Where you live matters' }}</p><h2 id="destinations-title">{{ 'Не просто страна.' if ru else 'More than a destination.' }}<br><span>{{ 'Ваш ритм жизни.' if ru else 'Your way of life.' }}</span></h2></div>
+      <p>{{ 'Кому-то нужен город, который не засыпает. Кому-то — море за окном. Начните с того, как вы хотите жить, а затем сравните визы, расходы и повседневные условия.' if ru else 'Some want a city that never sleeps. Others want the sea outside their window. Start with the life you want, then compare visas, costs and everyday practicalities.' }}</p>
+    </div>
+    <div class="rta-destination-index">
+      <div class="rta-destination-intro"><strong>{{ 'Популярные направления' if ru else 'Popular destinations' }}</strong><a href="{{ prefix }}/countries/">{{ 'Все страны' if ru else 'All destinations' }} <span aria-hidden="true">→</span></a></div>
+      <ol class="rta-destination-list">
+        {% for slug, flag, name_ru, name_en, desc_ru, desc_en in [
+          ('move-to-thailand','th','Таиланд','Thailand','Города, острова и варианты для долгой остановки','Cities, islands and options for a longer stay'),
+          ('move-to-malaysia','my','Малайзия','Malaysia','Городская жизнь и разные визовые маршруты','Urban life and different visa pathways'),
+          ('move-to-bali','id','Бали','Bali','Островной быт, районы и удалённая работа','Island living, neighbourhoods and remote work'),
+          ('move-to-vietnam','vn','Вьетнам','Vietnam','Большие города и жизнь у побережья','Big cities and life along the coast'),
+          ('move-to-taiwan','tw','Тайвань','Taiwan','Городская инфраструктура и повседневная жизнь','City infrastructure and everyday life')
+        ] %}
+        <li><a href="{{ prefix }}/countries/{{ slug }}/"><img src="https://flagcdn.com/w160/{{ flag }}.png" width="160" height="107" loading="lazy" decoding="async" alt="{{ (name_ru if ru else name_en) ~ (' — флаг' if ru else ' flag') }}"><span><strong>{{ name_ru if ru else name_en }}</strong><small>{{ desc_ru if ru else desc_en }}</small></span><b aria-hidden="true">↗</b></a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </section>
+
+  <section class="rta-planning-studio" aria-labelledby="planning-title">
+    <div class="rta-planning-copy"><p class="rta-overline">{{ 'Мечта. Цифры. План.' if ru else 'The dream. The numbers. The plan.' }}</p><h2 id="planning-title">{{ 'Дайте планам' if ru else 'Give your plans' }}<br>{{ 'реальные цифры.' if ru else 'some real numbers.' }}</h2><p>{{ 'Аренда — только часть расходов. Заложите перелёт, депозит, страховку и запас на первые месяцы. Наши инструменты помогут собрать свой сценарий.' if ru else 'Rent is only part of the picture. Allow for flights, a deposit, insurance and a buffer for your first months. Build your own scenario with our planning tools.' }}</p><a class="rta-action-primary" href="{{ prefix }}/tools/budget-planner/">{{ 'Собрать бюджет переезда' if ru else 'Build your moving budget' }} <span aria-hidden="true">↗</span></a><small>{{ 'Расчёты ориентировочные: вводите свои суммы и проверяйте условия.' if ru else 'Estimates are a starting point: use your own amounts and verify requirements.' }}</small></div>
+    <div class="rta-budget-preview" aria-label="{{ 'Что учесть в бюджете' if ru else 'What to include in your budget' }}"><div class="rta-budget-preview-top"><span>{{ 'Ваш план переезда' if ru else 'Your moving plan' }}</span><span aria-hidden="true">↗</span></div><h3>{{ 'Сначала — полная картина.' if ru else 'Start with the whole picture.' }}</h3><ul><li><span class="rta-budget-dot"></span>{{ 'Переезд и документы' if ru else 'Travel and paperwork' }}<span>01</span></li><li><span class="rta-budget-dot"></span>{{ 'Жильё и депозит' if ru else 'A home and a deposit' }}<span>02</span></li><li><span class="rta-budget-dot"></span>{{ 'Ежемесячные расходы' if ru else 'Monthly living costs' }}<span>03</span></li><li><span class="rta-budget-dot"></span>{{ 'Финансовая подушка' if ru else 'A financial buffer' }}<span>04</span></li></ul><a href="{{ prefix }}/tools/cost-calculator/">{{ 'Рассчитать стоимость жизни' if ru else 'Estimate monthly living costs' }} <span aria-hidden="true">→</span></a></div>
+  </section>
+
+  <section class="rta-life-paths" aria-labelledby="paths-title">
+    <div class="rta-section-heading"><div><p class="rta-overline">{{ 'У каждого свой маршрут' if ru else 'Different lives, different routes' }}</p><h2 id="paths-title">{{ 'Что для вас важно?' if ru else 'What matters to you?' }}</h2></div><a class="rta-action-text" href="{{ prefix }}/guides/">{{ 'Все гайды' if ru else 'All guides' }} →</a></div>
+    <div class="rta-path-list">
+      {% for number, url, title_ru, title_en, desc_ru, desc_en in [
+        ('01','digital-nomad-visas-asia/','Работать удалённо','Work from anywhere','Разобраться в визах и требованиях к удалённой работе.','Understand visas and requirements for remote work.'),
+        ('02','guides/best-asian-countries-for-remote-workers-with-family/','Переехать с семьёй','Move with your family','Сопоставить страны с потребностями всей семьи.','Compare destinations around your family’s needs.'),
+        ('03','retire-in-asia/','Сменить ритм жизни','Find a different pace','Изучить варианты переезда на пенсии.','Explore your options for retiring abroad.')
+      ] %}<a href="{{ prefix }}/{{ url }}"><span class="rta-path-number" aria-hidden="true">{{ number }}</span><h3>{{ title_ru if ru else title_en }}</h3><p>{{ desc_ru if ru else desc_en }}</p><span class="rta-path-arrow" aria-hidden="true">↗</span></a>{% endfor %}
+    </div>
+  </section>
+
+  <section class="rta-home-reading" aria-labelledby="home-reading-title"><div><p class="rta-overline">{{ 'Разобраться до переезда' if ru else 'Read before you move' }}</p><h2 id="home-reading-title">{{ 'Меньше догадок.' if ru else 'Less guesswork.' }}<br>{{ 'Больше ясности.' if ru else 'More clarity.' }}</h2><p>{{ 'В блоге разбираем визовые маршруты, документы и вопросы жизни за границей. Указываем источники и отделяем условия от редакционных выводов.' if ru else 'The blog explores visa routes, paperwork and life abroad. We cite sources and distinguish requirements from editorial guidance.' }}</p><a class="rta-action-primary" href="{{ prefix }}/blog/">{{ 'Открыть блог' if ru else 'Explore the blog' }} <span aria-hidden="true">↗</span></a></div><div class="rta-reading-topics"><a href="{{ prefix }}/visas/"><small>01</small><span>{{ 'Визы и документы' if ru else 'Visas & paperwork' }}</span>↗</a><a href="{{ prefix }}/cost-of-living-asia/"><small>02</small><span>{{ 'Стоимость жизни' if ru else 'Cost of living' }}</span>↗</a><a href="{{ prefix }}/compare/"><small>03</small><span>{{ 'Сравнения стран' if ru else 'Country comparisons' }}</span>↗</a><a href="{{ prefix }}/authors/margarita-yarovenko/" class="rta-home-author"><img class="rta-editor-photo" src="/static/img/margarita-yarovenko-author.png" width="960" height="960" loading="lazy" alt="{{ 'Маргарита Яровенко' if ru else 'Margarita Yarovenko' }}"><span><small>{{ 'Автор и редактор' if ru else 'Author & editor' }}</small><strong>{{ 'Маргарита Яровенко' if ru else 'Margarita Yarovenko' }}</strong></span>↗</a></div></section>
+
+  <section class="rta-home-faq" aria-labelledby="home-faq-title"><div><p class="rta-overline">{{ 'Перед первым шагом' if ru else 'Before the first step' }}</p><h2 id="home-faq-title">{{ 'С чего начать?' if ru else 'Where do I start?' }}</h2><p>{{ 'Не обязательно решать всё сразу. Начните с вопросов, которые влияют на ваш выбор.' if ru else 'You do not need every answer at once. Start with the questions that shape your choice.' }}</p></div><div>
+    <details><summary>{{ 'Как выбрать страну для переезда?' if ru else 'How do I choose a destination?' }}</summary><p>{{ 'Составьте короткий список стран под свой бюджет, работу и образ жизни. Затем проверьте визовые условия для своего гражданства, стоимость жилья и доступность нужных услуг. Сравнивайте конкретные города, а не только страны.' if ru else 'Make a shortlist around your budget, work and lifestyle. Then check visa eligibility for your nationality, housing costs and the services you need. Compare specific cities, not just countries.' }}</p></details>
+    <details><summary>{{ 'Сколько денег нужно подготовить?' if ru else 'How much money should I prepare?' }}</summary><p>{{ 'Универсальной суммы нет. Посчитайте разовые расходы, обычный месяц жизни и резерв отдельно. В планировщике бюджета можно подставить свои суммы и сравнить сценарии.' if ru else 'There is no universal amount. Calculate one-off costs, a normal month of living and a reserve separately. Use your own amounts in the budget planner to compare scenarios.' }}</p></details>
+    <details><summary>{{ 'Можно ли принимать решение только по статье?' if ru else 'Can I rely on an article alone?' }}</summary><p>{{ 'Материалы помогают сориентироваться, но не заменяют проверку актуальных правил. До подачи документов и оплаты услуг сверяйтесь с официальными ведомствами и подходящими специалистами.' if ru else 'The guides help you get oriented, but cannot replace checking current requirements. Before applying or paying for services, verify rules with the relevant authorities and qualified advisers.' }}</p></details>
+  </div></section>
+</div>
+{% endblock %}

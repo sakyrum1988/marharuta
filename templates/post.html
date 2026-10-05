@@ -3,12 +3,30 @@
 {% block title %}{{ seo.page_title if seo else (post['title'] | striptags ~ " | Relocate to Asia") }}{% endblock %}
 
 {% block content %}
-<div class="rta-content">
+<div class="rta-content rta-post">
   {% set current_title = post['title'] %}
   {% include "_breadcrumbs.html" %}
 
-  <h1 class="sr-only">{{ post['title'] | striptags }}</h1>
-  {{ post['content'] | wp_clean | safe }}
+  <header class="rta-post-header">
+    <p class="rta-journal-eyebrow">{{ article_topic }}</p>
+    <h1>{{ post['title'] | striptags }}</h1>
+    {% if post['excerpt'] %}<p class="rta-post-lead">{{ post['excerpt'] | striptags }}</p>{% endif %}
+    <div class="rta-post-byline">
+      {% if article_trust %}<img class="rta-post-author-photo" src="/static/img/margarita-yarovenko-author.png" width="960" height="960" loading="eager" alt=""><a href="{{ article_trust.author_url }}">{{ article_trust.author }}</a>{% endif %}
+      {% if post['date'] %}<span>{{ 'Опубликовано' if lang_code == 'ru' else 'Published' }} <time datetime="{{ post['date'][:10] }}">{{ post['date'] | format_date(lang_code) }}</time></span>{% endif %}
+      <span>≈ {{ reading_time }} {{ 'мин чтения' if lang_code == 'ru' else 'min read' }}</span>
+    </div>
+  </header>
+  <div class="rta-reading-layout">
+  <aside class="rta-reading-nav" aria-label="{{ 'Навигация по статье' if lang_code == 'ru' else 'Article navigation' }}">
+    <details open>
+      <summary>{{ 'В этой статье' if lang_code == 'ru' else 'In this article' }}</summary>
+      <ol>{% for item in article_toc %}<li><a href="#{{ item.id }}">{{ item.title }}</a></li>{% endfor %}</ol>
+    </details>
+    {% if article_source_panel %}<a class="rta-reading-sources" href="#article-source-panel-title">{{ 'Официальные источники' if lang_code == 'ru' else 'Official sources' }} ↓</a>{% endif %}
+  </aside>
+  <article class="rta-reading-body">
+  {{ article_body | wp_clean | safe }}
 
   {% if article_expansion %}
   <section class="rta-article-expansion" aria-labelledby="article-expansion-title">
@@ -46,7 +64,7 @@
     {% if article_depth.faq %}
     <div class="rta-depth-faq">
       {% for question, answer in article_depth.faq %}
-      <div class="faq-item">
+      <div class="rta-depth-faq-item">
         <h3>{{ question }}</h3>
         <p>{{ answer }}</p>
       </div>
@@ -124,17 +142,24 @@
   </section>
   {% endif %}
 
+  </article>
+  </div>
+
   {% if related_posts %}
   <section class="rta-related" aria-labelledby="related-posts-title">
     <h2 id="related-posts-title">{{ "Похожие статьи" if lang_code == "ru" else "Related Guides" }}</h2>
-    <div class="rta-related-grid">
+    <ol class="rta-related-list">
       {% for related in related_posts %}
-      <a class="rta-related-card" href="{{ '/ru/blog/' if lang_code == 'ru' else '/blog/' }}{{ related['slug'] }}/">
-        <h3>{{ related['title'] | safe }}</h3>
-        {% if related['excerpt'] %}<p>{{ related['excerpt'] | striptags | truncate(120) }}</p>{% endif %}
-      </a>
+      <li>
+        <span class="rta-related-number" aria-hidden="true">0{{ loop.index }}</span>
+        <div>
+          <h3><a href="{{ '/ru/blog/' if lang_code == 'ru' else '/blog/' }}{{ related['slug'] }}/">{{ related['title'] | striptags }}</a></h3>
+          {% if related['excerpt'] %}<p>{{ related['excerpt'] | striptags | truncate(140) }}</p>{% endif %}
+        </div>
+        <span class="rta-related-arrow" aria-hidden="true">↗</span>
+      </li>
       {% endfor %}
-    </div>
+    </ol>
   </section>
   {% endif %}
 

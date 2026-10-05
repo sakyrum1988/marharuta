@@ -1,139 +1,89 @@
 {% extends "base.html" %}
-
-{% block title %}{{ seo.page_title if seo else "Blog | Relocate to Asia" }}{% endblock %}
-
+{% block title %}{{ seo.page_title }}{% endblock %}
 {% block content %}
-<div class="rta-blog">
+{% set ru = blog_lang == 'ru' %}
+{% set prefix = '/ru' if ru else '' %}
+<div class="rta-blog rta-journal">
   {% set current_title = blog_breadcrumb_title | default(blog_title) %}
   {% include "_breadcrumbs.html" %}
-
-  <section class="rta-blog-hero">
-    <h1>{{ blog_title | default("Relocation Blog") }}</h1>
-    <p>{{ blog_intro | default("Guides, tips and real expat stories from across Asia.") }}</p>
-    {% if pagination %}
-    <div class="rta-blog-hero-stats">
-      <span>{{ pagination.total_posts }} {{ "материалов" if blog_lang == "ru" else "guides" }}</span>
-      <span>·</span>
-      <span>{{ "Обновляется 2026" if blog_lang == "ru" else "Updated 2026" }}</span>
-      <span>·</span>
-      <span>{{ "Официальные источники" if blog_lang == "ru" else "Official sources" }}</span>
+  <header class="rta-journal-header">
+    <div>
+      <p class="rta-journal-eyebrow">Relocate to Asia / {{ 'Журнал' if ru else 'Journal' }}</p>
+      <h1>{{ blog_title }}</h1>
+      <p class="rta-journal-intro">{{ 'Как выбрать страну, разобраться с визой и подготовиться к жизни за границей.' if ru else 'Choose a country, understand your visa options and prepare for life abroad.' }}</p>
     </div>
-    {% endif %}
-  </section>
-
-  {% if internal_links %}
-  <section class="rta-linkhub" aria-labelledby="internal-links-title">
-    <h2 id="internal-links-title">{{ "Что посмотреть ещё" if blog_lang == "ru" else "Start Here" }}</h2>
-    <div class="rta-linkhub-grid">
-      {% for link in internal_links %}
-      <a class="rta-linkhub-card" href="{{ link['url'] }}">
-        <h3>{{ link['title'] | safe }}</h3>
-        {% if link['description'] %}<p>{{ link['description'] }}</p>{% endif %}
-      </a>
-      {% endfor %}
+    <div class="rta-journal-editor">
+      <img class="rta-editor-photo" src="/static/img/margarita-yarovenko-author.png" width="960" height="960" loading="eager" alt="{{ 'Маргарита Яровенко' if ru else 'Margarita Yarovenko' }}">
+      <div><span>{{ 'Автор и редактор' if ru else 'Author & editor' }}</span><a href="{{ prefix }}/authors/margarita-yarovenko/">{{ 'Маргарита Яровенко' if ru else 'Margarita Yarovenko' }}</a></div>
     </div>
-  </section>
-  {% endif %}
-
-  {% if trust_panel %}
-  <section class="rta-trust-box" aria-labelledby="blog-trust-title">
-    <h2 id="blog-trust-title">{{ trust_panel.title }}</h2>
-    <div class="rta-trust-grid">
-      {% for label, value in trust_panel['items'] %}
-      <div><strong>{{ label }}</strong><span>{{ value }}</span></div>
-      {% endfor %}
-    </div>
-    <p>{{ trust_panel.disclaimer }}</p>
-    <div class="rta-trust-actions">
-      <a href="{{ trust_panel.methodology_url }}">{{ trust_panel.methodology_label }}</a>
-      <a href="{{ trust_panel.contact_url }}">{{ trust_panel.contact_label }}</a>
-    </div>
-  </section>
-  {% endif %}
-
-  {% if depth_panel %}
-  <section class="rta-depth-panel" aria-labelledby="blog-depth-title">
-    <h2 id="blog-depth-title">{{ depth_panel.title }}</h2>
-    <p class="rta-depth-intro">{{ depth_panel.intro }}</p>
-    <div class="rta-depth-grid">
-      {% for heading, text in depth_panel.sections %}
-      <article>
-        <h3>{{ heading }}</h3>
-        <p>{{ text }}</p>
-      </article>
-      {% endfor %}
-    </div>
-    {% if depth_panel.faq %}
-    <div class="rta-depth-faq">
-      {% for question, answer in depth_panel.faq %}
-      <div class="faq-item">
-        <h3>{{ question }}</h3>
-        <p>{{ answer }}</p>
+  </header>
+  <div class="rta-journal-toolbar">
+    <nav class="rta-journal-topics" aria-label="{{ 'Разделы о переезде' if ru else 'Relocation topics' }}">
+      <a href="{{ prefix }}/visas/">{{ 'Визы' if ru else 'Visas' }}</a>
+      <a href="{{ prefix }}/countries/">{{ 'Страны' if ru else 'Countries' }}</a>
+      <a href="{{ prefix }}/cost-of-living-asia/">{{ 'Стоимость жизни' if ru else 'Living costs' }}</a>
+    </nav>
+    <form class="rta-journal-search" action="{{ prefix }}/blog/" method="get" role="search">
+      <label class="sr-only" for="journal-search">{{ 'Поиск по всем статьям' if ru else 'Search all articles' }}</label>
+      <input id="journal-search" type="search" name="q" value="{{ search_query }}" maxlength="160" placeholder="{{ 'Страна, виза или вопрос…' if ru else 'Country, visa or question…' }}">
+      <button type="submit">{{ 'Найти' if ru else 'Search' }}</button>
+    </form>
+  </div>
+  <div class="rta-journal-layout">
+    <section aria-labelledby="journal-list-title">
+      <div class="rta-journal-list-heading">
+        <h2 id="journal-list-title">{{ ('Результаты поиска' if ru else 'Search results') if search_query else ('Последние статьи' if ru else 'Latest articles') }}</h2>
+        <span>{{ 'Всего: ' if ru else 'Total: ' }}{{ pagination.total_posts }}</span>
       </div>
-      {% endfor %}
-    </div>
-    {% endif %}
-  </section>
-  {% endif %}
-
-  {% if posts %}
-    <div class="rta-blog-list-head">
-      <div>
-        <p class="rta-blog-kicker">{{ "Свежие материалы" if blog_lang == "ru" else "Latest Guides" }}</p>
-        <h2>{{ "Статьи и разборы" if blog_lang == "ru" else "Articles And Analysis" }}</h2>
-      </div>
-      {% if pagination %}
-      <p>{{ pagination.total_posts }} {{ "статей" if blog_lang == "ru" else "articles" }} · {{ "страница" if blog_lang == "ru" else "page" }} {{ pagination.page }} / {{ pagination.total_pages }}</p>
-      {% endif %}
-    </div>
-
-    <div class="rta-blog-grid">
-      {% for post in posts %}
-      <a class="rta-blog-card" href="{{ blog_url_prefix | default('/blog') }}/{{ post['slug'] }}/">
-        <div class="rta-blog-card-body">
-          <div class="rta-blog-meta">
-            <span class="rta-blog-date">{{ post['date'] | format_date(blog_lang | default('en')) if post['date'] else '' }}</span>
+      {% if search_query %}<p class="rta-search-summary">«{{ search_query }}» · <a href="{{ prefix }}/blog/">{{ 'Сбросить поиск' if ru else 'Clear search' }}</a></p>{% endif %}
+      <div class="rta-journal-list">
+        {% for post in posts %}
+        <article class="rta-journal-story{% if loop.first and pagination.page == 1 and not search_query %} rta-journal-story--lead{% endif %}">
+          <div class="rta-journal-story-meta"><span>{{ post.topic }}</span><span>{{ post.reading_time }} {{ 'мин чтения' if ru else 'min read' }}</span></div>
+          <h3><a href="{{ blog_url_prefix }}/{{ post['slug'] }}/">{{ post['title'] | striptags }}</a></h3>
+          {% if post['excerpt'] %}<p>{{ post['excerpt'] | striptags | truncate(210) }}</p>{% endif %}
+          <div class="rta-journal-story-footer">
+            {% if post['date'] %}<time datetime="{{ post['date'][:10] }}">{{ post['date'] | format_date(blog_lang) }}</time>{% endif %}
+            <a href="{{ blog_url_prefix }}/{{ post['slug'] }}/" aria-label="{{ ('Читать: ' if ru else 'Read: ') ~ (post['title'] | striptags) }}">{{ 'Читать статью' if ru else 'Read article' }} <span aria-hidden="true">↗</span></a>
           </div>
-          <h2>{{ post['title'] | safe }}</h2>
-          {% if post['excerpt'] %}
-          <div class="rta-blog-excerpt">
-            {{ post['excerpt'] | striptags | truncate(155) }}
-          </div>
-          {% endif %}
-          <div class="rta-blog-link">{{ read_more | default("Read more") }} &rarr;</div>
-        </div>
-      </a>
-      {% endfor %}
-    </div>
-
-    {% if pagination and pagination.total_pages > 1 %}
-    <nav class="rta-pagination" aria-label="Blog pagination">
-      {% if pagination.prev_url %}
-      <a class="rta-page-link" href="{{ pagination.prev_url }}">{{ "← Назад" if blog_lang == "ru" else "← Previous" }}</a>
-      {% else %}
-      <span class="rta-page-link is-disabled">{{ "← Назад" if blog_lang == "ru" else "← Previous" }}</span>
-      {% endif %}
-
-      <div class="rta-page-numbers">
-        {% for num in range(1, pagination.total_pages + 1) %}
-          {% set page_url = pagination.base_path if num == 1 else pagination.base_path ~ "page/" ~ num ~ "/" %}
-          {% if num == pagination.page %}
-          <span class="is-current" aria-current="page">{{ num }}</span>
-          {% else %}
-          <a href="{{ page_url }}">{{ num }}</a>
-          {% endif %}
+        </article>
+        {% else %}
+        <div class="rta-journal-empty"><h3>{{ 'Ничего не найдено' if ru else 'No articles found' }}</h3><p>{{ 'Попробуйте название страны или более короткий запрос.' if ru else 'Try a country name or a shorter search.' }}</p><a href="{{ prefix }}/blog/">{{ 'Все статьи' if ru else 'All articles' }} →</a></div>
         {% endfor %}
       </div>
-
-      {% if pagination.next_url %}
-      <a class="rta-page-link" href="{{ pagination.next_url }}">{{ "Вперёд →" if blog_lang == "ru" else "Next →" }}</a>
-      {% else %}
-      <span class="rta-page-link is-disabled">{{ "Вперёд →" if blog_lang == "ru" else "Next →" }}</span>
+      {% if pagination.total_pages > 1 %}
+      <nav class="rta-pagination" aria-label="{{ 'Страницы блога' if ru else 'Blog pagination' }}">
+        {% if pagination.prev_url %}<a class="rta-page-link" rel="prev" href="{{ pagination.prev_url }}">{{ '← Назад' if ru else '← Previous' }}</a>{% endif %}
+        <div class="rta-page-numbers">
+          {% for num in range(1, pagination.total_pages + 1) %}
+          {% if num == pagination.page %}<span class="is-current" aria-current="page">{{ num }}</span>
+          {% else %}<a href="{{ pagination.base_path if num == 1 else pagination.base_path ~ 'page/' ~ num ~ '/' }}" aria-label="{{ ('Страница ' if ru else 'Page ') ~ num }}">{{ num }}</a>{% endif %}
+          {% endfor %}
+        </div>
+        {% if pagination.next_url %}<a class="rta-page-link" rel="next" href="{{ pagination.next_url }}">{{ 'Вперёд →' if ru else 'Next →' }}</a>{% endif %}
+      </nav>
       {% endif %}
-    </nav>
-    {% endif %}
-  {% else %}
-    <p class="rta-empty">{{ "Пока нет статей." if blog_lang == "ru" else "No posts yet." }}</p>
+    </section>
+    <aside class="rta-journal-aside" aria-label="{{ 'Помощь в планировании' if ru else 'Planning resources' }}">
+      <h2>{{ 'От чтения — к плану' if ru else 'From reading to a plan' }}</h2>
+      <p>{{ 'Три шага, которые помогут сузить выбор.' if ru else 'Three steps to narrow down your options.' }}</p>
+      <ol class="rta-journal-next">
+        <li><a href="{{ prefix }}/compare/">{{ 'Сравнить страны' if ru else 'Compare countries' }} ↗</a></li>
+        <li><a href="{{ prefix }}/visas/">{{ 'Проверить визовый маршрут' if ru else 'Explore visa routes' }} ↗</a></li>
+        <li><a href="{{ prefix }}/tools/budget-planner/">{{ 'Рассчитать бюджет' if ru else 'Plan your budget' }} ↗</a></li>
+      </ol>
+      <div class="rta-journal-editorial-note"><h3>{{ 'Как устроен блог' if ru else 'Behind the guides' }}</h3><p>{{ 'Разделяем условия из официальных источников и редакционные выводы. Перед подачей документов проверяйте правила у ведомства.' if ru else 'We separate official requirements from editorial guidance. Check the authority’s latest rules before applying.' }}</p><a href="{{ prefix }}/editorial-policy/">{{ 'Редакционная политика' if ru else 'Editorial policy' }} →</a></div>
+    </aside>
+  </div>
+  {% if depth_panel %}
+  <details class="rta-journal-method">
+    <summary>{{ 'Как пользоваться материалами блога' if ru else 'How to use these guides' }}</summary>
+    <div class="rta-depth-panel">
+      <h2>{{ depth_panel.title }}</h2><p>{{ depth_panel.intro }}</p>
+      {% for heading, text in depth_panel.sections %}<h3>{{ heading }}</h3><p>{{ text }}</p>{% endfor %}
+      <div class="rta-depth-faq">{% for question, answer in depth_panel.faq %}<div class="rta-depth-faq-item"><h3>{{ question }}</h3><p>{{ answer }}</p></div>{% endfor %}</div>
+    </div>
+  </details>
   {% endif %}
 </div>
 {% endblock %}

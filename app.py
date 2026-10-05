@@ -6,14 +6,25 @@ import json
 import html
 import threading
 import time
+import hashlib
 from pathlib import Path
 
-from flask import Flask, Response, abort, make_response, redirect, render_template, request
+from flask import Flask, Response, abort, make_response, redirect, render_template, request, url_for
+from tool_integrations import harden_tool_scripts
+from editorial import article_topic, plain_text, prepare_article, reading_minutes
 
 APP_DIR = Path(__file__).resolve().parent
 DB_PATH = APP_DIR / "content.db"
 
 app = Flask(__name__)
+
+
+@app.template_global()
+def versioned_static(filename: str) -> str:
+    """Invalidate browser/CDN caches whenever a first-party asset changes."""
+    asset = APP_DIR / "static" / filename
+    version = hashlib.sha256(asset.read_bytes()).hexdigest()[:12]
+    return url_for("static", filename=filename, v=version)
 
 # ── In-process page cache ────────────────────────────────────────────────────
 # Caches fully rendered HTML for static public GET pages.
@@ -41,6 +52,8 @@ def _serve_from_cache():
     if host == "marharuta.online":
         url = request.url.replace(f"{request.scheme}://marharuta.online", "https://www.marharuta.online", 1)
         return redirect(url, 301)
+    if app.debug:
+        return None
     if request.method != "GET":
         return None
     # Query-aware routes (for example /blog/?page=2) must reach their view.
@@ -63,6 +76,7 @@ def _serve_from_cache():
     resp.content_type = ct
     resp.headers["Cache-Control"] = "public, max-age=600, stale-while-revalidate=3600"
     resp.headers["X-Cache"] = "HIT"
+    resp.headers["Age"] = str(max(0, int(time.monotonic() - ts)))
     return resp
 
 
@@ -84,6 +98,11 @@ def _store_in_cache_and_add_headers(response: Response) -> Response:
         "connect-src 'self' https:; "
         "object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'",
     )
+    if app.debug:
+        # Live local design work must not mix new templates with stale assets.
+        # Production keeps its normal page and versioned asset caches.
+        response.headers["Cache-Control"] = "no-store"
+        return response
     if path.startswith("/static/") and response.status_code == 200:
         response.headers["Cache-Control"] = "public, max-age=604800"
     # Add Cache-Control to all public 200 GET responses
@@ -94,7 +113,7 @@ def _store_in_cache_and_add_headers(response: Response) -> Response:
             )
             # Store in cache only for HTML pages
             ct = response.content_type or ""
-            if "text/html" in ct and response.is_sequence:
+            if "text/html" in ct and response.is_sequence and response.headers.get("X-Cache") != "HIT":
                 body = response.get_data()
                 with _PAGE_CACHE_LOCK:
                     _PAGE_CACHE[path] = (body, ct, time.monotonic())
@@ -107,7 +126,7 @@ OG_ASIA_RELOCATION = "/static/img/og-asia-relocation.png"
 OG_BALI_THAILAND = "/static/img/og-bali-thailand.png"
 OG_VIETNAM_RELOCATION = "/static/img/og-vietnam-relocation.png"
 OG_ASIA_VISAS = "/static/img/og-asia-visas.png"
-OG_MARGARITA_AUTHOR = "/static/img/og-margarita-yarovenko.png"
+OG_MARGARITA_AUTHOR = "/static/img/margarita-yarovenko-author.png"
 FAVICON_PATH = "/static/img/favicon-512.png"
 GOOGLE_SITE_VERIFICATION_FILE = "google0cbfacb558cd5e85.html"
 
@@ -652,7 +671,7 @@ def ru_cheapest_countries_article() -> tuple[str, str]:
 <p>Рейтинг по реальным ежемесячным расходам — жильё, еда, транспорт и образ жизни — для комфортной жизни одного экспата.</p>
 <div class="cc-hero-stats">
 <div><strong>$550</strong><span>Минимальный бюджет</span></div>
-<div><strong>10</strong><span>Стран в рейтинге</span></div>
+<div><strong>9</strong><span>Стран в рейтинге</span></div>
 <div><strong>2026</strong><span>Актуальные данные</span></div>
 </div>
 </div>
@@ -663,7 +682,6 @@ def ru_cheapest_countries_article() -> tuple[str, str]:
 <ol>
 <li><a href="#cambodia">Камбоджа — от $550/мес.</a></li>
 <li><a href="#laos">Лаос — от $600/мес.</a></li>
-<li><a href="#myanmar">Мьянма — от $600/мес.</a></li>
 <li><a href="#nepal">Непал — от $650/мес.</a></li>
 <li><a href="#vietnam">Вьетнам — от $700/мес.</a></li>
 <li><a href="#india">Индия — от $700/мес.</a></li>
@@ -2406,7 +2424,7 @@ def country_search_faq_html(slug: str, lang: str) -> str:
     title = "Частые вопросы о переезде" if lang == "ru" else "Relocation Questions"
     label = "Ответы" if lang == "ru" else "Practical Answers"
     faq_items = "".join(
-        f'<div class="faq-item"><h3>{html.escape(question)}</h3><p>{html.escape(answer)}</p></div>'
+        f'<div class="rta-depth-faq-item"><h3>{html.escape(question)}</h3><p>{html.escape(answer)}</p></div>'
         for question, answer in items
     )
     anchor = "ru-search-questions" if lang == "ru" else "en-search-questions"
@@ -3098,10 +3116,10 @@ def move_to_asia_search_section(lang: str) -> str:
   </ol>
   <p class="ep-p"><a href="/ru/best-countries-in-asia-to-move/">Сравнить лучшие страны Азии</a> · <a href="/ru/visas/">Проверить визовые маршруты</a> · <a href="/ru/tools/budget-planner/">Посчитать бюджет переезда</a></p>
   <h2 class="ep-h2">Частые вопросы о переезде в Азию</h2>
-  <div class="faq-item"><h3>Какая страна Азии лучше всего подходит для переезда?</h3><p>Универсального ответа нет. Таиланд часто выбирают за города и медицину, Малайзию — за английский и инфраструктуру, Вьетнам — за бюджет, Тайвань — за профессиональные маршруты и качество городской среды.</p></div>
-  <div class="faq-item"><h3>Сколько денег нужно для переезда в Азию?</h3><p>Сложите три части: первый месяц, обычные расходы и резерв. Первый месяц обычно включает перелёт, временное жильё, депозит, документы и страховку, поэтому он заметно дороже обычного.</p></div>
-  <div class="faq-item"><h3>Можно ли сначала приехать туристом, а потом решить?</h3><p>Для знакомства со страной это может быть полезно, но туристический въезд не нужно считать гарантированным путём к долгому статусу или работе. Следующий законный маршрут проверяйте заранее.</p></div>
-  <div class="faq-item"><h3>Что выбирать сначала: страну, визу или город?</h3><p>Сначала профиль и законный маршрут, затем страну и только потом город. Иначе можно потратить время на направление, которое не подходит по документам или сроку.</p></div>
+  <div class="rta-depth-faq-item"><h3>Какая страна Азии лучше всего подходит для переезда?</h3><p>Универсального ответа нет. Таиланд часто выбирают за города и медицину, Малайзию — за английский и инфраструктуру, Вьетнам — за бюджет, Тайвань — за профессиональные маршруты и качество городской среды.</p></div>
+  <div class="rta-depth-faq-item"><h3>Сколько денег нужно для переезда в Азию?</h3><p>Сложите три части: первый месяц, обычные расходы и резерв. Первый месяц обычно включает перелёт, временное жильё, депозит, документы и страховку, поэтому он заметно дороже обычного.</p></div>
+  <div class="rta-depth-faq-item"><h3>Можно ли сначала приехать туристом, а потом решить?</h3><p>Для знакомства со страной это может быть полезно, но туристический въезд не нужно считать гарантированным путём к долгому статусу или работе. Следующий законный маршрут проверяйте заранее.</p></div>
+  <div class="rta-depth-faq-item"><h3>Что выбирать сначала: страну, визу или город?</h3><p>Сначала профиль и законный маршрут, затем страну и только потом город. Иначе можно потратить время на направление, которое не подходит по документам или сроку.</p></div>
 </section>
 """
     return """
@@ -3126,10 +3144,10 @@ def move_to_asia_search_section(lang: str) -> str:
   </ol>
   <p class="ep-p"><a href="/best-countries-in-asia-to-move/">Compare the best Asian countries</a> · <a href="/visas/">Check visa routes</a> · <a href="/tools/budget-planner/">Build a relocation budget</a></p>
   <h2 class="ep-h2">Frequently asked questions about moving to Asia</h2>
-  <div class="faq-item"><h3>What is the best Asian country to move to?</h3><p>There is no universal winner. Thailand is strong for city choice and healthcare, Malaysia for English and infrastructure, Vietnam for budget planning, and Taiwan for skilled-professional routes and urban quality.</p></div>
-  <div class="faq-item"><h3>How much money do you need to move to Asia?</h3><p>Calculate the setup month, normal monthly spending and an emergency reserve separately. Flights, temporary housing, a deposit, documents and insurance usually make the first month materially more expensive.</p></div>
-  <div class="faq-item"><h3>Can you arrive as a tourist and decide later?</h3><p>A short visit can help you test a country, but tourist entry should not be treated as a guaranteed route to residence or work permission. Verify the next legal step before committing.</p></div>
-  <div class="faq-item"><h3>Should you choose the country, visa or city first?</h3><p>Start with your profile and a viable legal route, then choose the country and finally the city. This prevents spending time on a destination that cannot support your documents or time horizon.</p></div>
+  <div class="rta-depth-faq-item"><h3>What is the best Asian country to move to?</h3><p>There is no universal winner. Thailand is strong for city choice and healthcare, Malaysia for English and infrastructure, Vietnam for budget planning, and Taiwan for skilled-professional routes and urban quality.</p></div>
+  <div class="rta-depth-faq-item"><h3>How much money do you need to move to Asia?</h3><p>Calculate the setup month, normal monthly spending and an emergency reserve separately. Flights, temporary housing, a deposit, documents and insurance usually make the first month materially more expensive.</p></div>
+  <div class="rta-depth-faq-item"><h3>Can you arrive as a tourist and decide later?</h3><p>A short visit can help you test a country, but tourist entry should not be treated as a guaranteed route to residence or work permission. Verify the next legal step before committing.</p></div>
+  <div class="rta-depth-faq-item"><h3>Should you choose the country, visa or city first?</h3><p>Start with your profile and a viable legal route, then choose the country and finally the city. This prevents spending time on a destination that cannot support your documents or time horizon.</p></div>
 </section>
 """
 
@@ -3518,6 +3536,12 @@ def replace_many(text: str, replacements: list[tuple[str, str]]) -> str:
 
 def localized_generic_content(content: str) -> str:
     replacements = [
+        # Translate compound interface labels before generic words such as Total.
+        ('Calculate Total Budget', 'Посчитать общий бюджет'),
+        ('Total you need before moving', 'Сколько нужно до переезда'),
+        ('Total One-Time', 'Всего разово'),
+        ('Annual Total', 'Годовой итог'),
+        ('First Month Total', 'Первый месяц'),
         ('Updated March 2026', 'Проверено в марте 2026'),
         ('Updated April 2026', 'Проверено в апреле 2026'),
         ('5 Countries', '5 стран'),
@@ -4939,13 +4963,13 @@ def faq_schema_from_html(content: str | None, *, lang: str) -> dict | None:
         return None
     items: list[tuple[str, str]] = []
     for _quote, question, answer in re.findall(
-        r'<div[^>]+class=(["\'])(?:[^"\']*\s)?faq-item(?:\s[^"\']*)?\1[^>]*>\s*<h3>(.*?)</h3>\s*<p>(.*?)</p>\s*</div>',
+        r'<div[^>]+class=(["\'])(?:[^"\']*\s)?(?:faq-item|rta-depth-faq-item)(?:\s[^"\']*)?\1[^>]*>\s*<h3\b[^>]*>(.*?)</h3>\s*<p\b[^>]*>(.*?)</p>\s*</div>',
         content,
         flags=re.IGNORECASE | re.DOTALL,
     ):
         items.append((strip_html(question), strip_html(answer)))
     for question, answer in re.findall(
-        r'<details>\s*<summary>(.*?)</summary>\s*<p>(.*?)</p>\s*</details>',
+        r'<details\b[^>]*>\s*<summary\b[^>]*>(.*?)</summary>\s*<p\b[^>]*>(.*?)</p>\s*</details>',
         content,
         flags=re.IGNORECASE | re.DOTALL,
     ):
@@ -5453,7 +5477,7 @@ def wp_clean(content: str | None) -> str:
     if not content:
         return ""
 
-    cleaned = content
+    cleaned = harden_tool_scripts(content)
     # JSON-LD is generated centrally from the current route. Old embedded blocks
     # in imported content can create duplicate or stale schema.
     cleaned = re.sub(
@@ -5516,6 +5540,25 @@ def many(sql: str, args: tuple = ()) -> list[sqlite3.Row]:
         return c.execute(sql, args).fetchall()
     finally:
         c.close()
+
+
+@app.get("/api/countries/<code>")
+def country_api(code: str):
+    if not re.fullmatch(r"[A-Za-z]{2}", code):
+        return {"error": "Invalid country code"}, 400
+    row = one("SELECT * FROM country_facts WHERE iso2 = ?", (code.upper(),))
+    if row is None:
+        return {"error": "Country data unavailable"}, 404
+    data = dict(row)
+    payload = {field: data.get(field) for field in ("population", "area", "population_year", "area_year")}
+    payload["iso2"] = code.upper()
+    payload["sources"] = {
+        field: "World Bank" if data.get(f"{field}_year") else "Previously saved country data"
+        for field in ("population", "area") if data.get(field) is not None
+    }
+    response = make_response(payload)
+    response.headers["Cache-Control"] = "public, max-age=3600"
+    return response
 
 
 def page_or_404(slug: str, parent: str | None = None) -> sqlite3.Row:
@@ -5613,8 +5656,8 @@ def internal_links_for_post(row: sqlite3.Row, *, lang: str) -> list[dict[str, st
             _link("Cost of living calculator", "/tools/cost-calculator/", "Check the monthly budget before choosing a country."),
             _link("Budget planner", "/tools/budget-planner/", "Turn a relocation idea into a rough expense plan."),
         ])
-    for related in related_posts(row, limit=4):
-        links.append(_link(strip_html(related["title"]), post_path(related), trim_text(strip_html(related["excerpt"] or ""), 110)))
+    # Related articles have their own reading list. Keep this section for
+    # planning destinations rather than repeating the same article links.
     return _dedupe_links(links, current_path=current_path, limit=9)
 
 
@@ -7568,7 +7611,7 @@ def render_page_row(row: sqlite3.Row | dict, **kwargs):
         quality_panel_data = None
         source_panel_data = None
         internal_links = []
-    faq_schema = faq_schema_from_html(row["content"], lang=lang)
+    faq_schema = faq_schema_from_html(row["content"], lang=lang) if path not in {"/", "/ru/"} else None
     if faq_schema:
         schema.append(faq_schema)
     else:
@@ -7615,7 +7658,7 @@ def render_page_row(row: sqlite3.Row | dict, **kwargs):
         og_image=og_image_for_path(path, slug),
     )
     return render_template(
-        "page.html",
+        "home.html" if path in {"/", "/ru/"} else "page.html",
         page=row,
         seo=seo,
         internal_links=internal_links,
@@ -7696,9 +7739,14 @@ def render_post_row(row: sqlite3.Row, *, lang: str):
              "excerpt": polish_ru_text(r["excerpt"] or "")}
             for r in related
         ]
+    article_body, article_toc = prepare_article(row["content"])
     return render_template(
         "post.html",
         post=row,
+        article_body=article_body,
+        article_toc=article_toc,
+        reading_time=reading_minutes(row["content"] + str(article_expansion or "") + str(article_depth or "")),
+        article_topic=article_topic(row, lang),
         seo=seo,
         lang_code=lang,
         home_url="/ru/" if lang == "ru" else "/",
@@ -9345,7 +9393,11 @@ def ru_best_countries():
 
 @app.route("/cheapest-countries-in-asia/")
 def cheapest_countries():
-    row = page_or_404("cheapest-countries-in-asia")
+    row = dict(page_or_404("cheapest-countries-in-asia"))
+    # The imported article has nine country sections, but its old TOC still
+    # advertises a deleted Myanmar section and a total of ten destinations.
+    row["content"] = re.sub(r'<li>\s*<a href="#myanmar">.*?</a>\s*</li>', "", row["content"], flags=re.S)
+    row["content"] = row["content"].replace('<strong>10</strong>', '<strong>9</strong>')
     return render_page_row(row, breadcrumbs=[])
 
 
@@ -9467,8 +9519,11 @@ def ru_guide(slug: str):
 def render_blog_index(*, lang: str, page: int = 1):
     is_ru = lang == "ru"
     path = "/ru/blog/" if is_ru else "/blog/"
+    search_query = request.args.get("q", "").strip()[:160]
+    if search_query:
+        page = 1
     query_page = request.args.get("page", type=int)
-    if query_page:
+    if query_page and not search_query:
         if query_page <= 1:
             return redirect(path, 301)
         return redirect(f"{path}page/{query_page}/", 301)
@@ -9493,7 +9548,7 @@ def render_blog_index(*, lang: str, page: int = 1):
         abort(404)
     posts = many(
         """
-        SELECT id, slug, title, excerpt, date, lang
+        SELECT id, slug, title, excerpt, date, lang, content
         FROM posts
         WHERE lang = ?
         ORDER BY date DESC, id DESC
@@ -9501,6 +9556,12 @@ def render_blog_index(*, lang: str, page: int = 1):
         """,
         (lang, per_page, (page - 1) * per_page),
     )
+    if search_query:
+        terms = search_query.casefold().split()
+        candidates = many("SELECT * FROM posts WHERE lang = ? ORDER BY date DESC, id DESC", (lang,))
+        posts = [post for post in candidates if all(term in plain_text(post["title"] + " " + (post["excerpt"] or "") + " " + (post["content"] or "")).casefold() for term in terms)]
+        page, total_pages, total_posts = 1, 1, len(posts)
+    posts = [{**dict(post), "topic": article_topic(post, lang), "reading_time": reading_minutes(post["content"] or "")} for post in posts]
     if is_ru:
         # Only prose fields are translated. The slug is URL data and must stay
         # byte-for-byte stable (for example ``remote-worker`` must not become
@@ -9552,9 +9613,12 @@ def render_blog_index(*, lang: str, page: int = 1):
         "prev_url": path if page == 2 else f"{path}page/{page - 1}/" if page > 2 else "",
         "next_url": f"{path}page/{page + 1}/" if page < total_pages else "",
     }
+    if search_query:
+        seo["meta_robots"] = "noindex,follow"
     return render_template(
         "blog.html",
         posts=posts,
+        search_query=search_query,
         seo=seo,
         blog_lang=lang,
         blog_url_prefix="/ru/blog" if is_ru else "/blog",
@@ -9661,7 +9725,6 @@ def margarita_author_page_content(lang: str) -> tuple[str, str]:
         title = f"{MARGARITA_AUTHOR_NAME_RU} — автор и редактор"
         role = "Автор и редактор Relocate to Asia"
         lead = "Пишет и редактирует практические материалы о переезде, жизни за границей и выборе страны. Соединяет личный опыт релокации с редакционной проверкой, понятной структурой и вниманием к источникам."
-        initials = "МЯ"
         facts = (("10+ лет", "в контенте, редактуре и переводе"), ("15+ стран", "личный опыт жизни и путешествий"), ("7 языков", "в профессиональном и редакционном фокусе"))
         body = f"""
 <section><p class="rta-author-label">ОБ АВТОРЕ</p><h2>Опыт жизни в разных странах</h2>
@@ -9686,7 +9749,6 @@ def margarita_author_page_content(lang: str) -> tuple[str, str]:
         title = f"{MARGARITA_AUTHOR_NAME_EN} — Author and Editor"
         role = "Author and Editor at Relocate to Asia"
         lead = "Writes and edits practical guides about relocation, living abroad and choosing a country. She combines first-hand relocation experience with editorial review, clear structure and careful sourcing."
-        initials = "MY"
         facts = (("10+ years", "in content, editing and translation"), ("15+ countries", "first-hand living and travel experience"), ("7 languages", "in professional and editorial focus"))
         body = f"""
 <section><p class="rta-author-label">ABOUT THE AUTHOR</p><h2>Living across countries</h2><p>Margarita has lived in Ukraine, Poland, Egypt, Germany, Türkiye and Moldova. Her broader first-hand experience covers more than 15 countries. This helps her treat relocation as an everyday system of documents, housing, language, healthcare, budget, adaptation and real-life trade-offs rather than a travel image.</p></section>
@@ -9706,7 +9768,7 @@ def margarita_author_page_content(lang: str) -> tuple[str, str]:
     facts_html = "".join(f"<div><strong>{value}</strong><span>{label}</span></div>" for value, label in facts)
     content = f"""
 <article class="rta-author-profile">
-  <header class="rta-author-hero"><div class="rta-author-avatar" aria-hidden="true">{initials}</div><div><p class="rta-author-kicker">{role}</p><h1>{MARGARITA_AUTHOR_NAME_RU if lang == 'ru' else MARGARITA_AUTHOR_NAME_EN}</h1><p class="rta-author-lead">{lead}</p><div class="rta-author-links"><a href="{MARGARITA_LINKEDIN_URL}" rel="me noopener noreferrer" target="_blank">LinkedIn ↗</a><a href="{MARGARITA_PROFILE_SOURCE_URL}" rel="me noopener noreferrer" target="_blank">{profile_label}</a></div></div></header>
+  <header class="rta-author-hero"><figure class="rta-author-portrait"><img src="{OG_MARGARITA_AUTHOR}" width="960" height="960" fetchpriority="high" alt="{MARGARITA_AUTHOR_NAME_RU if lang == 'ru' else MARGARITA_AUTHOR_NAME_EN}"></figure><div><p class="rta-author-kicker">{role}</p><h1>{MARGARITA_AUTHOR_NAME_RU if lang == 'ru' else MARGARITA_AUTHOR_NAME_EN}</h1><p class="rta-author-lead">{lead}</p><div class="rta-author-links"><a href="{MARGARITA_LINKEDIN_URL}" rel="me noopener noreferrer" target="_blank">LinkedIn ↗</a><a href="{MARGARITA_PROFILE_SOURCE_URL}" rel="me noopener noreferrer" target="_blank">{profile_label}</a></div></div></header>
   <section class="rta-author-facts" aria-label="{facts_label}">{facts_html}</section>
   <div class="rta-author-layout"><div class="rta-author-main">{body}</div><aside class="rta-author-sidebar" aria-label="{aside_label}"><h2>{topics_title}</h2><ul>{topics}</ul><h2>{countries_title}</h2><p>{countries}</p><a class="rta-author-blog-link" href="{blog_url}">{blog_label}</a></aside></div>
 </article>

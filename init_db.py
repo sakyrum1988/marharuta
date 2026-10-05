@@ -5,12 +5,15 @@ Run once before deploying, or as part of Render build command.
 from __future__ import annotations
 
 import sqlite3
+import os
 from pathlib import Path
 
 import requests
 
 BASE_URL = "https://www.marharuta.online"
-API = f"{BASE_URL}/wp-json/wp/v2"
+# This domain now runs Flask. Import only from an explicitly configured archive.
+WORDPRESS_SOURCE_URL = os.environ.get("WORDPRESS_SOURCE_URL", "").rstrip("/")
+API = f"{WORDPRESS_SOURCE_URL}/wp-json/wp/v2" if WORDPRESS_SOURCE_URL else ""
 DB_PATH = Path(__file__).resolve().parent / "content.db"
 
 
@@ -49,6 +52,8 @@ def parent_of(link: str, slug: str) -> str | None:
 
 
 def fetch_all(endpoint: str, fields: str) -> list[dict]:
+    if not API:
+        raise RuntimeError("WordPress import is disabled: set WORDPRESS_SOURCE_URL to an accessible WordPress archive. The live site is not WordPress.")
     items: list[dict] = []
     page = 1
     while True:
@@ -57,24 +62,27 @@ def fetch_all(endpoint: str, fields: str) -> list[dict]:
             params={"per_page": 100, "page": page, "_fields": fields},
             timeout=30,
         )
-        if r.status_code != 200:
-            break
+        r.raise_for_status()
         batch = r.json()
+        if not isinstance(batch, list) or any(not isinstance(item, dict) for item in batch):
+            raise ValueError("Unexpected WordPress response; import cancelled")
         if not batch:
             break
         items.extend(batch)
-        if len(batch) < 100:
+        if len(batch) < 100 or page >= int(r.headers.get("X-WP-TotalPages", page + 1)):
             break
         page += 1
     return items
 
 
 def main() -> None:
+    # Fetch both collections before any database changes; no partial imports.
+    pages = fetch_all("pages", "id,slug,title,content,link")
+    posts = fetch_all("posts", "id,slug,title,content,excerpt,date,link")
     with sqlite3.connect(DB_PATH) as conn:
         init_schema(conn)
 
         # ── Pages ────────────────────────────────────────────────────────────
-        pages = fetch_all("pages", "id,slug,title,content,link")
         page_count = 0
         for p in pages:
             slug: str = p["slug"]
@@ -97,7 +105,6 @@ def main() -> None:
             page_count += 1
 
         # ── Posts ────────────────────────────────────────────────────────────
-        posts = fetch_all("posts", "id,slug,title,content,excerpt,date,link")
         post_count = 0
         for p in posts:
             slug = p["slug"]

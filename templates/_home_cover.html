@@ -1,0 +1,24 @@
+{% set ru = lang_code == 'ru' %}
+{% set prefix = '/ru' if ru else '' %}
+<section class="rta-discover" aria-labelledby="discover-title">
+  <div class="rta-discover-copy">
+    <p class="rta-discover-kicker"><span aria-hidden="true">↗</span> {{ 'Ваш следующий адрес — Азия' if ru else 'Your next chapter, in Asia' }}</p>
+    <h1 id="discover-title">{{ 'Переезд в Азию.' if ru else 'Move to Asia.' }} <span>{{ 'На ваших условиях.' if ru else 'On your own terms.' }}</span></h1>
+    <p class="rta-discover-intro">{{ 'Большой город или жизнь у моря? Сравните страны, разберитесь с визами и посчитайте бюджет — шаг за шагом.' if ru else 'Big-city energy or a life by the sea? Compare countries, explore visas and work out your budget, one step at a time.' }}</p>
+    <div class="rta-discover-actions">
+      <a class="rta-action-primary" href="#countries">{{ 'Найти свою страну' if ru else 'Find your destination' }} <span aria-hidden="true">↗</span></a>
+      <a class="rta-action-text" href="{{ prefix }}/move-to-asia/">{{ 'С чего начать' if ru else 'Where to start' }} <span aria-hidden="true">→</span></a>
+    </div>
+    <p class="rta-discover-note">{{ 'Гайды по странам · Сравнения · Бесплатные инструменты' if ru else 'Country guides · Side-by-side comparisons · Free tools' }}</p>
+  </div>
+  <figure class="rta-discover-visual">
+    <img src="{{ versioned_static('img/asia-coast-illustration-v2.webp') }}" srcset="{{ versioned_static('img/asia-coast-illustration-v2-640.webp') }} 640w, {{ versioned_static('img/asia-coast-illustration-v2.webp') }} 1280w" sizes="(max-width: 720px) 100vw, 50vw" width="1280" height="853" fetchpriority="high" alt="{{ 'Иллюстрация прибрежного города среди зелёных гор' if ru else 'Illustration of a coastal town between green mountains and the sea' }}">
+    <figcaption>{{ 'Новая глава начинается с выбора' if ru else 'A new chapter starts with a choice' }}<small>{{ 'Иллюстрация, не фотография места' if ru else 'An illustration, not a photograph of a destination' }}</small></figcaption>
+  </figure>
+</section>
+<nav class="rta-journey" aria-label="{{ 'Планирование переезда' if ru else 'Plan your move' }}">
+  <p>{{ 'От идеи' if ru else 'From an idea' }}<br><strong>{{ 'к плану переезда' if ru else 'to a moving plan' }}</strong></p>
+  <a href="{{ prefix }}/compare/"><span class="rta-journey-icon" aria-hidden="true">⇄</span><span><strong>{{ 'Сравнить страны' if ru else 'Compare countries' }}</strong><small>{{ 'Что подходит именно вам' if ru else 'Find the right fit for you' }}</small></span><b aria-hidden="true">↗</b></a>
+  <a href="{{ prefix }}/visas/"><span class="rta-journey-icon" aria-hidden="true">▤</span><span><strong>{{ 'Разобраться с визой' if ru else 'Explore visa routes' }}</strong><small>{{ 'Условия и официальные источники' if ru else 'Requirements and official sources' }}</small></span><b aria-hidden="true">↗</b></a>
+  <a href="{{ prefix }}/tools/budget-planner/"><span class="rta-journey-icon" aria-hidden="true">＋</span><span><strong>{{ 'Посчитать бюджет' if ru else 'Plan your budget' }}</strong><small>{{ 'Переезд и первые месяцы' if ru else 'The move and your first months' }}</small></span><b aria-hidden="true">↗</b></a>
+</nav>

@@ -2461,7 +2461,7 @@
 
     .rta-depth-faq {
       display: grid;
-      gap: 12px;
+      gap: 0;
     }
 
     .guide-page {
@@ -2876,6 +2876,16 @@
       border-radius: 3px;
     }
 
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
     /* ── Premium Reading Experience (all content pages) ── */
 
     /* Body text in all content areas */
@@ -2889,16 +2899,16 @@
     .rta-content > p:last-child { margin-bottom: 0; }
 
     /* Inline links in article content */
-    .rta-content a:not(.ep-cta-btn):not(.rta-linkhub-card):not(.rta-related-card):not([class*="btn"]) {
-      color: #2563eb;
+    .rta-content a:where(:not(.ep-cta-btn):not(.rta-linkhub-card):not(.rta-related-card):not([class*="btn"])) {
+      color: var(--rta-accent, #176b58);
       text-decoration: underline;
-      text-decoration-color: rgba(37,99,235,.3);
+      text-decoration-color: rgba(23,107,88,.3);
       text-underline-offset: 3px;
       transition: color .15s, text-decoration-color .15s;
     }
-    .rta-content a:not(.ep-cta-btn):not(.rta-linkhub-card):not(.rta-related-card):not([class*="btn"]):hover {
-      color: #1d4ed8;
-      text-decoration-color: #2563eb;
+    .rta-content a:where(:not(.ep-cta-btn):not(.rta-linkhub-card):not(.rta-related-card):not([class*="btn"])):hover {
+      color: var(--rta-accent-dark, #0f5143);
+      text-decoration-color: currentColor;
     }
 
     /* Lists in content */
@@ -3045,13 +3055,17 @@
     .rta-source-list a:hover { text-decoration: underline; }
 
     /* ── Depth FAQ ── */
-    .rta-depth-faq .faq-item {
+    .rta-depth-faq-item {
+      min-width: 0;
+      margin: 0;
       border-bottom: 1px solid var(--line);
-      padding: 16px 0;
+      padding: 18px 0;
+      background: transparent;
     }
-    .rta-depth-faq .faq-item:last-child { border-bottom: none; }
-    .rta-depth-faq h3 { font-size: 16px; font-weight: 700; color: var(--dark); margin: 0 0 8px; }
-    .rta-depth-faq p { font-size: 15px; color: #475569; line-height: 1.7; margin: 0; }
+    .rta-depth-faq-item:first-child { padding-top: 4px; }
+    .rta-depth-faq-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .rta-depth-faq-item h3 { font-size: 17px; font-weight: 700; color: var(--dark); margin: 0 0 6px; }
+    .rta-depth-faq-item p { font-size: 15px; color: #475569; line-height: 1.65; margin: 0; }
 
     /* ── Hero pill ── */
     .rta-pill {
@@ -3134,6 +3148,11 @@
     /* ── Improved mobile reading ── */
     @media (max-width: 768px) {
       .rta-article-expansion { padding: 24px 20px; }
+      .rta-depth-panel,
+      .rta-source-panel,
+      .rta-trust-box { padding: 22px 20px; }
+      .rta-depth-panel h2,
+      .rta-source-panel h2 { font-size: 24px; }
       .rta-article-checklist { grid-template-columns: 1fr 1fr; }
       .ep-stats-bar { padding: 18px 20px; }
       .ep-stat-value { font-size: 22px; }

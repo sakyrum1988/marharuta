@@ -15,7 +15,7 @@
 
   triggers.forEach(function(trigger){
     trigger.addEventListener('click', function(e){
-      if (!window.matchMedia('(max-width: 720px)').matches) return;
+      if (!window.matchMedia('(max-width: 980px)').matches) return;
       e.preventDefault();
       var item = trigger.closest('.rta-nav-item');
       var opening = !item.classList.contains('rta-nav-item--open');
@@ -40,13 +40,26 @@
     });
     document.addEventListener('keydown', function(e){
       if (e.key === 'Escape') {
+        var wasOpen = nav.classList.contains('rta-nav--open');
         nav.classList.remove('rta-nav--open');
         btn.setAttribute('aria-expanded', 'false');
         closeSubmenus();
-        btn.focus();
+        if (wasOpen) btn.focus();
       }
     });
   }
+
+  /* Keep long article contents within a disclosure on smaller screens.
+     With JavaScript disabled the accessible native details remain open. */
+  var readingContents = document.querySelector('.rta-reading-nav details');
+  var compactLayout = window.matchMedia('(max-width: 980px)');
+  if (readingContents) readingContents.open = !compactLayout.matches;
+  compactLayout.addEventListener('change', function(event){
+    if (readingContents) readingContents.open = !event.matches;
+    if (nav) nav.classList.remove('rta-nav--open');
+    if (btn) btn.setAttribute('aria-expanded', 'false');
+    closeSubmenus();
+  });
 
   /* Reading progress bar */
   var bar = document.getElementById('rta-progress');

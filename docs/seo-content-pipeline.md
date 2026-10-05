@@ -2,6 +2,10 @@
 
 This is the working process for new and refreshed articles on Relocate to Asia.
 
+## Mandatory blog review
+
+For every new, substantially updated or translated blog article, read and follow [the mandatory writing prompt](blog-writing-prompt.md). It includes competitor research, Serpstat keyword research, natural keyword placement, primary-source verification and the final review checklist. Keep evidence and review status in `docs/content-reviews/<slug>-<lang>.md`; never include API tokens. Unperformed checks must remain unverified, not passed. This prompt governs blog editorial requirements where this older pipeline is less specific.
+
 ## 1. Context Trigger
 
 Start with the keyword, page intent and a short editorial angle. The angle must make the article different from a generic AI summary.
@@ -81,7 +85,7 @@ For every factual claim:
 - mark uncertain or changing rules clearly;
 - avoid unsupported claims about extensions, dependants, work permission or hidden paths.
 
-If a fact cannot be verified, remove it or soften it.
+If a fact cannot be verified, remove it or explicitly mark the uncertainty. Do not make an unsupported critical visa, tax or cost claim appear established merely by softening the wording. Record unresolved verification in the mandatory review and keep the article in draft when required checks remain open.
 
 ## 8. Preview
 

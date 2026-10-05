@@ -11,7 +11,7 @@
   <meta name="publisher" content="{{ seo.meta_publisher if seo else "Relocate to Asia" }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap">
   <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" type="image/x-icon">
   <link rel="icon" href="/static/img/favicon-96.png" sizes="96x96" type="image/png">
   <link rel="apple-touch-icon" href="/static/img/apple-touch-icon.png" sizes="180x180">
@@ -34,8 +34,11 @@
   <meta name="twitter:title" content="{{ seo.meta_title if seo else "Relocate to Asia" }}">
   <meta name="twitter:description" content="{{ seo.meta_description if seo else "Relocate to Asia helps expats compare countries, cities, visas and moving costs across Asia." }}">
   <meta name="twitter:image" content="{{ seo.og_image if seo and seo.og_image else 'https://www.marharuta.online/static/img/og-default.png' }}">
-  <link rel="stylesheet" href="/static/css/site.css?v=20261004editorial3">
-  <link rel="stylesheet" href="/static/css/editorial.css?v=20261004theme5">
+  <link rel="stylesheet" href="{{ versioned_static('css/site.css') }}">
+  <link rel="stylesheet" href="{{ versioned_static('css/editorial.css') }}">
+  {% if request.path in ['/compare/', '/ru/compare/', '/tools/cost-calculator/', '/ru/tools/cost-calculator/', '/tools/budget-planner/', '/ru/tools/budget-planner/'] %}
+  <script src="{{ versioned_static('js/data-api.js') }}"></script>
+  {% endif %}
   {% block head %}{% endblock %}
 </head>
 <body>
@@ -146,16 +149,11 @@
         <a class="rta-nav-trigger" href="{{ guides_prefix }}/" aria-haspopup="true" aria-expanded="false">{{ nav_guides }}</a>
         <div class="rta-dropdown rta-dropdown--wide">
           <a href="{{ guides_prefix }}/">{{ 'Все гайды' if is_ru_page else 'All Guides' }}</a>
-          <a href="{{ guides_prefix }}/can-you-extend-japan-digital-nomad-visa/">{{ 'Можно ли продлить визу digital nomad в Японии?' if is_ru_page else 'Can You Extend Japan Digital Nomad Visa?' }}</a>
-          <a href="{{ guides_prefix }}/japan-digital-nomad-visa-income-requirement/">{{ 'Требование к доходу для Japan Digital Nomad Visa' if is_ru_page else 'Japan Digital Nomad Visa Income' }}</a>
-          <a href="{{ guides_prefix }}/thailand-dtv-vs-ltr-visa/">{{ 'Thailand DTV или LTR Visa' if is_ru_page else 'Thailand DTV vs LTR Visa' }}</a>
-          <a href="{{ guides_prefix }}/malaysia-de-rantau-vs-thailand-dtv/">{{ 'Malaysia DE Rantau или Thailand DTV' if is_ru_page else 'Malaysia DE Rantau vs Thailand DTV' }}</a>
-          <a href="{{ guides_prefix }}/taiwan-gold-card-income-requirement/">{{ 'Требование к доходу для Taiwan Gold Card' if is_ru_page else 'Taiwan Gold Card Income' }}</a>
-          <a href="{{ guides_prefix }}/best-asian-countries-with-easy-long-stay-visas/">{{ 'Простые визы для долгого проживания в Азии' if is_ru_page else 'Easy Long-Stay Visas In Asia' }}</a>
-          <a href="{{ guides_prefix }}/where-to-live-in-asia-on-1500-a-month/">{{ 'Где жить в Азии на $1500 в месяц' if is_ru_page else 'Asia On $1500 A Month' }}</a>
+          <a href="{{ move_to_asia_url }}">{{ 'С чего начать переезд' if is_ru_page else 'Start planning your move' }}</a>
+          <a href="{{ dn_visas_url }}">{{ 'Удалённая работа и визы' if is_ru_page else 'Remote work & visas' }}</a>
+          <a href="{{ cola_asia_url }}">{{ 'Бюджет и стоимость жизни' if is_ru_page else 'Budget & living costs' }}</a>
           <a href="{{ guides_prefix }}/best-asian-countries-for-remote-workers-with-family/">{{ 'Страны Азии для удалёнщиков с семьёй' if is_ru_page else 'Remote Workers With Family' }}</a>
-          <a href="{{ guides_prefix }}/philippines-srrv-vs-thailand-retirement-visa/">{{ 'Philippines SRRV или пенсия в Таиланде' if is_ru_page else 'Philippines SRRV vs Thailand Retirement' }}</a>
-          <a href="{{ guides_prefix }}/vietnam-evisa-vs-thailand-dtv/">{{ 'Vietnam eVisa или Thailand DTV' if is_ru_page else 'Vietnam E-Visa vs Thailand DTV' }}</a>
+          <a href="{{ retire_asia_url }}">{{ 'Переезд на пенсии' if is_ru_page else 'Retiring abroad' }}</a>
         </div>
       </div>
       <div class="rta-nav-item">
@@ -203,7 +201,7 @@
 <footer class="rta-footer">
   <div class="rta-footer-inner">
     <div class="rta-footer-col">
-      <div class="rta-footer-logo">🌏 Relocate to Asia</div>
+      <div class="rta-footer-logo">Relocate to Asia</div>
       <p>{{ footer_tagline }}</p>
     </div>
     <div class="rta-footer-col">
@@ -233,6 +231,9 @@
       <a href="{{ guides_prefix }}/">{{ focused_guides_label }}</a>
       <a href="{{ best_countries_url }}">{{ best_countries_label }}</a>
       <a href="{{ cheapest_countries_url }}">{{ cheapest_countries_label }}</a>
+    </div>
+    <div class="rta-footer-col">
+      <div class="rta-footer-heading">{{ 'О проекте' if is_ru_page else 'About the project' }}</div>
       <a href="{{ about_url }}">{{ about_label }}</a>
       <a href="{{ authors_url }}">{{ authors_label }}</a>
       <a href="{{ contact_url }}">{{ contact_label }}</a>
@@ -245,8 +246,8 @@
 
 {% block scripts %}{% endblock %}
 {% if extra_js == "compare_cities" %}
-<script src="/static/js/compare-cities.js" defer></script>
+<script src="{{ versioned_static('js/compare-cities.js') }}" defer></script>
 {% endif %}
-<script src="/static/js/site.js?v=20261004ux2" defer></script>
+<script src="{{ versioned_static('js/site.js') }}" defer></script>
 </body>
 </html>
