@@ -1,4 +1,34 @@
 (function () {
+  var isRu = document.documentElement.lang === 'ru';
+  var RU_COUNTRIES = {
+    'Thailand': 'Таиланд', 'Malaysia': 'Малайзия', 'Singapore': 'Сингапур',
+    'Vietnam': 'Вьетнам', 'Indonesia': 'Индонезия', 'Taiwan': 'Тайвань',
+    'Japan': 'Япония', 'South Korea': 'Южная Корея', 'Philippines': 'Филиппины',
+    'China SAR': 'Гонконг'
+  };
+  var RU_LABELS = {
+    'Cost & Housing': 'Расходы и жильё', 'Safety & Health': 'Безопасность и медицина',
+    'Digital Nomad': 'Удалённая работа', 'Lifestyle': 'Образ жизни',
+    'Infrastructure': 'Инфраструктура', 'Housing': 'Жильё',
+    'Cost of Living': 'Стоимость жизни', 'Safety': 'Безопасность',
+    'Healthcare': 'Медицина', 'Internet Access': 'Интернет',
+    'Startups': 'Стартап-среда', 'Business Freedom': 'Условия для бизнеса',
+    'Taxation': 'Налоги', 'Leisure & Culture': 'Досуг и культура',
+    'Outdoors': 'Природа и отдых', 'Tolerance': 'Открытость среды',
+    'Education': 'Образование', 'Economy': 'Экономика',
+    'Travel Connectivity': 'Транспортная доступность',
+    'Environmental Quality': 'Экология', 'Commute': 'Городской транспорт',
+    'Overall Score': 'Общая оценка'
+  };
+
+  function uiLabel(value) {
+    return isRu && RU_LABELS[value] ? RU_LABELS[value] : value;
+  }
+
+  function countryLabel(value) {
+    return isRu && RU_COUNTRIES[value] ? RU_COUNTRIES[value] : value;
+  }
+
   var CITIES = [
     { label: 'Bangkok',        country: 'Thailand',     slug: 'bangkok' },
     { label: 'Chiang Mai',     country: 'Thailand',     slug: 'chiang-mai' },
@@ -151,25 +181,25 @@
     html += '<div class="cc-lbl-empty"></div>';
     html += '<div class="cc-city-head">'
           + '<strong>' + c1.label + '</strong>'
-          + '<br><span style="font-size:12px;color:#888">' + c1.country + '</span>'
+          + '<br><span class="cc-city-country">' + countryLabel(c1.country) + '</span>'
           + '<div class="cc-city-head-score" style="color:' + scoreColor(d1.score / 10) + '">' + d1.score + '</div>'
-          + '<span style="font-size:11px;color:#888">Overall Score</span>'
+          + '<span class="cc-score-caption">' + uiLabel('Overall Score') + '</span>'
           + '</div>';
     html += '<div class="cc-city-head">'
           + '<strong>' + c2.label + '</strong>'
-          + '<br><span style="font-size:12px;color:#888">' + c2.country + '</span>'
+          + '<br><span class="cc-city-country">' + countryLabel(c2.country) + '</span>'
           + '<div class="cc-city-head-score" style="color:' + scoreColor(d2.score / 10) + '">' + d2.score + '</div>'
-          + '<span style="font-size:11px;color:#888">Overall Score</span>'
+          + '<span class="cc-score-caption">' + uiLabel('Overall Score') + '</span>'
           + '</div>';
     html += '</div>';
 
     GROUPS.forEach(function (g) {
-      html += '<div class="cc-group-lbl">' + g.label + '</div>';
+      html += '<div class="cc-group-lbl">' + uiLabel(g.label) + '</div>';
       g.cats.forEach(function (cat) {
         var v1 = d1.cats[cat] || 0, v2 = d2.cats[cat] || 0;
         var w1 = v1 > v2, w2 = v2 > v1;
         html += '<div class="cc-row">'
-              + '<div class="cc-row-lbl">' + cat + '</div>'
+              + '<div class="cc-row-lbl">' + uiLabel(cat) + '</div>'
               + '<div class="cc-card' + (w1 ? ' winner' : '') + '">'
               +   '<div style="font-size:20px;font-weight:800;color:' + scoreColor(v1) + '">'
               +     v1.toFixed(1) + '<span style="font-size:11px;color:#888">/10</span>'
@@ -199,8 +229,8 @@
     if (!sel1 || !sel2) return;
 
     CITIES.forEach(function (c) {
-      var o1 = new Option(c.label + ' (' + c.country + ')', c.slug);
-      var o2 = new Option(c.label + ' (' + c.country + ')', c.slug);
+      var o1 = new Option(c.label + ' (' + countryLabel(c.country) + ')', c.slug);
+      var o2 = new Option(c.label + ' (' + countryLabel(c.country) + ')', c.slug);
       sel1.add(o1);
       sel2.add(o2);
     });

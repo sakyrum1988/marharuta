@@ -46,6 +46,11 @@ def _cache_eligible(path: str) -> bool:
     return True
 
 
+def _is_local_request() -> bool:
+    """Never cache pages while the site is being edited on localhost."""
+    return request.host.split(":", 1)[0] == "127.0.0.1"
+
+
 @app.before_request
 def _serve_from_cache():
     # Canonical-host redirects must happen before cache lookup. Otherwise a
@@ -54,7 +59,7 @@ def _serve_from_cache():
     if host == "marharuta.online":
         url = request.url.replace(f"{request.scheme}://marharuta.online", "https://www.marharuta.online", 1)
         return redirect(url, 301)
-    if app.debug:
+    if app.debug or _is_local_request():
         return None
     if request.method != "GET":
         return None
@@ -100,10 +105,12 @@ def _store_in_cache_and_add_headers(response: Response) -> Response:
         "connect-src 'self' https:; "
         "object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'",
     )
-    if app.debug:
+    if app.debug or _is_local_request():
         # Live local design work must not mix new templates with stale assets.
         # Production keeps its normal page and versioned asset caches.
         response.headers["Cache-Control"] = "no-store"
+        response.headers.pop("X-Cache", None)
+        response.headers.pop("Age", None)
         return response
     if path.startswith("/static/") and response.status_code == 200:
         response.headers["Cache-Control"] = "public, max-age=604800"
@@ -1350,6 +1357,16 @@ COUNTRY_EN_NAMES = {
     "move-to-uzbekistan": "Uzbekistan",
 }
 
+COUNTRY_FLAGS = {
+    "move-to-thailand": "🇹🇭", "move-to-malaysia": "🇲🇾", "move-to-bali": "🇮🇩",
+    "move-to-vietnam": "🇻🇳", "move-to-taiwan": "🇹🇼", "move-to-japan": "🇯🇵",
+    "move-to-china": "🇨🇳", "move-to-singapore": "🇸🇬", "move-to-south-korea": "🇰🇷",
+    "move-to-philippines": "🇵🇭", "move-to-uae": "🇦🇪", "move-to-cambodia": "🇰🇭",
+    "move-to-sri-lanka": "🇱🇰", "move-to-india": "🇮🇳", "move-to-nepal": "🇳🇵",
+    "move-to-laos": "🇱🇦", "move-to-kazakhstan": "🇰🇿", "move-to-brunei": "🇧🇳",
+    "move-to-myanmar": "🇲🇲", "move-to-uzbekistan": "🇺🇿",
+}
+
 
 RU_GUIDE_TITLES = {
     "can-you-extend-japan-digital-nomad-visa": "Можно ли продлить визу digital nomad в Японии в 2026 году?",
@@ -1407,7 +1424,7 @@ def compact_number(value) -> str:
 RU_COUNTRY_NOTES = {
     "move-to-thailand": (
         "Таиланд выбирают за сочетание реального сервиса, доступной медицины и зрелой expat-инфраструктуры — это не просто дешёвая Азия, а страна с отлаженной системой для иностранцев.",
-        "DTV требует дохода от $80K/год или активов 500K THB и не даёт права работать у тайского работодателя — проверяйте соответствие профилю до подачи.",
+        "DTV требует финансовое подтверждение от 500 000 THB и документов по выбранной категории. Это не разрешение на работу у тайского работодателя: маршрут нужно сверить с конкретным консульством до подачи.",
     ),
     "move-to-malaysia": (
         "Малайзия привлекает предсказуемостью — инфраструктура работает, цены стабильны, маршрут долгосрочного проживания понятен при подтверждённом доходе от $3 000/мес.",
@@ -1573,21 +1590,27 @@ EN_COUNTRY_NOTES: dict[str, tuple[str, str]] = {
 
 RU_COUNTRY_DATA: dict[str, dict] = {
     "move-to-thailand": {
-        "budget": "$800–1 200",
+        "budget": "от $800",
         "climate": "Тропический",
         "english": "Средний",
         "visa_label": "DTV / LTR / Non-OA",
-        "description": "Бангкок — от $800/мес при аренде студии в On Nut или Lat Phrao, Чиангмай — от $600/мес. Больницы Bumrungrad и Samitivej — международный аккредитованный уровень при ценах в 3–5 раз ниже, чем в США ($40–80 за консультацию). DTV (с 2024 года) даёт до 180 дней stay без привязки к тайскому работодателю.",
+        "description": "Таиланд подходит не одному типу переезда: Бангкок сильнее по медицине и инфраструктуре, Чиангмай — по бюджету и рабочему ритму, Пхукет — по морскому сценарию. DTV даёт до 180 дней за один въезд, но город и реальный месячный бюджет важны не меньше самой визы.",
         "visas": [
-            ("Thailand DTV", "До 180 дн. + 180 renewal", "$80K+ USD/год или 500K THB активов", "Удалёнщики, фрилансеры, workcation"),
-            ("LTR Visa", "10 лет (5+5)", "От $80K/год до $1M+ активов", "High-income professionals, обеспеченные пенсионеры"),
-            ("Retirement Visa (Non-OA)", "1 год, renewable", "800K THB на счёте или 65K THB/мес", "Пенсионеры от 50 лет"),
-            ("METV", "6 мес., до 270 дн. stay", "Банковская выписка", "Краткосрочный stay, тест направления"),
+            ("Thailand DTV", "5 лет; до 180 дней за въезд", "От 500 000 THB + документы по категории", "Удалёнщики, фрилансеры, soft-power программы"),
+            ("LTR Visa", "10 лет (5 + проверка + 5)", "Критерии зависят от категории: доход, активы, работодатель", "Высокодоходные специалисты и обеспеченные пенсионеры"),
+            ("Retirement Visa (Non-OA)", "1 год, можно продлевать", "800 000 THB или 65 000 THB/мес. + страховка", "Пенсионеры от 50 лет"),
+            ("METV", "6 месяцев действия; до 60 дней за въезд", "Туристическая цель и документы консульства", "Тест страны, но не долгосрочный статус"),
         ],
         "costs": ("$800–1 200", "$300–700", "$150–350", "$50–100"),
         "pros": ["Bumrungrad/Samitivej — JCI-больницы с ценами ЮВА ($40–80 консультация)", "Чиангмай: 1BR от $400–600/мес, коворкинги в каждом районе (CAMP, MANA, Think Park)", "DTV не требует тайского работодателя — подходит для удалёнщиков и фрилансеров", "Выбор городов: Бангкок (метрополия), Чиангмай (nomad-хаб), Пхукет (пляж)"],
         "cons": ["Сезон смога в Чиангмае (фев–апр): AQI 200+ — маски обязательны, авиабилеты дорожают", "DTV не даёт права работать на тайских работодателей — только иностранный доход", "Бангкок: 1BR в центре (Silom, Sukhumvit) от $800–1 200/мес", "Сезон дождей (июн–окт): тропические ливни, местами — наводнения в низинах"],
         "top_cities": ["Бангкок", "Чиангмай", "Пхукет", "Паттайя", "Хуа Хин"],
+        "city_profiles": [
+            ("Бангкок", "$1 500–2 400", "работа, медицина, школы", "дорогая аренда и пробки"),
+            ("Чиангмай", "$800–1 200", "удалённая работа и спокойный ритм", "дымный сезон с февраля по апрель"),
+            ("Пхукет", "$1 400–2 400", "море, семья, международный сервис", "туристические цены и зависимость от района"),
+            ("Хуа Хин", "$900–1 500", "спокойная база и пенсионный сценарий", "меньше карьерной и nomad-инфраструктуры"),
+        ],
     },
     "move-to-malaysia": {
         "budget": "$900–1 400",
@@ -2426,7 +2449,8 @@ def country_search_faq_html(slug: str, lang: str) -> str:
     title = "Частые вопросы о переезде" if lang == "ru" else "Relocation Questions"
     label = "Ответы" if lang == "ru" else "Practical Answers"
     faq_items = "".join(
-        f'<div class="rta-depth-faq-item"><h3>{html.escape(question)}</h3><p>{html.escape(answer)}</p></div>'
+        f'<details class="rta-country-faq"><summary>{html.escape(question)}</summary>'
+        f'<p>{html.escape(answer)}</p></details>'
         for question, answer in items
     )
     anchor = "ru-search-questions" if lang == "ru" else "en-search-questions"
@@ -2439,16 +2463,20 @@ def country_search_faq_html(slug: str, lang: str) -> str:
 
 def ru_country_article(slug: str, facts: sqlite3.Row | None) -> str:
     data = RU_COUNTRY_DATA.get(slug)
+    has_city_profiles = bool(data and data.get("city_profiles"))
     country = ru_country_display(slug)
     acc = ru_country_accusative(slug)
     destination = ru_country_destination(slug)
-    capital = facts["capital"] if facts and facts["capital"] else "данные отсутствуют"
-    currency = facts["currency_code"] if facts and facts["currency_code"] else "данные отсутствуют"
-    languages = facts["languages"] if facts and facts["languages"] else "данные отсутствуют"
-    population = compact_number(facts["population"] if facts else None)
-    internet = f"{facts['internet_pct']:.1f}%" if facts and facts["internet_pct"] is not None else "нет данных"
-    life = f"{facts['life_expectancy']:.1f} лет" if facts and facts["life_expectancy"] is not None else "нет данных"
-    year = facts["wb_year"] if facts and facts["wb_year"] else "последние данные"
+    prep = ru_country_prep(slug)
+    display_facts = country_facts_for_display(facts, slug, "ru")
+    capital = display_facts["capital"] if display_facts and display_facts["capital"] else "данные отсутствуют"
+    currency = display_facts["currency_code"] if display_facts and display_facts["currency_code"] else "данные отсутствуют"
+    languages = display_facts["languages"] if display_facts and display_facts["languages"] else "данные отсутствуют"
+    population = compact_number(display_facts["population"] if display_facts else None)
+    internet = f"{display_facts['internet_pct']:.1f}%" if display_facts and display_facts["internet_pct"] is not None else "нет данных"
+    life = f"{display_facts['life_expectancy']:.1f} лет" if display_facts and display_facts["life_expectancy"] is not None else "нет данных"
+    year = display_facts["wb_year"] if display_facts and display_facts["wb_year"] else "последние данные"
+    flag = COUNTRY_FLAGS.get(slug, "✦")
     note, risk = RU_COUNTRY_NOTES.get(
         slug,
         (
@@ -2458,43 +2486,47 @@ def ru_country_article(slug: str, facts: sqlite3.Row | None) -> str:
     )
 
     search_faq = country_search_faq_html(slug, "ru")
-    search_faq_link = '<li><a href="#ru-search-questions">Частые вопросы</a></li>' if search_faq else ""
-    sidebar_html = f"""
-    <div class="ep-toc">
-      <p class="ep-toc-title">На этой странице</p>
-      <ol>
-        <li><a href="#ru-overview">Почему выбирают</a></li>
-        <li><a href="#ru-visas">Визовые маршруты</a></li>
-        <li><a href="#ru-costs">Стоимость жизни</a></li>
-        <li><a href="#ru-proscons">Плюсы и минусы</a></li>
-        <li><a href="#ru-facts">Факты о стране</a></li>
-        {search_faq_link}
-      </ol>
-    </div>
-    <div class="ep-facts">
-      <p class="ep-facts-title">Факты о стране</p>
-      <div class="ep-facts-row"><span class="ep-facts-key">Столица</span><span class="ep-facts-val">{html.escape(capital)}</span></div>
-      <div class="ep-facts-row"><span class="ep-facts-key">Валюта</span><span class="ep-facts-val">{html.escape(currency)}</span></div>
-      <div class="ep-facts-row"><span class="ep-facts-key">Языки</span><span class="ep-facts-val">{html.escape(languages)}</span></div>
-      <div class="ep-facts-row"><span class="ep-facts-key">Население</span><span class="ep-facts-val">{population}</span></div>
-      <div class="ep-facts-row"><span class="ep-facts-key">Интернет</span><span class="ep-facts-val">{internet}</span></div>
-      <div class="ep-facts-row"><span class="ep-facts-key">Ожид. прод. жизни</span><span class="ep-facts-val">{life}</span></div>
-      <div class="ep-facts-row"><span class="ep-facts-key">World Bank</span><span class="ep-facts-val">{html.escape(str(year))}</span></div>
-    </div>"""
+    search_faq_link = '<a href="#ru-search-questions">Вопросы</a>' if search_faq else ""
+    city_toc_link = '<a href="#ru-cities">Города</a>' if has_city_profiles else ""
+    jump_nav_html = f"""
+    <nav class="rta-country-jumpnav" aria-label="Разделы страницы">
+      <a href="#ru-overview">Обзор</a>
+      <a href="#ru-visas">Визы</a>
+      <a href="#ru-costs">Бюджет</a>
+      {city_toc_link}
+      <a href="#ru-proscons">Кому подходит</a>
+      <a href="#ru-plan">План</a>
+      {search_faq_link}
+    </nav>"""
+    facts_band_html = f"""
+    <section class="rta-country-pulse" aria-label="Ключевые факты о стране">
+      <div><span>Столица</span><strong>{html.escape(capital)}</strong></div>
+      <div><span>Валюта</span><strong>{html.escape(currency)}</strong></div>
+      <div><span>Язык</span><strong>{html.escape(languages)}</strong></div>
+      <div><span>Население</span><strong>{population}</strong></div>
+      <div><span>Интернет</span><strong>{internet}</strong></div>
+      <div><span>Продолжительность жизни</span><strong>{life}</strong></div>
+    </section>"""
 
     if not data:
         return f"""
-<div class="rta-hero-card">
-  <span class="rta-pill">Гид по стране · 2026</span>
-  <h1 style="color:#fff;font-size:clamp(24px,3.5vw,42px);font-weight:900;letter-spacing:-.5px;margin:16px 0;line-height:1.15;">Переезд {html.escape(destination)}: визы, расходы и реальная логика выбора</h1>
-  <p style="color:rgba(255,255,255,.85);font-size:17px;line-height:1.6;margin:0;max-width:680px;">{html.escape(note)}</p>
+<div class="rta-hero-card rta-country-hero">
+  <div class="rta-country-kicker"><span class="rta-country-flag">{flag}</span><span>Гид по стране · 2026</span></div>
+  <h1>Переезд {html.escape(destination)}: визы, расходы и реальная логика выбора</h1>
+  <p>{html.escape(note)}</p>
+  <div class="rta-country-hero-actions">
+    <a class="rta-country-primary" href="#ru-overview">Начать проверку</a>
+    <a class="rta-country-secondary" href="/ru/compare/">Сравнить страны</a>
+  </div>
 </div>
-<div class="ep-highlight" style="margin-top:28px;"><p><strong>Короткий вывод:</strong> {html.escape(risk)}</p></div>
-<div class="ep-layout" style="margin-top:32px;">
+{jump_nav_html}
+{facts_band_html}
+<div class="ep-layout rta-country-layout">
   <div class="ep-main">
     <div class="ep-section" id="ru-overview">
-      <p class="ep-section-label">Что проверить</p>
-      <h2 class="ep-h2">Первые шаги</h2>
+      <p class="ep-section-label">Короткий вердикт</p>
+      <h2 class="ep-h2">Что проверить в первую очередь</h2>
+      <p class="ep-decision-note"><strong>Главная проверка:</strong> {html.escape(risk)}</p>
       <p class="ep-p">Сначала проверьте право находиться в стране. Если виза подходит только для короткого stay — не стоит строить вокруг неё план долгой релокации.</p>
       <p class="ep-p">Второй фильтр — бюджет. Низкая аренда не означает дешёвый переезд: к ней добавляются страховка, депозиты, перелёты и стартовые расходы.</p>
     </div>
@@ -2505,7 +2537,6 @@ def ru_country_article(slug: str, facts: sqlite3.Row | None) -> str:
       <a class="ep-cta-btn" href="/ru/visas/">Гид по визам</a>
     </div>
   </div>
-  <div class="ep-sidebar">{sidebar_html}</div>
 </div>
 """
 
@@ -2519,10 +2550,8 @@ def ru_country_article(slug: str, facts: sqlite3.Row | None) -> str:
     pros = data["pros"]
     cons = data["cons"]
     cities = data.get("top_cities", [])
+    city_profiles = data.get("city_profiles", [])
 
-    visa_tags_html = "".join(
-        f'<span class="ep-visa-tag">{html.escape(v[0])}</span>' for v in visas
-    )
     visa_rows = "".join(
         f"<tr><td><strong>{html.escape(v[0])}</strong></td>"
         f"<td>{html.escape(v[1])}</td>"
@@ -2538,55 +2567,79 @@ def ru_country_article(slug: str, facts: sqlite3.Row | None) -> str:
         + " &middot; ".join(html.escape(c) for c in cities)
         + "</p>"
     ) if cities else ""
+    city_rows = "".join(
+        f"<tr><td><strong>{html.escape(city)}</strong></td>"
+        f"<td>{html.escape(city_budget)}</td>"
+        f"<td>{html.escape(best_for)}</td>"
+        f"<td>{html.escape(tradeoff)}</td></tr>"
+        for city, city_budget, best_for, tradeoff in city_profiles
+    )
+    city_section = f"""
+    <section class="ep-section ep-country-cities" id="ru-cities">
+      <p class="ep-section-label">Города</p>
+      <h2 class="ep-h2">Какой город подходит вашему сценарию</h2>
+      <p class="ep-p">Страновой средний бюджет мало помогает при выборе жилья. Сравнивайте город, район и сезон — именно они определяют реальную стоимость и повседневный ритм.</p>
+      <div class="ep-table-wrap">
+        <table class="ep-table ep-city-table">
+          <thead><tr><th>Город</th><th>Ориентир / мес.</th><th>Лучше всего для</th><th>Главный компромисс</th></tr></thead>
+          <tbody>{city_rows}</tbody>
+        </table>
+      </div>
+      <p class="ep-data-note">Диапазоны — ориентир для одного человека с долгосрочной арендой. Перелёт, депозит, виза и страховка считаются отдельно.</p>
+    </section>
+    """ if city_rows else ""
     primary_visa = html.escape(visa_label.split("/")[0].strip())
+    cities_short = " · ".join(html.escape(city) for city in cities[:3]) if cities else "смотрите города в гайде"
 
     return f"""
-<div class="rta-hero-card">
-  <span class="rta-pill">Гид по стране · 2026</span>
-  <h1 style="color:#fff;font-size:clamp(24px,3.5vw,42px);font-weight:900;letter-spacing:-.5px;margin:16px 0;line-height:1.15;">Переезд {html.escape(destination)}: визы, расходы и реальная логика выбора</h1>
-  <p style="color:rgba(255,255,255,.85);font-size:17px;line-height:1.6;margin:0;max-width:680px;">{html.escape(description)}</p>
-  <div style="display:flex;gap:16px;flex-wrap:wrap;color:rgba(255,255,255,.6);font-size:13px;margin-top:18px;">
-    <span>📅 Обновлено 2026</span>
-    <span>⏱ 6 мин. чтения</span>
+<div class="rta-hero-card rta-country-hero">
+  <div class="rta-country-hero-grid">
+    <div class="rta-country-hero-copy">
+      <div class="rta-country-kicker"><span class="rta-country-flag">{flag}</span><span>Гид по стране · 2026</span></div>
+      <h1>Переезд {html.escape(destination)}: визы, расходы и реальная логика выбора</h1>
+      <p>{html.escape(description)}</p>
+      <div class="rta-country-hero-actions">
+        <a class="rta-country-primary" href="#ru-visas">Проверить визы</a>
+        <a class="rta-country-secondary" href="#ru-costs">Посчитать бюджет</a>
+      </div>
+      <div class="rta-country-hero-meta">
+        <span>Обновлено в 2026 году</span>
+        <span>6 минут на обзор</span>
+      </div>
+    </div>
+    <aside class="rta-country-hero-summary" aria-label="Быстрый ориентир">
+      <p>Быстрый ориентир</p>
+      <dl>
+        <div><dt>Месячный бюджет</dt><dd>{html.escape(budget)}</dd></div>
+        <div><dt>Основной маршрут</dt><dd>{primary_visa}</dd></div>
+        <div><dt>Города для сравнения</dt><dd>{cities_short}</dd></div>
+      </dl>
+    </aside>
   </div>
 </div>
 
-<div class="ep-stats-bar" style="margin-top:28px;">
-  <div class="ep-stat-item">
-    <div class="ep-stat-value">{html.escape(budget)}</div>
-    <div class="ep-stat-label">Бюджет / месяц</div>
-  </div>
-  <div class="ep-stat-item">
-    <div class="ep-stat-value">{html.escape(climate)}</div>
-    <div class="ep-stat-label">Климат</div>
-  </div>
-  <div class="ep-stat-item">
-    <div class="ep-stat-value">{html.escape(english)}</div>
-    <div class="ep-stat-label">Английский</div>
-  </div>
-  <div class="ep-stat-item">
-    <div class="ep-stat-value">{primary_visa}</div>
-    <div class="ep-stat-label">Основная виза</div>
-  </div>
-</div>
+{jump_nav_html}
+{facts_band_html}
 
-<div class="ep-visa-tags">{visa_tags_html}</div>
-
-<div class="ep-layout">
+<div class="ep-layout rta-country-layout">
   <div class="ep-main">
 
     <div class="ep-section" id="ru-overview">
-      <p class="ep-section-label">Обзор</p>
-      <h2 class="ep-h2">Почему выбирают {html.escape(acc)}</h2>
+      <p class="ep-section-label">Короткий вердикт</p>
+      <h2 class="ep-h2">Стоит ли рассматривать {html.escape(acc)}</h2>
       <p class="ep-p">{html.escape(note)}</p>
-      <div class="ep-highlight"><p>{html.escape(risk)}</p></div>
+      <div class="ep-country-verdict">
+        <div><strong>Подходит, если</strong><p>{html.escape(pros[0])}</p></div>
+        <div><strong>Подумайте дважды, если</strong><p>{html.escape(cons[0])}</p></div>
+      </div>
+      <p class="ep-decision-note"><strong>Главная проверка:</strong> {html.escape(risk)}</p>
     </div>
 
     <div class="ep-section" id="ru-visas">
       <p class="ep-section-label">Визы</p>
       <h2 class="ep-h2">Визовые маршруты в 2026 году</h2>
       <p class="ep-p">Условия регулярно обновляются. Проверяйте актуальные требования на официальных государственных ресурсах перед подачей.</p>
-      <div style="overflow-x:auto;">
+      <div class="ep-table-wrap">
         <table class="ep-table">
           <thead><tr><th>Виза</th><th>Срок</th><th>Ключевые требования</th><th>Кому подходит</th></tr></thead>
           <tbody>{visa_rows}</tbody>
@@ -2596,36 +2649,24 @@ def ru_country_article(slug: str, facts: sqlite3.Row | None) -> str:
 
     <div class="ep-section" id="ru-costs">
       <p class="ep-section-label">Стоимость жизни</p>
-      <h2 class="ep-h2">Стоимость жизни в {html.escape(country)}</h2>
-      <div class="ep-cost-grid" style="grid-template-columns:repeat(2,1fr);">
-        <div class="ep-cost-box comfort">
-          <div class="ep-cost-label">Комфортный месяц</div>
-          <div class="ep-cost-amount">{html.escape(total)}</div>
-          <div class="ep-cost-sub">solo-сценарий</div>
-        </div>
-        <div class="ep-cost-box budget">
-          <div class="ep-cost-label">Аренда жилья</div>
-          <div class="ep-cost-amount">{html.escape(rent)}</div>
-          <div class="ep-cost-sub">1BR в городе</div>
-        </div>
-        <div class="ep-cost-box mid">
-          <div class="ep-cost-label">Еда и рестораны</div>
-          <div class="ep-cost-amount">{html.escape(food)}</div>
-          <div class="ep-cost-sub">смешанный стиль</div>
-        </div>
-        <div class="ep-cost-box budget">
-          <div class="ep-cost-label">Транспорт</div>
-          <div class="ep-cost-amount">{html.escape(transport)}</div>
-          <div class="ep-cost-sub">местный + такси</div>
-        </div>
+      <h2 class="ep-h2">Реальный месячный бюджет в {html.escape(prep)}</h2>
+      <div class="ep-budget-ledger">
+        <div class="ep-budget-total"><span>Рабочий ориентир</span><strong>{html.escape(total)}</strong><small>один человек, без стартовых расходов</small></div>
+        <dl>
+          <div><dt>Аренда 1BR</dt><dd>{html.escape(rent)}</dd></div>
+          <div><dt>Еда и кафе</dt><dd>{html.escape(food)}</dd></div>
+          <div><dt>Транспорт</dt><dd>{html.escape(transport)}</dd></div>
+        </dl>
       </div>
-      <p class="ep-p" style="font-size:13px;color:#888;margin-top:8px;">Не включает страховку, визовые сборы, перелёты и стартовые расходы.</p>
+      <p class="ep-data-note">Отдельно заложите депозит, временное жильё, страховку, визовые сборы, перелёт и резерв минимум на один месяц.</p>
       {cities_line}
     </div>
 
+    {city_section}
+
     <div class="ep-section" id="ru-proscons">
-      <p class="ep-section-label">Анализ</p>
-      <h2 class="ep-h2">Плюсы и минусы</h2>
+      <p class="ep-section-label">Соответствие сценарию</p>
+      <h2 class="ep-h2">Кому подходит, а кому — нет</h2>
       <div class="ep-proscons">
         <div class="ep-pros">
           <h4>Плюсы</h4>
@@ -2638,11 +2679,17 @@ def ru_country_article(slug: str, facts: sqlite3.Row | None) -> str:
       </div>
     </div>
 
-    <div class="ep-section" id="ru-facts">
-      <p class="ep-section-label">Данные</p>
-      <h2 class="ep-h2">О стране</h2>
-      <p class="ep-p">Данные World Bank ({html.escape(str(year))}). Используйте как контекст при планировании — актуальные цифры проверяйте перед принятием решений.</p>
-    </div>
+    <section class="ep-section ep-move-plan" id="ru-plan">
+      <p class="ep-section-label">Следующий шаг</p>
+      <h2 class="ep-h2">План проверки до оплаты</h2>
+      <ol>
+        <li><strong>Определите срок.</strong><span>Короткий тест, сезонная база или переезд на год и больше требуют разных маршрутов.</span></li>
+        <li><strong>Проверьте право на пребывание.</strong><span>Откройте официальный источник, затем список документов своего консульства.</span></li>
+        <li><strong>Выберите город и район.</strong><span>Сравните аренду, медицину, транспорт, сезонность и доступ к аэропорту.</span></li>
+        <li><strong>Посчитайте старт.</strong><span>Добавьте к обычному месяцу депозит, перелёт, страховку, визу и резерв.</span></li>
+        <li><strong>Только потом бронируйте.</strong><span>Не оплачивайте долгую аренду, пока не понятны статус, район и условия договора.</span></li>
+      </ol>
+    </section>
 
     {search_faq}
 
@@ -2655,7 +2702,6 @@ def ru_country_article(slug: str, facts: sqlite3.Row | None) -> str:
     </div>
 
   </div>
-  <div class="ep-sidebar">{sidebar_html}</div>
 </div>
 """
 
@@ -2684,6 +2730,7 @@ def en_country_article(slug: str, facts: sqlite3.Row | None) -> str:
     internet = f"{facts['internet_pct']:.1f}%" if facts and facts["internet_pct"] is not None else "N/A"
     life = f"{facts['life_expectancy']:.1f} yrs" if facts and facts["life_expectancy"] is not None else "N/A"
     year = facts["wb_year"] if facts and facts["wb_year"] else "latest data"
+    flag = COUNTRY_FLAGS.get(slug, "✦")
     note, risk = EN_COUNTRY_NOTES.get(
         slug,
         (
@@ -2693,39 +2740,33 @@ def en_country_article(slug: str, facts: sqlite3.Row | None) -> str:
     )
 
     search_faq = country_search_faq_html(slug, "en")
-    search_faq_link = '<li><a href="#en-search-questions">Relocation Questions</a></li>' if search_faq else ""
-    sidebar_html = f"""
-    <div class="ep-toc">
-      <p class="ep-toc-title">On This Page</p>
-      <ol>
-        <li><a href="#en-overview">Why Choose</a></li>
-        <li><a href="#en-visas">Visa Routes</a></li>
-        <li><a href="#en-costs">Cost of Living</a></li>
-        <li><a href="#en-proscons">Pros &amp; Cons</a></li>
-        <li><a href="#en-facts">Country Facts</a></li>
-        {search_faq_link}
-      </ol>
-    </div>
-    <div class="ep-facts">
-      <p class="ep-facts-title">Country Facts</p>
-      <div class="ep-facts-row"><span class="ep-facts-key">Capital</span><span class="ep-facts-val">{html.escape(capital)}</span></div>
-      <div class="ep-facts-row"><span class="ep-facts-key">Currency</span><span class="ep-facts-val">{html.escape(currency)}</span></div>
-      <div class="ep-facts-row"><span class="ep-facts-key">Languages</span><span class="ep-facts-val">{html.escape(languages)}</span></div>
-      <div class="ep-facts-row"><span class="ep-facts-key">Population</span><span class="ep-facts-val">{population}</span></div>
-      <div class="ep-facts-row"><span class="ep-facts-key">Internet Users</span><span class="ep-facts-val">{internet}</span></div>
-      <div class="ep-facts-row"><span class="ep-facts-key">Life Expectancy</span><span class="ep-facts-val">{life}</span></div>
-      <div class="ep-facts-row"><span class="ep-facts-key">World Bank</span><span class="ep-facts-val">{html.escape(str(year))}</span></div>
-    </div>"""
+    search_faq_link = '<a href="#en-search-questions">Questions</a>' if search_faq else ""
+    jump_nav_html = f"""
+    <nav class="rta-country-jumpnav" aria-label="Page sections">
+      <a href="#en-overview">Overview</a><a href="#en-visas">Visas</a><a href="#en-costs">Budget</a>
+      <a href="#en-proscons">Fit</a>{search_faq_link}
+    </nav>"""
+    facts_band_html = f"""
+    <section class="rta-country-pulse" aria-label="Key country facts">
+      <div><span>Capital</span><strong>{html.escape(capital)}</strong></div>
+      <div><span>Currency</span><strong>{html.escape(currency)}</strong></div>
+      <div><span>Languages</span><strong>{html.escape(languages)}</strong></div>
+      <div><span>Population</span><strong>{population}</strong></div>
+      <div><span>Internet</span><strong>{internet}</strong></div>
+      <div><span>Life expectancy</span><strong>{life}</strong></div>
+    </section>"""
 
     if not en_data or not ru_data:
         return f"""
-<div class="rta-hero-card">
-  <span class="rta-pill">Country Guide · 2026</span>
-  <h1 style="color:#fff;font-size:clamp(24px,3.5vw,42px);font-weight:900;letter-spacing:-.5px;margin:16px 0;line-height:1.15;">Move to {html.escape(country)}: Visas, Costs and the Real Logic of Relocation</h1>
-  <p style="color:rgba(255,255,255,.85);font-size:17px;line-height:1.6;margin:0;max-width:680px;">{html.escape(note)}</p>
+<div class="rta-hero-card rta-country-hero">
+  <div class="rta-country-kicker"><span class="rta-country-flag">{flag}</span><span>Country guide · 2026</span></div>
+  <h1>Move to {html.escape(country)}: Visas, Costs and the Real Logic of Relocation</h1>
+  <p>{html.escape(note)}</p>
+  <div class="rta-country-hero-actions"><a class="rta-country-primary" href="#en-overview">Start the check</a><a class="rta-country-secondary" href="/compare/">Compare countries</a></div>
 </div>
-<div class="ep-highlight" style="margin-top:28px;"><p><strong>Key point:</strong> {html.escape(risk)}</p></div>
-<div class="ep-layout" style="margin-top:32px;">
+{jump_nav_html}
+{facts_band_html}
+<div class="ep-layout rta-country-layout">
   <div class="ep-main">
     <div class="ep-section" id="en-overview">
       <p class="ep-section-label">What To Check</p>
@@ -2740,7 +2781,6 @@ def en_country_article(slug: str, facts: sqlite3.Row | None) -> str:
       <a class="ep-cta-btn" href="/visas/">Visa Guide</a>
     </div>
   </div>
-  <div class="ep-sidebar">{sidebar_html}</div>
 </div>
 """
 
@@ -2755,9 +2795,6 @@ def en_country_article(slug: str, facts: sqlite3.Row | None) -> str:
     pros = en_data["pros"]
     cons = en_data["cons"]
 
-    visa_tags_html = "".join(
-        f'<span class="ep-visa-tag">{html.escape(v[0])}</span>' for v in visas
-    )
     visa_rows = "".join(
         f"<tr><td><strong>{html.escape(v[0])}</strong></td>"
         f"<td>{html.escape(v[1])}</td>"
@@ -2776,38 +2813,27 @@ def en_country_article(slug: str, facts: sqlite3.Row | None) -> str:
     primary_visa = html.escape(visa_label.split("/")[0].strip())
 
     return f"""
-<div class="rta-hero-card">
-  <span class="rta-pill">Country Guide · 2026</span>
-  <h1 style="color:#fff;font-size:clamp(24px,3.5vw,42px);font-weight:900;letter-spacing:-.5px;margin:16px 0;line-height:1.15;">Move to {html.escape(country)}: Visas, Costs and the Real Logic of Relocation</h1>
-  <p style="color:rgba(255,255,255,.85);font-size:17px;line-height:1.6;margin:0;max-width:680px;">{html.escape(description)}</p>
-  <div style="display:flex;gap:16px;flex-wrap:wrap;color:rgba(255,255,255,.6);font-size:13px;margin-top:18px;">
-    <span>📅 Updated 2026</span>
-    <span>⏱ 6 min read</span>
+<div class="rta-hero-card rta-country-hero">
+  <div class="rta-country-hero-grid">
+    <div class="rta-country-hero-copy">
+      <div class="rta-country-kicker"><span class="rta-country-flag">{flag}</span><span>Country guide · 2026</span></div>
+      <h1>Move to {html.escape(country)}: Visas, Costs and the Real Logic of Relocation</h1>
+      <p>{html.escape(description)}</p>
+      <div class="rta-country-hero-actions"><a class="rta-country-primary" href="#en-visas">Check visas</a><a class="rta-country-secondary" href="#en-costs">See the budget</a></div>
+      <div class="rta-country-hero-meta"><span>Updated 2026</span><span>6-minute overview</span></div>
+    </div>
+    <aside class="rta-country-hero-summary" aria-label="Quick orientation">
+      <p>Quick orientation</p><dl>
+        <div><dt>Monthly budget</dt><dd>{html.escape(budget)}</dd></div>
+        <div><dt>Primary route</dt><dd>{primary_visa}</dd></div>
+        <div><dt>Climate</dt><dd>{html.escape(climate)}</dd></div>
+      </dl>
+    </aside>
   </div>
 </div>
-
-<div class="ep-stats-bar" style="margin-top:28px;">
-  <div class="ep-stat-item">
-    <div class="ep-stat-value">{html.escape(budget)}</div>
-    <div class="ep-stat-label">Budget / month</div>
-  </div>
-  <div class="ep-stat-item">
-    <div class="ep-stat-value">{html.escape(climate)}</div>
-    <div class="ep-stat-label">Climate</div>
-  </div>
-  <div class="ep-stat-item">
-    <div class="ep-stat-value">{html.escape(english_level)}</div>
-    <div class="ep-stat-label">English</div>
-  </div>
-  <div class="ep-stat-item">
-    <div class="ep-stat-value">{primary_visa}</div>
-    <div class="ep-stat-label">Primary Visa</div>
-  </div>
-</div>
-
-<div class="ep-visa-tags">{visa_tags_html}</div>
-
-<div class="ep-layout">
+{jump_nav_html}
+{facts_band_html}
+<div class="ep-layout rta-country-layout">
   <div class="ep-main">
 
     <div class="ep-section" id="en-overview">
@@ -2873,12 +2899,6 @@ def en_country_article(slug: str, facts: sqlite3.Row | None) -> str:
       </div>
     </div>
 
-    <div class="ep-section" id="en-facts">
-      <p class="ep-section-label">Data</p>
-      <h2 class="ep-h2">About {html.escape(country)}</h2>
-      <p class="ep-p">World Bank data ({html.escape(str(year))}). Use as planning context — verify current figures before making decisions.</p>
-    </div>
-
     {search_faq}
 
     <div class="ep-cta">
@@ -2890,7 +2910,6 @@ def en_country_article(slug: str, facts: sqlite3.Row | None) -> str:
     </div>
 
   </div>
-  <div class="ep-sidebar">{sidebar_html}</div>
 </div>
 """
 
@@ -2955,9 +2974,304 @@ def _ru_visas_full_content() -> str:
 </section>"""
 
 
+def _ru_countries_catalog_content() -> str:
+    catalog_notes = {
+        "move-to-thailand": "Медицина, выбор городов и несколько long-stay сценариев.",
+        "move-to-malaysia": "Английский, городская инфраструктура и понятный повседневный быт.",
+        "move-to-bali": "Островной ритм, remote-work среда и сильная зависимость от района.",
+        "move-to-vietnam": "Доступный месяц жизни и динамичные города, но сложнее с long-stay логикой.",
+        "move-to-taiwan": "Безопасность, медицина и профессиональные маршруты для сильных профилей.",
+        "move-to-japan": "Высокое качество среды и короткий digital-nomad маршрут.",
+        "move-to-china": "Большой рынок и развитые мегаполисы при более сложной адаптации.",
+        "move-to-singapore": "Максимум инфраструктуры и карьерных возможностей при высоком бюджете.",
+        "move-to-south-korea": "Технологичная городская среда, безопасность и быстрый ритм.",
+        "move-to-philippines": "Английский, острова и отдельные маршруты для пенсионного сценария.",
+        "move-to-uae": "Международный рынок, высокий сервис и дорогой старт переезда.",
+        "move-to-cambodia": "Низкие расходы и простой быт, но медицина требует запасного плана.",
+        "move-to-sri-lanka": "Океан, природа и спокойный ритм вне крупных деловых центров.",
+        "move-to-india": "Tech-рынок, большой выбор городов и очень разный уровень среды.",
+        "move-to-nepal": "Невысокий бюджет и природа для тех, кому не нужна мегаполисная система.",
+        "move-to-laos": "Тихая жизнь и низкие расходы при ограниченной инфраструктуре.",
+        "move-to-kazakhstan": "Современные города, русский язык и удобная база в Центральной Азии.",
+        "move-to-brunei": "Безопасность и высокий уровень доходов в небольшом закрытом рынке.",
+        "move-to-myanmar": "Низкая стоимость жизни, но критически важна проверка текущей ситуации.",
+        "move-to-uzbekistan": "Доступный быт, растущие города и удобная региональная база.",
+    }
+    regions = [
+        ("Юго-Восточная Азия", "Самый широкий выбор бюджетов и форматов жизни", [
+            "move-to-thailand", "move-to-malaysia", "move-to-bali", "move-to-vietnam",
+            "move-to-singapore", "move-to-philippines", "move-to-cambodia", "move-to-laos",
+            "move-to-myanmar", "move-to-brunei",
+        ]),
+        ("Восточная Азия", "Сильная инфраструктура и более высокий порог входа", [
+            "move-to-taiwan", "move-to-japan", "move-to-china", "move-to-south-korea",
+        ]),
+        ("Южная Азия", "Контрастные города, природа и большой разброс качества среды", [
+            "move-to-sri-lanka", "move-to-india", "move-to-nepal",
+        ]),
+        ("Центральная Азия", "Близкая логистика и города с более доступным стартом", [
+            "move-to-kazakhstan", "move-to-uzbekistan",
+        ]),
+        ("Персидский залив", "Международная карьера и высокий уровень сервиса", ["move-to-uae"]),
+    ]
+
+    def country_row(slug: str) -> str:
+        data = RU_COUNTRY_DATA[slug]
+        return f"""
+        <a class="rta-directory-row" href="/ru/countries/{slug}/">
+          <span class="rta-directory-flag" aria-hidden="true">{COUNTRY_FLAGS.get(slug, '✦')}</span>
+          <span class="rta-directory-copy"><strong>{html.escape(ru_country_display(slug))}</strong><small>{html.escape(catalog_notes[slug])}</small></span>
+          <span class="rta-directory-meta"><b>{html.escape(data['budget'])}</b><small>{html.escape(data['visa_label'])}</small></span>
+          <span class="rta-directory-arrow" aria-hidden="true">↗</span>
+        </a>"""
+
+    region_html = "".join(
+        f"""
+        <section class="rta-directory-region">
+          <header><p>{html.escape(subtitle)}</p><h3>{html.escape(title)}</h3></header>
+          <div>{''.join(country_row(country_slug) for country_slug in slugs)}</div>
+        </section>"""
+        for title, subtitle, slugs in regions
+    )
+
+    scenario_rows = [
+        ("01", "Удалённая работа", "Таиланд · Малайзия · Бали · Тайвань", "/ru/guides/best-asian-countries-with-easy-long-stay-visas/"),
+        ("02", "Семья и инфраструктура", "Малайзия · Сингапур · Япония · ОАЭ", "/ru/guides/best-asian-countries-for-remote-workers-with-family/"),
+        ("03", "Бюджет до $1 500", "Вьетнам · Камбоджа · Лаос · Индия", "/ru/guides/where-to-live-in-asia-on-1500-a-month/"),
+        ("04", "Пенсионный сценарий", "Таиланд · Малайзия · Филиппины · Бали", "/ru/retire-in-asia/"),
+    ]
+    scenarios_html = "".join(
+        f'<a href="{url}"><span>{number}</span><strong>{title}</strong><small>{countries}</small><b aria-hidden="true">→</b></a>'
+        for number, title, countries, url in scenario_rows
+    )
+
+    featured_slugs = ["move-to-malaysia", "move-to-vietnam", "move-to-bali", "move-to-taiwan"]
+    featured_html = "".join(country_row(item) for item in featured_slugs)
+    thailand = RU_COUNTRY_DATA["move-to-thailand"]
+
+    return f"""
+<article class="rta-country-directory">
+  <header class="rta-directory-hero">
+    <div class="rta-directory-hero-copy">
+      <p class="rta-directory-eyebrow">Relocate to Asia · выбор направления</p>
+      <h1>Найдите страну, которая подходит вашей жизни</h1>
+      <p>Не начинайте с красивой картинки. Сначала сопоставьте визу, бюджет, работу, медицину и город — затем открывайте подробный гайд.</p>
+      <div class="rta-directory-actions">
+        <a class="rta-directory-primary" href="#all-countries">Смотреть все страны</a>
+        <a href="/ru/compare/">Сравнить направления</a>
+      </div>
+    </div>
+    <div class="rta-directory-hero-stats" aria-label="О каталоге">
+      <div><strong>20</strong><span>направлений</span></div>
+      <div><strong>5</strong><span>регионов</span></div>
+      <div><strong>2026</strong><span>актуальный обзор</span></div>
+    </div>
+  </header>
+
+  <nav class="rta-directory-nav" aria-label="Навигация по каталогу">
+    <a href="#start">С чего начать</a><a href="#popular">Популярные страны</a><a href="#all-countries">Все направления</a><a href="/ru/compare/">Сравнение</a>
+  </nav>
+
+  <section class="rta-directory-scenarios" id="start">
+    <header><p>Начните не со страны, а с задачи</p><h2>Как вы хотите жить после переезда?</h2></header>
+    <div>{scenarios_html}</div>
+  </section>
+
+  <section class="rta-directory-featured" id="popular">
+    <div class="rta-directory-spotlight">
+      <div class="rta-directory-spotlight-visual"><span>🇹🇭</span><small>Страна в фокусе</small></div>
+      <div class="rta-directory-spotlight-copy">
+        <p>Сильный универсальный старт</p>
+        <h2>Таиланд</h2>
+        <p>{html.escape(catalog_notes['move-to-thailand'])}</p>
+        <dl><div><dt>Бюджет</dt><dd>{html.escape(thailand['budget'])}/мес.</dd></div><div><dt>Маршруты</dt><dd>{html.escape(thailand['visa_label'])}</dd></div></dl>
+        <a href="/ru/countries/move-to-thailand/">Открыть гид по Таиланду →</a>
+      </div>
+    </div>
+    <div class="rta-directory-shortlist">
+      <header><p>Ещё четыре направления для первого сравнения</p><h2>Короткий список</h2></header>
+      {featured_html}
+    </div>
+  </section>
+
+  <section class="rta-directory-all" id="all-countries">
+    <header><p>Каталог по регионам</p><h2>Все страны</h2><span>Ориентиры бюджета нужны для первого фильтра. Реальная сумма зависит от города, района, сезона и визового сценария.</span></header>
+    {region_html}
+  </section>
+
+  <section class="rta-directory-compare">
+    <div><p>Следующий шаг</p><h2>Не выбирайте в одиночку</h2><span>Поставьте две страны рядом и сравните бюджет, интернет, медицину и визовую логику.</span></div>
+    <a href="/ru/compare/">Перейти к сравнению →</a>
+  </section>
+</article>
+"""
+
+
+def _en_countries_catalog_content() -> str:
+    notes = {
+        "move-to-thailand": "Healthcare, city choice and several practical long-stay routes.",
+        "move-to-malaysia": "English, strong infrastructure and easier day-to-day navigation.",
+        "move-to-bali": "Island lifestyle, remote-work community and major neighborhood trade-offs.",
+        "move-to-vietnam": "Affordable cities and fast daily life, with weaker long-stay clarity.",
+        "move-to-taiwan": "Safety, healthcare and professional routes for qualified applicants.",
+        "move-to-japan": "Exceptional urban quality with a short digital-nomad stay.",
+        "move-to-china": "Large market and advanced cities with a steeper adaptation curve.",
+        "move-to-singapore": "Top-tier infrastructure and careers at a premium monthly cost.",
+        "move-to-south-korea": "Technology, safety and a fast, highly urban rhythm.",
+        "move-to-philippines": "English, islands and dedicated retirement options.",
+        "move-to-uae": "International careers, polished services and a costly setup month.",
+        "move-to-cambodia": "Low living costs, while healthcare needs a backup plan.",
+        "move-to-sri-lanka": "Ocean, nature and a slower rhythm outside business hubs.",
+        "move-to-india": "Tech markets and enormous variation between cities.",
+        "move-to-nepal": "Low costs and nature for people who do not need a major-city system.",
+        "move-to-laos": "Quiet daily life and low costs with limited infrastructure.",
+        "move-to-kazakhstan": "Modern cities and a practical Central Asian base.",
+        "move-to-brunei": "Safety and high incomes in a small, selective market.",
+        "move-to-myanmar": "Low costs, but current conditions require extra caution.",
+        "move-to-uzbekistan": "Affordable living and fast-changing regional cities.",
+    }
+    regions = [
+        ("Southeast Asia", "The broadest mix of budgets and lifestyles", ["move-to-thailand", "move-to-malaysia", "move-to-bali", "move-to-vietnam", "move-to-singapore", "move-to-philippines", "move-to-cambodia", "move-to-laos", "move-to-myanmar", "move-to-brunei"]),
+        ("East Asia", "Powerful infrastructure with a higher entry threshold", ["move-to-taiwan", "move-to-japan", "move-to-china", "move-to-south-korea"]),
+        ("South Asia", "Contrasting cities, nature and daily-life conditions", ["move-to-sri-lanka", "move-to-india", "move-to-nepal"]),
+        ("Central Asia", "Accessible urban bases and easier regional logistics", ["move-to-kazakhstan", "move-to-uzbekistan"]),
+        ("The Gulf", "International careers and premium services", ["move-to-uae"]),
+    ]
+
+    def row(slug: str) -> str:
+        data = RU_COUNTRY_DATA[slug]
+        return f"""<a class="rta-directory-row" href="/countries/{slug}/"><span class="rta-directory-flag" aria-hidden="true">{COUNTRY_FLAGS.get(slug, '✦')}</span><span class="rta-directory-copy"><strong>{html.escape(COUNTRY_EN_NAMES[slug])}</strong><small>{html.escape(notes[slug])}</small></span><span class="rta-directory-meta"><b>{html.escape(_normalize_budget_en(data['budget']))}</b><small>{html.escape(data['visa_label'])}</small></span><span class="rta-directory-arrow" aria-hidden="true">↗</span></a>"""
+
+    region_html = "".join(f'<section class="rta-directory-region"><header><p>{subtitle}</p><h3>{title}</h3></header><div>{"".join(row(slug) for slug in slugs)}</div></section>' for title, subtitle, slugs in regions)
+    scenarios = [
+        ("01", "Remote work", "Thailand · Malaysia · Bali · Taiwan", "/guides/best-asian-countries-with-easy-long-stay-visas/"),
+        ("02", "Family and infrastructure", "Malaysia · Singapore · Japan · UAE", "/guides/best-asian-countries-for-remote-workers-with-family/"),
+        ("03", "Budget up to $1,500", "Vietnam · Cambodia · Laos · India", "/guides/where-to-live-in-asia-on-1500-a-month/"),
+        ("04", "Retirement", "Thailand · Malaysia · Philippines · Bali", "/retire-in-asia/"),
+    ]
+    scenarios_html = "".join(f'<a href="{url}"><span>{number}</span><strong>{title}</strong><small>{countries}</small><b aria-hidden="true">→</b></a>' for number, title, countries, url in scenarios)
+    featured = "".join(row(slug) for slug in ["move-to-malaysia", "move-to-vietnam", "move-to-bali", "move-to-taiwan"])
+    thailand = RU_COUNTRY_DATA["move-to-thailand"]
+    return f"""
+<article class="rta-country-directory">
+  <header class="rta-directory-hero"><div class="rta-directory-hero-copy"><p class="rta-directory-eyebrow">Relocate to Asia · destination finder</p><h1>Find a country that fits your real life</h1><p>Start with legal stay, budget, work, healthcare and the city—not a beautiful image.</p><div class="rta-directory-actions"><a class="rta-directory-primary" href="#all-countries">Browse all countries</a><a href="/compare/">Compare destinations</a></div></div><div class="rta-directory-hero-stats" aria-label="About this directory"><div><strong>20</strong><span>destinations</span></div><div><strong>5</strong><span>regions</span></div><div><strong>2026</strong><span>planning overview</span></div></div></header>
+  <nav class="rta-directory-nav" aria-label="Directory navigation"><a href="#start">Start with your goal</a><a href="#popular">Popular choices</a><a href="#all-countries">All destinations</a><a href="/compare/">Compare</a></nav>
+  <section class="rta-directory-scenarios" id="start"><header><p>Start with the life you want</p><h2>What should the move make easier?</h2></header><div>{scenarios_html}</div></section>
+  <section class="rta-directory-featured" id="popular"><div class="rta-directory-spotlight"><div class="rta-directory-spotlight-visual"><span>🇹🇭</span><small>Destination in focus</small></div><div class="rta-directory-spotlight-copy"><p>A strong all-round starting point</p><h2>Thailand</h2><p>{notes['move-to-thailand']}</p><dl><div><dt>Budget</dt><dd>{_normalize_budget_en(thailand['budget'])}/mo</dd></div><div><dt>Routes</dt><dd>{thailand['visa_label']}</dd></div></dl><a href="/countries/move-to-thailand/">Open the Thailand guide →</a></div></div><div class="rta-directory-shortlist"><header><p>Four more countries for a first comparison</p><h2>Shortlist</h2></header>{featured}</div></section>
+  <section class="rta-directory-all" id="all-countries"><header><p>Browse by region</p><h2>All countries</h2><span>Budget ranges are a first filter. City, neighborhood, season and visa route decide the real number.</span></header>{region_html}</section>
+  <section class="rta-directory-compare"><div><p>Next step</p><h2>Put two options side by side</h2><span>Compare costs, connectivity, healthcare and visa logic before choosing.</span></div><a href="/compare/">Open the comparison tool →</a></section>
+</article>"""
+
+
+def _ru_guides_catalog_content() -> str:
+    guide_groups = [
+        (
+            "Визовые ограничения",
+            "Срок stay, доход и требования, которые могут остановить план до выбора города.",
+            [
+                ("01", "Япония", "Можно ли продлить Japan Digital Nomad Visa?", "Главный вопрос — шестимесячный лимит и отсутствие обычного продления.", "can-you-extend-japan-digital-nomad-visa"),
+                ("02", "Япония", "Требование к доходу для Japan Digital Nomad Visa", "Какие подтверждения нужны и почему формальное соответствие ещё не означает удобный переезд.", "japan-digital-nomad-visa-income-requirement"),
+                ("03", "Тайвань", "Доход для Taiwan Gold Card", "Как читать профессиональные категории, пороги и альтернативные критерии.", "taiwan-gold-card-income-requirement"),
+                ("04", "Таиланд", "Thailand DTV или LTR Visa", "Гибкий маршрут и строгий long-stay статус решают разные задачи.", "thailand-dtv-vs-ltr-visa"),
+            ],
+        ),
+        (
+            "Сравнения маршрутов",
+            "Когда две визы выглядят похоже, но требуют разного дохода, работодателя и срока жизни.",
+            [
+                ("05", "Малайзия / Таиланд", "DE Rantau или Thailand DTV", "Сравнение логики работодателя, срока пребывания и продления.", "malaysia-de-rantau-vs-thailand-dtv"),
+                ("06", "Филиппины / Таиланд", "SRRV или пенсионная виза Таиланда", "Депозит, возраст, медицина и повседневная устойчивость пенсионного плана.", "philippines-srrv-vs-thailand-retirement-visa"),
+                ("07", "Вьетнам / Таиланд", "Vietnam eVisa или Thailand DTV", "Короткий тест страны против более длинного remote-work сценария.", "vietnam-evisa-vs-thailand-dtv"),
+            ],
+        ),
+        (
+            "Выбор страны и бюджета",
+            "Гайды для первого shortlist, когда конкретная страна ещё не выбрана.",
+            [
+                ("08", "Long-stay", "Страны Азии с более простыми long-stay визами", "Что именно считать простотой: документы, срок, депозит или продление.", "best-asian-countries-with-easy-long-stay-visas"),
+                ("09", "Семья", "Страны Азии для удалёнщиков с семьёй", "Dependants, школы, медицина и бюджет, который выдерживает не только аренду.", "best-asian-countries-for-remote-workers-with-family"),
+                ("10", "Бюджет", "Где жить в Азии на $1 500 в месяц", "Города и компромиссы, которые скрываются за средними ценами по стране.", "where-to-live-in-asia-on-1500-a-month"),
+            ],
+        ),
+    ]
+
+    def guide_row(item: tuple[str, str, str, str, str]) -> str:
+        number, label, title, description, slug = item
+        return f"""
+        <a class="rta-guide-row" href="/ru/guides/{slug}/">
+          <span class="rta-guide-number">{number}</span>
+          <span class="rta-guide-copy"><small>{html.escape(label)}</small><strong>{html.escape(title)}</strong><span>{html.escape(description)}</span></span>
+          <b aria-hidden="true">↗</b>
+        </a>"""
+
+    groups_html = "".join(
+        f"""
+        <section class="rta-guide-group">
+          <header><p>{html.escape(description)}</p><h2>{html.escape(title)}</h2></header>
+          <div>{''.join(guide_row(item) for item in items)}</div>
+        </section>"""
+        for title, description, items in guide_groups
+    )
+
+    return f"""
+<article class="rta-guides-directory">
+  <header class="rta-guides-hero">
+    <div>
+      <p class="rta-guides-eyebrow">Практическая библиотека · 2026</p>
+      <h1>Один вопрос. Один понятный следующий шаг.</h1>
+      <p>Гайды помогают проверить конкретное ограничение до того, как вы потратите время на страну, визу или бюджет, которые вам не подходят.</p>
+      <div class="rta-guides-actions"><a href="#guide-library">Найти свой вопрос</a><a href="/ru/countries/">Сначала выбрать страну</a></div>
+    </div>
+    <aside aria-label="О библиотеке">
+      <div><strong>10</strong><span>практических гайдов</span></div>
+      <div><strong>3</strong><span>типа решений</span></div>
+      <div><strong>0</strong><span>продаж визовых услуг</span></div>
+    </aside>
+  </header>
+
+  <nav class="rta-guides-nav" aria-label="Навигация по гайдам">
+    <a href="#how-to-use">Как пользоваться</a><a href="#guide-library">Все гайды</a><a href="/ru/visas/">Визы</a><a href="/ru/compare/">Сравнение стран</a>
+  </nav>
+
+  <section class="rta-guides-method" id="how-to-use">
+    <header><p>Правильный порядок</p><h2>Сначала найдите ограничение, которое может сломать план</h2></header>
+    <ol>
+      <li><span>01</span><strong>Срок и статус</strong><p>Сколько можно находиться в стране, есть ли продление и подходит ли маршрут вашей работе.</p></li>
+      <li><span>02</span><strong>Деньги и документы</strong><p>Как подтверждаются доход, сбережения, работодатель, страховка и dependants.</p></li>
+      <li><span>03</span><strong>Город и реальный месяц</strong><p>Только после визы сравнивайте аренду, медицину, транспорт и повседневный ритм.</p></li>
+    </ol>
+  </section>
+
+  <section class="rta-guides-featured">
+    <div class="rta-guides-featured-mark"><span>JP</span><small>Гайд для быстрого решения</small></div>
+    <div>
+      <p>Начните с главного ограничения</p>
+      <h2>Можно ли продлить digital nomad визу Японии?</h2>
+      <p>Короткий маршрут не становится долгосрочным только потому, что страна подходит по lifestyle. Сначала проверьте лимит пребывания и правило продления.</p>
+      <a href="/ru/guides/can-you-extend-japan-digital-nomad-visa/">Открыть гайд →</a>
+    </div>
+  </section>
+
+  <section class="rta-guides-library" id="guide-library">
+    <header><p>Все материалы</p><h2>Выберите вопрос, который у вас уже есть</h2><span>Если конкретного вопроса пока нет, начните с каталога стран или инструмента сравнения.</span></header>
+    {groups_html}
+  </section>
+
+  <section class="rta-guides-next">
+    <div><p>Не нашли точную пару?</p><h2>Соберите shortlist из двух стран</h2><span>Сравнение поможет увидеть, какой визовый или бюджетный вопрос нужно исследовать следующим.</span></div>
+    <a href="/ru/compare/">Сравнить страны →</a>
+  </section>
+</article>
+"""
+
+
 def ru_hub_content(slug: str) -> str | None:
     if slug == "visas":
         return _ru_visas_full_content()
+    if slug == "countries":
+        return _ru_countries_catalog_content()
+    if slug == "guides":
+        return _ru_guides_catalog_content()
     hubs = {
         "__home__": ("Переезд в Азию: страны, визы и расходы", "Главная задача сайта — помочь выбрать страну не по красивой картинке, а по реальным ограничениям: визе, бюджету, медицине, городу и сроку проживания.", [("Страны", "Сначала сузьте shortlist по бюджету и визовой логике."), ("Визы", "Проверьте stay, продление, доход и dependants до аренды."), ("Инструменты", "Посчитайте месячный бюджет и стартовые расходы до переезда.")]),
         "countries": ("Страны Азии для релокации", "Эта страница нужна не для вдохновения, а для первого отбора. Сравнивайте страны по визе, бюджету, медицине, интернету и тому, насколько городская жизнь совпадает с вашим сценарием.", [("Таиланд", "Сильный lifestyle и медицина, но визовый маршрут надо выбирать аккуратно."), ("Малайзия", "Английский, инфраструктура и понятные города для long-stay сценариев."), ("Вьетнам", "Сильный бюджетный вариант, но long-stay логику нельзя оставлять на потом.")]),
@@ -2975,7 +3289,10 @@ def ru_hub_content(slug: str) -> str | None:
     if not data:
         return None
     title, intro, cards = data
-    card_html = "\n".join(f'<div class="rta-hub-card"><h3>{html.escape(card_title)}</h3><p>{html.escape(text)}</p></div>' for card_title, text in cards)
+    priority_rows = "\n".join(
+        f'<div class="rta-hub-priority"><span>{index:02d}</span><strong>{html.escape(card_title)}</strong><p>{html.escape(text)}</p></div>'
+        for index, (card_title, text) in enumerate(cards, start=1)
+    )
     default_copy = (
         "Смотрите на страницу как на первый фильтр, а не как на готовый ответ. Если визовый маршрут, бюджет и срок проживания не сходятся, красивое направление лучше убрать из shortlist до оплаты жилья и билетов.",
         "Как принимать решение",
@@ -3075,21 +3392,44 @@ def ru_hub_content(slug: str) -> str | None:
         ),
     }.get(slug, default_copy)
     summary, decision_title, decision_one, decision_two, next_title, next_text = hub_copy
-    return f"""<style>.rta-hub{{max-width:1040px;margin:0 auto}}.rta-hub-hero{{background:linear-gradient(135deg,#0a1628,#1a3a6c);color:#fff;padding:46px 32px;border-radius:8px;margin-bottom:28px;box-shadow:0 10px 30px rgba(15,52,96,.12)}}.rta-hub-hero .badge{{display:inline-block;border:1px solid rgba(255,255,255,.3);border-radius:8px;padding:5px 12px;margin-bottom:14px;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}}.rta-hub-hero h1{{color:#fff!important;margin:0 0 12px;font-size:clamp(30px,4vw,46px);line-height:1.12}}.rta-hub-hero p{{max-width:760px;margin:0;color:rgba(255,255,255,.86);font-size:17px;line-height:1.7}}.rta-hub h2{{color:#0a1628;font-size:clamp(24px,3vw,34px);line-height:1.18;margin:30px 0 14px}}.rta-hub>p{{color:#4f5f73;line-height:1.7;font-size:16px;margin:0 0 16px}}.rta-hub-grid{{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:18px 0 28px}}.rta-hub-card{{background:#fff;border:1px solid #e3e9f2;border-radius:8px;padding:18px;box-shadow:0 8px 24px rgba(15,52,96,.06)}}.rta-hub-card h3{{margin:0 0 8px;color:#0a1628;font-size:18px;line-height:1.3}}.rta-hub-card p{{margin:0;color:#4f5f73;line-height:1.7}}@media(max-width:720px){{.rta-hub-grid{{grid-template-columns:1fr}}.rta-hub-hero{{padding:32px 18px}}}}</style>
-<section class="rta-hub">
-  <div class="rta-hub-hero">
-    <div class="badge">Гид 2026</div>
-    <h1>{html.escape(title)}</h1>
-    <p>{html.escape(intro)}</p>
-  </div>
-  <h2>Короткий вывод</h2>
-  <p>{html.escape(summary)}</p>
-  <div class="rta-hub-grid">{card_html}</div>
-  <h2>{html.escape(decision_title)}</h2>
-  <p>{html.escape(decision_one)}</p>
-  <p>{html.escape(decision_two)}</p>
-  <h2>{html.escape(next_title)}</h2>
-  <p>{html.escape(next_text)}</p>
+    hub_mark = {
+        "move-to-asia": "ASIA",
+        "digital-nomad-visas-asia": "DN",
+        "retire-in-asia": "50+",
+    }.get(slug, "R/A")
+    return f"""
+<section class="rta-hub rta-premium-hub">
+  <header class="rta-hub-hero">
+    <div class="rta-hub-hero-copy">
+      <p class="rta-hub-eyebrow">Практический гид · 2026</p>
+      <h1>{html.escape(title)}</h1>
+      <p>{html.escape(intro)}</p>
+      <div class="rta-hub-actions"><a href="#hub-priorities">Начать проверку</a><a href="/ru/compare/">Сравнить страны</a></div>
+    </div>
+    <aside><span>{hub_mark}</span><small>Решение начинается с ограничений, а не с рейтинга.</small></aside>
+  </header>
+
+  <nav class="rta-hub-nav" aria-label="Навигация по странице"><a href="#hub-verdict">Вывод</a><a href="#hub-priorities">Ключевые проверки</a><a href="#hub-decision">Как решить</a><a href="#hub-next">Следующий шаг</a></nav>
+
+  <section class="rta-hub-verdict" id="hub-verdict">
+    <div><p>Короткий вывод</p><h2>Что важно понять до выбора</h2></div>
+    <p>{html.escape(summary)}</p>
+  </section>
+
+  <section class="rta-hub-priorities" id="hub-priorities">
+    <header><p>Три фильтра</p><h2>Что проверять в первую очередь</h2></header>
+    <div>{priority_rows}</div>
+  </section>
+
+  <section class="rta-hub-decision" id="hub-decision">
+    <div><p>Логика решения</p><h2>{html.escape(decision_title)}</h2></div>
+    <div><p>{html.escape(decision_one)}</p><p>{html.escape(decision_two)}</p></div>
+  </section>
+
+  <section class="rta-hub-next" id="hub-next">
+    <div><p>Продолжить исследование</p><h2>{html.escape(next_title)}</h2><span>{html.escape(next_text)}</span></div>
+    <div><a href="/ru/countries/">Выбрать страну →</a><a href="/ru/visas/">Проверить визу →</a><a href="/ru/tools/budget-planner/">Посчитать бюджет →</a></div>
+  </section>
 </section>
 """
 
@@ -3959,6 +4299,8 @@ def localized_simple_page_content(slug: str, title: str, content: str) -> tuple[
     content = localized_generic_content(content)
     title = RU_STATIC_TITLES.get(slug, title)
     use_ru_hub = slug in {
+        "countries",
+        "guides",
         "visas",
         "move-to-asia",
         "digital-nomad-visas-asia",
@@ -4199,6 +4541,9 @@ def localized_simple_page_content(slug: str, title: str, content: str) -> tuple[
             ("Built for Real Relocation Decisions", "Собрано под реальные решения о переезде"),
             ("Real Cost Data", "Реальные данные по расходам"),
             ("Not generic travel data — purpose-built for people planning a permanent or long-term move to Asia.", "Это не туристические советы, а рабочие инструменты для тех, кто планирует долгий или постоянный переезд в Азию."),
+            ("COUNTRIES", "СТРАНЫ"),
+            ("Расчёты подстраиваются под сценарий: экономный переезд, средний бюджет или комфортный профессиональный профиль. Not one-size-fits-all.", "Расчёты подстраиваются под сценарий: экономный переезд, средний бюджет или комфортный профессиональный профиль."),
+            ("Оценки опираются на агрегированные экспат-отчёты, индексы стоимости жизни и локальные проверки. Данные нужно воспринимать как ориентир, а не как обещание точной цены. Estimates are accurate within 10–15% for most образ жизни types. Реальные расходы зависят от района, привычек и рынка жилья.", "Оценки опираются на агрегированные экспат-отчёты, индексы стоимости жизни и локальные проверки. Для большинства сценариев это ориентир с погрешностью примерно 10–15%, но район, привычки и рынок жилья всё равно меняют итог."),
         ],
         "cost-calculator": [
             ("Cost of Living Calculator — Asia 2026", "Калькулятор стоимости жизни в Азии — 2026"),
@@ -4674,6 +5019,17 @@ def localized_simple_page_content(slug: str, title: str, content: str) -> tuple[
     )
     content = content.replace("Entertainment & misc", "Досуг и прочее")
     content = content.replace("mix local + western", "местная + западная")
+    if slug == "tools":
+        content = content.replace("<div class=\"tp-stat-lbl\">Countries</div>", "<div class=\"tp-stat-lbl\">СТРАНЫ</div>")
+        content = content.replace(
+            "Расчёты подстраиваются под сценарий: экономный переезд, средний бюджет или комфортный профессиональный профиль. Not one-size-fits-all.",
+            "Расчёты подстраиваются под сценарий: экономный переезд, средний бюджет или комфортный профессиональный профиль.",
+        )
+        content = re.sub(r"\s*Not one-size-fits-all\.", "", content)
+        content = content.replace(
+            "Оценки опираются на агрегированные экспат-отчёты, индексы стоимости жизни и локальные проверки. Данные нужно воспринимать как ориентир, а не как обещание точной цены. Estimates are accurate within 10–15% for most образ жизни types. Реальные расходы зависят от района, привычек и рынка жилья.",
+            "Оценки опираются на агрегированные экспат-отчёты, индексы стоимости жизни и локальные проверки. Для большинства сценариев это ориентир с погрешностью примерно 10–15%, но район, привычки и рынок жилья всё равно меняют итог.",
+        )
     return title, content
 
 
@@ -6259,7 +6615,7 @@ def page_source_panel(path: str, *, lang: str) -> dict | None:
         return {
             "eyebrow": "Самопроверка",
             "title": "Официальные источники, которые стоит открыть до бронирования",
-            "intro": "Блог даёт общую картину, но визовые условия меняются. Срок пребывания, возможность продления, требования к доходу, страховке и список разрешённых занятий — всё это лучше уточнить напрямую, до того как платить за аренду или покупать билеты.",
+            "intro": "Гайд даёт общую картину, но визовые условия меняются. Срок пребывания, возможность продления, требования к доходу, страховке и список разрешённых занятий лучше уточнить напрямую до оплаты аренды или билетов.",
             "sources": panel_sources[:10],
             "checks": ["срок пребывания", "продление", "доход", "страховка", "иждивенцы", "разрешённые занятия"],
         }
@@ -6665,7 +7021,7 @@ COUNTRY_DEPTH_DATA: dict[str, dict] = {
     "move-to-thailand": {
         "ru": {
             "sections": [
-                ("Виза: DTV или LTR — не tourist run", "DTV даёт до 180 дней за въезд и действует 5 лет, но не продлевается и требует иностранного дохода. LTR — для тех, у кого $80K+/год подтверждённого дохода. Туристические прыжки через границу — не правовой статус для долгой базы, и с 2023 года иммиграция стала внимательнее к частым въездам."),
+                ("Виза: DTV или LTR — не tourist run", "DTV действует 5 лет и даёт до 180 дней за один въезд; базовое финансовое подтверждение — не менее 500 000 THB, а остальные документы зависят от категории и консульства. LTR работает по отдельным критериям дохода, активов и работодателя. Туристические въезды не заменяют долгосрочный статус."),
                 ("Что это значит по деньгам и городам", "Чиангмай: $800–1200/мес комфортно, Бангкок $1500+, Пхукет и Самуи — туристические цены даже в несезон. Медицина: Bumrungrad и Samitivej в Бангкоке — международный уровень, консультация $40–80."),
                 ("Кому стоит быть осторожнее", "Тем, кто планирует жить на туристических въездах — это не устойчивый план. Чиангмай с февраля по апрель: AQI регулярно выше 200 — дым от сельскохозяйственных пожаров — это реальная проблема, не фон. DTV не разрешает работу на тайских работодателей."),
             ],
@@ -7588,6 +7944,8 @@ def render_page_row(row: sqlite3.Row | dict, **kwargs):
         if row.get("content"):
             row["content"] = sentence_case_ru_headings(row["content"])
             row["content"] = polish_ru_text(row["content"])
+            # Sentence-case normalization must not lowercase the project name.
+            row["content"] = re.sub(r"relocate to asia", "Relocate to Asia", row["content"], flags=re.IGNORECASE)
         breadcrumbs = polish_ru_data(breadcrumbs)
     path = local_path(kwargs.get("canonical_path") or (row["link"] if "link" in row.keys() and row["link"] else request.path))
     show_breadcrumbs = kwargs.pop("show_breadcrumbs", path not in {"/", "/ru/"})
@@ -7605,7 +7963,24 @@ def render_page_row(row: sqlite3.Row | dict, **kwargs):
         quality_panel_data = polish_ru_data(quality_panel_data)
         source_panel_data = polish_ru_data(source_panel_data)
     internal_links = internal_links_for_page(row, current_path=path)
-    if path in {"/", "/ru/"}:
+    streamlined_hubs = {
+        "/", "/ru/", "/countries/", "/ru/countries/", "/visas/", "/ru/guides/",
+        "/ru/move-to-asia/", "/ru/digital-nomad-visas-asia/", "/ru/retire-in-asia/",
+        "/ru/visas/", "/ru/tools/", "/ru/compare/", "/ru/compare-cities/",
+        "/ru/cost-of-living-asia/", "/ru/best-countries-in-asia-to-move/",
+        "/ru/cheapest-countries-in-asia/",
+        "/about/", "/ru/about/", "/contact/", "/ru/contact/",
+        "/authors/", "/ru/authors/", "/authors/editorial-team/",
+        "/ru/authors/editorial-team/", "/authors/margarita-yarovenko/",
+        "/ru/authors/margarita-yarovenko/", "/editorial-policy/",
+        "/ru/editorial-policy/", "/how-we-verify-data/",
+        "/ru/how-we-verify-data/",
+    }
+    if path.startswith(("/compare/", "/ru/compare/", "/guides/", "/ru/guides/")):
+        streamlined_hubs.add(path)
+    if path in {"/tools/budget-planner/", "/ru/tools/budget-planner/"}:
+        streamlined_hubs.add(path)
+    if path in streamlined_hubs:
         # The homepage already contains destination, tool, comparison and trust
         # sections. Repeating generated support panels adds several screens of
         # content without helping the primary journey.
@@ -7613,7 +7988,7 @@ def render_page_row(row: sqlite3.Row | dict, **kwargs):
         quality_panel_data = None
         source_panel_data = None
         internal_links = []
-    faq_schema = faq_schema_from_html(row["content"], lang=lang) if path not in {"/", "/ru/"} else None
+    faq_schema = faq_schema_from_html(row["content"], lang=lang) if path not in streamlined_hubs else None
     if faq_schema:
         schema.append(faq_schema)
     else:
@@ -7639,7 +8014,7 @@ def render_page_row(row: sqlite3.Row | dict, **kwargs):
     }:
         schema.append(web_application_schema(row["title"], path, row["content"]))
     trust_panel_data = page_trust_panel(path, lang=lang)
-    if path in {"/", "/ru/"}:
+    if path in streamlined_hubs:
         trust_panel_data = None
     if trust_panel_data:
         schema.append(trust_page_schema(row["title"], path))
@@ -8213,7 +8588,8 @@ def ru_home():
 
 @app.route("/countries/")
 def countries_index():
-    row = page_or_404("countries")
+    row = dict(page_or_404("countries"))
+    row["content"] = _en_countries_catalog_content()
     return render_page_row(row, breadcrumbs=[])
 
 
@@ -8282,11 +8658,11 @@ def country(slug: str):
         facts=None if generated else country_facts_for_display(facts, slug, "en"),
         seo=seo,
         breadcrumbs=[("Countries", "/countries/")],
-        internal_links=internal_links,
-        trust_panel=page_trust_panel(path, lang="en"),
+        internal_links=internal_links[:4],
+        trust_panel=None,
         source_panel=source_panel_data,
-        depth_panel=depth_panel_data,
-        quality_panel=quality_panel_data,
+        depth_panel=None,
+        quality_panel=None,
         labels=localized_country_context_labels("en"),
     )
 
@@ -8304,13 +8680,11 @@ def ru_country(slug: str):
     row["content"] = polish_ru_text(row["content"])
     path = f"/ru/countries/{slug}/"
     internal_links = internal_links_for_page(row, current_path=path)
-    depth_panel_data = content_depth_panel(path, row, lang="ru")
     source_panel_data = page_source_panel(path, lang="ru")
-    quality_panel_data = content_quality_panel(path, row, lang="ru")
     internal_links = polish_ru_data(internal_links)
-    depth_panel_data = polish_ru_data(depth_panel_data)
     source_panel_data = polish_ru_data(source_panel_data)
-    quality_panel_data = polish_ru_data(quality_panel_data)
+    if source_panel_data:
+        source_panel_data = {**source_panel_data, "sources": source_panel_data["sources"][:5]}
     schema = [
         breadcrumb_schema([("Страны", "/ru/countries/")], row["title"], path),
         organization_schema(),
@@ -8321,10 +8695,6 @@ def ru_country(slug: str):
     faq_schema = faq_schema_from_html(row["content"], lang="ru")
     if faq_schema:
         schema.append(faq_schema)
-    else:
-        depth_schema = depth_panel_schema(depth_panel_data, path, lang="ru")
-        if depth_schema:
-            schema.append(depth_schema)
     item_list = item_list_schema(f"Internal links for {strip_html(row['title'])}", internal_links)
     if item_list:
         schema.append(item_list)
@@ -8344,15 +8714,15 @@ def ru_country(slug: str):
     return render_template(
         "country.html",
         page=row,
-        facts=country_facts_for_display(facts, slug, "ru"),
+        facts=None,
         seo=seo,
         breadcrumbs=[("Страны", "/ru/countries/")],
-        internal_links=internal_links,
+        internal_links=internal_links[:4],
         lang_code="ru",
-        trust_panel=polish_ru_data(page_trust_panel(path, lang="ru")),
+        trust_panel=None,
         source_panel=source_panel_data,
-        depth_panel=depth_panel_data,
-        quality_panel=quality_panel_data,
+        depth_panel=None,
+        quality_panel=None,
         labels=localized_country_context_labels("ru"),
         home_label="Главная",
     )
@@ -9297,11 +9667,13 @@ def ru_compare_index():
 def ru_compare(slug: str):
     source = page_or_404(slug, parent="compare")
     translated = one("SELECT title, content FROM pages WHERE slug = ? AND parent = ?", (localized_compare_db_slug(slug), "ru-compare"))
-    if translated and strip_html(translated["content"]).strip():
+    if slug == "japan-vs-taiwan":
+        # The database still contains an early compact placeholder for this
+        # comparison. Keep RU and EN on the same full editorial template.
+        title, content = japan_vs_taiwan_article("ru")
+    elif translated and strip_html(translated["content"]).strip():
         title = translated["title"]
         content = normalize_ru_compare_content(_localize_internal_links(localized_generic_content(translated["content"]), lang="ru"))
-    elif slug == "japan-vs-taiwan":
-        title, content = japan_vs_taiwan_article("ru")
     else:
         enhanced = enhanced_compare_article(slug, "ru")
         if enhanced:
@@ -9982,7 +10354,7 @@ TRUST_PAGES_RU = {
   <h2>Что мы публикуем</h2>
   <ul>
     <li>Сравнения стран и городов для экспатов и удалённых специалистов.</li>
-    <li>Визовые и long-stay гайды на основе официальных источников.</li>
+    <li>Визовые и долгосрочные гайды на основе официальных источников.</li>
     <li>Материалы о расходах, образе жизни и реальных ограничениях при переезде по Азии.</li>
     <li>Английские и русские версии там, где перевод действительно помогает читателю.</li>
   </ul>

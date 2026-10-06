@@ -3,9 +3,22 @@
 {% block title %}{{ seo.page_title if seo else (page['title'] ~ " | Relocate to Asia") }}{% endblock %}
 
 {% block content %}
-<div class="rta-content">
+{% set service_paths = ['/about/', '/ru/about/', '/contact/', '/ru/contact/', '/authors/', '/ru/authors/', '/authors/editorial-team/', '/ru/authors/editorial-team/', '/authors/margarita-yarovenko/', '/ru/authors/margarita-yarovenko/', '/editorial-policy/', '/ru/editorial-policy/', '/how-we-verify-data/', '/ru/how-we-verify-data/'] %}
+{% set is_service_page = request.path in service_paths %}
+<div class="rta-content{% if is_service_page %} rta-service-page{% endif %}{% if '/authors/' in request.path %} rta-author-service-page{% endif %}{% if page['slug'] in ['countries', 'ru-countries'] %} rta-directory-page{% elif page['slug'] == 'ru-guides' %} rta-guides-page{% elif page['slug'] in ['ru-move-to-asia', 'ru-digital-nomad-visas-asia', 'ru-retire-in-asia'] %} rta-premium-hub-page{% elif page['slug'] in ['visas', 'ru-visas', 'tools', 'ru-tools', 'ru-compare', 'ru-compare-cities', 'ru-cost-of-living-asia', 'ru-best-countries-in-asia-to-move', 'ru-cheapest-countries-in-asia'] %} rta-core-page{% elif page['parent'] in ['compare', 'ru-compare'] %} rta-comparison-page{% elif page['parent'] in ['guides', 'ru-guides'] %} rta-guide-detail-page{% elif page['slug'] in ['budget-planner', 'ru-budget-planner'] %} rta-budget-page{% endif %}">
   {% set current_title = page['title'] %}
   {% include "_breadcrumbs.html" %}
+
+  {% if is_service_page %}
+  {% set service_prefix = '/ru' if lang_code == 'ru' else '' %}
+  <nav class="rta-service-nav" aria-label="{{ 'О проекте' if lang_code == 'ru' else 'About this project' }}">
+    <a{% if request.path == service_prefix ~ '/about/' %} aria-current="page"{% endif %} href="{{ service_prefix }}/about/">{{ 'О проекте' if lang_code == 'ru' else 'About' }}</a>
+    <a{% if request.path.startswith(service_prefix ~ '/authors/') %} aria-current="page"{% endif %} href="{{ service_prefix }}/authors/">{{ 'Авторы' if lang_code == 'ru' else 'Authors' }}</a>
+    <a{% if request.path == service_prefix ~ '/how-we-verify-data/' %} aria-current="page"{% endif %} href="{{ service_prefix }}/how-we-verify-data/">{{ 'Проверка данных' if lang_code == 'ru' else 'Data review' }}</a>
+    <a{% if request.path == service_prefix ~ '/editorial-policy/' %} aria-current="page"{% endif %} href="{{ service_prefix }}/editorial-policy/">{{ 'Редакционная политика' if lang_code == 'ru' else 'Editorial policy' }}</a>
+    <a{% if request.path == service_prefix ~ '/contact/' %} aria-current="page"{% endif %} href="{{ service_prefix }}/contact/">{{ 'Контакты' if lang_code == 'ru' else 'Contact' }}</a>
+  </nav>
+  {% endif %}
 
   {% if '<h1' not in (page['content'] or '')|lower %}<h1 class="sr-only">{{ page['title'] }}</h1>{% endif %}
   {{ page['content'] | wp_clean | safe }}
