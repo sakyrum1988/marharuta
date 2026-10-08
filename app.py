@@ -278,10 +278,12 @@ RU_PAGE_SEO_DESCRIPTIONS = {
     "budget-planner": "Спланируйте полную стоимость переезда в Азию: визы, перелёт, жильё, первые расходы и финансовый резерв.",
     "compare-cities": "Сравните города Азии по стоимости жизни, безопасности, интернету, медицине и качеству жизни.",
     "best-countries-in-asia-to-move": "Лучшие страны Азии для переезда в 2026 году: сравнение расходов, виз, безопасности, медицины и инфраструктуры.",
-    "cheapest-countries-in-asia": "Сравните самые дешёвые страны Азии для экспатов в 2026 году по аренде, питанию, транспорту и визам.",
+    "cheapest-countries-in-asia": "Самые дешёвые страны Азии для жизни в 2026 году: месячные бюджеты, аренда, питание, транспорт, визы и практические ограничения.",
     "move-to-asia": "Как переехать в Азию в 2026 году: выбор страны и визы, расчёт бюджета, сравнение городов и практический план подготовки.",
     "visas": "Сравните визы стран Азии в 2026 году: маршруты для удалённой работы, долгого проживания, специалистов и пенсионеров.",
-    "digital-nomad-visas-asia": "Сравните digital nomad визы Азии в 2026 году по доходу, сроку пребывания, продлению, документам и семейным условиям.",
+    "digital-nomad-visas-asia": "Сравните digital nomad визы Азии в 2026 году по доходу, сроку пребывания, продлению, документам, работе и условиям для семьи.",
+    "can-you-extend-japan-digital-nomad-visa": "Можно ли продлить Japan Digital Nomad Visa: правило 6 месяцев, повторная подача после выезда, re-entry, документы и альтернативы.",
+    "japan-digital-nomad-visa-income-requirement": "Доход для Japan Digital Nomad Visa: порог 10 млн JPY, документы сотрудника и фрилансера, пересчёт валюты и частые ошибки.",
     "retire-in-asia": "Сравните страны Азии для жизни на пенсии в 2026 году по визам, медицине, депозитам, расходам и устойчивости долгого проживания.",
     "cost-of-living-asia": "Сравните стоимость жизни в странах Азии в 2026 году и рассчитайте бюджет аренды, питания, транспорта, страховки и переезда.",
     "compare": (
@@ -289,16 +291,16 @@ RU_PAGE_SEO_DESCRIPTIONS = {
         "медицине, безопасности и практичности для релокации."
     ),
     "bali-vs-thailand": (
-        "Бали или Таиланд в 2026 году: что дешевле и что лучше для переезда по визам, "
-        "расходам, инфраструктуре и образу жизни."
+        "Что дешевле — Бали или Таиланд в 2026 году? Сравнение расходов, виз, "
+        "медицины, инфраструктуры и сценариев для переезда."
     ),
     "thailand-vs-malaysia": (
-        "Малайзия или Таиланд в 2026 году: что выбрать для переезда по стоимости жизни, "
-        "долгосрочным визам, английскому языку, медицине и семейному сценарию."
+        "Таиланд или Малайзия в 2026 году: что выбрать для жизни и переезда по расходам, "
+        "визам, английскому языку, медицине и семейному сценарию."
     ),
     "japan-vs-taiwan": (
-        "Сравнение Японии и Тайваня для релокации в 2026 году: визовые маршруты, "
-        "профессиональный профиль, стоимость жизни и практические ограничения."
+        "Япония или Тайвань: что лучше для переезда в 2026 году по визам, сроку "
+        "пребывания, стоимости жизни и профессиональному профилю."
     ),
     "thailand-vs-vietnam": (
         "Сравнение Таиланда и Вьетнама для релокации в 2026 году: стоимость, визы, "
@@ -672,17 +674,21 @@ CC_ARTICLE_STYLE = """<style>
 
 
 def ru_cheapest_countries_article() -> tuple[str, str]:
-    title = "Самые дешёвые страны Азии для жизни в 2026 году"
+    title = "Самые дешёвые страны Азии для жизни в 2026 году: цены и бюджет"
     content = """
 <div class="cc-hero">
-<div class="badge">Проверено в марте 2026 · Реальные данные экспатов</div>
-<h1>Самые дешёвые страны Азии для жизни в 2026 году</h1>
-<p>Рейтинг по реальным ежемесячным расходам — жильё, еда, транспорт и образ жизни — для комфортной жизни одного экспата.</p>
+<div class="badge">Обновлено в октябре 2026 · редакционные ориентиры бюджета</div>
+<h1>Самые дешёвые страны Азии для жизни в 2026 году: цены и бюджет</h1>
+<p>Сравнение месячных расходов на жильё, еду, транспорт и повседневную жизнь для одного человека — с поправкой на визы, медицину и качество инфраструктуры.</p>
 <div class="cc-hero-stats">
 <div><strong>$550</strong><span>Минимальный бюджет</span></div>
 <div><strong>9</strong><span>Стран в рейтинге</span></div>
 <div><strong>2026</strong><span>Актуальные данные</span></div>
 </div>
+</div>
+<div class="cc-search-answer">
+<strong>Короткий ответ:</strong> по минимальным бытовым расходам в начале списка обычно оказываются Камбоджа, Лаос и Непал. Для более устойчивого переезда часто практичнее Вьетнам, Таиланд или Малайзия: месяц может стоить дороже, зато проще с инфраструктурой, медициной и повседневными задачами. Поэтому ниже есть не только рейтинг цен, но и ограничения каждого варианта.
+<nav aria-label="Полезные инструменты"><a href="/ru/tools/cost-calculator/">Рассчитать стоимость жизни →</a><a href="/ru/compare/">Сравнить страны →</a><a href="/ru/visas/">Проверить визовые маршруты →</a></nav>
 </div>
 <p>В Азии находятся одни из самых доступных мест для жизни в мире — без жертв комфортом, безопасностью или качеством жизни. Независимо от того, являетесь ли вы бюджетным путешественником, цифровым кочевником или ранним пенсионером, страны в этом списке позволяют жить хорошо за долю того, что вы потратили бы на Западе.</p>
 <p>Все бюджеты ниже представляют <strong>комфортный образ жизни одного человека</strong>: отдельная квартира, питание в кафе, местный транспорт, хороший интернет и редкие развлечения. Ультрабюджетные цифры рассчитаны на совместное жильё и готовку дома.</p>
@@ -947,7 +953,7 @@ def ru_cheapest_countries_article() -> tuple[str, str]:
 <div class="cc-pros"><h4>✓ Плюсы</h4><ul>
 <li>Английский официальный — нет языкового барьера</li>
 <li>Дружелюбная, тёплая культура</li>
-<li>Пенсионная виза SRRV от депозита $10,000</li>
+<li>SRRV для заявителей от 40 лет; депозит зависит от возраста, пенсии и категории</li>
 <li>7,000+ островов для исследования</li>
 </ul></div>
 <div class="cc-cons"><h4>✗ Минусы</h4><ul>
@@ -975,7 +981,7 @@ def ru_cheapest_countries_article() -> tuple[str, str]:
 <div class="cc-budget-item"><span class="val">$2,000</span><span class="lbl">Комфорт+</span></div>
 <div class="cc-budget-item"><span class="val">IDR</span><span class="lbl">Валюта</span></div>
 </div>
-<p>Бали предлагает непревзойдённую ценность образа жизни — коворкинги мирового класса, потрясающая природа, огромное международное сообщество и невероятная еда по ценам ЮВА. Чангу — столица номадов; Убуд — для творческих и духовных; Семиньяк — для вечеринок. Виза цифрового номада (E33G) освобождает иностранный доход от индонезийского налога на 60–180 дней.</p>
+<p>Бали сочетает развитое международное сообщество, природу и сервисы для удалённой работы. E33G — разрешение на ограниченное пребывание для удалённой работы; официальные иммиграционные страницы указывают варианты срока 180 дней, 1 год или 2 года в зависимости от оформленного разрешения. Сам статус E33G не создаёт автоматического освобождения от индонезийских налогов: налоговое резидентство оценивается отдельно, в том числе по правилу 183 дней и намерению проживать в стране.</p>
 <div class="cc-breakdown">
 <h4>Разбивка расходов за месяц — Чангу, Бали 2026</h4>
 <table>
@@ -989,7 +995,7 @@ def ru_cheapest_countries_article() -> tuple[str, str]:
 <div class="cc-cols">
 <div class="cc-pros"><h4>✓ Плюсы</h4><ul>
 <li>Лучшее сообщество номадов в мире</li>
-<li>Иностранный доход освобождён от налога (E33G)</li>
+<li>E33G даёт отдельный иммиграционный маршрут для подходящей удалённой работы</li>
 <li>Невероятная еда и кафе-сцена</li>
 <li>Йога, велнес, сёрф-культура</li>
 </ul></div>
@@ -1018,7 +1024,7 @@ def ru_cheapest_countries_article() -> tuple[str, str]:
 <div class="cc-budget-item"><span class="val">$2,000</span><span class="lbl">Комфорт+</span></div>
 <div class="cc-budget-item"><span class="val">THB</span><span class="lbl">Валюта</span></div>
 </div>
-<p>Чиангмай остаётся самым доступным из крупных экспат-городов Таиланда — от $850/месяц в комфортном режиме. Бангкок дороже ($1,200–1,800 для комфортного образа жизни), но предлагает инфраструктуру и ночную жизнь мирового класса. Хуахин, Паттайя и Самуи привлекают пенсионеров пляжным образом жизни. Виза LTR и Thailand Elite предлагают отличные долгосрочные варианты.</p>
+<p>Чиангмай обычно дешевле Бангкока, а Хуахин, Паттайя и Самуи предлагают другие сценарии жизни у моря. Для долгого пребывания сравнивайте DTV, LTR и Thailand Privilege по собственному профилю: это разные программы с разными документами, сроками и стоимостью.</p>
 <div class="cc-breakdown">
 <h4>Разбивка расходов за месяц — Чиангмай 2026</h4>
 <table>
@@ -1080,7 +1086,7 @@ def ru_cheapest_countries_article() -> tuple[str, str]:
 <li>Современная инфраструктура и метро</li>
 </ul></div>
 <div class="cc-cons"><h4>✗ Минусы</h4><ul>
-<li>MM2H требует подтверждения дохода $40,000+</li>
+<li>MM2H требует крупного депозита и покупки недвижимости по выбранной категории</li>
 <li>Дороже соседей по ЮВА</li>
 <li>Жара и влажность круглый год</li>
 <li>Консервативные законы об алкоголе и поведении</li>
@@ -1140,7 +1146,7 @@ def ru_cheapest_countries_article() -> tuple[str, str]:
 </div>
 <div class="cc-faq-item">
 <h3>В какой дешёвой азиатской стране проще всего получить долгосрочную визу?</h3>
-<p>Камбоджа — самый простой вариант: бизнес-виза продлевается бессрочно без требований к доходу. Таиланд предлагает наибольший выбор (LTR, Elite, пенсионная, образовательная, SMART-виза). MM2H Малайзии — лучшая структурированная долгосрочная виза, но с требованиями к доходу. Вьетнам и Филиппины позволяют продлевать туристические визы на длительный срок.</p>
+<p>У каждой страны своя логика долгого пребывания. В Таиланде есть DTV, LTR, Thailand Privilege и другие категории; MM2H Малайзии требует фиксированного депозита и покупки недвижимости, а не общего порога зарубежного дохода. Туристические продления нельзя считать заменой резидентскому статусу: перед переездом проверяйте конкретную категорию на официальном сайте.</p>
 </div>
 <div class="cc-faq-item">
 <h3>Безопасно ли жить в Азии с минимальным бюджетом?</h3>
@@ -1290,6 +1296,114 @@ def normalize_ru_compare_content(content: str) -> str:
     )
 
 
+def optimize_ru_compare_for_search(slug: str, content: str) -> tuple[str | None, str]:
+    """Put the answer matching high-impression GSC intent before the legacy comparison."""
+    configs = {
+        "bali-vs-thailand": {
+            "title": "Что дешевле — Бали или Таиланд: цены и сравнение в 2026 году",
+            "eyebrow": "Бали vs Таиланд · короткий ответ",
+            "h1": "Бали или Таиланд: где дешевле и лучше жить в 2026 году",
+            "lead": (
+                "Если сравнивать одинаковый уровень комфорта, Чиангмай обычно дешевле популярных "
+                "районов юга Бали. Бангкок, Пхукет и Самуи могут стоить столько же или дороже. "
+                "Таиланд чаще выигрывает по медицине и выбору городов, Бали — по компактному "
+                "международному сообществу и островному образу жизни."
+            ),
+            "cards": [
+                ("Где дешевле", "Чиангмай", "Но сравнивайте одинаковые районы и сезон аренды."),
+                ("Где проще с медициной", "Таиланд", "Больше сильных частных клиник и выбор городов."),
+                ("Где сильнее nomad-среда", "Бали", "Сообщество плотнее, но популярные районы дороже."),
+            ],
+            "rows": [
+                ("Аренда", "Сильно зависит от Чангу, Убуда и сезона", "Больше городов и ценовых сценариев"),
+                ("Виза", "Проверьте подходящий маршрут Индонезии", "Сверьте DTV, LTR или другой официальный маршрут"),
+                ("Медицина", "Основной выбор сосредоточен на юге острова", "Сильнее выбор частных больниц"),
+                ("Кому подходит", "Тем, кому важны остров, community и lifestyle", "Тем, кому важны города, сервисы и запас вариантов"),
+            ],
+            "links": [
+                ("Гид по Бали", "/ru/countries/move-to-bali/"),
+                ("Гид по Таиланду", "/ru/countries/move-to-thailand/"),
+                ("Рассчитать бюджет", "/ru/tools/cost-calculator/"),
+            ],
+        },
+        "thailand-vs-malaysia": {
+            "title": "Таиланд или Малайзия: что выбрать для жизни в 2026 году",
+            "eyebrow": "Таиланд vs Малайзия · короткий ответ",
+            "h1": "Таиланд или Малайзия: что выбрать для жизни и переезда в 2026 году",
+            "lead": (
+                "Таиланд чаще подходит тем, кому важны выбор городов, еда, пляжи и развитая "
+                "туристическая инфраструктура. Малайзия обычно практичнее для английского в быту, "
+                "семьи, городской логистики и спокойного повседневного ритма. Итог зависит от "
+                "официального визового маршрута, а не только от цены аренды."
+            ),
+            "cards": [
+                ("Lifestyle и выбор мест", "Таиланд", "Бангкок, Чиангмай, Пхукет и острова дают разные сценарии."),
+                ("Английский и городской быт", "Малайзия", "Мягче вход в повседневную жизнь и семейную логистику."),
+                ("Бюджет", "Зависит от города", "Сравнивайте Бангкок с Куала-Лумпуром, а не страны в среднем."),
+            ],
+            "rows": [
+                ("Городской выбор", "Больше разных курортных и городских сценариев", "Сильный и понятный городской сценарий в Куала-Лумпуре и Пенанге"),
+                ("Язык", "Английский удобнее в туристических и деловых районах", "Английский шире используется в повседневной жизни"),
+                ("Медицина", "Сильные частные госпитали и большой выбор", "Сильная частная медицина, особенно в крупных городах"),
+                ("Виза", "Проверьте DTV, LTR или другой подходящий маршрут", "Проверьте DE Rantau, MM2H или рабочий маршрут"),
+            ],
+            "links": [
+                ("Гид по Таиланду", "/ru/countries/move-to-thailand/"),
+                ("Гид по Малайзии", "/ru/countries/move-to-malaysia/"),
+                ("Сравнить бюджет", "/ru/tools/cost-calculator/"),
+            ],
+        },
+    }
+    config = configs.get(slug)
+    if not config:
+        return None, content
+
+    legacy_heading = re.search(r"<h1\b[^>]*>(.*?)</h1>", content, flags=re.I | re.S)
+    if legacy_heading:
+        content = (
+            content[: legacy_heading.start()]
+            + f'<h2 class="rta-legacy-comparison-title">{legacy_heading.group(1)}</h2>'
+            + content[legacy_heading.end() :]
+        )
+
+    cards = "".join(
+        f'<article><span>{html.escape(label)}</span><strong>{html.escape(value)}</strong><p>{html.escape(note)}</p></article>'
+        for label, value, note in config["cards"]
+    )
+    rows = "".join(
+        f'<tr><th scope="row">{html.escape(label)}</th><td>{html.escape(first)}</td><td>{html.escape(second)}</td></tr>'
+        for label, first, second in config["rows"]
+    )
+    links = "".join(
+        f'<a href="{href}">{html.escape(label)} <span aria-hidden="true">→</span></a>'
+        for label, href in config["links"]
+    )
+    first_name = "Бали" if slug == "bali-vs-thailand" else "Таиланд"
+    second_name = "Таиланд" if slug == "bali-vs-thailand" else "Малайзия"
+    block = f"""
+<section class="rta-search-intent-hero" aria-labelledby="search-intent-title">
+  <p class="rta-search-intent-eyebrow">{html.escape(config['eyebrow'])}</p>
+  <h1 id="search-intent-title">{html.escape(config['h1'])}</h1>
+  <p class="rta-search-intent-lead">{html.escape(config['lead'])}</p>
+  <div class="rta-search-intent-cards">{cards}</div>
+  <div class="rta-search-intent-table-wrap">
+    <table class="rta-search-intent-table">
+      <thead><tr><th>Критерий</th><th>{first_name}</th><th>{second_name}</th></tr></thead>
+      <tbody>{rows}</tbody>
+    </table>
+  </div>
+  <nav class="rta-search-intent-links" aria-label="Открыть подробные гайды">{links}</nav>
+</section>
+"""
+    style_end = content.find("</style>")
+    if style_end >= 0:
+        insert_at = style_end + len("</style>")
+        content = content[:insert_at] + block + content[insert_at:]
+    else:
+        content = block + content
+    return str(config["title"]), content
+
+
 RU_STATIC_TITLES = {
     "__home__": "Переезд в Азию: страны, расходы и визы",
     "tools": "Бесплатные инструменты для релокации в Азию",
@@ -1300,7 +1414,7 @@ RU_STATIC_TITLES = {
     "guides": "Гайды по релокации в Азию: визы, бюджет и выбор страны",
     "compare-cities": "Сравнение городов Азии для релокации",
     "best-countries-in-asia-to-move": "Лучшие страны Азии для переезда в 2026 году",
-    "cheapest-countries-in-asia": "Самые дешёвые страны Азии для жизни в 2026 году",
+    "cheapest-countries-in-asia": "Самые дешёвые страны Азии для жизни в 2026 году: цены и бюджет",
     "move-to-asia": "Переезд в Азию в 2026 году: с чего начать",
     "digital-nomad-visas-asia": "Digital Nomad визы в Азии в 2026 году",
     "retire-in-asia": "Пенсия в Азии в 2026 году: визы, расходы и практичность",
@@ -1427,12 +1541,12 @@ RU_COUNTRY_NOTES = {
         "DTV требует финансовое подтверждение от 500 000 THB и документов по выбранной категории. Это не разрешение на работу у тайского работодателя: маршрут нужно сверить с конкретным консульством до подачи.",
     ),
     "move-to-malaysia": (
-        "Малайзия привлекает предсказуемостью — инфраструктура работает, цены стабильны, маршрут долгосрочного проживания понятен при подтверждённом доходе от $3 000/мес.",
-        "MM2H в редакции 2021+ требует дохода от $35K/мес и депозита от 1M MYR — условия ужесточились. DE Rantau доступнее, но нужен конкретный иностранный работодатель.",
+        "Малайзия привлекает предсказуемостью: инфраструктура работает, английский широко используется, а DE Rantau и MM2H дают разные маршруты для разных профилей заявителя.",
+        "У MM2H больше нет общего требования к зарубежному доходу: федеральная программа разделена на Silver, Gold и Platinum с фиксированными депозитами и обязательной покупкой недвижимости. DE Rantau допускает не только удалённых сотрудников, но и фрилансеров с подтверждёнными контрактами.",
     ),
     "move-to-bali": (
         "Бали выбирают за сочетание климата, сообщества и доступных цен — при условии, что визовый маршрут спланирован заранее и не строится только на цепочке VOA-продлений.",
-        "VOA + продление = 60 дней максимум. B211A даёт до 180 дней, но требует реального выезда каждые 60 дней и подтверждения иностранного дохода. KITAS — надёжнее, но дороже.",
+        "VOA, визы посещения и E33G — разные категории. Не используйте старое название B211A как универсальную «remote-work визу»: перед поездкой проверяйте действующий индекс, срок и право на деятельность в официальной системе eVisa.",
     ),
     "move-to-vietnam": (
         "Вьетнам часто используют как бюджетный тест или ротационную базу: $600–900/мес при хорошем уровне жизни. Как постоянное направление требует решения визового вопроса до въезда.",
@@ -1468,7 +1582,7 @@ RU_COUNTRY_NOTES = {
     ),
     "move-to-india": (
         "Индию стоит рассматривать как IT-профессиональный маршрут (Бангалор, Пуне) или бюджетный тест (Гоа, Дели). Без рабочей визы или инвестиций долгосрочный stay — серая зона.",
-        "Нет digital nomad визы: e-Tourist — только 90 дней. Качество жизни и инфраструктура сильно различаются по регионам — Бангалор и Гоа не равны большей части страны.",
+        "Нет digital nomad визы. У e-Tourist есть варианты на 30 дней, 1 год и 5 лет; для годовой и пятилетней визы суммарное пребывание ограничено 180 днями в календарном году. Виза не продлевается и не конвертируется внутри страны.",
     ),
     "move-to-nepal": (
         "Непал привлекает минималистов и любителей гор: Покхара у озера Фева — один из самых спокойных expat-мест в Азии при бюджете от $400/мес.",
@@ -1511,11 +1625,11 @@ EN_COUNTRY_NOTES: dict[str, tuple[str, str]] = {
     ),
     "move-to-malaysia": (
         "Malaysia is strong when you need a clear long-stay route with good English and JCI-accredited hospitals. KL offers the best infrastructure-to-cost ratio among Southeast Asian capitals.",
-        "MM2H 2021+ requires $35,000/month income and a 1M MYR deposit — far stricter than its predecessor. DE Rantau needs a specific foreign employer, not just any foreign income.",
+        "MM2H no longer has a universal offshore-income threshold: the federal programme uses Silver, Gold and Platinum tiers with fixed deposits and mandatory property purchases. DE Rantau also accepts qualifying freelancers with documented client contracts, not only remote employees.",
     ),
     "move-to-bali": (
         "Bali works for lifestyle-first nomads who have foreign income, can handle visa complexity, and don't need the cheapest base in Southeast Asia.",
-        "B211A doesn't auto-renew — after 60+120 days you need a KITAS sponsor or local company. Canggu 1BR costs as much as Bangkok central.",
+        "VOA, visit visas and E33G are different categories. Do not treat the old B211A label as a universal remote-work visa; verify the current visa index, duration and permitted activity in Indonesia's official eVisa system.",
     ),
     "move-to-vietnam": (
         "Vietnam wins on budget, food and internet speed. Ho Chi Minh City and Hanoi offer dense expat infrastructure. Da Lat and Hoi An are budget alternatives with better climate.",
@@ -1551,7 +1665,7 @@ EN_COUNTRY_NOTES: dict[str, tuple[str, str]] = {
     ),
     "move-to-india": (
         "Bangalore (Koramangala, HSR Layout, Indiranagar) is a world-class IT hub with 1BR from $300–700/month. Goa is the nomad alternative from $400/month.",
-        "e-Tourist Visa is max 90 days with no in-country renewal — exit required. Delhi AQI hits 200–400 for most of the year — among the worst globally.",
+        "The e-Tourist scheme offers 30-day, 1-year and 5-year options; the 1-year and 5-year visas allow no more than 180 days in India per calendar year and cannot be extended or converted in-country. Air quality in Delhi can be a serious seasonal risk.",
     ),
     "move-to-nepal": (
         "Pokhara is a minimalist expat base on Lake Fewa — 1BR from $150–300/month with Annapurna 30 minutes away. Low cost, minimal bureaucracy for short stays.",
@@ -1617,33 +1731,34 @@ RU_COUNTRY_DATA: dict[str, dict] = {
         "climate": "Тропический",
         "english": "Высокий",
         "visa_label": "DE Rantau / MM2H",
-        "description": "Куала-Лумпур: 1BR в Mont Kiara или KLCC от $400–700/мес. Больницы Prince Court, Pantai, KPJ — JCI-аккредитованные, сопоставимы с Bumrungrad по уровню и ценам. DE Rantau доступен удалёнщикам с иностранным доходом от $3 000/мес — нужен конкретный иностранный работодатель.",
+        "description": "Куала-Лумпур: 1BR в Mont Kiara или KLCC часто предлагают примерно за $400–700/мес., но актуальная цена зависит от объекта. DE Rantau рассчитан на digital professionals: сотрудники подтверждают иностранного работодателя, а фрилансеры — действующие контракты. Для tech-профилей MDEC указывает доход свыше $24 000 в год; для других категорий проверяйте актуальный чеклист.",
         "visas": [
-            ("DE Rantau", "12 мес., renewable", "3 000+ USD/мес от иностранного работодателя", "Удалёнщики, цифровые фрилансеры"),
-            ("MM2H", "5 лет, renewable", "$35K+ USD/мес дохода и крупный депозит", "Финансово независимые, пенсионеры"),
+            ("DE Rantau", "3–12 мес.; продление ещё до 12 мес.", "Контракт и доход по категории; tech-профили — свыше $24K/год", "Удалённые сотрудники и цифровые фрилансеры"),
+            ("MM2H Silver / Gold / Platinum", "5 / 15 / 20 лет", "Депозит $150K / $500K / $1M и недвижимость от RM600K / RM1M / RM2M", "Финансово независимые и пенсионеры"),
             ("Professional Visit Pass", "До 12 мес.", "Спонсорство компании", "Корпоративные назначения"),
             ("eVisa / туристическая", "До 30–90 дн.", "Стандартная", "Тест направления"),
         ],
         "costs": ("$900–1 400", "$400–800", "$150–300", "$40–80"),
-        "pros": ["Prince Court / Pantai / KPJ — JCI-больницы на уровне Бангкока", "1BR в Mont Kiara (KL): $400–700/мес, хорошая экспат-инфраструктура", "DE Rantau: 12 мес. stay при $3 000/мес иностранного дохода от работодателя", "Отличный английский во всей стране — в банках, клиниках, магазинах"],
-        "cons": ["MM2H 2021+: $35 000/мес дохода и депозит 1M MYR ($220K) — условия жёстко ужесточились", "DE Rantau: нужен именно иностранный работодатель (не просто иностранный доход)", "Жара + влажность 90% круглый год — привыкание занимает несколько месяцев", "KL-центр: пробки серьёзные, метро покрывает не все районы"],
+        "pros": ["Prince Court / Pantai / KPJ — сильная частная медицина", "1BR в Mont Kiara (KL): ориентир $400–700/мес., но цена зависит от объекта и даты", "DE Rantau принимает подходящих удалённых сотрудников и фрилансеров", "Английский широко используется в банках, клиниках и сервисах"],
+        "cons": ["MM2H требует крупного фиксированного депозита и покупки недвижимости", "DE Rantau требует документально подтверждённой цифровой деятельности и дохода по категории", "Жара и высокая влажность круглый год", "В центре KL бывают серьёзные пробки, метро покрывает не все районы"],
         "top_cities": ["Куала-Лумпур", "Пенанг", "Джохор-Бару", "Кота-Кинабалу"],
     },
     "move-to-bali": {
         "budget": "$800–1 300",
         "climate": "Тропический",
         "english": "Средний",
-        "visa_label": "B211A / KITAS",
-        "description": "Чангу — главный nomad-хаб Бали: коворкинги Dojo Bali, Outpost, Roam. 1BR в Чанг/Семиньяке — $700–1 200/мес; в Убуде — $300–500/мес. B211A Remote Worker Visa: 60 дн. + продление до 180 дн., далее — переход в KITAS (требует спонсора или местной компании).",
+        "visa_label": "E33G / визы посещения",
+        "description": "Бали — популярная база для удалённой работы, но визовый индекс нужно выбирать по цели поездки. E33G предназначен для подходящей удалённой работы на зарубежную организацию; VOA и визы посещения не следует подавать как равнозначную замену рабочему или резидентскому маршруту.",
         "visas": [
-            ("B211A (Remote Worker)", "60 дн., продление до 180 дн.", "Доказательство иностранного дохода", "Удалённая работа из Бали"),
+            ("E33G (Remote Worker)", "180 дней, 1 год или 2 года по оформленному разрешению", "Иностранный работодатель и подтверждённый доход", "Подходящая удалённая работа"),
+            ("Visit Visa", "Зависит от текущего индекса", "Цель посещения и документы", "Туризм и разрешённые цели посещения"),
             ("KITAS (Stay Permit)", "До 1 года, renewable", "Спонсорство или инвестиции", "Долгосрочное проживание"),
             ("VOA (Visa on Arrival)", "30 дн., 1 продление", "Депозит на счёте", "Тест или краткий stay"),
             ("Retirement KITAS", "До 1 года", "3 000+ USD/мес пассивный доход, от 55 лет", "Пенсионеры"),
         ],
         "costs": ("$800–1 300", "$350–700", "$150–300", "$30–80"),
         "pros": ["Dojo Bali, Outpost, Roam — сильные коворкинги с community в Чанг", "Убуд: 1BR от $300–500/мес, рисовые поля и тропики, 40 мин до пляжа", "Активное nomad-сообщество: meetups, Slack-каналы, общие виллы", "Еда: наси-горенг от $2–3, кофе $2–4, рыба-гриль у моря $5–10"],
-        "cons": ["B211A не продлевается автоматически: 60+120 дн., затем KITAS (нужен спонсор или PT)", "Чангу/Семиньяк: 1BR $700–1 200/мес — дорого для ЮВА и часто ниже Thai-уровня качества", "Пробки Чангу–Семиньяк–Кута — тяжёлые, мотобайк обязателен, страховка нужна", "Сезон дождей (ноябрь–март): ежедневные ливни, условия для аутдора ухудшаются"],
+        "cons": ["Старые обозначения B211A в блогах могут не совпадать с текущими индексами eVisa", "Чангу/Семиньяк: аренда заметно зависит от сезона и конкретного объекта", "Пробки Чангу–Семиньяк–Кута тяжёлые; страховка особенно важна при поездках на мотобайке", "Сезон дождей меняет условия для повседневной жизни и аутдора"],
         "top_cities": ["Чангу", "Убуд", "Семиньяк", "Санур", "Нуса-Дуа"],
     },
     "move-to-vietnam": {
@@ -1736,15 +1851,15 @@ RU_COUNTRY_DATA: dict[str, dict] = {
         "climate": "Тропический",
         "english": "Отличный",
         "visa_label": "SRRV / 9G Visa",
-        "description": "Макати/BGC (Манила) — международный стандарт при ценах ЮВА: 1BR $400–800/мес. SRRV — депозит от $10 000 (наиболее доступный pension visa в регионе). Трафик в Маниле — 2–4 часа на 10 км в часы пик. Себу — альтернатива: дешевле и менее загруженный.",
+        "description": "Макати/BGC и Себу — основные городские сценарии. SRRV доступна квалифицированным заявителям от 40 лет; для SRRV Classic депозит зависит от возраста и наличия пенсии: $25K/$50K для 40–49 лет и $15K/$30K для 50+. У специальных категорий Courtesy действуют отдельные условия.",
         "visas": [
-            ("SRRV (Retired Resident Visa)", "Indefinite stay", "Депозит от $10K–20K, от 35 лет", "Пенсионеры, ранние пенсионеры"),
+            ("SRRV Classic", "Multiple entry / indefinite stay", "От 40 лет; депозит $15K–50K по возрасту и пенсионному статусу", "Пенсионеры и финансово независимые заявители"),
             ("9G (Pre-arranged Employment)", "1–2 года, renewable", "Работодатель-спонсор", "Наёмные работники"),
             ("13A (Супруги граждан)", "Постоянный", "Брак с гражданином Филиппин", "Супруги граждан"),
             ("9 (a) Tourist Visa", "30 дн., продление до 36 мес.", "Стандартная", "Долгосрочный тест, пенсионеры"),
         ],
         "costs": ("$700–1 200", "$300–650", "$150–300", "$30–80"),
-        "pros": ["SRRV: депозит от $10 000 — самый доступный pension visa в ЮВА", "Английский — официальный язык: всё образование, медицина, суды на нём", "Макати/BGC: международный уровень при 1BR $400–800/мес", "Частные клиники в Себу/Маниле — качественные, доступные по цене"],
+        "pros": ["SRRV даёт multiple entry и indefinite stay при выполнении условий выбранной категории", "Английский — один из официальных языков", "Макати/BGC и Себу предлагают развитую городскую инфраструктуру", "В Маниле и Себу есть крупные частные клиники"],
         "cons": ["Трафик в Маниле: 2–4 ч на 10 км в час пик — один из худших в мире", "Тайфунный сезон (июнь–ноябрь) ежегодно разрушает инфраструктуру в части районов", "Интернет вне Манилы/Себу: нестабильный (PLDT/Globe с перебоями)", "Инфраструктура вне BGC/Макати/Себу — заметно слабее соседних стран"],
         "top_cities": ["Манила", "Себу", "Давао", "Бохол", "Палаван"],
     },
@@ -1803,15 +1918,15 @@ RU_COUNTRY_DATA: dict[str, dict] = {
         "climate": "Разнообразный",
         "english": "Отличный (в городах)",
         "visa_label": "e-Visa / Business Visa",
-        "description": "Бангалор (Koramangala, HSR Layout, Indiranagar) — IT-хаб с 1BR от $300–700/мес. e-Tourist Visa — max 90 дней без renewal внутри страны (нужен выезд). Гоа — nomad-база от $400/мес. Полноценного digital nomad маршрута нет — серая зона при длительном stay.",
+        "description": "Бангалор — крупный IT-хаб, а Гоа часто выбирают для короткого тестового проживания. Отдельной digital nomad визы нет. e-Tourist бывает на 30 дней, 1 год или 5 лет; для годовой и пятилетней визы суммарное пребывание ограничено 180 днями в календарном году. eVisa не продлевается и не конвертируется внутри страны.",
         "visas": [
-            ("e-Tourist Visa", "30–90 дн., до 2 раз в год", "Стандартная", "Туризм, тест направления"),
+            ("e-Tourist Visa", "30 дней, 1 год или 5 лет; лимит 180 дней/год для долгих вариантов", "Доступность зависит от гражданства", "Туризм и короткие поездки"),
             ("e-Business Visa", "1 год, multi-entry", "Деловые цели", "Деловая деятельность"),
             ("Long-Term Visa (LTV)", "5 лет, специальные категории", "Ограниченные категории", "Особые случаи"),
         ],
         "costs": ("$600–1 200", "$200–600", "$100–250", "$20–60"),
         "pros": ["Бангалор Koramangala/HSR Layout: IT-экосистема мирового уровня, 1BR от $300–700/мес", "Хайдарабад, Пуне — альтернативы Бангалору с меньшим трафиком и ценами", "Гоа (Арамболь, Паноджи): 1BR от $300–500/мес, nomad-community и серф", "Английский — деловой язык в крупных городах: IT, медицина, образование"],
-        "cons": ["e-Tourist Visa: max 90 дней, без renewal внутри страны (выезд обязателен)", "Дели AQI: 200–400 большую часть года — один из худших показателей в мире", "Счёт в индийском банке для иностранца: сложный процесс, часто невозможен без ВНЖ", "Трафик и шум в Мумбаи/Дели: экстремальный, особенно для непривыкших"],
+        "cons": ["e-Tourist Visa не продлевается и не конвертируется; у долгих вариантов всё равно действует лимит 180 дней в календарном году", "Качество воздуха в Дели может быть серьёзным сезонным риском", "Счёт в индийском банке для иностранца: сложный процесс, часто невозможен без ВНЖ", "Трафик и шум в Мумбаи/Дели тяжело переносятся без адаптации"],
         "top_cities": ["Бангалор", "Пуне", "Мумбаи", "Гоа", "Дели"],
     },
     "move-to-nepal": {
@@ -1934,7 +2049,7 @@ COUNTRY_EN_DATA: dict[str, dict] = {
     "move-to-thailand": {
         "description": "Bangkok from $800/month in On Nut or Lat Phrao, Chiang Mai from $600/month. Bumrungrad and Samitivej hospitals offer JCI-accredited care at 3–5× lower prices than the US ($40–80 per consultation). The DTV (since 2024) gives up to 180 days stay without a Thai employer.",
         "visas": [
-            ("Thailand DTV", "Up to 180 days + 180-day renewal", "$80K+ USD/year or 500K THB in assets", "Remote workers, freelancers, workcation"),
+            ("Thailand DTV", "Up to 180 days per entry; one in-country extension", "Financial evidence of at least 500,000 THB plus category documents", "Remote workers, freelancers, workcation"),
             ("LTR Visa", "10 years (5+5)", "$80K/year to $1M+ in assets depending on category", "High-income professionals, wealthy retirees"),
             ("Retirement Visa (Non-OA)", "1 year, renewable", "800K THB in bank or 65K THB/month income", "Retirees aged 50+"),
             ("METV", "6 months, up to 270 days stay", "Bank statement required", "Short-term stay, testing the country"),
@@ -1954,31 +2069,32 @@ COUNTRY_EN_DATA: dict[str, dict] = {
         "top_cities": ["Bangkok", "Chiang Mai", "Phuket", "Pattaya", "Hua Hin"],
     },
     "move-to-malaysia": {
-        "description": "Kuala Lumpur: 1BR in Mont Kiara or KLCC from $400–700/month. Prince Court, Pantai and KPJ hospitals are JCI-accredited and comparable to Bumrungrad in quality and price. DE Rantau is available to remote workers earning $3,000/month from a specific foreign employer.",
+        "description": "Kuala Lumpur: a 1BR in Mont Kiara or KLCC is often marketed around $400–700/month, though live quotes vary. DE Rantau covers eligible digital professionals: employees document a foreign employer and freelancers document active client contracts. MDEC states more than USD24,000/year for tech profiles; check its current checklist for other categories.",
         "visas": [
-            ("DE Rantau", "12 months, renewable", "$3,000+ USD/month from a foreign employer", "Remote workers, digital freelancers"),
-            ("MM2H", "5 years, renewable", "$35,000+/month income and 1M MYR deposit", "Financially independent, retirees"),
+            ("DE Rantau", "3–12 months; renewable for up to 12 more", "Contracts and category income; tech profiles over $24K/year", "Remote employees and digital freelancers"),
+            ("MM2H Silver / Gold / Platinum", "5 / 15 / 20 years", "$150K / $500K / $1M fixed deposit plus property from RM600K / RM1M / RM2M", "Financially independent applicants and retirees"),
             ("Professional Visit Pass", "Up to 12 months", "Company sponsorship", "Corporate assignments"),
             ("eVisa / Tourist", "30–90 days", "Standard", "Testing the country"),
         ],
         "pros": [
             "Prince Court / Pantai / KPJ — JCI hospitals on par with Bangkok",
             "1BR in Mont Kiara (KL): $400–700/month with good expat infrastructure",
-            "DE Rantau: 12-month stay at $3,000/month from a foreign employer",
+            "DE Rantau covers qualifying remote employees and freelancers with documented digital work",
             "Excellent English throughout — banks, clinics, shops",
         ],
         "cons": [
-            "MM2H 2021+: $35,000/month income and 1M MYR deposit ($220K) — sharply tightened",
-            "DE Rantau: requires a specific foreign employer, not just any foreign income",
+            "MM2H requires a large fixed deposit and a qualifying property purchase",
+            "DE Rantau requires documented digital work and income under the applicable category",
             "Heat + 90% humidity year-round — acclimatisation takes several months",
             "KL centre: heavy traffic, metro doesn't cover all areas",
         ],
         "top_cities": ["Kuala Lumpur", "Penang", "Johor Bahru", "Kota Kinabalu"],
     },
     "move-to-bali": {
-        "description": "Canggu is Bali's main nomad hub: Dojo Bali, Outpost and Roam coworkings. 1BR in Canggu/Seminyak is $700–1,200/month; in Ubud $300–500/month. B211A Remote Worker Visa: 60 days extendable to 180, then KITAS (requires a sponsor or local company).",
+        "description": "Bali is a popular remote-work base, but the visa index must match the purpose of stay. E33G is intended for eligible remote work for a foreign organisation; VOA and visit visas should not be presented as equivalent substitutes for a work or residence route.",
         "visas": [
-            ("B211A (Remote Worker)", "60 days, extendable to 180 days", "Proof of foreign income", "Remote work from Bali"),
+            ("E33G (Remote Worker)", "180 days, 1 year or 2 years under the issued permit", "Foreign employer and documented income", "Eligible remote work"),
+            ("Visit Visa", "Depends on the current visa index", "Purpose of visit and supporting documents", "Tourism and permitted visit activities"),
             ("KITAS (Stay Permit)", "Up to 1 year, renewable", "Sponsorship or investment", "Long-term residence"),
             ("VOA (Visa on Arrival)", "30 days, 1 extension", "Bank deposit", "Testing or short stay"),
             ("Retirement KITAS", "Up to 1 year", "$3,000+ USD/month passive income, aged 55+", "Retirees"),
@@ -1990,7 +2106,7 @@ COUNTRY_EN_DATA: dict[str, dict] = {
             "Food: nasi goreng from $2–3, coffee $2–4, grilled fish by the sea $5–10",
         ],
         "cons": [
-            "B211A doesn't auto-renew: 60+120 days, then KITAS (sponsor or local PT company needed)",
+            "Old B211A labels in third-party guides may not match the current eVisa indices",
             "Canggu/Seminyak: 1BR $700–1,200/month — expensive for SEA and quality often below Thai equivalent",
             "Canggu–Seminyak–Kuta traffic is heavy — motorbike required, insurance essential",
             "Rainy season (Nov–Mar): daily downpours, outdoor conditions deteriorate significantly",
@@ -2108,15 +2224,15 @@ COUNTRY_EN_DATA: dict[str, dict] = {
         "top_cities": ["Seoul", "Busan", "Incheon", "Daegu"],
     },
     "move-to-philippines": {
-        "description": "Makati/BGC (Manila) — international standard at Southeast Asian prices: 1BR $400–800/month. SRRV — deposit from $10,000 (the most accessible pension visa in the region). Manila traffic is 2–4 hours for 10km at peak times. Cebu is cheaper and less congested.",
+        "description": "Makati/BGC and Cebu are the main urban scenarios. SRRV is open to qualified applicants aged 40+: under SRRV Classic, deposits vary by age and pension status—$25K/$50K at ages 40–49 and $15K/$30K at 50+. Courtesy categories have separate rules.",
         "visas": [
-            ("SRRV (Retired Resident Visa)", "Indefinite stay", "Deposit from $10K–20K, aged 35+", "Retirees, early retirees"),
+            ("SRRV Classic", "Multiple entry / indefinite stay", "Age 40+; $15K–50K deposit by age and pension status", "Retirees and financially independent applicants"),
             ("9G (Pre-arranged Employment)", "1–2 years, renewable", "Employer sponsorship", "Employed workers"),
             ("13A (Spouse of Citizen)", "Permanent", "Married to a Filipino citizen", "Spouses of citizens"),
             ("9(a) Tourist Visa", "30 days, extendable to 36 months", "Standard", "Long-term testing, retirees"),
         ],
         "pros": [
-            "SRRV: deposit from $10,000 — the most accessible pension visa in Southeast Asia",
+            "SRRV offers multiple entry and indefinite stay when the selected category's conditions are met",
             "English is the official language: all education, healthcare, courts conducted in it",
             "Makati/BGC: international standard with 1BR $400–800/month",
             "Private clinics in Cebu/Manila — quality care at accessible prices",
@@ -2195,9 +2311,9 @@ COUNTRY_EN_DATA: dict[str, dict] = {
         "top_cities": ["Colombo", "Galle", "Nuwara Eliya", "Kandy"],
     },
     "move-to-india": {
-        "description": "Bangalore (Koramangala, HSR Layout, Indiranagar) — IT hub with 1BR from $300–700/month. e-Tourist Visa — max 90 days with no in-country renewal (exit required). Goa — nomad base from $400/month. No proper digital nomad route — grey zone for long stays.",
+        "description": "Bangalore is a major IT hub and Goa is a common short-stay base. India has no dedicated digital-nomad visa. e-Tourist options are 30 days, 1 year or 5 years; holders of the 1- and 5-year options may stay no more than 180 days per calendar year. The eVisa is non-extendable and non-convertible.",
         "visas": [
-            ("e-Tourist Visa", "30–90 days, up to twice per year", "Standard", "Tourism, testing"),
+            ("e-Tourist Visa", "30 days, 1 year or 5 years; 180 days/year cap on long options", "Nationality-specific eligibility", "Tourism and short stays"),
             ("e-Business Visa", "1 year, multi-entry", "Business purposes", "Business activities"),
             ("Long-Term Visa (LTV)", "5 years, limited categories", "Specific categories only", "Special cases"),
         ],
@@ -2208,8 +2324,8 @@ COUNTRY_EN_DATA: dict[str, dict] = {
             "English is the business language in major cities: IT, healthcare, education",
         ],
         "cons": [
-            "e-Tourist Visa: max 90 days, no in-country renewal (exit mandatory)",
-            "Delhi AQI: 200–400 for most of the year — among the worst globally",
+            "e-Tourist Visa is non-extendable and non-convertible; long options still cap stay at 180 days per calendar year",
+            "Delhi air quality can be a serious seasonal risk",
             "Indian bank account for foreigners: complex process, often impossible without residency",
             "Traffic and noise in Mumbai/Delhi: extreme, especially for the uninitiated",
         ],
@@ -2461,6 +2577,48 @@ def country_search_faq_html(slug: str, lang: str) -> str:
     )
 
 
+def ru_country_comparison_links(slug: str) -> str:
+    """Surface the most relevant decision pages from country guides."""
+    links_by_country = {
+        "move-to-bali": [
+            ("Бали или Таиланд: где дешевле", "/ru/compare/bali-vs-thailand/", "Цены, визы и быт"),
+            ("Самые дешёвые страны Азии", "/ru/cheapest-countries-in-asia/", "Сравнить месячный бюджет"),
+        ],
+        "move-to-thailand": [
+            ("Бали или Таиланд: где дешевле", "/ru/compare/bali-vs-thailand/", "Цены, визы и быт"),
+            ("Таиланд или Малайзия: что выбрать", "/ru/compare/thailand-vs-malaysia/", "Практическое сравнение"),
+        ],
+        "move-to-malaysia": [
+            ("Таиланд или Малайзия: что выбрать", "/ru/compare/thailand-vs-malaysia/", "Бюджет и долгий срок"),
+            ("Самые дешёвые страны Азии", "/ru/cheapest-countries-in-asia/", "Сравнить месячный бюджет"),
+        ],
+        "move-to-japan": [
+            ("Япония или Тайвань: что лучше", "/ru/compare/japan-vs-taiwan/", "Визы, цены и жизнь"),
+        ],
+        "move-to-taiwan": [
+            ("Япония или Тайвань: что лучше", "/ru/compare/japan-vs-taiwan/", "Визы, цены и жизнь"),
+        ],
+    }
+    links = links_by_country.get(slug)
+    if not links:
+        return ""
+    items = "".join(
+        '<a href="{href}"><span>{label}</span><small>{note}</small><b aria-hidden="true">→</b></a>'.format(
+            href=html.escape(href, quote=True),
+            label=html.escape(label),
+            note=html.escape(note),
+        )
+        for label, href, note in links
+    )
+    return (
+        '<section class="ep-section rta-country-comparisons" aria-labelledby="ru-country-compare-title">'
+        '<p class="ep-section-label">Сравнить перед выбором</p>'
+        '<h2 class="ep-h2" id="ru-country-compare-title">Похожие направления</h2>'
+        f'<div class="rta-country-comparison-links">{items}</div>'
+        '</section>'
+    )
+
+
 def ru_country_article(slug: str, facts: sqlite3.Row | None) -> str:
     data = RU_COUNTRY_DATA.get(slug)
     has_city_profiles = bool(data and data.get("city_profiles"))
@@ -2486,6 +2644,7 @@ def ru_country_article(slug: str, facts: sqlite3.Row | None) -> str:
     )
 
     search_faq = country_search_faq_html(slug, "ru")
+    comparison_links = ru_country_comparison_links(slug)
     search_faq_link = '<a href="#ru-search-questions">Вопросы</a>' if search_faq else ""
     city_toc_link = '<a href="#ru-cities">Города</a>' if has_city_profiles else ""
     jump_nav_html = f"""
@@ -2692,6 +2851,8 @@ def ru_country_article(slug: str, facts: sqlite3.Row | None) -> str:
     </section>
 
     {search_faq}
+
+    {comparison_links}
 
     <div class="ep-cta">
       <h3>Готовы выбрать страну?</h3>
@@ -3278,7 +3439,19 @@ def ru_hub_content(slug: str) -> str | None:
         "tools": ("Инструменты для планирования переезда в Азию", "Инструменты помогают быстро проверить грубые цифры: месячный бюджет, стартовые расходы и сравнение стран. Это не финальный ответ, но хороший фильтр до платных решений.", [("Калькулятор стоимости жизни", "Прикиньте месячные расходы по стране и стилю жизни."), ("Планировщик бюджета", "Сложите перелёты, визы, депозиты, первый месяц и emergency fund."), ("Сравнение стран", "Поставьте две страны рядом и проверьте, где сильнее компромиссы.")]),
         "guides": ("Гайды по релокации в Азию", "Здесь собраны короткие страницы под конкретные вопросы: продление визы, доход, семейный переезд, пенсионные маршруты и бюджет. Это слой между длинной статьёй и быстрым ответом.", [("Визовые вопросы", "Разбирайте срок stay, продление, доход и dependants до выбора города."), ("Бюджет", "Смотрите полный сценарий, а не только аренду."), ("Семья и пенсия", "Медицина, школы, страховка и банковская логика важнее красивого района.")]),
         "move-to-asia": ("Переезд в Азию в 2026 году: с чего начать", "Азия — не один рынок релокации. Япония, Таиланд, Малайзия, Тайвань, Вьетнам и ОАЭ решают разные задачи. Нельзя выбрать страну только по цене аренды или красивому lifestyle.", [("Сначала виза", "Проверьте срок stay, продление, доход, dependants и право на удалённую или местную работу."), ("Потом бюджет", "Считайте не только месяц жизни, но и перелёт, депозит, страховку, визы и финансовую подушку."), ("Потом город", "Одна и та же страна может быть дешёвой в одном городе и неудобной в другом.")]),
-        "digital-nomad-visas-asia": ("Digital Nomad визы в Азии в 2026 году", "Digital nomad виза полезна только тогда, когда она совпадает с тем, как вы зарабатываете. Одни маршруты короткие, другие требуют сильного профиля, третьи ближе к профессиональным talent-pass программам.", [("Japan Digital Nomad Visa", "Короткий stay до 6 месяцев. Хорошо для временной базы, плохо для долгой релокации."), ("Taiwan Gold Card", "Профессиональный маршрут с work permit и residence логикой."), ("Thailand LTR / DTV", "Сначала сравните профиль, доход и цель stay. Это разные инструменты, а не две версии одной визы.")]),
+        "digital-nomad-visas-asia": (
+            "Digital Nomad визы в Азии в 2026 году",
+            "Digital Nomad виза полезна только тогда, когда совпадает с вашей моделью дохода и работы. Сравнивайте не названия программ, а требования к заявителю, разрешённую деятельность, срок пребывания, семью и продление.",
+            [
+                ("Япония", "Короткий маршрут для временной базы: в отдельном разборе проверяем доход, страховку, семью и ограничение по сроку.", "/ru/blog/yaponiya-digital-nomad-visa-2026/", "Короткий срок"),
+                ("Таиланд", "LTR и DTV нельзя считать двумя версиями одной визы. Сначала определите профиль заявителя и цель пребывания.", "/ru/blog/tailand-ltr-dlya-udalennyh-specialistov-2026/", "Несколько маршрутов"),
+                ("Малайзия", "Откройте разбор DE Rantau и проверьте, как программа смотрит на деятельность, доход, документы и семью.", "/ru/blog/malaysia-dlya-digital-nomads-2026/", "Удалённая работа"),
+                ("Индонезия", "Материал по E33G помогает отделить маршрут для удалённой работы от местной занятости и обычного туристического пребывания.", "/ru/blog/indonesia-e33g-remote-worker-visa-2026/", "Работодатель"),
+                ("Южная Корея", "Workation-маршрут стоит оценивать как временную базу: отдельно проверяйте доход, страховку и семейные условия.", "/ru/blog/yuzhnaya-koreya-workation-visa-2026/", "Временная база"),
+                ("Тайвань", "Gold Card — профессиональный маршрут, а не универсальная nomad-виза. Главный фильтр — соответствие квалификационным критериям.", "/ru/blog/taiwan-gold-card-2026/", "Профессиональный профиль"),
+                ("ОАЭ", "Virtual Work Residence подходит не каждому удалённому специалисту: проверьте работодателя, подтверждение дохода и полный бюджет Дубая.", "/ru/blog/uae-virtual-work-visa-2026/", "Доход и бюджет"),
+            ],
+        ),
         "retire-in-asia": ("Пенсия в Азии в 2026 году: визы, расходы и медицина", "Пенсионная релокация отличается от remote-work переезда. Здесь важнее медицина, страховка, банковская логика, валюта, dependants и стабильность long-stay маршрута. Ошибка обычно начинается там, где страну выбирают по пляжу или аренде, а депозит, больницы, страховое покрытие и срок статуса проверяют уже после решения. Для пенсионного сценария особенно важно считать не самый дешёвый месяц, а спокойный год: продление, лечение, перелёты домой, помощь на месте и запас на валютные колебания.", [("Philippines SRRV", "Пенсионный маршрут с депозитом и логикой indefinite stay. Подходит не всем, но его стоит сравнить."), ("Малайзия", "Сильна английским, городами и медициной. Важно проверять актуальные условия MM2H."), ("Таиланд", "Сильный lifestyle и медицина в крупных городах, но визовый маршрут нужно проверять отдельно.")]),
         "cost-of-living-asia": ("Стоимость жизни в Азии в 2026 году", "Дешёвая страна не всегда подходит для переезда. Низкая аренда может идти вместе со слабой визовой логикой, дорогой медициной или городом, который не подходит под работу и семью.", [("Считайте полный месяц", "Аренда, еда, транспорт, связь, страховка, coworking, медицина и непредвиденные расходы."), ("Отделяйте старт от жизни", "Депозит, перелёты, визы и первый месяц часто ломают красивый бюджет."), ("Сравнивайте города", "Бангкок и Чиангмай, Куала-Лумпур и Пенанг, Бали и Джакарта — это разные бюджеты.")]),
         "visas": ("Визы Азии в 2026 году: long-stay, digital nomad и пенсионные маршруты", "Страну лучше выбирать после проверки визы. Иначе можно влюбиться в направление, которое не совпадает с вашим доходом, сроком stay, семьёй или типом работы.", [("Удалённая работа", "Проверяйте, разрешена ли удалённая работа и где должен находиться работодатель."), ("Долгое проживание", "Смотрите срок, продление, доход, депозиты и dependants."), ("Пенсионный сценарий", "Медицина и стабильность часто важнее минимальной стоимости жизни.")]),
@@ -3289,10 +3462,30 @@ def ru_hub_content(slug: str) -> str | None:
     if not data:
         return None
     title, intro, cards = data
-    priority_rows = "\n".join(
-        f'<div class="rta-hub-priority"><span>{index:02d}</span><strong>{html.escape(card_title)}</strong><p>{html.escape(text)}</p></div>'
-        for index, (card_title, text) in enumerate(cards, start=1)
-    )
+    priority_rows = []
+    for index, card in enumerate(cards, start=1):
+        card_title, text, *meta = card
+        card_url = meta[0] if meta else None
+        card_tag = meta[1] if len(meta) > 1 else None
+        country_flags = {
+            "Япония": "🇯🇵", "Таиланд": "🇹🇭", "Малайзия": "🇲🇾",
+            "Индонезия": "🇮🇩", "Южная Корея": "🇰🇷", "Тайвань": "🇹🇼", "ОАЭ": "🇦🇪",
+        }
+        flag_html = (
+            f'<span class="rta-hub-flag" aria-hidden="true">{country_flags[card_title]}</span>'
+            if slug == "digital-nomad-visas-asia" and card_title in country_flags
+            else ""
+        )
+        card_heading = (
+            f'<a href="{html.escape(card_url, quote=True)}">{flag_html}{html.escape(card_title)} <span aria-hidden="true">↗</span></a>'
+            if card_url
+            else f"{flag_html}{html.escape(card_title)}"
+        )
+        tag_html = f'<em>{html.escape(card_tag)}</em>' if card_tag else ""
+        priority_rows.append(
+            f'<div class="rta-hub-priority"><span>{index:02d}</span><strong>{card_heading}{tag_html}</strong><p>{html.escape(text)}</p></div>'
+        )
+    priority_rows_html = "\n".join(priority_rows)
     default_copy = (
         "Смотрите на страницу как на первый фильтр, а не как на готовый ответ. Если визовый маршрут, бюджет и срок проживания не сходятся, красивое направление лучше убрать из shortlist до оплаты жилья и билетов.",
         "Как принимать решение",
@@ -3392,18 +3585,102 @@ def ru_hub_content(slug: str) -> str | None:
         ),
     }.get(slug, default_copy)
     summary, decision_title, decision_one, decision_two, next_title, next_text = hub_copy
+    deep_content = {
+        "digital-nomad-visas-asia": """
+        <section class="rta-hub-research">
+          <header><p>Сравнение программ</p><h2>Digital Nomad визы Азии: цифры, которые нельзя смешивать</h2></header>
+          <div class="guide-table-wrap"><table class="guide-table guide-fact-table"><thead><tr><th>Страна и маршрут</th><th>Срок</th><th>Ключевой финансовый фильтр</th><th>Главное ограничение</th></tr></thead><tbody>
+            <tr><th scope="row">Japan Digital Nomad Visa</th><td>6 месяцев, без продления</td><td>Доход от 10 млн JPY в год; медицинское покрытие от 10 млн JPY</td><td>Это временная база, а не путь к резиденции</td></tr>
+            <tr><th scope="row">Thailand DTV</th><td>Виза на 5 лет; до 180 дней за въезд</td><td>Финансовое подтверждение от 500 000 THB</td><td>Пять лет действия не равны пяти годам непрерывного пребывания</td></tr>
+            <tr><th scope="row">Malaysia DE Rantau</th><td>3–12 месяцев + продление до 12 месяцев</td><td>Для технологических профилей — свыше USD 24 000 в год</td><td>Нужно подтвердить цифровую профессию и зарубежный доход</td></tr>
+            <tr><th scope="row">Taiwan Gold Card</th><td>1–3 года</td><td>160 000 NTD в месяц — один из критериев только для отдельных полей</td><td>Профессиональный отбор, а не универсальная nomad-виза</td></tr>
+            <tr><th scope="row">Indonesia E33G</th><td>До 1 года с возможностью продления по действующим правилам</td><td>Иностранный работодатель и подтверждение дохода</td><td>Маршрут не предназначен для местной занятости</td></tr>
+            <tr><th scope="row">South Korea Workation</th><td>До 1 года с возможным продлением</td><td>Доход привязан к кратному показателю GNI</td><td>Порог меняется вместе с официальным GNI</td></tr>
+            <tr><th scope="row">UAE Virtual Work Residence</th><td>1 год</td><td>Доход от USD 3 500 в месяц</td><td>Визовый порог не равен реальному бюджету Дубая</td></tr>
+          </tbody></table></div>
+          <p class="guide-data-note"><strong>Важно.</strong> Таблица сравнивает разные юридические конструкции. Перед подачей проверьте официальную страницу программы, гражданство, место подачи и список документов вашего консульства.</p>
+        </section>
+        <section class="rta-hub-essay" id="income-model"><h2>Как выбрать визу под модель дохода</h2><p>Наёмному сотруднику нужен договор с иностранной компанией, срок занятости и подтверждённая зарплата. Фрилансеру — действующие контракты, история выплат и объяснимая структура клиентов. Владельцу компании важно отделить зарплату и дивиденды от оборота бизнеса: не каждая программа считает их одинаково.</p><p>Сделайте таблицу за последние 12 месяцев: плательщик, страна, тип договора, валюта, сумма и документ. Если ключевой порог достигается только за счёт активов или разовой выплаты, уточните правила до подачи.</p></section>
+        <section class="rta-hub-essay"><h2>Срок визы, срок пребывания и продление</h2><p>Это три разные величины. DTV может действовать пять лет, но один период пребывания ограничен. Японский маршрут даёт шесть месяцев без продления. DE Rantau имеет собственный общий горизонт, а Gold Card — резидентский срок от одного до трёх лет.</p><p>Для каждого варианта запишите четыре даты: въезд, окончание разрешённого пребывания, крайний срок продления и дату обязательного выезда. Такой календарь обнаруживает слабый маршрут раньше, чем длинная аренда или невозвратные билеты.</p></section>
+        <section class="rta-hub-essay"><h2>Семья, налоги и работа: что проверить отдельно</h2><p>Сопровождающий статус не всегда даёт супругу право работать, а возраст ребёнка может ограничивать семейную категорию. Налоговый статус также не следует выводить только из названия визы: значение имеют дни присутствия, источник дохода, местные правила и налоговые соглашения.</p><p>До переезда запросите профессиональную налоговую консультацию для своей страны резидентства и страны назначения. Гайд помогает выбрать вопросы, но не заменяет персональный расчёт.</p></section>
+        <section class="rta-hub-essay"><h2>Документы: минимальный рабочий пакет</h2><p>Для первичной самопроверки соберите паспорт, подтверждение резидентства в стране подачи, договоры, налоговые документы, банковские поступления, страховой полис и документы о родстве. Названия файлов и даты должны позволять быстро связать каждый документ с конкретным требованием программы.</p><p>Не начинайте с апостилей и дорогих переводов всего архива. Сначала проверьте официальный список и требования консульства. После этого составьте финальный перечень: оригинал, перевод, заверение, срок действия и владелец документа.</p></section>
+        <section class="rta-hub-essay"><h2>Три сценария выбора</h2><p><strong>Короткий тест Азии:</strong> Япония подходит при высоком подтверждаемом доходе и готовности выехать через шесть месяцев. <strong>Повторяемая база:</strong> DTV может быть удобнее при соответствии цели и готовности управлять периодами въезда. <strong>Профессиональная релокация:</strong> Taiwan Gold Card сильнее, если профиль проходит квалификационный критерий.</p><p>DE Rantau стоит сравнить с DTV, когда важны Малайзия, английский и более ограниченный общий горизонт. E33G — когда есть иностранный работодатель и нужна Индонезия. Выбор начинается с документов, а не с популярности страны.</p></section>
+        <section class="rta-hub-research">
+          <header><p>Выбор по профилю</p><h2>Какие digital nomad визы в Азии сравнивать именно вам</h2></header>
+          <div class="guide-table-wrap"><table class="guide-table guide-fact-table"><thead><tr><th>Профиль</th><th>С чего начать</th><th>Почему</th><th>Что может остановить</th></tr></thead><tbody>
+            <tr><th scope="row">Наёмный удалённый сотрудник</th><td>Japan Digital Nomad, Korea Workation, Indonesia E33G</td><td>Эти маршруты строятся вокруг зарубежной работы и подтверждаемого дохода</td><td>Высокий порог, короткий срок или обязательный иностранный работодатель</td></tr>
+            <tr><th scope="row">Фрилансер с несколькими клиентами</th><td>Thailand DTV, Malaysia DE Rantau; Япония — при сильном пакете</td><td>Можно связать договоры, инвойсы и поступления без одного работодателя</td><td>Неясные договоры, разовые выплаты и доход без налогового следа</td></tr>
+            <tr><th scope="row">Квалифицированный специалист</th><td>Taiwan Gold Card</td><td>Это профессиональный резидентский маршрут с открытым разрешением на работу</td><td>Нужно пройти конкретный квалификационный критерий, а не только показать деньги</td></tr>
+            <tr><th scope="row">Семья с детьми</th><td>Сначала DE Rantau, DTV, Gold Card и семейные правила каждого маршрута</td><td>Срок, dependants, школа и страховка важнее туристической привлекательности</td><td>Статус супруга, возраст детей, стоимость школы и короткий горизонт</td></tr>
+            <tr><th scope="row">Нужна база дольше года</th><td>Gold Card или маршруты с подтверждённым продлением</td><td>Шестимесячная Япония не решает задачу непрерывного проживания</td><td>Не путайте срок действия многократной визы со сроком одного пребывания</td></tr>
+          </tbody></table></div>
+        </section>
+        <section class="rta-hub-essay"><h2>Чего не хватает в большинстве сравнений</h2><p>Конкурентные обзоры удобно показывают доход, срок и сбор, но этого мало для решения. В отдельную проверку вынесите: можно ли открыть банковский счёт, выдаётся ли карта резидента, разрешена ли работа супруга, где подаётся заявление, нужен ли выезд для продления и какие документы подтверждают именно ваш тип дохода.</p><p>Не переносите налоговый вывод из одной страны на другую. Даже формула «меньше 183 дней» не работает как универсальное освобождение: имеют значение источник дохода, местное право и применимое налоговое соглашение.</p></section>
+        <section class="rta-hub-essay"><h2>Как проверить таблицу перед тем, как ей доверять</h2><p>Откройте официальную страницу каждой программы и найдите четыре формулировки: кто может подать, какая деятельность разрешена, сколько длится одно пребывание и что сказано о продлении. Затем сверяйте финансовое условие: доход, накопления, депозит и оборот бизнеса — разные показатели.</p><p>Эта страница использует конкурентов только для поиска вопросов и структуры. Все юридически значимые цифры привязаны к официальным источникам в блоке ниже; если ведомство не публикует единое значение, мы не подменяем его средним из коммерческих сайтов.</p></section>
+        <section class="rta-hub-essay"><h2>Порядок действий до оплаты</h2><p>1. Выберите две программы, соответствующие типу дохода. 2. Откройте их официальные требования. 3. Соберите доказательства за один и тот же период. 4. Рассчитайте первый год с визовыми расходами и возможным выездом. 5. Проверьте семью, страховку и налоги. 6. Только после этого бронируйте жильё.</p><p>Если на втором или третьем шаге появляется неподтверждённое исключение, не маскируйте его оптимизмом. Либо получите письменное разъяснение, либо выберите маршрут с более ясными правилами.</p></section>
+        """,
+        "retire-in-asia": """
+        <section class="rta-hub-research">
+          <header><p>Маршруты для сравнения</p><h2>Пенсионные визы Азии: возраст, деньги и обслуживание статуса</h2></header>
+          <div class="guide-table-wrap"><table class="guide-table guide-fact-table"><thead><tr><th>Маршрут</th><th>Возраст</th><th>Финансовое условие</th><th>Что особенно проверить</th></tr></thead><tbody>
+            <tr><th scope="row">Philippines SRRV Classic</th><td>От 40 лет</td><td>Депозит USD 15 000–50 000 по возрасту и пенсионному статусу</td><td>Возврат и использование депозита, ежегодный сбор, семья</td></tr>
+            <tr><th scope="row">Thailand Non-O</th><td>От 50 лет</td><td>Ориентир 800 000 THB на счёте или 65 000 THB дохода в месяц</td><td>Точное место подачи, продление, банковская история и re-entry</td></tr>
+            <tr><th scope="row">Thailand O-A</th><td>От 50 лет</td><td>Финансовые доказательства и обязательная страховка</td><td>Требования к полису, медицинские документы и запрет на работу</td></tr>
+            <tr><th scope="row">Malaysia MM2H</th><td>Зависит от действующей категории</td><td>Депозит, доход и стоимость недвижимости зависят от федеральной или региональной схемы</td><td>Не смешивать федеральную MM2H, Sarawak-MM2H и другие программы</td></tr>
+            <tr><th scope="row">Indonesia retirement / Second Home</th><td>Зависит от категории</td><td>Проверяются средства, жильё, спонсор и страхование</td><td>Выбирать точный индекс визы, а не общее слово «пенсионная»</td></tr>
+          </tbody></table></div>
+          <p class="guide-data-note"><strong>Не только виза.</strong> Номинально дешёвый маршрут может оказаться слабым из-за страховки, удалённости больницы, валютного риска или сложного ежегодного обслуживания.</p>
+        </section>
+        <section class="rta-hub-essay"><h2>Как считать пенсионный бюджет на год</h2><p>Разделите деньги на четыре корзины: повседневная жизнь, медицинское покрытие, обслуживание статуса и резерв. Депозит по визе не является месячным расходом, но временно уменьшает доступный капитал. Страховая премия зависит от возраста и здоровья, поэтому средняя цифра из чужой статьи почти бесполезна без условий полиса.</p><p>Считайте не самый дешёвый месяц, а год с одним лечением, одним перелётом домой и ростом аренды. Для пары добавьте отдельный сценарий, если один супруг младше возрастного порога или не может быть включён как сопровождающий.</p></section>
+        <section class="rta-hub-essay"><h2>Медицина: страна не равна городу</h2><p>Бангкок, Куала-Лумпур и Манила дают иной доступ к крупным частным больницам, чем остров или небольшой курорт. Перед арендой проверьте время до госпиталя, наличие нужного специалиста, прямой биллинг со страховщиком и план медицинской эвакуации.</p><p>Если есть хроническое заболевание, запросите у страховщика письменное решение об исключениях до переезда. Полис с высокой суммой покрытия может не покрывать именно то состояние, ради которого нужна защита.</p></section>
+        <section class="rta-hub-essay"><h2>Банки, валюта и наследование</h2><p>Пенсионные программы могут требовать локальный счёт, регулярный доход или депозит. Уточните, в какой валюте хранится капитал, можно ли получать проценты, когда деньги разблокируются и какие документы понадобятся наследникам. Это особенно важно для SRRV и других депозитных схем.</p><p>Не переводите весь резерв в одну страну до открытия счёта и подтверждения статуса. Практичнее сохранить ликвидную часть вне визового депозита и иметь доступ к деньгам на случай лечения или срочного отъезда.</p></section>
+        <section class="rta-hub-essay"><h2>Как выбрать между Филиппинами, Таиландом и Малайзией</h2><p>Филиппины сильны ранним возрастным порогом SRRV и английским языком, но выбор города и медицины критичен. Таиланд предлагает развитую частную медицину и разные города, но требует аккуратно выбрать категорию и обслуживать статус. Малайзия привлекательна английским, городской инфраструктурой и больницами, однако условия MM2H нужно проверять по конкретной схеме.</p><p>Финальный выбор делайте после пробного проживания и консультации по налогам. Туристическое впечатление не показывает, как будет работать страховка, банк и продление через год.</p></section>
+        <section class="rta-hub-essay"><h2>Проверка страховки до переезда</h2><p>Запросите не рекламную брошюру, а условия полиса. Отметьте франшизу, годовой лимит, ограничения по возрасту, ожидание, хронические заболевания, онкологию, кардиологию, амбулаторное лечение и медицинскую эвакуацию. Уточните, платит ли страховщик больнице напрямую или сначала платите вы.</p><p>Сравните два полиса на одном медицинском сценарии, например госпитализация на пять дней. Дешёвая премия может скрывать большую франшизу или исключение, которое делает покрытие бесполезным именно для вас.</p></section>
+        <section class="rta-hub-essay"><h2>Пробный период перед долгой арендой</h2><p>Проведите в выбранном городе достаточно времени, чтобы проверить обычный быт: поход в клинику, дорогу в сезон дождей, банковский вопрос, покупку лекарств, связь с аэропортом и уровень шума ночью. Не используйте туристический въезд как доказательство, что долгосрочный статус будет одобрен.</p><p>Во время теста соберите фактический бюджет и список неудобств. Если город подходит только при постоянном такси, частых перелётах за лечением или аренде в одном дорогом районе, это должно попасть в годовой расчёт.</p></section>
+        <section class="rta-hub-essay"><h2>Порядок решения для пенсионного переезда</h2><p>1. Проверьте возраст и финансовую категорию. 2. Получите предварительное предложение по страховке. 3. Выберите город рядом с нужной медициной. 4. Рассчитайте визовый депозит отдельно от резерва. 5. Проверьте супругов, наследование и банковский доступ. 6. Проведите пробный период. 7. Только затем принимайте долгосрочные обязательства.</p><p>Если маршрут работает только при идеальном здоровье, стабильном курсе и отсутствии срочных перелётов, он недостаточно устойчив. Сильный план выдерживает хотя бы один плохой месяц без продажи активов или потери статуса.</p></section>
+        """,
+    }.get(slug, "")
+    priority_label = "Семь маршрутов" if slug == "digital-nomad-visas-asia" else "Три фильтра"
+    priority_title = "С чего начать сравнение" if slug == "digital-nomad-visas-asia" else "Что проверять в первую очередь"
+    decision_checklist = ""
+    if slug == "digital-nomad-visas-asia":
+        decision_checklist = """
+        <ul class="rta-hub-checklist" aria-label="Чек-лист выбора визы">
+          <li><strong>Доход</strong><span>Сумма, регулярность и способ подтверждения.</span></li>
+          <li><strong>Работа</strong><span>Иностранный работодатель, клиенты или профессиональная категория.</span></li>
+          <li><strong>Срок</strong><span>Пребывание, срок действия, продление и повторная подача.</span></li>
+          <li><strong>Семья</strong><span>Условия для супруга, детей, страховки и документов.</span></li>
+          <li><strong>Риски</strong><span>Местная работа, налоги и правила, которых нет в публичном описании.</span></li>
+        </ul>
+        """
     hub_mark = {
         "move-to-asia": "ASIA",
         "digital-nomad-visas-asia": "DN",
         "retire-in-asia": "50+",
     }.get(slug, "R/A")
+    hub_eyebrow = (
+        "Проверено 8 октября 2026 · 7 официальных маршрутов"
+        if slug == "digital-nomad-visas-asia"
+        else "Практический гид · 2026"
+    )
+    hub_proof = ""
+    if slug == "digital-nomad-visas-asia":
+        hub_proof = """
+        <div class="rta-hub-proof" aria-label="Краткая сводка гайда">
+          <div><strong>7</strong><span>маршрутов в сравнении</span></div>
+          <div><strong>08.10.2026</strong><span>дата проверки правил</span></div>
+          <div><strong>3 фильтра</strong><span>доход · работа · срок</span></div>
+        </div>
+        """
+    hub_layout_class = " rta-text-guide" if slug == "digital-nomad-visas-asia" else ""
     return f"""
-<section class="rta-hub rta-premium-hub">
+<section class="rta-hub rta-premium-hub{hub_layout_class}">
   <header class="rta-hub-hero">
     <div class="rta-hub-hero-copy">
-      <p class="rta-hub-eyebrow">Практический гид · 2026</p>
+      <p class="rta-hub-eyebrow">{hub_eyebrow}</p>
       <h1>{html.escape(title)}</h1>
       <p>{html.escape(intro)}</p>
+      {hub_proof}
       <div class="rta-hub-actions"><a href="#hub-priorities">Начать проверку</a><a href="/ru/compare/">Сравнить страны</a></div>
     </div>
     <aside><span>{hub_mark}</span><small>Решение начинается с ограничений, а не с рейтинга.</small></aside>
@@ -3417,13 +3694,15 @@ def ru_hub_content(slug: str) -> str | None:
   </section>
 
   <section class="rta-hub-priorities" id="hub-priorities">
-    <header><p>Три фильтра</p><h2>Что проверять в первую очередь</h2></header>
-    <div>{priority_rows}</div>
+    <header><p>{priority_label}</p><h2>{priority_title}</h2></header>
+    <div>{priority_rows_html}</div>
   </section>
+
+  {deep_content}
 
   <section class="rta-hub-decision" id="hub-decision">
     <div><p>Логика решения</p><h2>{html.escape(decision_title)}</h2></div>
-    <div><p>{html.escape(decision_one)}</p><p>{html.escape(decision_two)}</p></div>
+    <div><p>{html.escape(decision_one)}</p><p>{html.escape(decision_two)}</p>{decision_checklist}</div>
   </section>
 
   <section class="rta-hub-next" id="hub-next">
@@ -3498,7 +3777,7 @@ def ru_thailand_dtv_vs_ltr_article(title: str) -> str:
     return f"""
 <article class="guide-page">
   <div class="guide-hero">
-    <span class="badge">Обновлено в апреле 2026 · проверено по официальным источникам</span>
+    <span class="badge">Проверено 8 октября 2026 · официальные данные</span>
     <h1>{html.escape(title)}</h1>
     <p>Thailand DTV и LTR часто ставят рядом, но это не две версии одной визы. DTV больше похожа на гибкий маршрут для повторяющихся stay в Таиланде. LTR — на долгую структуру для людей, которые проходят жёсткий фильтр по доходу, страховке, работодателю, активам или профессиональному статусу.</p>
   </div>
@@ -3517,9 +3796,21 @@ def ru_thailand_dtv_vs_ltr_article(title: str) -> str:
     <tr><td>Срок</td><td>До 180 дней за въезд; Thailand.go.th пишет про опцию продления ещё на 180 дней.</td><td>10-летняя логика, но BOI объясняет схему как 5 лет плюс ещё 5 лет при сохранении условий.</td></tr>
     <tr><td>Финансовый фильтр</td><td>Официальная DTV-страница указывает financial evidence не менее 500 000 THB.</td><td>Для Work-From-Thailand Professionals BOI указывает минимум USD 80 000 в год за последние два года или альтернативный путь при USD 40 000+ и дополнительных доказательствах.</td></tr>
     <tr><td>Работа</td><td>Маршрут подходит для удалённой работы на зарубежного работодателя или клиентов, если это соответствует категории подачи.</td><td>LTR может включать digital work permit для некоторых категорий, но BOI отдельно пишет, что Work-From-Thailand Professionals не получают work permit, потому что работают на иностранного работодателя из Таиланда.</td></tr>
-    <tr><td>Семья</td><td>Официальные консульские страницы называют spouse и children under 20 как dependants DTV holder.</td><td>BOI пишет про spouse и children under 20, максимум 4 dependants на одного LTR holder.</td></tr>
+    <tr><td>Семья</td><td>Официальные консульские страницы называют spouse и children under 20 как dependants DTV holder.</td><td>В обновлении BOI 2025 dependants расширены на родителей и legal dependants; заявителю всё равно нужно подтвердить каждую связь по актуальному чек-листу.</td></tr>
     <tr><td>Риск</td><td>Не стоит считать DTV полноценной резидентской стратегией без проверки продления, налогов и повторных въездов.</td><td>Не стоит начинать LTR, если доход, страховка, работодатель или инвестиционные документы слабые.</td></tr>
   </table>
+
+  <h2>Быстрый Фильтр: DTV, LTR Или Ни Один Маршрут</h2>
+  <div class="guide-table-wrap"><table class="guide-table guide-fact-table">
+    <thead><tr><th>Ваш профиль</th><th>Предварительный выбор</th><th>Что доказать</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Фрилансер или несколько зарубежных клиентов</th><td><strong>DTV</strong></td><td>Workcation-профиль, портфолио или договоры, цель подачи и финансовое подтверждение от 500 000 THB по правилам консульства.</td></tr>
+      <tr><th scope="row">Сотрудник зарубежной публичной компании</th><td><strong>Проверить LTR и DTV</strong></td><td>Для LTR — доход за два года, договор, документы работодателя, страховка или финансовая альтернатива.</td></tr>
+      <tr><th scope="row">Сотрудник частной зарубежной компании</th><td><strong>LTR только после проверки работодателя</strong></td><td>Компания работает не менее трёх лет и имеет совокупную выручку от USD 50 млн за последние три года; wholly owned subsidiary может использовать данные материнской компании.</td></tr>
+      <tr><th scope="row">Работа на тайскую компанию или тайских клиентов</th><td><strong>Сравнение DTV и LTR-T не подходит</strong></td><td>Нужен маршрут, допускающий местную занятость. LTR Work-From-Thailand не выдаёт work permit для работы на иностранного работодателя.</td></tr>
+      <tr><th scope="row">Доход ниже USD 40 000 в год</th><td><strong>LTR Work-From-Thailand не подходит</strong></td><td>DTV оценивается отдельно: она проверяет другую цель и финансовый пакет, а не служит автоматической заменой LTR.</td></tr>
+    </tbody>
+  </table></div>
 
   <h2>Кому Подходит Thailand DTV</h2>
   <p>DTV подходит человеку, который хочет жить в Таиланде не как турист на две недели, но и не строит сразу тяжёлую резидентскую конструкцию. Например: удалённый сотрудник иностранной компании, фрилансер с понятным портфолио, человек на medical treatment, участник soft-power программы или семья, которая идёт как dependants основного держателя DTV.</p>
@@ -3530,6 +3821,10 @@ def ru_thailand_dtv_vs_ltr_article(title: str) -> str:
   <p>LTR подходит не “тем, кто серьёзнее”, а тем, чей профиль реально проходит BOI. Это большая разница. Если у вас сильный доход, стабильный зарубежный работодатель, понятная карьера, медицинская страховка или финансовая база, LTR может быть намного спокойнее. Но если профиль пограничный, LTR быстро превращается в длинный список документов без гарантии результата.</p>
   <p>BOI пишет, что Work-From-Thailand Professionals должны быть remote workers working for well-established overseas companies. По доходу на главной странице LTR указан минимум USD 80 000 в год за последние два года. Если доход ниже, но не ниже USD 40 000, нужны дополнительные доказательства, например степень или другие квалификационные документы. Для пенсионеров BOI отдельно подчёркивает passive income. Зарплата или самозанятость для Wealthy Pensioner не читаются как такой доход.</p>
   <p>Практически это значит вот что: LTR не надо начинать с вопроса “нравится ли мне Таиланд?”. Начинать нужно с документов. Налоговые формы, подтверждение дохода, страховое покрытие, работодатель, категория, dependants. Если всё это не собирается в чистую историю, DTV или другой маршрут может быть разумнее.</p>
+
+  <h2>Работодатель И Страховка: Два Фильтра LTR, Которые Часто Пропускают</h2>
+  <p>По обновлённым критериям BOI Work-From-Thailand Professional работает на зарубежную публичную компанию либо на частную компанию с минимум тремя годами работы и совокупной выручкой не менее USD 50 млн за последние три года. Полностью принадлежащая ей дочерняя компания может использовать финансовые показатели материнской структуры. Поэтому высокая зарплата в небольшом стартапе сама по себе не открывает LTR.</p>
+  <p>Для всех LTR-категорий BOI указывает один из трёх вариантов медицинской защиты: полис с покрытием лечения в Таиланде не менее USD 50 000 и остаточным сроком минимум десять месяцев, подходящее тайское social security либо депозит не менее USD 100 000, удерживаемый требуемый период. Это не декоративный документ, а самостоятельный eligibility-фильтр.</p>
 
   <h2>Где DTV Сильнее LTR</h2>
   <p>DTV сильнее там, где нужна гибкость. Она понятнее для людей, которые хотят приехать, пожить, поработать удалённо, протестировать Бангкок, Чиангмай, Пхукет или другой город, но не готовы доказывать профиль уровня BOI. Порог по документам ниже. Логика проще. Но проще не значит “без правил”.</p>
@@ -3570,7 +3865,8 @@ def ru_thailand_dtv_vs_ltr_article(title: str) -> str:
   <div class="faq-item"><h3>Thailand DTV Лучше Чем LTR Visa?</h3><p>Не всегда. DTV проще и гибче для medium-stay сценария. LTR сильнее для долгого статуса, если вы проходите требования BOI.</p></div>
   <div class="faq-item"><h3>Можно Ли По DTV Жить В Таиланде Как Резидент?</h3><p>Нужно быть осторожным с таким выводом. DTV даёт stay по конкретной визовой логике, но не стоит читать её как полноценный путь к резидентству.</p></div>
   <div class="faq-item"><h3>Кому Реально Подходит LTR Work-From-Thailand?</h3><p>Тем, кто работает на well-established overseas company, может подтвердить доход и собрать документы так, как требует BOI.</p></div>
-  <div class="faq-item"><h3>Можно Ли Взять Семью По DTV Или LTR?</h3><p>Да, но правила разные. По DTV консульские страницы говорят о spouse и children under 20. По LTR BOI указывает spouse и children under 20, максимум 4 dependants.</p></div>
+  <div class="faq-item"><h3>Можно Ли Взять Семью По DTV Или LTR?</h3><p>Да, но правила разные. По DTV консульские страницы говорят о spouse и children under 20. В обновлении BOI 2025 LTR dependants расширены на родителей и legal dependants без прежнего фиксированного лимита; документы каждой связи проверяются отдельно.</p></div>
+  <div class="faq-item"><h3>Подходит Ли LTR Work-From-Thailand Фрилансеру?</h3><p>Как правило, нет: категория построена вокруг трудового договора с квалифицируемой зарубежной компанией. Фрилансеру с клиентскими договорами обычно логичнее сначала проверить DTV workcation.</p></div>
   <div class="faq-item"><h3>Что Проверять Первым: Город Или Визу?</h3><p>Визу. Город важен, но он не исправит слабый legal route. Сначала срок, доход, документы, dependants и работа. Потом уже районы, аренда и lifestyle.</p></div>
 </article>
 """
@@ -3580,17 +3876,30 @@ def ru_where_to_live_on_1500_article(title: str) -> str:
     return f"""
 <article class="guide-page">
   <div class="guide-hero">
-    <span class="badge">Бюджет 2026 · Азия без иллюзий</span>
+    <span class="badge">Проверено 8 октября 2026 · бюджет для одного человека</span>
     <h1>{html.escape(title)}</h1>
     <p>$1500 в месяц в Азии могут работать. Но не как универсальный ответ. Один человек в Дананге, Чиангмае или Пенанге — это один сценарий. Семья, Бангкок, острова, частая медицина и квартира “как дома” — уже совсем другой.</p>
   </div>
 
   <div class="guide-note"><strong>Короткий ответ:</strong> $1500 в месяц реалистичны для аккуратного solo-сценария или очень компактной пары в отдельных городах Азии. Для семьи, премиальных районов, международной школы, частной медицины и частых перелётов это слабый бюджет. Тут решает не страна в целом, а город, район, виза, страховка и то, сколько ошибок вы можете себе позволить.</div>
 
+  <h2>Что Именно Означает Бюджет $1500</h2>
+  <p>Ниже мы считаем не отпуск и не «выживание», а обычный месяц одного удалёнщика: меблированная квартира с долгосрочной скидкой, местная еда и продукты, городской транспорт, связь, рабочее место, базовая страховка и небольшой резерв. Перелёт в Азию, депозит за жильё, ноутбук, крупное лечение и международная школа в эту сумму не входят.</p>
+  <table class="guide-table">
+    <tr><th>Статья</th><th>Рабочий диапазон</th><th>Правило проверки</th></tr>
+    <tr><td>Жильё и коммунальные</td><td>$400–650</td><td>Не более 40% бюджета; проверять цену на срок от 3 месяцев, а не посуточную аренду.</td></tr>
+    <tr><td>Еда и бытовые покупки</td><td>$250–350</td><td>Смешанный режим: продукты, местные кафе и ограниченная доставка.</td></tr>
+    <tr><td>Транспорт и связь</td><td>$80–150</td><td>Без ежедневных такси и аренды автомобиля.</td></tr>
+    <tr><td>Работа и досуг</td><td>$100–180</td><td>Коворкинг или тихая квартира, но не оба премиальных варианта сразу.</td></tr>
+    <tr><td>Страховка, визы и резерв</td><td>$200–320</td><td>Откладывать ежемесячно, даже если платёж возникает раз в квартал или год.</td></tr>
+    <tr><td><strong>Итого</strong></td><td><strong>$1 030–1 650</strong></td><td>$1 500 работает ближе к середине диапазонов, а не при максимуме каждой строки.</td></tr>
+  </table>
+  <p class="guide-note"><strong>Это плановая модель, а не обещание цены.</strong> Аренда меняется по району и сезону, страховка — по возрасту и здоровью, а визовые расходы — по гражданству и месту подачи. Перед оплатой жилья сверяйте свой сценарий минимум по трём свежим объявлениям и официальному визовому источнику.</p>
+
   <h2>Где Жить В Азии На $1500: Сначала Честный Фильтр</h2>
   <p>Самая плохая версия такого вопроса звучит так: “Какая страна дешёвая?” Потому что дешёвая страна не равна дешёвой жизни. Аренда может быть низкой, но виза короткая. Еда может стоить мало, но страховка и перелёты съедят запас. Город может быть комфортным, но нормальная квартира в нужном районе уже не попадает в расчёт.</p>
   <p>Поэтому $1500 лучше читать не как обещание, а как фильтр. Он помогает убрать направления, где бюджет почти сразу треснет. И оставить те, где можно жить без постоянного ощущения, что любой счёт выбивает план из рук.</p>
-  <p>Практически это значит вот что: на $1500 можно проверять страну, жить проще, снимать не в самом дорогом районе, не строить семейный premium-сценарий и держать расходы под контролем. Если нужен западный уровень квартиры, частые кафе, спортзал, поездки, страховка, coworking и запас на визовые выезды — сумма быстро становится тесной.</p>
+  <p>Практически это значит вот что: на $1500 можно проверять страну, жить проще, снимать не в самом дорогом районе, не строить семейный премиальный сценарий и держать расходы под контролем. Если нужен западный уровень квартиры, частые кафе, спортзал, поездки, страховка, коворкинг и запас на визовые выезды — сумма быстро становится тесной.</p>
 
   <h2>Что Должно Входить В $1500 В Месяц</h2>
   <table class="guide-table">
@@ -3598,27 +3907,33 @@ def ru_where_to_live_on_1500_article(title: str) -> str:
     <tr><td>Жильё</td><td>Аренда, депозит, коммунальные, интернет, район, срок договора.</td><td>Берут цену “от”, но потом выбирают район для экспатов.</td></tr>
     <tr><td>Еда</td><td>Локальная еда, продукты, кафе, доставка, кофе, бытовые мелочи.</td><td>Считают только street food, хотя живут иначе.</td></tr>
     <tr><td>Виза</td><td>Сборы, продления, выезды, документы, возможные поездки в соседние страны.</td><td>Думают, что дешёвый месяц равен дешёвому году.</td></tr>
-    <tr><td>Страховка</td><td>Медицинская страховка, франшиза, хронические вопросы, emergency fund.</td><td>Исключают медицину, потому что “я почти не болею”.</td></tr>
-    <tr><td>Работа</td><td>Интернет, coworking, тишина дома, резервный мобильный интернет.</td><td>Снимают дешёвое жильё, где невозможно нормально работать.</td></tr>
+    <tr><td>Страховка</td><td>Медицинская страховка, франшиза, хронические вопросы, аварийный резерв.</td><td>Исключают медицину, потому что “я почти не болею”.</td></tr>
+    <tr><td>Работа</td><td>Интернет, коворкинг, тишина дома, резервный мобильный интернет.</td><td>Снимают дешёвое жильё, где невозможно нормально работать.</td></tr>
     <tr><td>Запас</td><td>10-20% на ошибки, переезды, поломки, срочные билеты.</td><td>Планируют месяц в ноль. Это не план, а надежда.</td></tr>
   </table>
 
   <h2>Города, Где $1500 Выглядят Реалистичнее</h2>
-  <p>Вьетнам часто выглядит сильным вариантом для такого бюджета. Дананг, Нячанг, иногда Ханой или Хошимин при скромном жилье могут дать нормальный баланс. Официальный eVisa-маршрут Вьетнама сейчас позволяет планировать пребывание до 90 дней, single или multiple entry, но это всё равно не резидентская стратегия. Это важно. Бюджет может сходиться, а визовый ритм всё равно требовать дисциплины.</p>
-  <p>Таиланд может работать, но не везде. Чиангмай обычно проще для бюджета, чем премиальные районы Бангкока или островной lifestyle. Thailand DTV может быть интересна, если ваш purpose реально попадает в категории DTV, но это уже не просто “дешёвая жизнь”. Там есть документы, финансовое подтверждение и логика подачи. Если вы просто тестируете страну, не надо притворяться, что визовый вопрос решён сам собой.</p>
-  <p>Малайзия сильна городским комфортом: Куала-Лумпур, Пенанг, английский язык, медицина, инфраструктура. Но $1500 в Куала-Лумпуре и $1500 в более спокойном районе — разные деньги. Чем больше хочется “удобно и без компромиссов”, тем быстрее Малайзия выходит за рамку.</p>
-  <p>Камбоджа может быть бюджетной, но с ней осторожнее. Она может дать низкие повседневные расходы, но медицина, инфраструктура, качество жилья и долгосрочный комфорт требуют отдельной проверки. Если бюджет маленький, слабая медицина и отсутствие запаса становятся не теорией, а реальным риском.</p>
+  <p>Диапазоны ниже — редакционные ориентиры для одного человека на октябрь 2026 года, собранные из сопоставимых бюджетов конкурентов и нашей общей модели. Они нужны для короткого списка, а не для подписания договора аренды.</p>
+  <table class="guide-table">
+    <tr><th>Город</th><th>Плановый месяц</th><th>Почему может сработать</th><th>Что ломает бюджет</th></tr>
+    <tr><td>Дананг</td><td>$900–1 300</td><td>Море, компактный город, доступная аренда вне первой линии.</td><td>Короткая аренда, импортные продукты, визовые выезды и сезонный выбор жилья.</td></tr>
+    <tr><td>Чиангмай</td><td>$1 050–1 450</td><td>Сильная инфраструктура для удалённой работы и большой выбор районов.</td><td>Дымный сезон, ежедневные такси, премиальный Nimman и отсутствие резерва на визу.</td></tr>
+    <tr><td>Пенанг</td><td>$1 150–1 500</td><td>Английский в быту, медицина и более спокойный темп, чем в столице.</td><td>Кондоминиум у моря, автомобиль, дорогая частная страховка.</td></tr>
+    <tr><td>Пномпень</td><td>$950–1 400</td><td>Доступное жильё и понятная городская база.</td><td>Международная медицина, кондиционер, импортные товары и слабый резерв.</td></tr>
+    <tr><td>Хошимин</td><td>$1 150–1 500</td><td>Больше коворкингов, сервисов и деловой среды.</td><td>Центральный район, квартира с обслуживанием, такси и активная социальная жизнь.</td></tr>
+  </table>
+  <p>Вьетнам часто выглядит сильным вариантом для такого бюджета. Официальная eVisa действует максимум 90 дней и может быть однократной или многократной, но это въездной инструмент, а не резидентская стратегия. Чиангмай обычно проще для бюджета, чем Бангкок или острова, однако DTV требует подтверждения цели и не менее 500 000 THB финансовых доказательств. Пенанг и Пномпень могут работать, если заранее принять их реальные компромиссы по транспорту, медицине и визовому маршруту.</p>
 
   <h2>Где $1500 Становятся Слишком Оптимистичными</h2>
   <p>Сингапур, Гонконг, центральный Токио, премиальные районы Бали и островной Таиланд обычно ломают эту цифру быстро. Даже если можно найти комнату или краткосрочный компромисс, это не значит, что бюджет устойчивый. Устойчивость — это когда вы можете прожить несколько месяцев, заболеть, переехать, продлить документы и не разрушить весь план.</p>
-  <p>Для семьи $1500 почти всегда слишком мало. Не потому что “в Азии дорого”, а потому что семья добавляет школу, медицину, большую квартиру, страховку на нескольких человек, dependants, больше транспорта и меньше пространства для ошибок. Один человек может потерпеть неудобство. Семья обычно нет.</p>
+  <p>Для семьи $1500 почти всегда слишком мало. Не потому что “в Азии дорого”, а потому что семья добавляет школу, медицину, большую квартиру, страховку на нескольких человек, визы для иждивенцев, больше транспорта и меньше пространства для ошибок. Один человек может потерпеть неудобство. Семья обычно нет.</p>
 
   <h2>Кому Подходит Бюджет $1500 В Азии</h2>
   <div class="guide-grid">
-    <div class="guide-card"><strong>Подходит</strong><p>Solo remote worker, который готов жить проще, выбирать не самый дорогой район и держать расходы под контролем.</p></div>
+    <div class="guide-card"><strong>Подходит</strong><p>Один удалённый специалист, который готов жить проще, выбирать не самый дорогой район и держать расходы под контролем.</p></div>
     <div class="guide-card"><strong>Подходит Частично</strong><p>Паре без детей, если жильё скромное, город выбран аккуратно, а визовые расходы заранее заложены.</p></div>
     <div class="guide-card"><strong>Не Подходит</strong><p>Семье с детьми, международной школой, частой медициной и ожиданием западного уровня жилья.</p></div>
-    <div class="guide-card"><strong>Рискованно</strong><p>Тем, кто планирует жить в ноль, без страховки, emergency fund и денег на выезд.</p></div>
+    <div class="guide-card"><strong>Рискованно</strong><p>Тем, кто планирует жить в ноль, без страховки, аварийного резерва и денег на выезд.</p></div>
   </div>
 
   <h2>Как Проверить Свой Сценарий До Переезда</h2>
@@ -3628,6 +3943,15 @@ def ru_where_to_live_on_1500_article(title: str) -> str:
     <li><a href="/ru/tools/cost-calculator/">Калькулятор стоимости жизни</a> — посчитать месячный бюджет по стране и стилю жизни.</li>
     <li><a href="/ru/tools/budget-planner/">Планировщик бюджета</a> — добавить перелёты, депозиты, визы, первый месяц и запас.</li>
     <li><a href="/ru/compare-cities/">Сравнение городов</a> — проверить, где $1500 выглядят реалистичнее: не по стране, а по конкретной базе.</li>
+  </ul>
+
+  <h2>Источники И Методика</h2>
+  <ul class="guide-sources">
+    <li><a href="https://getwherenext.com/blog/best-cities-under-1500-digital-nomads-2026" rel="nofollow noopener" target="_blank">WhereNext: что включать в all-in бюджет до $1 500</a></li>
+    <li><a href="https://asianescapades.com/guides/expat-living-costs" rel="nofollow noopener" target="_blank">Asian Escapades: lean и comfortable бюджеты городов ЮВА</a></li>
+    <li><a href="https://data.worldbank.org/?locations=VN-TH-MY-KH" rel="nofollow noopener" target="_blank">World Bank: макроэкономический контекст Вьетнама, Таиланда, Малайзии и Камбоджи</a></li>
+    <li><a href="https://evisa.gov.vn/?option=MO" rel="nofollow noopener" target="_blank">Vietnam Immigration Department: официальный eVisa-портал</a></li>
+    <li><a href="https://thailand.go.th/public/useful-information-detail/3---destination-thailand-visa-dtv" rel="nofollow noopener" target="_blank">Thailand.go.th: категории и документы DTV</a></li>
   </ul>
 
   <h2>Практический Вывод</h2>
@@ -3648,28 +3972,40 @@ def ru_vietnam_evisa_vs_thailand_dtv_article(title: str) -> str:
     return f"""
 <article class="guide-page">
   <div class="guide-hero">
-    <span class="badge">Обновлено в апреле 2026 · Vietnam eVisa vs Thailand DTV</span>
+    <span class="badge">Проверено 8 октября 2026 · официальные визовые правила</span>
     <h1>{html.escape(title)}</h1>
-    <p>Vietnam eVisa и Thailand DTV часто сравнивают как два способа “пожить в Юго-Восточной Азии”. Но это разные инструменты. Vietnam eVisa лучше для понятного тестового stay. Thailand DTV сильнее, если ваш сценарий реально попадает в DTV-категории и вы хотите возвращаться в Таиланд как в базу.</p>
+    <p>Vietnam eVisa и Thailand DTV часто сравнивают как два способа «пожить в Юго-Восточной Азии». Но это разные инструменты. Vietnam eVisa лучше для понятного тестового пребывания. Thailand DTV сильнее, если ваш сценарий реально попадает в DTV-категории и вы хотите возвращаться в Таиланд как в базу.</p>
   </div>
 
-  <div class="guide-note"><strong>Короткий ответ:</strong> выбирайте Vietnam eVisa, если вам нужен простой тест Вьетнама на срок до 90 дней и без тяжёлой иммиграционной конструкции. Смотрите Thailand DTV, если вы удалёнщик, freelancer, участник soft-power активности, едете на лечение или идёте как dependant, и можете подтвердить цель, документы и финансовые требования.</div>
+  <div class="guide-note"><strong>Короткий ответ:</strong> выбирайте Vietnam eVisa, если вам нужен простой тест Вьетнама на срок до 90 дней без тяжёлой иммиграционной конструкции. Смотрите Thailand DTV, если вы удалёнщик, фрилансер, участник программы Thai soft power, едете на лечение или как иждивенец и можете подтвердить цель, документы и финансовые требования.</div>
 
   <h2>Vietnam eVisa vs Thailand DTV: Главное Различие</h2>
-  <p>Vietnam eVisa — это въездной инструмент. Он удобен, потому что официальная иммиграционная страница Вьетнама описывает eVisa как электронную визу сроком максимум до 90 дней, single или multiple entry. Официальный туристический сайт Вьетнама также пишет, что с 15 августа 2023 года граждане всех стран и территорий могут подаваться на eVisa и использовать 90-day duration, valid for multiple entry.</p>
-  <p>Thailand DTV — другой зверёк. Это не просто “въехать и посмотреть страну”. На правительственных страницах Thailand.go.th DTV описывается через цели: workcation, digital nomad, remote worker, foreign talent, freelancer, Thai soft power activities, medical treatment и dependants. Там же фигурирует срок до 180 дней за stay и отдельная логика продления. На странице типов DTV указано financial evidence не менее 500 000 THB и validity period 5 years.</p>
-  <p>Практический смысл: Vietnam eVisa проще для теста. Thailand DTV интереснее для повторяющегося medium-stay сценария, но требует более точного совпадения с категорией.</p>
+  <p>Vietnam eVisa — это въездной инструмент. Официальный иммиграционный портал Вьетнама описывает её как электронную визу максимум на 90 дней с однократным или многократным въездом.</p>
+  <p>Thailand DTV устроена иначе. Правительственная страница перечисляет три направления: workcation для удалённых специалистов и фрилансеров, Thai soft power или лечение, а также супругов и детей младше 20 лет. Для всех указано подтверждение средств не менее 500 000 THB и срок действия визы 5 лет.</p>
+  <p>Практический смысл: Vietnam eVisa проще для теста страны. Thailand DTV интереснее для повторяющихся пребываний средней продолжительности, но требует точного совпадения с категорией.</p>
 
   <h2>Ключевые Факты По Vietnam eVisa И Thailand DTV</h2>
   <table class="guide-table">
     <tr><th>Пункт</th><th>Vietnam eVisa</th><th>Thailand DTV</th></tr>
-    <tr><td>Срок</td><td>До 90 дней, single или multiple entry по официальному порталу иммиграции.</td><td>До 180 дней за stay, с контекстом продления ещё на 180 дней на Thailand.go.th.</td></tr>
-    <tr><td>Назначение</td><td>Въезд и тест страны без отдельной digital nomad категории.</td><td>Workcation, remote work, freelancer, soft power, лечение, dependants.</td></tr>
-    <tr><td>Финансовый фильтр</td><td>В официальном eVisa-описании основной акцент на паспорт, подачу, fee и условия въезда.</td><td>Официальная DTV-страница по типам указывает financial evidence не менее 500 000 THB.</td></tr>
-    <tr><td>Сложность</td><td>Проще как тестовый въезд.</td><td>Сложнее, потому что нужно доказать purpose и документы категории.</td></tr>
+    <tr><td>Срок пребывания</td><td>До 90 дней с однократным или многократным въездом.</td><td>До 180 дней за въезд; правительственный портал описывает возможность продления ещё до 180 дней.</td></tr>
+    <tr><td>Срок действия</td><td>Конкретный срок указан в выданной eVisa; это не многолетняя программа.</td><td>5 лет, многократный въезд; разрешённый срок пребывания проверяется отдельно при каждом въезде.</td></tr>
+    <tr><td>Сбор</td><td>Официальный портал указывает $25 за однократную и $50 за многократную eVisa; платёж не возвращается при отказе.</td><td>Сбор зависит от страны и консульства: проверять в Thai e-Visa перед оплатой.</td></tr>
+    <tr><td>Обычный срок обработки</td><td>Официальный портал просит проверять результат через 3 рабочих дня после оплаты.</td><td>Единого гарантированного срока нет: он зависит от места подачи и дополнительных запросов.</td></tr>
+    <tr><td>Назначение</td><td>Въезд и тест страны без отдельной категории для цифровых кочевников.</td><td>Удалённая работа, фриланс, Thai soft power, лечение, супруги и дети младше 20 лет.</td></tr>
+    <tr><td>Финансовый фильтр</td><td>На официальной странице нет отдельного порога по сбережениям.</td><td>Официальная страница DTV указывает подтверждение средств не менее 500 000 THB.</td></tr>
+    <tr><td>Сложность</td><td>Проще как тестовый въезд.</td><td>Сложнее: нужно доказать цель и представить документы выбранной категории.</td></tr>
     <tr><td>Лучший сценарий</td><td>Проверить Вьетнам, город, бюджет, ритм жизни.</td><td>Использовать Таиланд как повторяющуюся базу, если ваш профиль подходит под DTV.</td></tr>
-    <tr><td>Главный риск</td><td>Принять 90-day eVisa за долгосрочную релокацию.</td><td>Считать DTV простой туристической визой без проверки цели и документов.</td></tr>
+    <tr><td>Главный риск</td><td>Принять 90-дневную eVisa за долгосрочную релокацию.</td><td>Считать DTV простой туристической визой без проверки цели и документов.</td></tr>
   </table>
+
+  <h2>Сколько Стоит Год: Не Сравнивайте Только Визовый Сбор</h2>
+  <table class="guide-table">
+    <tr><th>Сценарий</th><th>Визовый ритм</th><th>Минимум прямых расходов</th><th>Скрытая цена</th></tr>
+    <tr><td>Вьетнам, 4 последовательных периода</td><td>Новая eVisa и выезд примерно каждые 90 дней; следующий въезд не гарантируется заранее.</td><td>$100 за четыре однократные или $200 за четыре многократные eVisa.</td><td>Билеты, отели, дни без работы и риск задержки или отказа.</td></tr>
+    <tr><td>Таиланд DTV без продления внутри страны</td><td>До 180 дней за въезд, затем выезд и новый въезд в пределах срока действия визы.</td><td>Один консульский сбор по тарифу места подачи.</td><td>Нужно заранее показать не менее 500 000 THB и доказать категорию.</td></tr>
+    <tr><td>Таиланд DTV с продлением</td><td>Правительственный портал допускает ещё до 180 дней, но процедуру и сбор уточняют в Immigration.</td><td>Консульский сбор плюс сбор за продление.</td><td>Документы, сроки и отсутствие автоматической гарантии.</td></tr>
+  </table>
+  <p class="guide-note"><strong>Важно:</strong> четыре eVisa подряд — это математический сценарий, а не право прожить год. Каждая заявка и каждый въезд рассматриваются отдельно. DTV тоже не превращает владельца в резидента и не даёт права работать на тайского работодателя.</p>
 
   <h2>Кому Больше Подходит Vietnam eVisa</h2>
   <p>Vietnam eVisa подходит тем, кто хочет проверить страну без тяжёлой визовой архитектуры. Например: пожить в Дананге, Ханое или Хошимине, понять бюджет, интернет, жильё, климат, шум, транспорт, еду и реальный рабочий ритм.</p>
@@ -3677,29 +4013,31 @@ def ru_vietnam_evisa_vs_thailand_dtv_article(title: str) -> str:
   <p>Где люди ошибаются: считают, что раз въезд простой, то и переезд простой. Нет. Виза может быть простой, а жизнь — нет. Жильё, качество воздуха, медицина, банковские вопросы, налоги, школа и долгосрочный статус всё равно требуют отдельной проверки.</p>
 
   <h2>Кому Больше Подходит Thailand DTV</h2>
-  <p>Thailand DTV больше подходит тем, кто уже понимает, почему именно Таиланд. Не просто “нравится Бангкок” или “хочу на остров”. А есть сценарий: удалённая работа на иностранного работодателя, freelance portfolio, soft-power activity, medical treatment или family dependant route.</p>
-  <p>У DTV сильная сторона — повторяемая база. Если вы хотите регулярно жить в Таиланде средними периодами, DTV выглядит серьёзнее, чем постоянная импровизация с короткими въездами. Но у неё есть фильтр. Официальные страницы перечисляют категории и документы, а консульские чеклисты показывают, что нужны паспорт, фото, current location, финансовое подтверждение и доказательство цели.</p>
+  <p>Thailand DTV больше подходит тем, кто уже понимает, почему именно Таиланд. Не просто «нравится Бангкок» или «хочу на остров», а есть подтверждаемый сценарий: удалённая работа на иностранного работодателя, портфолио фрилансера, программа Thai soft power, лечение или семейный маршрут.</p>
+  <p>У DTV сильная сторона — повторяемая база. Если вы хотите регулярно жить в Таиланде средними периодами, DTV выглядит серьёзнее, чем постоянная импровизация с короткими въездами. Но у неё есть фильтр. Официальные страницы перечисляют категории и документы, а консульские чеклисты требуют паспорт, фото, подтверждение текущего места нахождения, средства и доказательство цели.</p>
   <p>Если ваш профиль не попадает в категорию, DTV не становится подходящей только потому, что Таиланд вам нравится. Это неприятная, но полезная мысль.</p>
+
+  <h2>Удалённая Работа И Налоги: Что Виза Не Решает</h2>
+  <p>Vietnam eVisa официально описана как документ для въезда; на официальной странице нет отдельного разрешения на удалённую работу. Поэтому нельзя превращать молчание портала в юридическое право. Если работа, клиенты или расчёты связаны с Вьетнамом, нужна индивидуальная проверка статуса и разрешений.</p>
+  <p>DTV прямо включает цифровых кочевников, удалённых специалистов и фрилансеров в категорию workcation, но это не разрешение наниматься к тайской компании. Кроме того, визовый срок и налоговое резидентство — разные тесты. Если вы проводите в стране значительную часть года, получаете местный доход или переводите зарубежный доход, сверяйте налоговые правила со специалистом до выбора визового ритма.</p>
 
   <h2>Бюджет: Вьетнам Часто Проще, Но Не Всегда Лучше</h2>
   <p>Если смотреть только на расходы, Вьетнам часто выигрывает. Дананг и Нячанг могут быть мягче по аренде, еде и повседневной жизни, чем Бангкок или популярные районы Таиланда. Но бюджет — это не вся релокация.</p>
-  <p>Таиланд может стоить дороже, но давать больше привычной инфраструктуры для части людей: медицина в крупных городах, expat-сервисы, выбор жилья, международные сообщества, больше familiar lifestyle. Вопрос не в том, где дешевле. Вопрос в том, где ваш бюджет, виза и рабочая жизнь сходятся одновременно.</p>
+  <p>Таиланд может стоить дороже, но давать больше привычной инфраструктуры: медицина в крупных городах, сервисы для иностранцев, выбор жилья и международные сообщества. Вопрос не только в том, где дешевле, а в том, где ваш бюджет, виза и рабочая жизнь сходятся одновременно.</p>
 
   <h2>Как Выбрать Между Vietnam eVisa И Thailand DTV</h2>
   <div class="guide-grid">
     <div class="guide-card"><strong>Берите Vietnam eVisa</strong><p>Если хотите протестировать страну на понятный срок, без сложной категории и без обещаний себе, что это уже переезд.</p></div>
-    <div class="guide-card"><strong>Берите Thailand DTV</strong><p>Если ваш purpose попадает в DTV, документы готовы, и Таиланд нужен как повторяющаяся база.</p></div>
-    <div class="guide-card"><strong>Осторожно С Vietnam eVisa</strong><p>Если вам нужна семья, школа, long-stay и понятный путь на год или дольше.</p></div>
-    <div class="guide-card"><strong>Осторожно С DTV</strong><p>Если нет финансового подтверждения, слабый work proof или цель поездки не совпадает с категорией.</p></div>
+    <div class="guide-card"><strong>Берите Thailand DTV</strong><p>Если ваша цель попадает в категорию DTV, документы готовы, и Таиланд нужен как повторяющаяся база.</p></div>
+    <div class="guide-card"><strong>Осторожно С Vietnam eVisa</strong><p>Если вам нужна семья, школа и понятный законный маршрут на год или дольше.</p></div>
+    <div class="guide-card"><strong>Осторожно С DTV</strong><p>Если нет подтверждения средств, доказательств удалённой работы или цель поездки не совпадает с категорией.</p></div>
   </div>
 
   <h2>Официальные Источники Для Быстрой Проверки</h2>
   <ul class="guide-sources">
-    <li><a href="https://evisa.immigration.gov.vn/web/guest/trang-chu-ttdt" rel="nofollow noopener" target="_blank">Vietnam Immigration: eVisa official portal</a></li>
-    <li><a href="https://vietnam.travel/plan-your-trip/official-vietnam-evisa-application" rel="nofollow noopener" target="_blank">Vietnam Tourism: official eVisa guide</a></li>
-    <li><a href="https://immigration.gov.vn/en_US/khai-thi-thuc-dien-tu/cap-thi-thuc-dien-tu" rel="nofollow noopener" target="_blank">Vietnam Immigration: foreigner eVisa application instructions</a></li>
-    <li><a href="https://thailand.go.th/visit-thailand-detail/-destination-thailand-visa-dtv" rel="nofollow noopener" target="_blank">Thailand.go.th: DTV launch and stay context</a></li>
-    <li><a href="https://thailand.go.th/issue-focus-detail/3---destination-thailand-visa-dtv?hl=en" rel="nofollow noopener" target="_blank">Thailand.go.th: 3 DTV types and required documents</a></li>
+    <li><a href="https://evisa.gov.vn/?option=MO" rel="nofollow noopener" target="_blank">Vietnam Immigration Department: новый официальный eVisa-портал</a></li>
+    <li><a href="https://thailand.go.th/public/index.php/visit-thailand-detail/-destination-thailand-visa-dtv" rel="nofollow noopener" target="_blank">Thailand.go.th: срок stay и продление DTV</a></li>
+    <li><a href="https://thailand.go.th/public/useful-information-detail/3---destination-thailand-visa-dtv" rel="nofollow noopener" target="_blank">Thailand.go.th: категории, 500 000 THB и документы DTV</a></li>
     <li><a href="https://www.thaievisa.go.th/" rel="nofollow noopener" target="_blank">Thailand e-Visa official website</a></li>
   </ul>
 
@@ -3712,7 +4050,7 @@ def ru_vietnam_evisa_vs_thailand_dtv_article(title: str) -> str:
   <div class="faq-item"><h3>Можно Ли Работать Удалённо По Vietnam eVisa?</h3><p>Нужно быть осторожным. Vietnam eVisa — это въездной инструмент, а не отдельная digital nomad visa. Не стоит приписывать ей права, которых официальный источник прямо не даёт.</p></div>
   <div class="faq-item"><h3>Thailand DTV Подходит Всем Удалёнщикам?</h3><p>Нет. Нужно попасть в категорию DTV и подтвердить цель, документы и финансовые требования. Сам факт удалённой работы ещё не равен одобрению.</p></div>
   <div class="faq-item"><h3>Где Дешевле Жить: Во Вьетнаме Или В Таиланде?</h3><p>Часто Вьетнам дешевле в повседневном сценарии, но всё зависит от города, жилья, страховки, визового ритма и lifestyle.</p></div>
-  <div class="faq-item"><h3>Что Проверить Перед Выбором?</h3><p>Срок stay, цель визы, документы, бюджет, страховку, город, интернет и план выхода после окончания разрешённого срока.</p></div>
+  <div class="faq-item"><h3>Что Проверить Перед Выбором?</h3><p>Срок пребывания, цель визы, документы, бюджет, страховку, город, интернет и план после окончания разрешённого срока.</p></div>
 </article>
 """
 
@@ -3729,7 +4067,7 @@ def ru_guide_article(slug: str, title: str) -> str | None:
         "can-you-extend-japan-digital-nomad-visa": (
             "Япония выглядит как идеальная короткая база. Но у digital nomad маршрута есть жёсткая рамка: до 6 месяцев и без продления.",
             "Если вам нужен тест страны, сезон в Японии или понятный рабочий период с датой выезда — маршрут может подойти. Если вы ищете релокацию, школу для детей, долгую аренду или путь к резиденции, это не тот инструмент.",
-            "Главная ошибка — считать визу началом переезда. Это скорее ограниченное окно для удалённой работы, а не long-stay стратегия.",
+            "Главная ошибка — считать визу началом переезда. Это скорее ограниченное окно для удалённой работы, а не стратегия долгого проживания.",
         ),
         "japan-digital-nomad-visa-income-requirement": (
             "По Японии вопрос не только в сумме дохода. Важнее то, можно ли этот доход нормально подтвердить документами.",
@@ -3742,18 +4080,18 @@ def ru_guide_article(slug: str, title: str) -> str | None:
             "Если вы хотите просто пожить в Таиланде и проверить страну, DTV может быть логичнее. Если нужен более стабильный профессиональный статус и профиль тянет требования, смотрите LTR.",
         ),
         "malaysia-de-rantau-vs-thailand-dtv": (
-            "DE Rantau и Thailand DTV привлекают похожую аудиторию, но устроены по-разному.",
-            "Малайзия сильнее там, где важны английский, Куала-Лумпур, понятная digital nomad программа и городская инфраструктура. Таиланд сильнее там, где важны lifestyle, выбор городов и более гибкий сценарий stay.",
-            "Не выбирайте между странами по настроению. Сравните работодателя, доход, срок, dependants и то, где вам реально удобнее жить каждый день.",
+            "Malaysia DE Rantau и Thailand DTV адресованы удалённым специалистам, но проверяют разные вещи: Малайзия — профессию, договоры и доход, Таиланд — цель поездки, профессиональные доказательства и ликвидные средства.",
+            "Выбирайте DE Rantau, если нужен оформленный Professional Visit Pass на 3–12 месяцев и ваш рабочий профиль проходит правила MDEC. Выбирайте DTV, если приоритет — Таиланд, документы соответствуют workcation или другой DTV-категории и вам подходит модель 180 дней за один въезд.",
+            "Пятилетняя DTV не равна пяти годам непрерывного проживания, а допуск non-tech профессий в DE Rantau не отменяет отдельной проверки дохода и документов. Сначала сравните eligibility, затем семью, город и бюджет.",
         ),
         "taiwan-gold-card-income-requirement": (
-            "Taiwan Gold Card — серьёзный профессиональный маршрут, а не casual nomad visa.",
-            "Если вы идёте по salary-based логике, важно не просто заработать нужную сумму, а доказать её так, как требует официальный критерий. Зарплата, налоговые документы и контракты должны складываться в понятную историю.",
-            "Gold Card может быть сильным решением для специалистов, которым нужен work permit и residence logic в одной связке. Но слабые документы быстро превращают хороший профиль в риск.",
+            "Taiwan Employment Gold Card — профессиональный резидентский маршрут, а не универсальная digital nomad visa. Порог 160 000 NTD применяется только в отдельных полях и подпунктах.",
+            "Если выбранный критерий допускает зарплатный путь, проверьте не только сумму: доход должен быть классифицирован как salary, относиться к подходящему периоду и подтверждаться налоговым или эквивалентным документом. Дивиденды, банковский остаток и оборот ИП не заменяют зарплату.",
+            "Gold Card объединяет открытое разрешение на работу и резидентский статус, но сначала выбирается профессиональное поле, затем конкретный критерий и только потом документы. Обратный порядок часто приводит к запросу дополнений или отказу.",
         ),
         "best-asian-countries-with-easy-long-stay-visas": (
-            "Лёгкая long-stay виза — это не всегда низкий порог входа. Иногда «лёгкая» значит понятная. Иногда — дешёвая. Иногда — гибкая по сроку.",
-            "Для пенсионера easy route может быть SRRV. Для remote worker — DE Rantau или DTV. Для специалиста — Taiwan Gold Card. Для теста региона — eVisa или туристический маршрут, если он честно подходит под цель.",
+            "Простая виза для долгого проживания — это не всегда низкий порог входа. Иногда «простая» значит понятная. Иногда — недорогая. Иногда — гибкая по сроку.",
+            "Для пенсионера подходящим маршрутом может быть SRRV. Для удалённого специалиста — DE Rantau или DTV. Для квалифицированного специалиста — Taiwan Gold Card. Для теста региона — eVisa или туристический маршрут, если он честно подходит под цель.",
             "Сначала определите свой профиль: возраст, доход, работодатель, семья, срок и документы. Потом уже выбирайте страну.",
         ),
         "where-to-live-in-asia-on-1500-a-month": (
@@ -3762,13 +4100,13 @@ def ru_guide_article(slug: str, title: str) -> str | None:
             "Не сравнивайте только rent. Смотрите визу, страховку, депозиты, перелёты, интернет, транспорт и запас на выход из страны.",
         ),
         "best-asian-countries-for-remote-workers-with-family": (
-            "Семейная релокация ломается не там, где solo remote worker просто потерпит неудобство.",
-            "Для семьи важны dependants, школа, медицина, жильё, район, страховка и предсказуемость продления. Красивая страна может не подойти, если ребёнку нужна школа, супругу нужен статус, а аренда требует длинного договора.",
-            "Начинайте с legal stay для всей семьи. Потом медицина и школа. Только после этого lifestyle.",
+            "Семейная релокация ломается там, где один удалённый специалист ещё мог бы просто потерпеть неудобство.",
+            "Для семьи важны статусы сопровождающих, школа, медицина, жильё, район, страховка и предсказуемость продления. Красивая страна может не подойти, если ребёнку нужна школа, супругу нужен статус, а аренда требует длинного договора.",
+            "Начинайте с законного статуса для всей семьи. Потом медицина и школа. Только после этого оценивайте образ жизни.",
         ),
         "philippines-srrv-vs-thailand-retirement-visa": (
             "Philippines SRRV и пенсионные маршруты Таиланда сравнивают часто, но критерии разные.",
-            "SRRV интересен тем, кто хочет меньше border anxiety и смотрит на indefinite stay logic. Таиланд часто выигрывает по lifestyle, медицине в крупных городах и привычной expat-инфраструктуре.",
+            "SRRV интересен тем, кто хочет меньше тревоги из-за визовых выездов и рассматривает бессрочное пребывание. Таиланд часто выигрывает по образу жизни, медицине в крупных городах и привычной инфраструктуре для иностранцев.",
             "Решение зависит от возраста, депозита, страховки, медицинских потребностей, банка и того, где вы реально хотите жить после первых трёх месяцев.",
         ),
         "vietnam-evisa-vs-thailand-dtv": (
@@ -3777,39 +4115,248 @@ def ru_guide_article(slug: str, title: str) -> str | None:
             "Если вы просто проверяете Юго-Восточную Азию, Вьетнам может быть проще. Если уже нужен более оформленный stay в Таиланде, смотрите DTV.",
         ),
     }
+    evidence = {
+        "can-you-extend-japan-digital-nomad-visa": {
+            "facts": [
+                ("Разрешённый срок", "6 месяцев", "MOFA прямо пишет: extension не предоставляется."),
+                ("Повторная подача", "после 6 месяцев вне статуса", "ISA указывает, что снова использовать эту категорию можно после шестимесячного перерыва; это новая заявка, а не продление."),
+                ("Годовой доход", "от 10 млн JPY", "Нужны документы, подтверждающие доход заявителя."),
+                ("Страховое покрытие", "от 10 млн JPY", "Покрытие лечения при травме или болезни на весь срок."),
+                ("Карта резидента", "не выдаётся", "Короткий статус не даёт обычную residence card; бытовые сервисы нужно планировать с учётом этого."),
+                ("Семья", "супруг или ребёнок", "Для сопровождающих предусмотрена отдельная категория и собственный комплект документов."),
+            ],
+            "checks": ["дата въезда и обязательного выезда", "гражданство в официальном списке допустимых стран и территорий", "налоговая справка или подтверждение дохода", "контракт с иностранным работодателем или клиентом", "страховой полис с суммой покрытия", "документы о родстве для семьи", "план следующего легального статуса после 6 месяцев"],
+        },
+        "japan-digital-nomad-visa-income-requirement": {
+            "facts": [
+                ("Порог дохода", "10 млн JPY в год", "Это личный годовой доход заявителя на момент подачи, а не остаток денег на счёте."),
+                ("Что принимает MOFA", "налоговые и доходные документы", "Также могут использоваться трудовой договор или договор с контрагентом, где видны срок и сумма."),
+                ("Новый сотрудник", "ожидаемый годовой доход", "Официальный FAQ допускает оценку по текущему договору, если он показывает годовую зарплату от 10 млн JPY."),
+                ("Страховка", "не менее 10 млн JPY", "Покрытие медицинского лечения при травме или болезни."),
+                ("Срок", "6 месяцев без продления", "Высокий доход не превращает маршрут в долгосрочную резиденцию."),
+            ],
+            "checks": ["совпадают ли суммы в налоговой справке и контракте", "видны ли срок договора и размер вознаграждения", "отделён ли личный доход от оборота компании и стоимости активов", "можно ли объяснить нерегулярные выплаты", "приложен ли японский перевод к документам на другом языке", "действует ли страховка все 6 месяцев", "подходит ли гражданство под официальный список"],
+        },
+        "malaysia-de-rantau-vs-thailand-dtv": {
+            "facts": [
+                ("DE Rantau: срок", "3–12 месяцев", "MDEC допускает продление ещё максимум на 12 месяцев."),
+                ("DE Rantau: tech-доход", "свыше USD 24 000 в год", "Фрилансеры подтверждают активные договоры с клиентами; сотрудники — зарубежного работодателя."),
+                ("DE Rantau: профессии", "tech и non-tech", "MDEC расширила программу, но доходный порог и список документов нужно проверять для своей категории в актуальном чек-листе."),
+                ("DE Rantau: сбор", "MYR 1 080 за заявителя", "FAQ MDEC версии 3.0 указывает сумму с 8% SST; иммиграционный сбор и виза оплачиваются отдельно."),
+                ("Thailand DTV", "5 лет, multiple entry", "Разрешённое пребывание — до 180 дней за въезд с опцией одного продления ещё до 180 дней."),
+                ("DTV: финансы", "от 500 000 THB", "Нужны также документы, подтверждающие цель подачи."),
+            ],
+            "checks": ["относится ли профессия к tech или non-tech категории MDEC", "кто платит доход: зарубежный работодатель или клиенты", "достаточно ли сроков и сумм в контрактах для MDEC", "совпадает ли цель поездки с категорией DTV", "как консульство просит показать 500 000 THB", "нужны ли статусы для супруга, детей или родителей", "есть ли запас времени с учётом объявленных MDEC задержек", "что происходит после максимального срока пребывания"],
+        },
+        "taiwan-gold-card-income-requirement": {
+            "facts": [
+                ("Срок карты", "1–3 года", "Gold Card объединяет резидентскую визу, открытое разрешение на работу, ARC и разрешение на повторный въезд."),
+                ("Критерий по зарплате", "от 160 000 NTD/месяц", "Это один из маршрутов только в определённых профессиональных полях и подпунктах, а не универсальный порог для всех."),
+                ("Годовой эквивалент", "1 920 000 NTD", "Учитывается зарплата до налога, а не стоимость активов."),
+                ("Срок рассмотрения", "не менее 60 рабочих дней", "Актуальная страница подачи просит планировать минимум 60 рабочих дней; запрос дополнительных документов увеличивает срок."),
+                ("Стоимость", "NTD 3 700–5 700 для большинства новых заявителей", "Диапазон относится к иностранным паспортам, кроме отдельных правил для граждан США, Hong Kong/Macau и держателей ARC."),
+            ],
+            "checks": ["правильно ли выбраны профессиональное поле и подпункт", "допускает ли именно этот подпункт зарплатный критерий", "есть ли налоговая форма за один из последних трёх лет", "указаны ли должность, работодатель, даты занятости и фактическая зарплата", "не смешаны ли salary, дивиденды, выручка ИП и стоимость активов", "нужен ли семье зависимый резидентский статус", "есть ли не менее 60 рабочих дней и запас на дополнительные документы"],
+        },
+        "best-asian-countries-with-easy-long-stay-visas": {
+            "facts": [
+                ("Thailand DTV", "5 лет; до 180 дней за въезд", "Для подходящих remote-work и soft-power сценариев; финансовое подтверждение от 500 000 THB."),
+                ("Taiwan Gold Card", "1–3 года", "Открытое разрешение на работу без спонсора; 160 000 NTD — один из маршрутов только в определённых полях."),
+                ("Malaysia DE Rantau", "3–12 + до 12 месяцев", "Для подходящих digital professionals; tech-профили — свыше USD 24 000 в год."),
+                ("Philippines SRRV", "indefinite stay, возраст 40+", "SRRV Classic требует депозит USD 15 000–50 000 по возрасту и пенсионному статусу."),
+                ("Japan Digital Nomad Visa", "6 месяцев без продления", "Доход от 10 млн JPY и медицинское покрытие от 10 млн JPY."),
+            ],
+            "checks": ["нужен ли именно резидентский статус", "есть ли право на местную работу", "какой капитал замораживается в депозите", "можно ли включить dependants", "сколько дней реально разрешено находиться за один въезд", "какой официальный документ подтверждает каждую цифру"],
+        },
+        "best-asian-countries-for-remote-workers-with-family": {
+            "facts": [
+                ("Япония", "супруг и ребёнок", "Отдельная категория сопровождающего; каждому нужна страховка с покрытием лечения от 10 млн JPY."),
+                ("Thailand DTV", "супруг и дети младше 20 лет", "Основной заявитель подтверждает категорию и финансовые документы; требования проверяются у консульства подачи."),
+                ("Thailand LTR", "расширенный список dependants", "Обновление BOI 2025 включает супруга, детей младше 20 лет, родителей и legal dependants; связь подтверждается документами."),
+                ("Taiwan Gold Card", "резидентский статус для семьи", "Супруг и дети могут получить зависимый статус; у держателя карты есть открытое право на работу."),
+                ("SRRV", "супруг и дети до 21 года", "Базовый депозит покрывает основного заявителя и двух членов семьи; за следующих действует дополнительный депозит."),
+            ],
+            "checks": ["легальный статус каждого члена семьи", "возрастные ограничения для детей", "страховое покрытие на каждого", "школа и дедлайн зачисления", "размер жилья и депозит по аренде", "резерв минимум на один внеплановый выезд семьи"],
+        },
+        "philippines-srrv-vs-thailand-retirement-visa": {
+            "facts": [
+                ("SRRV: возраст", "от 40 лет", "PRA принимает иностранных граждан и бывших граждан Филиппин."),
+                ("SRRV Classic", "депозит USD 15 000–50 000", "40–49 лет: USD 25K с пенсией или 50K без; 50+: USD 15K с пенсией или 30K без."),
+                ("SRRV: пенсия", "USD 800/месяц", "Для одного заявителя; USD 1 000 при включении членов семьи."),
+                ("SRRV: сборы", "USD 1 500 + USD 360/год", "Сбор за обработку заявления и ежегодный сбор Classic для основного заявителя и двух членов семьи."),
+                ("Thailand Non-O", "от 50 лет", "Официальные консульские страницы указывают 800 000 THB на счёте или доход 65 000 THB в месяц; базовый срок пребывания — 90 дней."),
+                ("Thailand O-A", "до 1 года", "Финансы: 800 000 THB либо 65 000 THB/месяц; работать нельзя."),
+                ("Thailand O-A: страховка", "от 3 000 000 THB", "Официальные консульские страницы требуют покрытие на весь период и Foreign Insurance Certificate для иностранного полиса."),
+            ],
+            "checks": ["возраст и пенсионный статус", "какая сумма останется замороженной", "страховка и хронические заболевания", "ежегодные сборы и отчётность", "статус супруга и детей", "доступность нужной медицины в выбранном городе"],
+        },
+    }
+    expansions = {
+        "can-you-extend-japan-digital-nomad-visa": [
+            ("Почему шесть месяцев — это предел, а не этап продления", "Японский статус Digital Nomad создан для временной удалённой работы. Официальная страница MOFA указывает период пребывания до шести месяцев и прямо сообщает, что продление не предоставляется. Поэтому план «въехать на полгода, а затем продлить ещё на полгода» нельзя закладывать ни в аренду, ни в школьный календарь, ни в рабочие обязательства. Срок действия визы и фактический период пребывания также нужно сверять в выданных документах, а не рассчитывать самостоятельно.", "Выезд из Японии не превращает тот же статус в автоматически возобновляемый маршрут. Если после шести месяцев вы хотите вернуться или остаться дольше, потребуется другое законное основание либо новая подача, если на тот момент вы по-прежнему соответствуете правилам. Консульство оценивает новую заявку заново; прошлое одобрение не является обещанием следующего."),
+            ("Можно ли подать снова после выезда", "Японская версия страницы ISA уточняет важную деталь: после использования этого статуса снова находиться в Японии по нему можно не раньше чем через шесть месяцев после выезда. Это не продление и не автоматическое возобновление. Нужно снова соответствовать требованиям, подготовить актуальные документы и получить новое решение.", "Практически это означает календарь «до шести месяцев в Японии — затем минимум шесть месяцев вне этого статуса». Если вам нужна непрерывная база, такая модель не подходит. Если Япония нужна как сезонный этап между другими странами, повторная подача может быть частью будущего плана, но не гарантией."),
+            ("Какие документы подтверждают, что маршрут вам подходит", "Ключевая связка — паспорт подходящей страны или территории, годовой доход не менее 10 млн JPY, договор с иностранным работодателем или клиентами и медицинская страховка с покрытием не менее 10 млн JPY. В документах должны совпадать имя, период работы, размер вознаграждения и источник выплат. Остаток на счёте может показать финансовую устойчивость, но не заменяет подтверждение дохода, если консульство просит именно его.", "Подготовьте простой реестр: документ, период, валюта, сумма и то, какое требование он подтверждает. Если доход приходит от нескольких клиентов, сложите суммы за один и тот же проверяемый период и приложите договоры и подтверждения выплат. Переводы и формат подачи уточняйте у консульства, куда фактически подаёте заявление."),
+            ("Как подать заявление без сертификата COE", "MOFA допускает два пути: с Certificate of Eligibility (COE) или без него. При наличии COE часть доказательных документов на визовом этапе можно не подавать повторно, но сам COE не гарантирует выдачу визы. Если заявитель находится за пределами Японии и у него нет представителя для подачи на COE, официальный FAQ направляет подавать визовое заявление непосредственно в японское посольство или консульство по месту пребывания.", "Последовательность простая: определить консульство, проверить его локальный чек-лист, собрать заявление, паспорт, план деятельности, доказательства дохода и страховки, затем не покупать невозвратные билеты до решения. Консульство вправе запросить дополнительные материалы."),
+            ("Выезд и возвращение внутри шестимесячного срока", "Официальный FAQ ISA разрешает временно покинуть Японию и вернуться до окончания разрешённого срока при наличии re-entry permission или special re-entry permission. Сам по себе билет обратно не сохраняет статус. Перед поездкой нужно проверить, какое разрешение применяется к вашей ситуации и что срок пребывания не истечёт до возвращения.", "Такая поездка не обнуляет шестимесячный лимит и не создаёт новый период. Календарь продолжает идти до даты окончания статуса."),
+            ("Налоговый вопрос нельзя решать по правилу 183 дней", "FAQ ISA объясняет, что освобождение вознаграждения в Японии возможно только при выполнении условий конкретного налогового соглашения; во многих соглашениях встречается лимит 183 дня, но формулировки и дополнительные условия различаются. Поэтому короткий срок визы сам по себе не доказывает отсутствие налоговых обязательств.", "Проверьте налоговое резидентство страны, из которой уезжаете, источник дохода и применимое соглашение. Для сложной структуры дохода нужен персональный налоговый совет, а не вывод из названия визы."),
+            ("Что меняется, если вы едете с семьёй", "Для супруга и ребёнка предусмотрена категория сопровождающего, но это не одна семейная заявка без отдельных требований. Нужны документы о родстве и медицинская страховка для каждого сопровождающего. Семья следует тому же короткому горизонту: наличие ребёнка или супруга не продлевает основной шестимесячный статус.", "Для семьи шесть месяцев могут быть достаточны для пробного периода, но часто слишком коротки для школы, долгосрочной аренды и устойчивой медицинской логистики. До оплаты жилья проверьте правила регистрации, условия страхового полиса и даты, к которым вся семья обязана выехать."),
+            ("Что делать, если нужна Япония дольше чем на шесть месяцев", "Сначала определите реальную цель: работа на японского работодателя, предпринимательство, обучение, семейное основание или высококвалифицированная профессиональная деятельность. Это уже другие категории со своими спонсорами и доказательствами. Digital Nomad Visa нельзя использовать как обход требований рабочего или резидентского статуса.", "Практичный план состоит из двух независимых этапов: использовать шесть месяцев как ограниченный тест страны и параллельно оценить другой статус, не предполагая его одобрение. Если второго основания нет, честный план должен включать дату выезда, стоимость перелёта и следующую страну."),
+        ],
+        "japan-digital-nomad-visa-income-requirement": [
+            ("Что означает порог 10 млн JPY", "Порог относится к годовому доходу заявителя. Это не рекомендуемый бюджет жизни в Японии и не сумма, которую нужно положить на отдельный счёт. Консульству важно увидеть происхождение денег и период, за который они заработаны. Налоговая справка обычно сильнее одиночной банковской выписки, потому что показывает уже заявленный доход.", "Если вознаграждение указано в другой валюте, сохраняйте документы с датой и валютой платежа. Не пересчитывайте только выгодный месяц: доказательства должны давать последовательную картину за год."),
+            ("Какие документы прямо перечисляет MOFA", "Официальный перечень называет налоговое свидетельство, справку о доходах, трудовой договор или договор с деловым партнёром, где ясно указаны срок и сумма. Это примеры доказательств, а не обещание, что одного документа всегда достаточно. Конкретное консульство может запросить дополнительные материалы.", "Соберите пакет по логике «правило — документ — период — сумма». К каждому источнику дохода добавьте договор и подтверждение фактических выплат. Документы на иностранном языке сопровождаются переводом на японский по правилам ISA; локальный чек-лист консульства проверяется отдельно."),
+            ("Как подтвердить зарплату, фриланс и смешанный доход", "Наёмному сотруднику проще связать трудовой договор, справку работодателя, налоговый документ и поступления. Фрилансеру понадобится набор договоров и выплат от клиентов. При смешанной модели разделите источники дохода и покажите, какая часть относится к удалённой профессиональной деятельности.", "Криптоактивы, стоимость недвижимости и инвестиционный портфель не следует автоматически считать заработанным доходом. Если ваша ситуация нестандартна, запросите письменное разъяснение у консульства до оплаты перевода всего пакета."),
+            ("Матрица доказательств для трёх профилей", "Наёмный сотрудник связывает договор, письмо работодателя, налоговую справку и расчётные листки. Фрилансер показывает действующие клиентские договоры с периодом и стоимостью, инвойсы и поступления. Владелец компании отделяет личное вознаграждение от выручки бизнеса: оборот компании не равен годовому доходу заявителя.", "Если вы недавно получили повышение или только начали новую работу, официальный FAQ допускает оценку ожидаемого дохода по договору, когда годовая зарплата достигает порога. Но окончательный комплект всё равно согласовывается с консульством подачи."),
+            ("Как пересчитать доход в другой валюте", "Официальные страницы задают порог в иенах, но не устанавливают на основной странице универсальный курс для всех консульств. Поэтому не фиксируйте в статье или заявлении удобный долларовый эквивалент как юридический порог. Покажите исходную валюту, период, сумму и метод пересчёта, который принимает ваше консульство.", "Оставьте запас над порогом: курсовое движение между справкой и подачей может сделать пограничный расчёт спорным. Запас — практическая рекомендация, а не дополнительное официальное требование."),
+            ("Доход, страховка и гражданство проверяются вместе", "Даже безупречное подтверждение 10 млн JPY не заменяет остальные условия. Заявитель должен иметь гражданство или подданство страны или территории из официального списка, выполнять международную удалённую работу и иметь частную медицинскую страховку с покрытием лечения не менее 10 млн JPY на весь срок.", "Отдельно проверьте, что работа действительно выполняется для зарубежной организации или зарубежных клиентов. Работа по контракту с японской организацией не входит в назначение этого статуса."),
+            ("Почему высокий доход не решает вопрос срока", "Даже доход значительно выше порога не даёт право оставаться больше шести месяцев и не создаёт путь к постоянному проживанию. Доход — только один фильтр. Отдельно проверяются гражданство, цель поездки, дистанционный характер работы, страховка и документы сопровождающих.", "Это важное отличие от программ, где доход связан с многолетним статусом. Японский маршрут полезен как временная база, но слаб как самостоятельный план релокации."),
+        ],
+        "malaysia-de-rantau-vs-thailand-dtv": [
+            ("Короткий ответ: какой маршрут кому ближе", "DE Rantau логичнее человеку, который хочет жить в Малайзии, может ясно подтвердить цифровую профессию и иностранный доход. DTV логичнее, если приоритет — Таиланд и цель соответствует одной из официальных категорий. Пятилетний срок действия DTV нельзя читать как пять лет непрерывного проживания: разрешённый период одного въезда рассматривается отдельно.", "Сравнивайте не маркетинговое название, а четыре вещи: кто платит доход, чем подтверждается профессия, сколько можно находиться за один въезд и что требуется членам семьи."),
+            ("Доход и финансовые документы", "Для технологических профилей DE Rantau официальный FAQ MDEC указывает доход свыше USD 24 000 в год. Сотрудник показывает активный договор на срок более трёх месяцев с зарубежным работодателем, фрилансер — один или несколько активных проектов общей длительностью более трёх месяцев. Для DTV финансовое подтверждение начинается от 500 000 THB, но деньги на счёте не заменяют документ о workcation, soft-power активности, лечении или другой цели подачи.", "Заранее соберите таблицу контрактов: контрагент, страна, срок, сумма и фактические поступления. Так проще увидеть, выдерживает ли пакет проверку без устных объяснений."),
+            ("Non-tech DE Rantau: что изменилось", "MDEC официально расширила программу на специалистов за пределами IT и digital: среди примеров названы founders, CEOs, COOs, tax accountants, legal counsels, technical writers, business development и public relations. Но само наличие профессии в этом широком списке ещё не подтверждает финансовое соответствие. Используйте актуальный чек-лист своей категории в кабинете подачи, а не старую статью, где для всех указан один порог.", "В этой статье зафиксирован только опубликованный MDEC порог свыше USD 24 000 для tech-профилей. Неподтверждённый на актуальной официальной странице порог для non-tech не выдаётся за установленный факт."),
+            ("Срок пребывания и продление", "DE Rantau выдаётся на 3–12 месяцев с возможностью продления ещё максимум на 12 месяцев при выполнении условий. DTV имеет многократный пятилетний срок действия, но один въезд ограничен 180 днями; официальные материалы указывают возможность одного продления ещё до 180 дней. Это разные модели: резидентская программа на ограниченный общий горизонт и многократная виза с отдельными периодами пребывания.", "До подписания годовой аренды нарисуйте календарь въездов, продления и возможного выезда. Если план работает только при автоматическом продлении, которого источник не обещает, план слабый."),
+            ("Семья и зависимые статусы", "Текущая страница MDEC указывает возможность добавить супруга, детей и родителей основного заявителя. Для DTV официальные консульские инструкции обычно называют супруга и детей младше 20 лет. Это важное различие для семьи с пожилыми родителями, но сопровождающий статус не следует автоматически читать как разрешение работать.", "Посчитайте отдельные сборы, страховку и документы каждого зависимого. Для DE Rantau FAQ версии 3.0 указывает processing fee MYR 540 за зависимого с 8% SST, отдельно от иммиграционного сбора и возможной визовой платы."),
+            ("Сборы и текущие сроки", "FAQ MDEC версии 3.0 указывает MYR 1 080 за основного заявителя и MYR 540 за зависимого, включая 8% SST; сбор невозвратный. Иммиграционный pass fee указан отдельно: MYR 90 за каждые три месяца или MYR 360 за год. У DTV консульский сбор и формат оплаты зависят от места подачи, поэтому универсальную цену в другой валюте лучше не фиксировать.", "23 сентября 2026 года MDEC опубликовала уведомление о задержках из-за технических проблем интеграции и синхронизации. Не планируйте перелёт, расторжение аренды или школу ребёнка по старому рекламному сроку обработки."),
+            ("Города и стоимость ошибки", "Куала-Лумпур и Пенанг дают англоязычную городскую среду; Бангкок, Чиангмай и острова создают разные бюджеты и логистику. Но город сравнивается только после того, как выбран юридически подходящий маршрут. Иначе дешёвая аренда или любимый район маскируют слабый визовый план.", "Слабый выбор обычно обнаруживается через 6–12 месяцев: статус не продлевается как ожидалось, ребёнку не подходит школа или город требует большего бюджета. Поэтому решение должно включать запасной маршрут и стоимость выхода."),
+        ],
+        "taiwan-gold-card-income-requirement": [
+            ("160 000 NTD — не универсальное требование для всех", "Официальный Gold Card FAQ подчёркивает: среднемесячная зарплата 160 000 NTD является одним из маршрутов только для определённых профессиональных полей и подпунктов. Это не означает, что каждый заявитель обязан проходить только по зарплате, и не означает, что любой человек с таким доходом автоматически соответствует программе.", "Сначала выберите профессиональное поле и конкретный критерий. Только потом собирайте доказательства. Иначе сильный документ может подтверждать не тот пункт, по которому подана заявка."),
+            ("Как считается средняя месячная зарплата", "Для зарплатного критерия подтверждённый годовой доход делится на 12. Можно выбрать подходящий год из последних трёх, если официальный критерий вашего поля это допускает. В расчёте важна зарплата до налога; банковский баланс, криптовалюта, акции и доход от собственности не считаются эквивалентом зарплаты.", "Проверьте, совпадают ли работодатель, должность, период и сумма в налоговой форме, справке о занятости и договоре. Если документы противоречат друг другу, приложите пояснение и подтверждение изменения работы."),
+            ("Какие деньги не засчитываются как salary", "Официальный FAQ прямо исключает доход sole proprietor и дивиденды из зарплатного критерия. Доход фрилансера может учитываться только тогда, когда в налоговом документе он классифицирован именно как salary. Инвойсы, оборот бизнеса или банковские поступления сами по себе не меняют юридическую классификацию дохода.", "Если ваша реальная модель — предпринимательство или дивиденды, проверьте другие критерии подходящего профессионального поля. Не переименовывайте доход в зарплату только для анкеты."),
+            ("Документы: сильный и слабый пакет", "Базовый сильный пакет связывает CV, employment certificate с работодателем, должностью и датами, а также налоговую или salary withholding форму. Если налоговую форму получить невозможно из-за правил вашей страны, официальный FAQ допускает employer certificate после объяснения соответствующих норм. Для недавно повышенной зарплаты портал просит предыдущую налоговую форму, письмо о повышении и salary statement или payslips.", "Слабый пакет — это банковская выписка без классификации дохода, письмо без периода работы, документ на компанию вместо заявителя или выбор поля только потому, что в нём встречается знакомое слово."),
+            ("Будущий контракт в Тайване", "Официальный FAQ допускает контракт предполагаемой будущей работы в ROC как один из способов доказательства зарплаты; дата начала должна быть более чем через месяц после подачи. Это отдельный сценарий, а не универсальная замена налоговым документам для любой удалённой работы.", "Если используете будущий контракт, проверьте поле, подпункт и требования к работодателю. Сумма выше порога не отменяет профессиональную квалификацию."),
+            ("Как пересчитывается иностранная валюта", "WDA использует buying cash rate Bank of Taiwan на дату проверки или в период занятости. Если нужной валюты нет в таблице, официальный FAQ предлагает сначала перевести сумму в USD по курсу публичного банка вашей страны, а затем в NTD по Bank of Taiwan.", "Сохраняйте исходную валюту, период и документ с зарплатой. Не публикуйте один постоянный долларовый эквивалент: он быстро устаревает и может сделать пограничную заявку слабой."),
+            ("Что даёт Gold Card после одобрения", "Карта объединяет резидентскую визу, открытое разрешение на работу, ARC и разрешение на повторный въезд. Её могут выдать на один, два или три года. Это сильнее короткой nomad-визы, потому что держатель не привязан к одному работодателю, но срок и последующее продление всё равно требуют отдельной проверки.", "Семье нужен собственный зависимый резидентский статус. Право основного держателя свободно работать не нужно автоматически переносить на каждого сопровождающего."),
+            ("Срок рассмотрения и сбор", "Актуальная страница подачи просит закладывать не менее 60 рабочих дней даже при полном комплекте. Для большинства новых заявителей с иностранным паспортом, кроме отдельных правил для граждан США и других специальных случаев, опубликованы сборы NTD 3 700, 4 700 и 5 700 за карту на один, два или три года. Сбор не возвращается при отказе.", "Не покупайте невозвратные билеты и не завершайте текущий статус по оптимистичному сроку. До подачи проведите внутреннюю проверку: каждый критерий должен иметь документ и короткое объяснение."),
+        ],
+        "best-asian-countries-with-easy-long-stay-visas": [
+            ("Что на самом деле означает «простая виза»", "Для одного заявителя простота — низкий финансовый порог, для другого — мало поездок в иммиграцию, для третьего — право взять семью. Поэтому универсального рейтинга нет. Разделите задачу на срок, способ подтверждения дохода, право работать, семейные условия и капитал, который придётся заморозить.", "Японские шесть месяцев могут быть простыми документально, но не решают долгий переезд. Taiwan Gold Card сильнее по статусу, но требует профессионального соответствия. DTV гибка по въездам, а SRRV строится вокруг возраста и депозита."),
+            ("Маршруты для удалённых специалистов", "DE Rantau, Thailand DTV, Japan Digital Nomad Visa и Indonesia E33G адресуют разные модели удалённой работы. Смотрите, где зарегистрирован работодатель, допускаются ли клиенты, нужен ли минимальный доход и что программа говорит о местной занятости. Туристический въезд не нужно ставить в один ряд с официальным удалённым маршрутом.", "Если доход нестабилен или приходит через собственную компанию, заранее проверьте, какие документы примет конкретный орган или консульство."),
+            ("Профессиональные и пенсионные маршруты", "Taiwan Gold Card подходит квалифицированным специалистам, а не всем удалёнщикам. Philippines SRRV и тайские пенсионные статусы зависят от возраста, депозита или регулярного дохода. Здесь простота часто покупается ценой замороженного капитала, страховки или ежегодных процедур.", "Сравнивайте полную стоимость первого года: сборы, депозит, страховку, переводы, поездки и обслуживание статуса."),
+            ("Пять лет действия не означают пять лет непрерывного stay", "Для DTV нужно отделять срок действия визы от 180 дней одного въезда. У LTR десять лет устроены как пять лет плюс ещё пять при сохранении условий. Japan Digital Nomad ограничена шестью месяцами без продления, а DE Rantau — общим горизонтом до 24 месяцев при одобрении продления. Эти цифры нельзя ставить в одну колонку без пояснений.", "Для каждого маршрута запишите четыре отдельные даты: срок визы или карты, разрешённый stay, дедлайн продления и дату следующей обязательной проверки условий."),
+            ("Как собрать короткий список стран", "Сначала исключите маршруты, где не совпадает возраст, доход или тип работы. Затем исключите варианты, которые не подходят семье. Из оставшихся сравните медицину, город, бюджет и путь после окончания статуса. Так десять привлекательных стран превращаются в два-три реалистичных варианта.", "Для каждого варианта запишите дату следующего обязательного действия: продление, выезд, отчётность или повторная подача."),
+        ],
+        "best-asian-countries-for-remote-workers-with-family": [
+            ("Почему семейный выбор начинается не со страны", "Сначала проверяется статус каждого члена семьи. У программы может быть хороший маршрут для основного заявителя, но возрастной предел для ребёнка, отдельная страховка или отсутствие права работать у супруга. Только после этого имеет смысл сравнивать школы, районы и стоимость жилья.", "Семейный план должен пережить изменение работодателя или дохода основного заявителя. Если вся семья теряет статус сразу, нужен резерв денег и понятный маршрут выезда."),
+            ("Какие программы стоит сравнить", "Japan Digital Nomad Visa допускает супруга и ребёнка, но сохраняет короткий шестимесячный горизонт. Thailand DTV предусматривает супруга и детей младше 20 лет. В обновлении BOI 2025 список LTR dependants расширен на родителей и legal dependants. Taiwan Gold Card даёт основному заявителю открытое право работать и позволяет семье оформлять зависимое проживание. SRRV строит семейную логику вокруг основного заявителя, возраста детей и депозита.", "Ни одна строка в сравнительной таблице не заменяет проверку конкретного консульства: состав документов и место подачи могут зависеть от гражданства и резидентства."),
+            ("Бюджет семьи: что обычно забывают", "К аренде добавьте депозит, спальни нужного размера, школу, страховку на каждого, педиатрию, транспорт и минимум один внеплановый перелёт всей семьи. Международная школа часто меняет рейтинг стран сильнее, чем разница в аренде.", "Считайте два сценария: обычный месяц и плохой месяц с лечением, переездом или срочным выездом. Если второй сценарий невозможен без долга, страна пока не подходит."),
+            ("Школа — это календарь, а не только цена", "Сопоставьте дату начала учебного года, срок внесения невозвратного registration fee, требования к прежним табелям, языковую поддержку и время в пути. Виза, которая заканчивается в середине учебного года, может сделать недорогую школу дорогим риском.", "Не оплачивайте полный год до подтверждения статуса, если договор школы не объясняет возврат денег при отказе в визе. Уточняйте это письменно."),
+            ("Город важнее среднего показателя страны", "Куала-Лумпур, Бангкок, Тайбэй и Фукуока отличаются не только ценой. Важны расстояние до школы и больницы, качество воздуха, общественный транспорт и возможность жить без автомобиля. Семье нужен анализ конкретного района, а не средняя оценка страны.", "Перед длинной арендой полезен пробный период без обещания, что туристический или короткий статус станет долгосрочным."),
+        ],
+        "philippines-srrv-vs-thailand-retirement-visa": [
+            ("Короткий ответ: SRRV или Таиланд", "SRRV сильнее для человека от 40 лет, который готов работать с депозитом и хочет многократный въезд с бессрочной логикой пребывания. Таиланд чаще выбирают с 50 лет ради городов, медицины и знакомой инфраструктуры, но финансовые доказательства, страховка и обслуживание статуса зависят от конкретной категории Non-O, O-A или O-X.", "Сравнивать нужно одинаковые вещи: возраст, замороженный капитал, ежегодные расходы, страхование, отчётность, семью и возможность жить в выбранном городе."),
+            ("Как устроен депозит SRRV Classic", "PRA указывает разные суммы по возрасту и наличию пенсии. Для 40–49 лет это USD 25 000 при подтверждённой пенсии или USD 50 000 без неё; с 50 лет — USD 15 000 или USD 30 000 соответственно. Пенсионный доход для одного заявителя начинается от USD 800 в месяц, для заявителя с членами семьи — от USD 1 000.", "Депозит не является расходом на обычную жизнь. До перевода средств проверьте правила использования, возврата и последствия прекращения статуса непосредственно у PRA и обслуживающего банка."),
+            ("Тайские пенсионные категории нельзя смешивать", "Non-O, O-A и O-X отличаются местом подачи, сроком, страховкой и финансовыми доказательствами. Официальные консульские страницы для Non-O используют ориентир 800 000 THB на счёте или доход 65 000 THB в месяц; базовый въезд может быть на 90 дней. O-A рассчитана на более длинный срок и требует отдельный набор медицинских и страховых документов.", "Не переносите правило одной категории на другую. Перед подачей зафиксируйте точное название статуса и официальный орган, чьими инструкциями вы пользуетесь."),
+            ("Сборы SRRV и страховой фильтр O-A", "PRA указывает processing fee USD 1 500 для основного заявителя, USD 300 для присоединяемого dependent и annual fee USD 360 по SRRV Classic за основного заявителя и двух dependants. Для Thailand O-A официальные консульские страницы требуют медицинское покрытие не менее 3 000 000 THB на весь период; иностранному полису нужен Foreign Insurance Certificate.", "Не сравнивайте только депозит SRRV с 800 000 THB тайского финансового критерия. В первой модели есть невозвратные и ежегодные сборы, во второй стоимость полиса может сильно зависеть от возраста и заболеваний."),
+            ("Медицина и страховка после 60–70 лет", "Цена и доступность полиса зависят от возраста, хронических заболеваний, франшизы и территории покрытия. Поэтому обещать универсальную стоимость нельзя. Сравните не только премию, но и исключения, прямой биллинг, лимиты госпитализации и ближайший госпиталь в выбранном городе.", "Дешёвая аренда вдали от крупной больницы может быть плохой экономией. Для пенсионного переезда город и медицинский маршрут должны оцениваться вместе с визой."),
+            ("Годовая стоимость и семейный сценарий", "Для SRRV учитывайте сбор за обработку заявления, ежегодный сбор и капитал в депозите. Для Таиланда — страховку, банковские требования, продление, отчётность и re-entry разрешение, если оно необходимо вашему статусу. Супруги разного возраста могут иметь разные оптимальные маршруты.", "Соберите календарь на 12 месяцев и отметьте каждое обязательное действие. Побеждает не самая красивая программа, а та, которую вы сможете спокойно обслуживать несколько лет."),
+        ],
+    }
     item = data.get(slug)
     if not item:
         return None
     intro, practical, risk = item
+    detail = evidence[slug]
+    fact_rows = "".join(
+        f"<tr><th scope='row'>{html.escape(label)}</th><td><strong>{html.escape(value)}</strong></td><td>{html.escape(note)}</td></tr>"
+        for label, value, note in detail["facts"]
+    )
+    check_rows = "".join(
+        f"<li><span>{index:02d}</span><p>{html.escape(check)}</p></li>"
+        for index, check in enumerate(detail["checks"], start=1)
+    )
+    expansion_html = "".join(
+        f"<section class='guide-depth-section'><h2>{html.escape(heading)}</h2><p>{html.escape(first)}</p><p>{html.escape(second)}</p></section>"
+        for heading, first, second in expansions.get(slug, [])
+    )
+    faq_by_slug = {
+        "can-you-extend-japan-digital-nomad-visa": [
+            ("Можно ли продлить Japan Digital Nomad Visa внутри страны?", "Нет. MOFA и ISA указывают шестимесячный срок без продления."),
+            ("Можно ли выехать и сразу подать снова?", "Нет как на автоматическое продолжение. ISA указывает шестимесячный перерыв перед повторным использованием этого статуса; новая заявка оценивается заново."),
+            ("Можно ли выезжать из Японии в течение этих шести месяцев?", "Да, официальный FAQ допускает возвращение до окончания статуса при наличии применимого re-entry permission. Выезд не запускает новый шестимесячный период."),
+            ("Можно ли работать на японскую компанию?", "Нет в рамках этого маршрута. Он предназначен для международной удалённой работы на зарубежную организацию или зарубежных клиентов."),
+            ("Получает ли digital nomad карту резидента?", "Нет. ISA прямо указывает, что residence card для этой категории не выдаётся."),
+        ],
+        "japan-digital-nomad-visa-income-requirement": [
+            ("10 млн JPY — это доход или деньги на счёте?", "Это личный годовой доход заявителя на момент подачи. Банковский остаток сам по себе не заменяет доказательство дохода."),
+            ("Подходит ли доход от нескольких клиентов?", "Официальный список допускает договоры с деловыми партнёрами. Практически нужно связать договоры, периоды, суммы и фактические поступления в одну проверяемую картину."),
+            ("Можно ли учитывать оборот собственной компании?", "Не автоматически. Требование относится к доходу заявителя, поэтому личное вознаграждение нужно отделить от выручки и активов компании."),
+            ("Что делать, если зарплату повысили недавно?", "FAQ ISA допускает оценку ожидаемого годового дохода по новому договору, если он показывает не менее 10 млн JPY в год. Конкретный комплект подтверждений уточняйте у консульства."),
+            ("Нужен ли японский перевод документов?", "ISA просит прилагать перевод на японский к документам на иностранном языке. Дополнительные местные требования проверяются у консульства подачи."),
+        ],
+        "malaysia-de-rantau-vs-thailand-dtv": [
+            ("Что лучше: Malaysia DE Rantau или Thailand DTV?", "DE Rantau лучше соответствует оформленной рабочей базе в Малайзии, если профессия, контракты и доход проходят MDEC. DTV сильнее для подходящего DTV-сценария в Таиланде и повторных въездов, но пять лет действия не означают пять лет непрерывного проживания."),
+            ("Какой минимальный доход нужен для DE Rantau?", "Для tech-профилей актуальная страница MDEC указывает более USD 24 000 в год. Для non-tech используйте текущий чек-лист категории в момент подачи: программа расширена, но старый общий порог нельзя автоматически переносить на все профессии."),
+            ("Можно ли взять семью?", "MDEC указывает супруга, детей и родителей основного заявителя; у DTV консульские инструкции обычно называют супруга и детей младше 20 лет. Для каждого зависимого проверяются отдельные документы и сборы."),
+            ("Сколько можно находиться по DTV?", "До 180 дней за один въезд с возможностью одного продления ещё до 180 дней по официальным материалам. Это нужно отличать от пятилетнего срока действия многократной визы."),
+            ("Есть ли сейчас задержки DE Rantau?", "Да. MDEC 23 сентября 2026 года официально предупредила, что часть заявлений обрабатывается дольше обычного из-за технических проблем интеграции и синхронизации."),
+        ],
+        "taiwan-gold-card-income-requirement": [
+            ("Нужно ли каждому заявителю зарабатывать 160 000 NTD в месяц?", "Нет. Это один из критериев только для определённых профессиональных полей и подпунктов. Сначала проверьте конкретное поле и qualification route."),
+            ("Засчитываются ли дивиденды или доход ИП?", "Нет для salary route. Официальный FAQ принимает доход фрилансера только когда налоговый документ классифицирует его как salary; sole proprietor income и дивиденды не засчитываются."),
+            ("Можно ли подтвердить зарплату банковской выпиской?", "Банковский остаток или поступления сами по себе не заменяют налоговую или зарплатную документацию. Нужны документы, где видны работодатель, период, должность и классификация выплаты."),
+            ("Какой год дохода можно использовать?", "Официальный FAQ допускает выбрать один год из трёх лет до месяца подачи. WDA делит подтверждённую годовую зарплату на 12."),
+            ("Сколько занимает подача Taiwan Gold Card?", "Актуальная официальная инструкция рекомендует закладывать не менее 60 рабочих дней. Дополнительные документы и отдельные проверки могут увеличить срок."),
+        ],
+        "best-asian-countries-with-easy-long-stay-visas": [
+            ("Какая long-stay виза в Азии самая простая?", "Универсального победителя нет. Для удалёнщика DTV или DE Rantau могут быть проще пенсионной программы; для человека от 40 лет SRRV может быть устойчивее short-stay визы; для квалифицированного специалиста сильнее Gold Card."),
+            ("Можно ли считать срок действия визы сроком непрерывного проживания?", "Нет. Например, DTV действует пять лет, но разрешённый stay считается по каждому въезду. Всегда отделяйте validity, stay, extension и обязанность выезда."),
+            ("Какая азиатская виза даёт право работать?", "Gold Card включает открытое разрешение на работу. Другие маршруты могут разрешать только зарубежную удалённую деятельность или вообще запрещать работу. Проверяется конкретная категория."),
+            ("Нужен ли депозит?", "Зависит от программы. SRRV и отдельные пенсионные/инвестиционные маршруты используют депозит, а digital nomad программы чаще проверяют доход, договоры, страховку или доступные средства."),
+            ("Как выбрать из двух подходящих маршрутов?", "Сравните полный первый год: государственные сборы, замороженный капитал, страховку, переводы, поездки, семейные статусы и дату следующего обязательного действия."),
+        ],
+        "best-asian-countries-for-remote-workers-with-family": [
+            ("Какая страна Азии лучше для удалённой семьи?", "Чаще в коротком списке оказываются Малайзия, Таиланд и Тайвань, но победитель зависит от законного статуса всей семьи, школы, медицины, бюджета и права супруга работать."),
+            ("Можно ли ребёнку учиться как dependent?", "Иммиграционный статус и допуск в конкретную школу — разные вопросы. Уточняйте тип dependent status, требования школы и срок действия документов до оплаты невозвратных сборов."),
+            ("Получает ли супруг право работать автоматически?", "Не всегда. Право основного заявителя работать или находиться в стране нельзя автоматически переносить на супруга; правила проверяются у программы и работодателя."),
+            ("Как считать семейный бюджет?", "Отдельно считайте обычный месяц и стартовые расходы: депозит за жильё, school fees, страховку каждого члена семьи, документы, мебель, транспорт и резерв на внеплановый перелёт."),
+            ("Нужен ли пробный переезд?", "Да, если он возможен законно. Короткий тест района помогает проверить дорогу до школы, больницу, качество воздуха и быт, но не является обещанием последующего long-stay статуса."),
+        ],
+        "philippines-srrv-vs-thailand-retirement-visa": [
+            ("Что лучше для пенсии: Philippines SRRV или Thailand retirement visa?", "SRRV сильнее бессрочной логикой и входом с 40 лет; Таиланд — выбором городов и частной медицины. Решение определяется депозитом, страховкой, возрастом и обслуживанием статуса."),
+            ("Какой депозит нужен для SRRV Classic?", "В 40–49 лет — USD 25 000 при подходящей пенсии или USD 50 000 без неё; с 50 лет — USD 15 000 или USD 30 000 соответственно."),
+            ("Какая пенсия нужна для SRRV?", "PRA указывает минимум USD 800 в месяц для одного заявителя и USD 1 000 при включении dependants."),
+            ("Нужна ли страховка для Thailand O-A?", "Да. Официальные консульские страницы указывают покрытие не менее 3 000 000 THB на весь период и отдельный сертификат для иностранного страховщика."),
+            ("Можно ли работать по пенсионной визе?", "Thai Non-O/O-A запрещают занятость. У SRRV есть отдельные льготы и процедуры, но работу и бизнес нужно проверять отдельно у PRA и соответствующего органа, а не выводить из статуса автоматически."),
+        ],
+    }
+    faq_items = faq_by_slug.get(slug, [
+        ("Можно ли использовать этот гайд как юридическую консультацию?", "Нет. Это планировочный материал. Перед подачей проверяйте официальный источник или консультируйтесь со специалистом."),
+        ("Что проверять первым?", "Срок пребывания, продление, доход, статус членов семьи, страховку и разрешённую деятельность."),
+        ("Что делать после чтения?", "Откройте официальные источники, сравните альтернативный маршрут и посчитайте полный бюджет до оплаты."),
+    ])
+    faq_html = "".join(
+        f"<h3>{html.escape(question)}</h3><p>{html.escape(answer)}</p>"
+        for question, answer in faq_items
+    )
     return f"""
 <article class="guide-page">
   <div class="guide-hero">
-    <span class="badge">Гайд 2026</span>
+    <span class="badge">Проверено 8 октября 2026 · официальные данные</span>
     <h1>{html.escape(title)}</h1>
     <p>{html.escape(intro)}</p>
   </div>
   <div class="guide-note"><strong>Короткий ответ:</strong> {html.escape(practical)}</div>
-  <h2>Что написано в правилах</h2>
-  <p>Смотрите на официальный срок stay, продление, тип разрешённой деятельности, требования к доходу и документы. Если правило не говорит о продлении, dependants или местной работе, не стоит додумывать это как скрытую возможность.</p>
+  <h2>Ключевые цифры и подтверждённые правила</h2>
+  <div class="guide-table-wrap"><table class="guide-table guide-fact-table"><thead><tr><th>Параметр</th><th>Цифра</th><th>Что это означает</th></tr></thead><tbody>{fact_rows}</tbody></table></div>
+  <p class="guide-data-note"><strong>Как читать таблицу.</strong> Срок действия визы не всегда равен сроку одного пребывания, депозит не равен месячному бюджету, а право сопровождающего жить в стране не означает автоматическое право работать. Поэтому каждая цифра выше привязана к своему юридическому контексту.</p>
+  {expansion_html}
   <h2>Что это значит на практике</h2>
-  <p>{html.escape(risk)} Практический подход простой: сначала legal route, затем деньги, затем город и быт. Обратный порядок почти всегда создаёт лишние ожидания.</p>
+  <p>{html.escape(risk)}</p>
+  <p>Сначала подтвердите законное основание для пребывания и документы, затем посчитайте полный финансовый сценарий: сборы, депозит, страховку, жильё, перелёты и резерв. Только после этого сравнивайте города и образ жизни. Такой порядок помогает не строить переезд вокруг одной привлекательной цифры.</p>
   <div class="guide-grid">
-    <div class="guide-card"><strong>Подходит</strong><span>Тем, чей доход, срок stay и документы совпадают с официальным маршрутом.</span></div>
-    <div class="guide-card"><strong>Не подходит</strong><span>Тем, кто ищет обходные варианты, не может подтвердить доход или планирует жить дольше разрешённого срока.</span></div>
+    <div class="guide-card"><strong>Подходит</strong><span>Доход, срок пребывания, состав семьи и документы совпадают с официальной категорией.</span></div>
+    <div class="guide-card"><strong>Нужна дополнительная проверка</strong><span>Доход нерегулярный, часть денег приходит из активов, документы оформлены на разные компании или меняется работодатель.</span></div>
+    <div class="guide-card"><strong>Не подходит</strong><span>План требует местной работы, скрытого продления или срока, которого официальный маршрут не даёт.</span></div>
   </div>
+  <h2>Чек-лист до подачи или оплаты</h2>
+  <ol class="guide-checklist">{check_rows}</ol>
   <h2>Где люди чаще ошибаются</h2>
-  <p>Самая частая ошибка — читать визу как lifestyle-обещание. Виза не обещает дешёвую аренду, хорошую школу, понятную медицину или лёгкую интеграцию. Она только задаёт легальные рамки.</p>
+  <p>Самая частая ошибка — сравнивать цифры из заголовков без единиц измерения и условий: пять лет действия визы принимают за пять лет непрерывного пребывания, банковский остаток — за доход, а право въезда — за право работать. Вторая ошибка — считать только государственный сбор и забывать депозит, страховку, переводы, легализацию документов и стоимость повторной подачи.</p>
+  <p>Если цифра не подтверждена официальным сайтом, в расчёте её лучше считать неизвестной. Именно поэтому ниже на странице показаны первоисточники, а не ссылки на визовых посредников.</p>
   <h2>FAQ</h2>
-  <h3>Можно ли использовать этот гайд как юридическую консультацию?</h3>
-  <p>Нет. Это планировочный материал. Перед подачей проверяйте официальный источник или консультируйтесь со специалистом.</p>
-  <h3>Что проверять первым?</h3>
-  <p>Срок stay, продление, доход, dependants, страховку и разрешённую деятельность.</p>
-  <h3>Можно ли ориентироваться только на стоимость жизни?</h3>
-  <p>Нет. Дешёвая страна не помогает, если визовый маршрут не совпадает с вашим профилем.</p>
-  <h3>Что делать после чтения?</h3>
-  <p>Откройте страновую страницу, визовый гид и калькулятор бюджета. Решение должно сходиться по правилам и деньгам одновременно.</p>
-  <h3>Почему формулировки такие осторожные?</h3>
-  <p>Потому что визовые правила меняются, а неподтверждённые обещания стоят дороже, чем честная пауза перед подачей.</p>
+  {faq_html}
 </article>
 """
 
@@ -4481,7 +5028,7 @@ def localized_simple_page_content(slug: str, title: str, content: str) -> tuple[
             ("Vietnam is the sweet spot of cheap living + excellent infrastructure. Da Nang offers some of the fastest internet in Southeast Asia, beautiful beaches, and a modern lifestyle for $800–1,100/month. Ho Chi Minh City is more expensive but packed with co-working spaces and a booming startup scene. Hanoi blends tradition with affordability.", "Вьетнам часто даёт лучший баланс цены и инфраструктуры. Дананг подходит тем, кому нужны море, быстрый интернет и понятный городской быт. Хошимин дороже, зато сильнее по coworking и бизнес-среде. Ханой дешевле части крупных азиатских столиц и даёт совсем другой, более традиционный ритм."),
             ("India’s sheer size means costs vary wildly by location. Goa remains the expat favourite — beach lifestyle, good food, and English everywhere for $900–1,400/month. Bangalore is the tech hub with excellent infrastructure. Rishikesh and Dharamsala attract the yoga/spiritual crowd at very low costs. The e-visa is valid for up to 365 days.", "Индия слишком большая, чтобы оценивать её одной цифрой. Гоа остаётся знакомой expat-базой с пляжным бытом, едой и английским языком. Бангалор сильнее для tech-среды. Ришикеш и Дхарамсала тянут людей, которым важны йога, горы и низкие расходы. Визовый режим нужно проверять отдельно под гражданство и срок."),
             ("The Philippines is the most English-friendly cheap country in Asia. Cebu offers a modern city with beaches nearby for under $1,000/month. Davao is even cheaper and increasingly popular with expats. Island lifestyle in Siargao or El Nido is possible from $800/month. Tourist visas can be extended up to 36 months without leaving the country.", "Филиппины — один из самых понятных дешёвых вариантов для тех, кому важен английский. Себу даёт городской быт и пляжи рядом. Давао часто дешевле. Сиаргао и Эль-Нидо подходят тем, кто хочет островной lifestyle, но там сильнее сезонность и зависимость от района. Визовые продления выглядят гибко, но правила нужно сверять перед планированием."),
-            ("Bali offers unmatched lifestyle value — world-class coworking spaces, stunning nature, a massive international community, and incredible food, all at Southeast Asian prices. Canggu is the nomad capital; Ubud is for the spiritual and creative crowd; Seminyak for nightlife. The Digital Nomad Visa (E33G) exempts foreign income from Indonesian tax for 60–180 days.", "Бали силён не тем, что он самый дешёвый, а тем, сколько lifestyle даёт за свои деньги: coworking, природа, международное сообщество, еда и привычная среда для удалённой работы. Чангу — nomad-база, Убуд — более творческий и спокойный сценарий, Семиньяк — nightlife. Но визовую и налоговую логику Индонезии нельзя заменять слухами из чатов."),
+            ("Bali offers strong lifestyle value through coworking, nature and an international community. E33G is an immigration route for eligible remote work, but it does not automatically exempt foreign income from Indonesian tax; tax residence must be assessed separately.", "Бали силён сочетанием coworking, природы и международного сообщества. E33G — отдельный маршрут для подходящей удалённой работы, но он не даёт автоматического освобождения иностранного дохода от индонезийского налога: налоговый статус нужно оценивать отдельно."),
             ("Chiang Mai remains the most affordable of Thailand’s major expat cities — from $850/month comfortably. Bangkok costs more ($1,200–1,800 for a comfortable lifestyle) but offers world-class infrastructure and nightlife. Hua Hin, Pattaya, and Koh Samui attract retirees seeking beach life at mid-range costs. Thailand’s LTR Visa and Thailand Elite offer excellent long-term options.", "Чиангмай остаётся самым доступным из крупных expat-городов Таиланда. Бангкок дороже, зато даёт инфраструктуру, медицину, транспорт и деловую среду другого уровня. Хуахин, Паттайя и Самуи чаще смотрят пенсионеры и те, кому нужен морской быт. Визовых маршрутов у Таиланда много, но именно поэтому их нужно сравнивать аккуратно."),
             ("Malaysia is the priciest on this list but offers something no other budget Asian country does: English everywhere, First World infrastructure, excellent private healthcare, and the region’s best long-term visa (MM2H). Kuala Lumpur costs $1,200–2,000/month comfortably; Penang and Ipoh offer the same quality at 20–30% less.", "Малайзия самая дорогая в этом списке, но она даёт то, чего часто не хватает более дешёвым странам: английский в быту, сильную городскую инфраструктуру, частную медицину и понятные long-stay маршруты вроде MM2H. Куала-Лумпур дороже, Пенанг и Ипох могут дать похожее качество жизни дешевле."),
         ],
@@ -5033,11 +5580,32 @@ def localized_simple_page_content(slug: str, title: str, content: str) -> tuple[
     return title, content
 
 
+def add_ru_thailand_visa_overview_link(slug: str, content: str) -> str:
+    thailand_visa_guides = {
+        "thailand-dtv-vs-ltr-visa",
+        "malaysia-de-rantau-vs-thailand-dtv",
+        "vietnam-evisa-vs-thailand-dtv",
+        "philippines-srrv-vs-thailand-retirement-visa",
+    }
+    overview_url = "/ru/blog/viza-v-tailand-2026/"
+    if slug not in thailand_visa_guides or overview_url in content:
+        return content
+    block = f"""
+<section class="guide-depth-section">
+  <h2>Нужен обзор всех виз Таиланда?</h2>
+  <p>Если вы ещё не выбрали между DTV, LTR, туристическим и пенсионным маршрутом, начните с <a href="{overview_url}">обзора виз Таиланда в 2026 году</a>. В нём отдельно показаны срок действия, срок одного пребывания, право на работу и ключевые документы.</p>
+</section>
+""".strip()
+    if "</article>" in content:
+        return content.replace("</article>", f"{block}\n</article>", 1)
+    return f"{content}\n{block}"
+
+
 def localized_guide_content(slug: str, title: str, content: str) -> tuple[str, str]:
     title = RU_GUIDE_TITLES.get(slug, title)
     guide_content = ru_guide_article(slug, title)
     if guide_content:
-        return title, guide_content
+        return title, add_ru_thailand_visa_overview_link(slug, guide_content)
     content = localized_generic_content(content)
     guide_replacements = [
         ("Updated April 2026 · ", "Проверено в апреле 2026 · "),
@@ -5225,7 +5793,7 @@ def localized_guide_content(slug: str, title: str, content: str) -> tuple[str, s
         ],
     }
     content = replace_many(content, extra_slug_replacements.get(slug, []))
-    return title, content
+    return title, add_ru_thailand_visa_overview_link(slug, content)
 
 
 def breadcrumb_schema(items: list[tuple[str, str]], current_title: str, current_path: str) -> dict:
@@ -6417,14 +6985,14 @@ def page_source_panel(path: str, *, lang: str) -> dict | None:
         "/ru/guides/": ["japan", "thailand_dtv", "thailand_ltr", "malaysia", "taiwan", "vietnam"],
         "/compare/": ["world_bank", "thailand_dtv", "malaysia", "taiwan", "japan", "vietnam"],
         "/ru/compare/": ["world_bank", "thailand_dtv", "malaysia", "taiwan", "japan", "vietnam"],
-        "/retire-in-asia/": ["world_bank", "philippines", "thailand_ltr", "malaysia"],
-        "/ru/retire-in-asia/": ["world_bank", "philippines", "thailand_ltr", "malaysia"],
+        "/retire-in-asia/": ["world_bank", "philippines", "thailand_retirement", "thailand_ltr", "thailand_privilege", "malaysia"],
+        "/ru/retire-in-asia/": ["world_bank", "philippines", "thailand_retirement", "thailand_ltr", "thailand_privilege", "malaysia"],
         "/digital-nomad-visas-asia/": ["japan", "taiwan", "indonesia", "thailand_dtv", "malaysia", "south-korea", "uae"],
         "/ru/digital-nomad-visas-asia/": ["japan", "taiwan", "indonesia", "thailand_dtv", "malaysia", "south-korea", "uae"],
         "/cost-of-living-asia/": ["world_bank", "thailand_dtv", "thailand_ltr", "malaysia", "taiwan", "japan", "vietnam", "indonesia"],
         "/ru/cost-of-living-asia/": ["world_bank", "thailand_dtv", "thailand_ltr", "malaysia", "taiwan", "japan", "vietnam", "indonesia"],
-        "/best-countries-in-asia-to-move/": ["world_bank", "thailand_dtv", "thailand_ltr", "malaysia", "taiwan", "japan", "vietnam", "indonesia", "philippines", "singapore", "uae", "cambodia"],
-        "/ru/best-countries-in-asia-to-move/": ["world_bank", "thailand_dtv", "thailand_ltr", "malaysia", "taiwan", "japan", "vietnam", "indonesia", "philippines", "singapore", "uae", "cambodia"],
+        "/best-countries-in-asia-to-move/": ["world_bank", "thailand_dtv", "thailand_ltr", "thailand_privilege", "malaysia", "taiwan", "japan", "vietnam", "indonesia", "philippines", "singapore", "uae", "cambodia"],
+        "/ru/best-countries-in-asia-to-move/": ["world_bank", "thailand_dtv", "thailand_ltr", "thailand_privilege", "malaysia", "taiwan", "japan", "vietnam", "indonesia", "philippines", "singapore", "uae", "cambodia"],
         "/cheapest-countries-in-asia/": ["world_bank", "vietnam", "indonesia", "malaysia", "philippines", "cambodia", "thailand_dtv"],
         "/ru/cheapest-countries-in-asia/": ["world_bank", "vietnam", "indonesia", "malaysia", "philippines", "cambodia", "thailand_dtv"],
     }
@@ -6454,8 +7022,8 @@ def page_source_panel(path: str, *, lang: str) -> dict | None:
         ],
         "thailand_dtv": [
             _official_source("Thailand e-Visa Official Website", "https://www.thaievisa.go.th/", "Official application entry point for Thai visa categories.", "Официальный сайт для подачи заявки — отсюда начинается процесс оформления.", lang=lang),
-            _official_source("Thailand.go.th: Destination Thailand Visa Launch", "https://thailand.go.th/visit-thailand-detail/-destination-thailand-visa-dtv", "Government page confirming DTV purpose, 180-day stay and extension context.", "Государственная страница с описанием DTV: для чего нужна виза и сколько можно оставаться.", lang=lang),
-            _official_source("Thailand.go.th: 3 DTV Tourist Visa Types", "https://thailand.go.th/issue-focus-detail/3---destination-thailand-visa-dtv?hl=en", "Government page listing DTV categories, 500,000 THB financial evidence and 5-year validity.", "Здесь перечислены все три категории DTV, требование к балансу счёта (500 000 бат) и срок действия 5 лет.", lang=lang),
+            _official_source("Thailand.go.th: Destination Thailand Visa Launch", "https://www.thailand.go.th/public/index.php/visit-thailand-detail/-destination-thailand-visa-dtv", "Government page confirming DTV purpose, 180-day stay and extension context.", "Государственная страница с описанием DTV: для чего нужна виза и сколько можно оставаться.", lang=lang),
+            _official_source("Thailand.go.th: 3 DTV Tourist Visa Types", "https://thailand.go.th/public/useful-information-detail/3---destination-thailand-visa-dtv", "Government page listing DTV categories, 500,000 THB financial evidence and 5-year validity.", "Здесь перечислены все три категории DTV, требование к балансу счёта (500 000 бат) и срок действия 5 лет.", lang=lang),
             _official_source("Royal Thai Consulate-General Los Angeles: DTV", "https://thaiconsulatela.thaiembassy.org/en/publicservice/dtv-visa%3Fcate%3D61a8019ec0e81b444e7a5b52", "Official consulate checklist for DTV workcation, soft-power and dependant routes.", "Чеклист документов от консульства в Лос-Анджелесе — для категорий workcation, soft power и с семьёй.", lang=lang),
             _official_source("Royal Thai Embassy Vienna: DTV", "https://www.thaiembassy.at/en/type-of-visa/destination-thailand-visa-dtv.html", "Embassy DTV page for local application and document cross-checks.", "Страница венского посольства по DTV — документы и местные требования к подаче.", lang=lang),
         ],
@@ -6469,7 +7037,12 @@ def page_source_panel(path: str, *, lang: str) -> dict | None:
             _official_source("BOI LTR Dependants Documents", "https://ltr.boi.go.th/documents/Spouses-and-dependents-required-documents.pdf", "Official checklist for spouses and dependants under LTR.", "Чеклист для супругов и иждивенцев по программе LTR.", lang=lang),
             _official_source("Royal Thai Embassy Vienna: LTR Visa", "https://www.thaiembassy.at/en/type-of-visa/long-term-resident-ltr-visa.html", "Embassy page explaining LTR application flow through BOI and e-Visa.", "Страница венского посольства — как устроена подача LTR через BOI и e-Visa.", lang=lang),
         ],
+        "thailand_retirement": [
+            _official_source("Royal Thai Consulate-General Los Angeles: Retirement Visa", "https://thaiconsulatela.thaiembassy.org/en/publicservice/non-immigrant-type-o-retirement", "Official requirements for Non-O, O-A and O-X retirement categories, including age, stay and financial evidence.", "Официальные требования к пенсионным категориям Non-O, O-A и O-X: возраст, срок и финансовые доказательства.", lang=lang),
+            _official_source("Royal Thai Embassy London: Retirement Visa", "https://london.thaiembassy.org/en/page/retirement-visa", "Embassy checklist confirming the 50+ age rule and 800,000 THB or 65,000 THB monthly evidence for relevant categories.", "Чеклист посольства: возраст 50+ и финансовое подтверждение 800 000 THB либо 65 000 THB в месяц для соответствующих категорий.", lang=lang),
+        ],
         "malaysia": [
+            _official_source("Malaysia My Second Home: Category Overview", "https://www.mm2h.gov.my/category/overview", "Official MM2H tier table for validity, fixed deposits, property minimums and permitted withdrawals.", "Официальная таблица категорий MM2H: срок, фиксированный депозит, минимальная стоимость недвижимости и допустимое снятие средств.", lang=lang),
             _official_source("MDEC: DE Rantau FAQ For Foreign Applicants", "https://mdec.my/static/pdf/derantau/DE%20Rantau%20Pass%20FAQ-Foreign.pdf", "Official FAQ used to check DE Rantau applicant logic.", "Официальный FAQ по DE Rantau — кто может подавать, какие документы и как подтверждается доход.", lang=lang),
             _official_source("MDEC: DE Rantau Programme Updates", "https://www.mdec.my/media-release/news-press-release/336/mdec-expands-de-rantau-programme-new-opportunities-for-global-digital-nomads-and-exciting-partnerships", "MDEC programme update and expansion context.", "Обновление MDEC о расширении программы DE Rantau.", lang=lang),
             _official_source("MDEC: DE Rantau Sarawak Announcement", "https://www.mdec.my/media-release/news-press-release/346/de-rantau-sarawak-the-new-frontier-for-digital-nomads-in-borneo", "Official MDEC announcement for DE Rantau Sarawak and family usage context.", "Анонс MDEC по DE Rantau Sarawak — отдельный вариант программы, включая семьи с детьми.", lang=lang),
@@ -6495,18 +7068,15 @@ def page_source_panel(path: str, *, lang: str) -> dict | None:
             _official_source("PRA: SRRV Deposit Instructions", "https://pra.gov.ph/Uploads/MediaFile/FileUpload/Updated_-SRRVisa-Deposit-Remittance-Instruction.pdf", "Official deposit remittance instruction for SRRV applicants.", "Официальная инструкция PRA по депозиту для заявителей SRRV.", lang=lang),
         ],
         "vietnam": [
-            _official_source("Vietnam Immigration: eVisa Portal", "https://evisa.immigration.gov.vn/trang-chu-ttdt", "Official immigration portal for Vietnam eVisa applications.", "Официальный портал для подачи заявки на вьетнамскую eVisa.", lang=lang),
+            _official_source("Vietnam Immigration: eVisa Portal", "https://evisa.gov.vn/?option=MO", "Current official immigration portal for Vietnam eVisa applications.", "Актуальный официальный портал для подачи заявки на вьетнамскую eVisa.", lang=lang),
             _official_source("Vietnam Tourism: Official eVisa Guide", "https://vietnam.travel/plan-your-trip/official-vietnam-evisa-application", "Official tourism guide summarising the 90-day eVisa route.", "Официальный туристический гид по eVisa на 90 дней.", lang=lang),
-            _official_source("Vietnam Immigration: eVisa New Portal Notice", "https://evisa.immigration.gov.vn/web/guest/trang-chu-ttdt", "Official immigration notice for eVisa domains, 90-day validity and entry conditions.", "Уведомление о новых доменах eVisa, сроке до 90 дней и условиях въезда.", lang=lang),
-            _official_source("Vietnam Immigration: Foreigner eVisa Application", "https://immigration.gov.vn/en_US/khai-thi-thuc-dien-tu/cap-thi-thuc-dien-tu", "Official application instructions and fee logic for foreign eVisa applicants.", "Инструкция по подаче и размеру сбора для иностранных заявителей.", lang=lang),
             _official_source("Vietnam Tourism: eVisa Extended To 90 Days", "https://vietnam.travel/things-to-do/big-news-vietnam-approves-extending-e-visas-90-days", "Official tourism update on 90-day multiple-entry eVisas.", "Официальное подтверждение продления eVisa до 90 дней с возможностью многократного въезда.", lang=lang),
             _official_source("Vietnam Tourism: eVisa Border Gates Update", "https://vietnam.travel/node/1766", "Official update on eVisa entry and exit border gates.", "Список пунктов пропуска для въезда и выезда по eVisa.", lang=lang),
             _official_source("Vietnam Immigration: eVisa Country List PDF", "https://immigration.gov.vn/documents/20181/117155/evisa-country-list.pdf/6d522d1e-25ed-410b-b966-27198ae58b49", "Official PDF list of countries allowed for eVisa issuing.", "PDF со списком стран, для которых доступна вьетнамская eVisa.", lang=lang),
-            _official_source("Vietnam Immigration: eVisa Port List PDF", "https://evisa.immigration.gov.vn/documents/20181/117155/List-of-evisa-port.pdf/c774e24b-1ab8-4fb6-9ac1-dcdfaccecf8e", "Official PDF list of ports allowed for eVisa entry and exit.", "PDF со списком пунктов пропуска для въезда и выезда по eVisa.", lang=lang),
-            _official_source("Vietnam Immigration: eVisa Status Search", "https://evisa.immigration.gov.vn/tra-cuu-ho-so", "Official status check page for issued or pending eVisa applications.", "Проверка статуса вашей eVisa-заявки — сюда возвращаются после подачи.", lang=lang),
         ],
         "india": [
             _official_source("Indian Visa Online: eVisa", "https://indianvisaonline.gov.in/evisa/", "Official eVisa portal for India.", "Официальный портал для подачи заявки на индийскую eVisa.", lang=lang),
+            _official_source("Indian Visa Online: eVisa rules", "https://indianvisaonline.gov.in/evisa/tvoa.html", "Official rules for e-Tourist validity, permitted stay, entries and non-extension.", "Официальные правила e-Tourist: срок действия, допустимое пребывание, въезды и запрет на продление.", lang=lang),
             _official_source("India e-Tourist Visa Fee PDF", "https://indianvisaonline.gov.in/evisa/images/Etourist_fee_final.pdf", "Official fee table showing 30-day, 1-year and 5-year options by country.", "Таблица сборов: варианты на 30 дней, 1 год и 5 лет в зависимости от гражданства.", lang=lang),
         ],
         "sri_lanka": [
@@ -6517,6 +7087,11 @@ def page_source_panel(path: str, *, lang: str) -> dict | None:
         ],
         "indonesia": [
             _official_source("Indonesia eVisa Official Portal", "https://evisa.imigrasi.go.id/", "Official Indonesian immigration portal for visa applications and status checks.", "Официальный портал иммиграционной службы Индонезии — подача заявки и проверка статуса.", lang=lang),
+            _official_source("Indonesia Immigration: Stay Permit Services", "https://surakarta.imigrasi.go.id/layanan-publik/warga-negara-asing/izin-tinggal-keimigrasian/", "Official immigration office information listing E33G stay-permit durations.", "Официальная информация иммиграционной службы о сроках разрешения E33G.", lang=lang),
+            _official_source("Indonesia Tax Authority: Individual Tax Residence", "https://pajak.go.id/en/node/46122", "Official tax-residence criteria for individuals, including the 183-day rule and intent to reside.", "Официальные критерии налогового резидентства, включая правило 183 дней и намерение проживать в стране.", lang=lang),
+        ],
+        "thailand_privilege": [
+            _official_source("Thailand Privilege Card: Memberships", "https://www.thailandprivilege.co.th/home", "Official membership tiers, validity and current fees for Thailand Privilege Card.", "Официальные категории Thailand Privilege Card, сроки и актуальная стоимость.", lang=lang),
         ],
         "uae": [
             _official_source("UAE Government: Residence Visa For Working Outside The UAE", "https://u.ae/en/information-and-services/visa-and-emirates-id/residence-visas/residence-visa-for-working-outside-the-uae", "Official UAE government page for the virtual work residence route.", "Официальная страница ОАЭ по визе проживания для работающих удалённо.", lang=lang),
@@ -6551,7 +7126,7 @@ def page_source_panel(path: str, *, lang: str) -> dict | None:
         "best-asian-countries-with-easy-long-stay-visas": ["japan", "malaysia", "taiwan", "philippines"],
         "where-to-live-in-asia-on-1500-a-month": ["vietnam", "thailand_dtv", "malaysia", "cambodia"],
         "best-asian-countries-for-remote-workers-with-family": ["japan", "malaysia", "thailand_ltr", "taiwan"],
-        "philippines-srrv-vs-thailand-retirement-visa": ["philippines", "thailand_ltr"],
+        "philippines-srrv-vs-thailand-retirement-visa": ["philippines", "thailand_retirement"],
         "vietnam-evisa-vs-thailand-dtv": ["vietnam", "thailand_dtv"],
     }
     if simple_source_keys:
@@ -6563,7 +7138,7 @@ def page_source_panel(path: str, *, lang: str) -> dict | None:
         country_source_map = {
             "bali": ["indonesia"],
             "indonesia": ["indonesia"],
-            "thailand": ["thailand_dtv", "thailand_ltr"],
+            "thailand": ["thailand_dtv", "thailand_ltr", "thailand_privilege"],
             "malaysia": ["malaysia"],
             "japan": ["japan"],
             "taiwan": ["taiwan"],
@@ -6584,7 +7159,7 @@ def page_source_panel(path: str, *, lang: str) -> dict | None:
         compare_source_map = {
             "bali": ["indonesia"],
             "indonesia": ["indonesia"],
-            "thailand": ["thailand_dtv", "thailand_ltr"],
+            "thailand": ["thailand_dtv", "thailand_ltr", "thailand_privilege"],
             "malaysia": ["malaysia"],
             "japan": ["japan"],
             "taiwan": ["taiwan"],
@@ -6606,7 +7181,16 @@ def page_source_panel(path: str, *, lang: str) -> dict | None:
         keys = guide_sources.get(guide_match.group(1), [])
     panel_sources: list[dict[str, str]] = []
     for key in keys:
-        for source in sources.get(key, []):
+        key_sources = sources.get(key, [])
+        if simple_source_keys:
+            # Hub pages should show a representative primary source per topic,
+            # not let the first programme consume the whole panel.
+            key_sources = key_sources[:1]
+        elif compare_match:
+            # Comparisons need evidence from both sides; keep tax context for
+            # Indonesia while limiting larger visa-source collections.
+            key_sources = key_sources[:3 if key == "indonesia" else 2]
+        for source in key_sources:
             if not any(item["url"] == source["url"] for item in panel_sources):
                 panel_sources.append(source)
     if not panel_sources:
@@ -7045,47 +7629,47 @@ COUNTRY_DEPTH_DATA: dict[str, dict] = {
     "move-to-malaysia": {
         "ru": {
             "sections": [
-                ("DE Rantau: remote workers с подтверждённым работодателем", "$3000+/мес от конкретной иностранной компании — не общий фриланс-доход. Виза на 12 месяцев, продлевается. MM2H стал дорогим после 2021 года: $35K/мес дохода и 1M MYR депозит (~$220K)."),
+                ("DE Rantau и MM2H — разные маршруты", "DE Rantau принимает подходящих удалённых сотрудников и цифровых фрилансеров с документами по работе и доходу. Федеральный MM2H делится на Silver, Gold и Platinum: депозит $150K/$500K/$1M, срок 5/15/20 лет и обязательная недвижимость от RM600K/RM1M/RM2M."),
                 ("Что это значит по деньгам и городам", "Куала-Лумпур, Mont Kiara или KLCC: $400–700/мес за 1BR. Больницы Prince Court, Pantai и KPJ — JCI-аккредитация, уровень Bangkok по качеству. Пенанг дешевле, Джохор-Бару в 40 минутах от Сингапура."),
-                ("Кому быть осторожнее", "Фрилансерам без конкретного работодателя: DE Rantau для них не работает. MM2H — только для тех, у кого реально есть $220K на депозит. Малайзия — исламская страна: публичные ограничения на алкоголь и поведение реальны."),
+                ("Кому быть осторожнее", "Заявителям без прозрачных контрактов и подтверждённого дохода: DE Rantau требует документированную digital-деятельность. MM2H требует крупный депозит и покупку недвижимости. Условия нужно перепроверять по своей категории."),
             ],
             "faq": [
-                ("Подходит ли Малайзия для фрилансера?", "DE Rantau требует конкретного работодателя с подтверждёнными $3000+/мес — это не общий фриланс-доход. Без работодателя прямого 12-месячного легального пути нет."),
-                ("Чем Малайзия лучше Таиланда?", "Медицина и английский язык выше среднего по Азии. Для remote workers с работодателем DE Rantau — один из лучших маршрутов в регионе. Но MM2H после 2021 года доступен только тем, у кого реально есть $220K."),
+                ("Подходит ли Малайзия для фрилансера?", "Да, DE Rantau может принимать digital-фрилансеров: нужны действующие договоры с клиентами, подтверждение дохода и соответствие профессиональной категории. Проверьте актуальный FAQ MDEC перед подачей."),
+                ("Чем Малайзия лучше Таиланда?", "Английский и городская инфраструктура упрощают быт. Но визы сравнивают по профилю: DE Rantau, MM2H, DTV, LTR и Thailand Privilege имеют разные основания и стоимость."),
             ],
         },
         "en": {
             "sections": [
-                ("DE Rantau: Remote Workers With A Confirmed Foreign Employer", "$3,000+/month from a specific foreign company — not general freelance income. 12-month visa, renewable. MM2H was overhauled in 2021 and now requires $35,000/month income and a 1M MYR deposit (~$220K)."),
+                ("DE Rantau And MM2H Are Different Routes", "DE Rantau accepts eligible remote employees and digital freelancers with documented work and income. Federal MM2H uses Silver, Gold and Platinum tiers: $150K/$500K/$1M fixed deposits, 5/15/20-year validity and mandatory property from RM600K/RM1M/RM2M."),
                 ("What This Means For Budget And City Choice", "Kuala Lumpur, Mont Kiara or KLCC area: $400–700/month for a 1BR. Prince Court, Pantai and KPJ hospitals are JCI-accredited and comparable to Bangkok in quality. Penang is cheaper; Johor Bahru is 40 minutes from Singapore."),
-                ("Who Should Be More Careful", "Freelancers without a specific foreign employer: DE Rantau does not cover general freelance income. MM2H is only realistic if you genuinely have $220K for the deposit. Malaysia is an Islamic country — public alcohol restrictions and conduct rules are real."),
+                ("Who Should Be More Careful", "Applicants without clear contracts or documented income: DE Rantau requires verifiable digital work. MM2H requires substantial capital and a qualifying property purchase. Recheck the current rules for your exact category."),
             ],
             "faq": [
-                ("Is Malaysia good for freelancers?", "DE Rantau requires a confirmed employer paying $3,000+/month — general freelance income does not qualify. Without that, there is no direct 12-month legal route."),
-                ("How does Malaysia compare to Thailand?", "Healthcare and English levels are above the Asian average. For remote workers with a confirmed employer, DE Rantau is one of the better regional options. But MM2H post-2021 is only realistic with $220K available for the deposit."),
+                ("Is Malaysia good for freelancers?", "DE Rantau can accept digital freelancers who provide active client contracts, income evidence and the required professional documents. Check the current MDEC FAQ before applying."),
+                ("How does Malaysia compare to Thailand?", "English and urban infrastructure make daily life easier, but the visa decision is profile-specific: DE Rantau, MM2H, DTV, LTR and Thailand Privilege have different legal bases and costs."),
             ],
         },
     },
     "move-to-bali": {
         "ru": {
             "sections": [
-                ("B211A и KITAS: это не одна виза", "B211A — только въезд на 60 дней, продлевается до 180. KITAS Social/Sponsored нужен для легального долгого пребывания и требует индонезийского спонсора. Без понимания этой цепочки легко потерять деньги и статус."),
+                ("E33G и визы посещения — не одно и то же", "E33G — маршрут для подходящей удалённой работы, а VOA и визы посещения имеют другую цель. Старое обозначение B211A не следует использовать как универсальное название remote-work визы: актуальный индекс и разрешённую деятельность проверяйте в системе eVisa."),
                 ("Что это значит на практике", "Убуд: $300–500/мес, Чангу: $600–1000+. Коворкинги Dojo, Outpost, Roam — одни из лучших в Азии. Интернет нестабильный за пределами Денпасара. Аренда в Чангу выросла на 40–60% за последние три года."),
                 ("Кому быть осторожнее", "Тем, кто приезжает без понимания спонсорской схемы KITAS. Сезон дождей (октябрь–март) — ежедневные ливни несколько часов подряд. Для фрилансеров прямого официального пути нет: большинство живёт на туристической визе, что формально нарушение."),
             ],
             "faq": [
-                ("Можно ли работать на Бали легально?", "Для работы на иностранного работодателя нужен KITAS Sponsored. Для фрилансеров прямого пути нет — большинство работает на туристической визе, что формально является нарушением. Риск депортации реален при систематических проверках."),
+                ("Можно ли работать на Бали легально?", "E33G предназначен для подходящей удалённой работы на иностранную организацию и требует подтверждённый доход. Для местной занятости или другой деятельности нужна соответствующая категория; туристический статус не заменяет разрешение на работу."),
                 ("Убуд или Чангу?", "Убуд тихий, дешевле и подходит для сфокусированной работы. Чангу — серфинг, большое nomad-коммьюнити, выше цены. Оба зависят от тропических ливней с октября по март."),
             ],
         },
         "en": {
             "sections": [
-                ("B211A And KITAS: These Are Not The Same Visa", "B211A is an entry permit for 60 days, extendable to 180. KITAS Social/Sponsored is the long-stay path and requires an Indonesian sponsor. Confusing these two routes is one of the most common and expensive mistakes in Bali relocation."),
+                ("E33G And Visit Visas Are Not The Same Route", "E33G is intended for eligible remote work, while VOA and visit visas have different purposes. Do not use the old B211A label as a universal remote-work visa; verify the current index and permitted activity in the official eVisa system."),
                 ("What This Means In Practice", "Ubud: $300–500/month. Canggu: $600–1,000+. Coworking spaces Dojo, Outpost and Roam are among the best in Asia. Internet is unreliable outside central Denpasar. Canggu rental prices have risen 40–60% over the last three years."),
                 ("Who Should Be More Careful", "Anyone arriving without understanding the KITAS sponsorship structure. Bali rainy season runs October through March with daily heavy rain. For freelancers there is no direct legal path — most work on a tourist visa, which is technically non-compliant."),
             ],
             "faq": [
-                ("Can I work legally in Bali?", "Working for a foreign employer requires a KITAS Sponsored permit. For freelancers there is no direct official path: most work on a tourist visa, which is technically non-compliant. Deportation risk is real during enforcement periods."),
+                ("Can I work legally in Bali?", "E33G is intended for eligible remote work for a foreign organisation and requires documented income. Local employment or other activities need the appropriate category; tourist status is not a substitute for work authorisation."),
                 ("Ubud or Canggu?", "Ubud is quiet, cheaper and suits focused solo work. Canggu is social, surf-friendly and has a larger nomad community but higher rents. Both are heavily affected by the rainy season from October through March."),
             ],
         },
@@ -7213,23 +7797,23 @@ COUNTRY_DEPTH_DATA: dict[str, dict] = {
     "move-to-philippines": {
         "ru": {
             "sections": [
-                ("SRRV: $10K депозит, пожизненный статус, пенсионный маршрут", "Special Resident Retiree's Visa — для 35+ лет (или 50+ без подтверждения дохода). Депозит $10K в Philippine Retirement Authority. Самый доступный пенсионный путь в Азии. Туристическая виза продлевается до 2 лет помесячно."),
+                ("SRRV: пенсионный маршрут для заявителей от 40 лет", "SRRV даёт multiple entry и indefinite stay, но сумма депозита зависит от категории. Для SRRV Classic: 40–49 лет — $25K с пенсией или $50K без неё; 50+ — $15K с пенсией или $30K без неё. У Courtesy отдельные правила."),
                 ("Что это значит на практике", "Макати / BGC: $400–800/мес. Себу дешевле. Английский — официальный язык, уровень реально высокий. Медицина в Маниле есть на международном уровне, но в провинции значительно слабее. Трафик в Маниле: 2–4 часа на 10 км — это реальный риск для качества жизни."),
                 ("Кому быть осторожнее", "Тем, кто недооценивает инфраструктурные ограничения: наводнения, тайфуны (ноябрь–февраль), перебои с электроэнергией. Трафик в Маниле критически плохой. Для семей с детьми Себу или закрытые районы часто предпочтительнее."),
             ],
             "faq": [
-                ("Подходят ли Филиппины для пенсионеров?", "SRRV — один из лучших пенсионных маршрутов в Азии: $10K депозит, пожизненный статус, английский язык. Но климат жаркий и влажный, тайфуны реальны, медицина в провинции слабее столичной."),
+                ("Подходят ли Филиппины для пенсионеров?", "SRRV может быть удобна благодаря multiple entry и indefinite stay, но сначала проверьте возраст, категорию, депозит, пенсию и медицинские требования на сайте PRA. В провинции медицина заметно слабее столичной."),
                 ("Манила или Себу?", "Манила: бизнес, международные рейсы, но трафик катастрофический. Себу: спокойнее, острова доступны, меньше пробок. Для повседневной жизни Себу чаще оказывается лучшим выбором."),
             ],
         },
         "en": {
             "sections": [
-                ("SRRV: $10K Deposit, Retirement Visa, Permanent Status", "The Special Resident Retiree's Visa is available from age 35 (or 50+ without income proof). A $10K deposit with the Philippine Retirement Authority is required. It is the most affordable retirement route in Asia. Tourist visas can be extended monthly for up to 2 years."),
+                ("SRRV: A Retirement Route From Age 40", "SRRV provides multiple entry and indefinite stay, but the deposit depends on category. Under SRRV Classic, ages 40–49 require $25K with a pension or $50K without one; ages 50+ require $15K with a pension or $30K without one. Courtesy categories have separate rules."),
                 ("What This Means In Practice", "Makati/BGC: $400–800/month. Cebu is cheaper. English is an official language and the level is genuinely high. International hospitals exist in Manila, but quality drops sharply in the provinces. Manila traffic: 2–4 hours to cover 10 km is a real quality-of-life risk."),
                 ("Who Should Be More Careful", "Those underestimating infrastructure limitations: flooding, typhoons (November through February) and power outages. Manila traffic is critically bad. Families with children are often better off in Cebu or in gated community areas."),
             ],
             "faq": [
-                ("Is the Philippines good for retirement?", "SRRV is one of the best retirement visa routes in Asia: $10K deposit, permanent status and genuine English communication. Trade-offs include heat, typhoon season and lower healthcare quality outside Manila."),
+                ("Is the Philippines good for retirement?", "SRRV can be convenient because it offers multiple entry and indefinite stay, but first verify age, category, deposit, pension and medical requirements with PRA. Healthcare is weaker outside the main cities."),
                 ("Manila or Cebu?", "Manila for business and international flights, with catastrophic traffic. Cebu is calmer, islands are accessible and congestion is lighter. For day-to-day quality of life, Cebu is often the better choice."),
             ],
         },
@@ -7851,6 +8435,13 @@ def article_source_panel_for_post(row: sqlite3.Row | dict, *, lang: str) -> dict
     for item in extract_official_sources(row["content"] if "content" in row.keys() else "", limit=10):
         add(item["title"], item["url"], "Official source referenced in the article.", "Официальный источник, указанный в статье.")
 
+    if slug in {"luchshie-strany-azii-dlya-ekspatov-2026", "best-countries-in-asia-for-expats-2026"}:
+        add("Malaysia My Second Home: Category Overview", "https://www.mm2h.gov.my/category/overview", "Official MM2H tiers, validity, deposits and property minimums.", "Официальные категории MM2H: сроки, депозиты и минимальная стоимость недвижимости.")
+        add("Philippine Retirement Authority: SRRVisa", "https://pra.gov.ph/SRRVisa", "Official SRRV age, category and deposit rules.", "Официальные требования SRRV по возрасту, категории и депозиту.")
+        add("Indonesia Immigration: Stay Permit Services", "https://surakarta.imigrasi.go.id/layanan-publik/warga-negara-asing/izin-tinggal-keimigrasian/", "Official immigration information listing E33G permit durations.", "Официальная информация иммиграционной службы о сроках E33G.")
+        add("Indonesia Tax Authority: Individual Tax Residence", "https://pajak.go.id/en/node/46122", "Official individual tax-residence criteria.", "Официальные критерии налогового резидентства физического лица.")
+        add("Thailand Privilege Card: Memberships", "https://www.thailandprivilege.co.th/home", "Official Thailand Privilege tiers, validity and fees.", "Официальные категории Thailand Privilege, сроки и стоимость.")
+
     if "japan" in haystack or "yaponiya" in haystack:
         add("Japan MOFA: Specified Visa For Digital Nomad", "https://www.mofa.go.jp/ca/fna/pagewe_000001_00046.html", "Checks stay length, income proof, insurance and no-extension wording.", "Здесь: срок, доход, страховка и прямое правило о том, что виза не продлевается.")
         add("Japan Immigration Services Agency: Digital Nomad", "https://www.moj.go.jp/isa/applications/status/designatedactivities53_00001.html", "Immigration authority page for the Designated Activities route.", "Страница иммиграционной службы по визе Designated Activities — первоисточник.")
@@ -7986,7 +8577,14 @@ def render_page_row(row: sqlite3.Row | dict, **kwargs):
         # content without helping the primary journey.
         depth_panel_data = None
         quality_panel_data = None
-        source_panel_data = None
+        keep_source_panel = path.startswith(("/compare/", "/ru/compare/", "/guides/", "/ru/guides/")) or path in {
+            "/best-countries-in-asia-to-move/", "/ru/best-countries-in-asia-to-move/",
+            "/cheapest-countries-in-asia/", "/ru/cheapest-countries-in-asia/",
+            "/digital-nomad-visas-asia/", "/ru/digital-nomad-visas-asia/",
+            "/retire-in-asia/", "/ru/retire-in-asia/",
+        }
+        if not keep_source_panel:
+            source_panel_data = None
         internal_links = []
     faq_schema = faq_schema_from_html(row["content"], lang=lang) if path not in streamlined_hubs else None
     if faq_schema:
@@ -8459,6 +9057,11 @@ RU_HEADING_KEEP_UPPER = {
     "ETA",
     "Remote Worker Visa",
     "Virtual Work Residence Visa",
+    "Digital Nomad",
+    "Japan Digital Nomad Visa",
+    "Taiwan Gold Card",
+    "Gold Card",
+    "DE Rantau",
 }
 
 
@@ -8944,9 +9547,9 @@ def cost_of_living_asia_article(lang: str = "en") -> tuple[str, str]:
 def japan_vs_taiwan_article(lang: str = "en") -> tuple[str, str]:
     if lang == "ru":
         return (
-            "Япония или Тайвань для переезда в 2026 году: визы, бюджет и реальность",
+            "Япония или Тайвань: что лучше для переезда в 2026 году",
             BCM_ARTICLE_STYLE + """
-<div class="bcm-hero"><div class="badge">Обновлено в мае 2026 - Japan vs Taiwan</div><h1>Япония или Тайвань для переезда в 2026 году</h1><p>Если выбирать только сердцем, Япония часто победит. Если выбирать по визе, сроку, деньгам и документам, картина становится сложнее. Japan Digital Nomad Visa и Taiwan Gold Card решают разные задачи.</p><div class="bcm-stats"><div><strong>6 месяцев</strong><span>Japan Digital Nomad Visa</span></div><div><strong>1-3 года</strong><span>Taiwan Gold Card</span></div><div><strong>NT$160k</strong><span>частый salary-фильтр</span></div></div></div>
+<div class="bcm-hero"><div class="badge">Обновлено в мае 2026 - Japan vs Taiwan</div><h1>Япония или Тайвань: что лучше для переезда в 2026 году</h1><p>Япония сильнее для короткого культурного погружения по Digital Nomad Visa. Тайвань практичнее для специалистов, которые проходят по требованиям Gold Card и ищут более длинный легальный горизонт.</p><div class="bcm-stats"><div><strong>6 месяцев</strong><span>Japan Digital Nomad Visa</span></div><div><strong>1-3 года</strong><span>Taiwan Gold Card</span></div><div><strong>NT$160k</strong><span>частый salary-фильтр</span></div></div></div>
 <div class="bcm-note"><strong>Короткий вывод:</strong> Япония лучше как короткий, дорогой и очень качественный тест страны. Тайвань сильнее, если вам нужен более длинный горизонт, право работать и вы реально проходите по профессиональной квалификации Gold Card. Это не спор «какая страна красивее». Это вопрос: какой официальный маршрут выдерживает ваш профиль.</div>
 <h2>Japan vs Taiwan: что важно понять сразу</h2>
 <p>У Японии сильный бренд. Токио, Осака, Киото, транспорт, безопасность, сервис - всё это легко превращается в желание переехать. Но официальный digital nomad route Японии специально сделан коротким. На странице <a href="https://www.mofa.go.jp/ca/fna/pagewe_000001_00046.html" rel="nofollow noopener" target="_blank">Ministry of Foreign Affairs of Japan</a> указано: срок пребывания 6 месяцев, продление не предоставляется. Там же прописаны документы по доходу и страховке.</p>
@@ -9240,7 +9843,7 @@ def ru_best_countries_move_article() -> tuple[str, str]:
 <div class="bcm-stat-item"><span class="val">Топ-3</span><span class="lbl">Рейтинг номадов</span></div>
 </div>
 <p>Таиланд занимает 1-е место среди экспат-направлений Азии уже более десяти лет — и не без причин. Бангкок предлагает инфраструктуру мирового класса, международные больницы и коворкинги за долю западных цен. Чиангмай остаётся духовным домом цифровых номадов, а Пхукет и Самуи привлекают экспатов, ориентированных на образ жизни.</p>
-<p><strong>Виза LTR (Long Term Resident)</strong> позволяет квалифицированным заявителям жить в Таиланде до 10 лет. <strong>Thailand Elite</strong> предлагает членство на 5–20 лет для тех, кто предпочитает простоту требованиям к квалификации.</p>
+<p><strong>LTR (Long Term Resident)</strong> рассчитана на квалифицированные категории и действует до 10 лет. <strong>Thailand Privilege</strong> — платная членская программа: официальный сайт указывает Bronze 650 000 THB/5 лет, Gold 900 000 THB/5 лет, Platinum 1,5 млн THB/10 лет, Diamond 2,5 млн THB/15 лет и Reserve 5 млн THB/20 лет по приглашению.</p>
 <div class="bcm-cols">
 <div class="bcm-pros"><h4>✓ Плюсы</h4><ul>
 <li>Великолепная кухня по низким ценам</li>
@@ -9264,7 +9867,7 @@ def ru_best_countries_move_article() -> tuple[str, str]:
 <div class="bcm-country-header">
 <div class="bcm-rank-badge">2</div>
 <div class="bcm-country-title">
-<span class="tag">🏡 Лучшая долгосрочная виза (MM2H)</span>
+<span class="tag">🏡 Структурированная программа MM2H</span>
 <h2>Малайзия</h2>
 </div>
 </div>
@@ -9274,18 +9877,18 @@ def ru_best_countries_move_article() -> tuple[str, str]:
 <div class="bcm-stat-item"><span class="val">Английский</span><span class="lbl">Широко распространён</span></div>
 <div class="bcm-stat-item"><span class="val">Топ-5</span><span class="lbl">Рейтинг экспатов</span></div>
 </div>
-<p>Малайзия стабильно входит в число лучших стран для экспатов во всём мире. Программа <strong>Malaysia My Second Home (MM2H)</strong> широко считается лучшей долгосрочной визой резидента в ЮВА — многократный въезд на 5–10 лет с возможностью продления. Куала-Лумпур обеспечивает современную мультикультурную городскую жизнь по ценам ЮВА.</p>
+<p><strong>Malaysia My Second Home (MM2H)</strong> — долгосрочная программа с несколькими категориями. Федеральные Silver, Gold и Platinum действуют 5, 15 и 20 лет и требуют депозит $150K, $500K или $1M плюс покупку недвижимости минимум за RM600K, RM1M или RM2M соответственно. Это капиталоёмкий маршрут, а не универсальная «лёгкая виза».</p>
 <p>Английский широко распространён, медицина отличная и доступная, международные школы — одни из лучших в регионе. Малайзия особенно популярна среди семей, пенсионеров и удалённых работников, ищущих стабильности.</p>
 <div class="bcm-cols">
 <div class="bcm-pros"><h4>✓ Плюсы</h4><ul>
-<li>Виза MM2H — лучший долгосрочный вариант в ЮВА</li>
+<li>MM2H даёт понятную категорийную структуру и длительный срок</li>
 <li>Английский повсеместно распространён</li>
 <li>Отличные международные школы</li>
 <li>Современная инфраструктура в КЛ</li>
 <li>Мультикультурное, толерантное общество</li>
 </ul></div>
 <div class="bcm-cons"><h4>✗ Минусы</h4><ul>
-<li>MM2H требует подтверждения дохода ($40k+)</li>
+<li>MM2H требует крупного депозита и покупки недвижимости</li>
 <li>Консервативные законы (алкоголь и т.д.)</li>
 <li>Пробки в КЛ</li>
 <li>Менее активная ночная жизнь, чем в Таиланде</li>
@@ -9340,17 +9943,17 @@ def ru_best_countries_move_article() -> tuple[str, str]:
 </div>
 <div class="bcm-stats-bar">
 <div class="bcm-stat-item"><span class="val">$800</span><span class="lbl">Стартовый бюджет</span></div>
-<div class="bcm-stat-item"><span class="val">B211A</span><span class="lbl">Социальная виза</span></div>
+<div class="bcm-stat-item"><span class="val">E33G</span><span class="lbl">Remote-work маршрут</span></div>
 <div class="bcm-stat-item"><span class="val">Тропический</span><span class="lbl">Климат</span></div>
 <div class="bcm-stat-item"><span class="val">#1</span><span class="lbl">Столица номадов</span></div>
 </div>
 <p>Бали — мировая столица цифровых номадов. Чангу стал культовым хабом с десятками коворкингов мирового класса, исключительными кафе и сообществом из 50 000+ удалённых работников. Убуд предлагает более спокойный, духовный опыт среди рисовых террас. Семиньяк и Улувату привлекают любителей образа жизни.</p>
-<p>Индонезия запустила <strong>Визу цифрового номада (E33G)</strong> с пребыванием 60 дней, продлеваемых до 180 дней, и освобождением иностранного дохода от индонезийского налога. <strong>Виза второго дома</strong> обеспечивает 5 или 10-летнее пребывание для инвесторов в недвижимость.</p>
+<p><strong>E33G</strong> — иммиграционный маршрут для подходящей удалённой работы. Официальные иммиграционные страницы перечисляют варианты разрешения на 180 дней, 1 год или 2 года. Виза сама по себе не гарантирует налоговое освобождение: налоговый статус определяется отдельно, в том числе по сроку и намерению проживания.</p>
 <div class="bcm-cols">
 <div class="bcm-pros"><h4>✓ Плюсы</h4><ul>
 <li>Лучшее сообщество цифровых номадов в мире</li>
 <li>Невероятная коворкинг-сцена в Чангу</li>
-<li>Иностранный доход освобождён от налога (виза E33G)</li>
+<li>Есть отдельный маршрут E33G для подходящей удалённой работы</li>
 <li>Духовная, велнес-ориентированная культура</li>
 <li>Красивая природа и пляжи</li>
 </ul></div>
@@ -9380,7 +9983,7 @@ def ru_best_countries_move_article() -> tuple[str, str]:
 <div class="bcm-stat-item"><span class="val">7,641</span><span class="lbl">Островов</span></div>
 </div>
 <p>Филиппины — самая дружелюбная к английскому языку страна в Азии: он является официальным, и практически все им владеют. Это делает страну уникально доступной для экспатов, не желающих сталкиваться с языковым барьером. В Себу, Маниле и Давао сложились устоявшиеся экспат-сообщества, а острова вроде Сиаргао привлекают серферов и любителей образа жизни.</p>
-<p><strong>SRRV (Special Resident Retiree's Visa)</strong> доступна от 35 лет с банковским депозитом от $10,000 до $50,000. Для остальных туристические визы могут продлеваться до 36 месяцев.</p>
+<p><strong>SRRV (Special Resident Retiree's Visa)</strong> доступна квалифицированным заявителям от 40 лет. Для SRRV Classic депозит составляет $25K с пенсией или $50K без неё в возрасте 40–49 лет; для 50+ — $15K с пенсией или $30K без неё. У специальных категорий Courtesy действуют отдельные условия.</p>
 <div class="bcm-cols">
 <div class="bcm-pros"><h4>✓ Плюсы</h4><ul>
 <li>Английский официальный — нет языкового барьера</li>
@@ -9575,7 +10178,7 @@ def ru_best_countries_move_article() -> tuple[str, str]:
 <h2>Часто задаваемые вопросы</h2>
 <div class="bcm-faq-item">
 <h3>В какую азиатскую страну проще всего переехать?</h3>
-<p>Таиланд, Камбоджа и Филиппины — самые простые страны для переезда в Азии. Таиланд предлагает широко используемую туристическую визу, которую можно продлить, бизнес-виза Камбоджи продлевается бессрочно. На Филиппинах туристические визы можно продлевать до 36 месяцев. MM2H Малайзии — лучшая формальная долгосрочная виза, когда выполнены требования к доходу.</p>
+<p>Универсально «самой простой» страны нет: туристическая виза не равна разрешению на проживание или работу. Сравнивайте DTV/LTR/Thailand Privilege, MM2H, SRRV и другие маршруты по возрасту, источнику дохода, капиталу и цели пребывания, затем подтверждайте правила на официальном сайте.</p>
 </div>
 <div class="bcm-faq-item">
 <h3>Какая самая дешёвая страна Азии для жизни?</h3>
@@ -9587,7 +10190,7 @@ def ru_best_countries_move_article() -> tuple[str, str]:
 </div>
 <div class="bcm-faq-item">
 <h3>Можно ли выйти на пенсию в Азии недорого?</h3>
-<p>Да — несколько азиатских стран предлагают пенсионные визы с относительно низкими требованиями. Пенсионная виза Таиланда требует $25,000 на тайском банковском счёте или подтверждения пенсии $2,000/месяц. MM2H Малайзии отлично подходит для пенсионеров. SRRV Филиппин начинается с депозита $10,000 для лиц от 35 лет. Все три страны предлагают очень комфортный выход на пенсию за $1,200–2,000/месяц.</p>
+<p>Да, но требования различаются по программе и консульству. Для SRRV Classic нужен возраст от 40 лет и депозит $15K–50K в зависимости от возраста и пенсии; федеральный MM2H требует депозит $150K–$1M и покупку недвижимости; тайские пенсионные маршруты имеют собственные возрастные, финансовые и страховые условия. Бюджет жизни считайте отдельно от визовых средств.</p>
 </div>
 <div class="bcm-faq-item">
 <h3>В какой азиатской стране лучшая медицина для экспатов?</h3>
@@ -9680,10 +10283,9 @@ def ru_compare(slug: str):
             title, content = enhanced
         else:
             title, content = localized_compare_pair_content(slug, translated["title"] if translated else source["title"], source["content"])
-    title = {
-        "bali-vs-thailand": "Бали или Таиланд: что выбрать?",
-        "thailand-vs-malaysia": "Таиланд или Малайзия: что выбрать?",
-    }.get(slug, title)
+    optimized_title, content = optimize_ru_compare_for_search(slug, content)
+    if optimized_title:
+        title = optimized_title
     row = localized_page_dict(
         slug=localized_compare_db_slug(slug),
         title=title,

@@ -121,16 +121,16 @@
     {% if request.path.startswith('/ru/compare/') %}
       {% set lang_ns.url = '/compare/' if request.path == '/ru/compare/' else request.path | replace('/ru/compare/', '/compare/', 1) %}
       {% set lang_ns.show = true %}
-    {% elif request.path.startswith('/ru/blog/') %}
-      {% set lang_ns.url = '/blog/' if request.path == '/ru/blog/' else request.path | replace('/ru/blog/', '/blog/', 1) %}
+    {% elif request.path == '/ru/blog/' %}
+      {% set lang_ns.url = '/blog/' %}
       {% set lang_ns.show = true %}
     {% endif %}
   {% else %}
     {% if request.path.startswith('/compare/') %}
       {% set lang_ns.url = '/ru/compare/' if request.path == '/compare/' else request.path | replace('/compare/', '/ru/compare/', 1) %}
       {% set lang_ns.show = true %}
-    {% elif request.path.startswith('/blog/') %}
-      {% set lang_ns.url = '/ru/blog/' if request.path == '/blog/' else request.path | replace('/blog/', '/ru/blog/', 1) %}
+    {% elif request.path == '/blog/' %}
+      {% set lang_ns.url = '/ru/blog/' %}
       {% set lang_ns.show = true %}
     {% endif %}
   {% endif %}
