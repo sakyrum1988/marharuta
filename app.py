@@ -6078,6 +6078,7 @@ POST_TRANSLATION_SLUGS = {
     "japan-digital-nomad-visa-2026": "yaponiya-digital-nomad-visa-2026",
     "taiwan-gold-card-guide-2026": "taiwan-gold-card-2026",
     "thailand-ltr-remote-workers-2026": "tailand-ltr-dlya-udalennyh-specialistov-2026",
+    "thailand-visa-2026": "viza-v-tailand-2026",
     "south-korea-workation-visa-2026": "yuzhnaya-koreya-workation-visa-2026",
     "vietnam-evisa-guide-2026": "vietnam-evisa-2026",
 }
