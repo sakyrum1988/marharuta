@@ -9,6 +9,7 @@ import threading
 import time
 import hashlib
 from pathlib import Path
+from urllib.parse import urlencode
 
 from flask import Flask, Response, abort, make_response, redirect, render_template, request, url_for
 from tool_integrations import harden_tool_scripts
@@ -1446,6 +1447,23 @@ COUNTRY_FORMS_RU = {
     "move-to-brunei": ("Бруней", "Бруней", "Брунее"),
     "move-to-myanmar": ("Мьянма", "Мьянму", "Мьянме"),
     "move-to-uzbekistan": ("Узбекистан", "Узбекистан", "Узбекистане"),
+    "move-to-georgia": ("Грузия", "Грузию", "Грузии"),
+    "move-to-turkey": ("Турция", "Турцию", "Турции"),
+    "move-to-kyrgyzstan": ("Кыргызстан", "Кыргызстан", "Кыргызстане"),
+    "move-to-armenia": ("Армения", "Армению", "Армении"),
+    "move-to-azerbaijan": ("Азербайджан", "Азербайджан", "Азербайджане"),
+    "move-to-qatar": ("Катар", "Катар", "Катаре"),
+    "move-to-saudi-arabia": ("Саудовская Аравия", "Саудовскую Аравию", "Саудовской Аравии"),
+    "move-to-oman": ("Оман", "Оман", "Омане"),
+    "move-to-bahrain": ("Бахрейн", "Бахрейн", "Бахрейне"),
+    "move-to-kuwait": ("Кувейт", "Кувейт", "Кувейте"),
+    "move-to-jordan": ("Иордания", "Иорданию", "Иордании"),
+    "move-to-lebanon": ("Ливан", "Ливан", "Ливане"),
+    "move-to-israel": ("Израиль", "Израиль", "Израиле"),
+    "move-to-iran": ("Иран", "Иран", "Иране"),
+    "move-to-yemen": ("Йемен", "Йемен", "Йемене"),
+    "move-to-syria": ("Сирия", "Сирию", "Сирии"),
+    "move-to-iraq": ("Ирак", "Ирак", "Ираке"),
 }
 
 COUNTRY_EN_NAMES = {
@@ -1469,6 +1487,23 @@ COUNTRY_EN_NAMES = {
     "move-to-brunei": "Brunei",
     "move-to-myanmar": "Myanmar",
     "move-to-uzbekistan": "Uzbekistan",
+    "move-to-georgia": "Georgia",
+    "move-to-turkey": "Türkiye",
+    "move-to-kyrgyzstan": "Kyrgyzstan",
+    "move-to-armenia": "Armenia",
+    "move-to-azerbaijan": "Azerbaijan",
+    "move-to-qatar": "Qatar",
+    "move-to-saudi-arabia": "Saudi Arabia",
+    "move-to-oman": "Oman",
+    "move-to-bahrain": "Bahrain",
+    "move-to-kuwait": "Kuwait",
+    "move-to-jordan": "Jordan",
+    "move-to-lebanon": "Lebanon",
+    "move-to-israel": "Israel",
+    "move-to-iran": "Iran",
+    "move-to-yemen": "Yemen",
+    "move-to-syria": "Syria",
+    "move-to-iraq": "Iraq",
 }
 
 COUNTRY_FLAGS = {
@@ -1479,6 +1514,23 @@ COUNTRY_FLAGS = {
     "move-to-sri-lanka": "🇱🇰", "move-to-india": "🇮🇳", "move-to-nepal": "🇳🇵",
     "move-to-laos": "🇱🇦", "move-to-kazakhstan": "🇰🇿", "move-to-brunei": "🇧🇳",
     "move-to-myanmar": "🇲🇲", "move-to-uzbekistan": "🇺🇿",
+    "move-to-georgia": "🇬🇪",
+    "move-to-turkey": "🇹🇷",
+    "move-to-kyrgyzstan": "🇰🇬",
+    "move-to-armenia": "🇦🇲",
+    "move-to-azerbaijan": "🇦🇿",
+    "move-to-qatar": "🇶🇦",
+    "move-to-saudi-arabia": "🇸🇦",
+    "move-to-oman": "🇴🇲",
+    "move-to-bahrain": "🇧🇭",
+    "move-to-kuwait": "🇰🇼",
+    "move-to-jordan": "🇯🇴",
+    "move-to-lebanon": "🇱🇧",
+    "move-to-israel": "🇮🇱",
+    "move-to-iran": "🇮🇷",
+    "move-to-yemen": "🇾🇪",
+    "move-to-syria": "🇸🇾",
+    "move-to-iraq": "🇮🇶",
 }
 
 
@@ -1608,6 +1660,74 @@ RU_COUNTRY_NOTES = {
         "Узбекистан привлекает русскоязычных экспатов очень низким бюджетом и богатой историей. Ташкент реформируется, но медленнее, чем рынки ЮВА.",
         "Жаркое лето (40–45°C) и холодная зима создают сложный климат. Банковская инфраструктура для иностранцев в развитии, expat-рынок минимальный.",
     ),
+    "move-to-georgia": (
+        "Грузия подходит для тестового переезда и долгой базы, если ваш паспорт есть в официальном списке безвизового пребывания и выбранный способ работы оформлен отдельно. Тбилиси даёт максимум сервисов, Батуми — море и сильную сезонность, Кутаиси — более спокойный бюджет.",
+        "Безвизовый срок не равен разрешению на местную работу. С 1 марта 2026 года трудовая и предпринимательская деятельность иностранцев регулируется через право на работу и подходящий миграционный статус; налоговый режим 1% также не включается автоматически.",
+    ),
+    "move-to-turkey": (
+        "Турция подходит тем, кто выбирает между большим рынком Стамбула, средиземноморским ритмом Антальи и более спокойными Измиром или Анкарой. План начинается с правил для конкретного паспорта и реального основания для пребывания дольше 90 дней.",
+        "Туристическая виза или безвиз не дают права на местную работу и не гарантируют одобрение краткосрочного ВНЖ. Digital Nomad Identification Certificate доступен только гражданам официального перечня, в возрасте 21–55 лет и при подтверждённом иностранном доходе.",
+    ),
+    "move-to-kyrgyzstan": (
+        "Кыргызстан подходит для недорогого тестового переезда, удалённой работы и региональной базы в Центральной Азии. Бишкек даёт больше сервисов, Ош — более локальную среду и меньший бюджет, Каракол — доступ к горам при выраженной сезонности.",
+        "Безвизовый срок, регистрация, право на работу и налоговое резидентство проверяются отдельно. С 31 декабря 2025 года для граждан ЕАЭС базовый лимит без документов составляет 90 дней из 180, а для многих стран из официального перечня — 30 дней из 60; точное правило зависит от паспорта.",
+    ),
+    "move-to-armenia": (
+        "Армения подходит для тестового переезда, предпринимательского сценария и работы в Ереване, если паспортный режим и основание для долгого проживания проверены заранее. Ереван концентрирует сервисы и вакансии, Гюмри снижает бюджет, Дилижан предлагает более спокойную горную среду.",
+        "Безвизовый въезд до 180 дней в течение года доступен только гражданам стран из официальных списков или соглашений. Он не заменяет разрешение на местную работу и не является отдельной digital nomad визой; миграционные процедуры меняются с 1 ноября 2026 года.",
+    ),
+    "move-to-azerbaijan": (
+        "Азербайджан подходит для пробного переезда и работы с базой в Баку, если заранее разделить въезд, регистрацию адреса, ВНЖ и право на местную занятость. Гянджа и Шеки обходятся дешевле, но предлагают меньший рынок работы, медицины и международных сервисов.",
+        "eVisa обычно даёт один въезд и до 30 дней пребывания в пределах 90-дневного срока действия. При проживании свыше 15 дней нужна бесплатная регистрация по месту пребывания; для граждан Казахстана действует срок 30 дней.",
+    ),
+    "move-to-qatar": (
+        "Катар подходит прежде всего для переезда по сильному трудовому контракту: работодатель оформляет Work Residence Permit, а пакет с жильём, страховкой и школой часто важнее одной зарплаты. Доха даёт максимум работы и сервисов, Аль-Вакра снижает стоимость аренды, Лусаил предлагает новые районы с более высоким бюджетом.",
+        "Туристический въезд доступен на 30 или 90 дней только подходящим паспортам и не разрешает местную работу. Отдельный маршрут для цифровых кочевников на официальных порталах не найден; для долгого проживания нужны работа, семья, недвижимость или другое признанное основание.",
+    ),
+    "move-to-saudi-arabia": (
+        "Саудовская Аравия подходит прежде всего для карьерного переезда с заранее согласованным пакетом работодателя. Эр-Рияд даёт самый глубокий рынок вакансий и крупных проектов, Джидда — прибрежный ритм и торговый бизнес, Эль-Хубар — доступ к энергетическому кластеру Восточной провинции.",
+        "Туристическая eVisa разрешает туризм, визиты и умру, но не заменяет рабочую визу и Iqama. Отдельная digital nomad виза на официальных порталах не найдена; независимый долгосрочный путь возможен через подходящий продукт Premium Residency, но его финансовые и профессиональные условия высоки.",
+    ),
+    "move-to-oman": (
+        "Оман подходит тем, кто выбирает спокойную и безопасную жизнь в Персидском заливе без масштаба Дубая или Эр-Рияда. Маскат даёт основной рынок работы и международные школы, Салала — зелёный сезон хариф и меньший темп, Сохар — промышленность и портовую экономику.",
+        "Обычный рабочий статус оформляет и поддерживает местный работодатель. Отдельной digital nomad визы на официальных порталах не найдено; туристическая eVisa не даёт права работать, а Golden Residency требует квалифицирующей инвестиции и в 2025 году получила минимальный порог OMR 200 000.",
+    ),
+    "move-to-bahrain": (
+        "Бахрейн — компактная база в Персидском заливе для тех, кто едет с оффером в финансах, финтехе, профессиональных услугах или региональном бизнесе. Манама даёт основной рынок работы и международные сервисы, Мухаррак удобен для аэропорта и более спокойного быта, Эр-Рифа — для семейного сценария с автомобилем.",
+        "Обычное трудоустройство оформляется через работодателя и LMRA. Golden Residency выдаётся на 10 лет по нескольким основаниям, однако для наёмной работы её владельцу обычно всё равно нужен отдельный рабочий пермит; отдельной digital nomad визы на официальных порталах не найдено.",
+    ),
+    "move-to-kuwait": (
+        "Кувейт имеет смысл прежде всего при сильном оффере с понятным пакетом жилья, страховки, перелётов и школы. Эль-Кувейт концентрирует офисы и государственные учреждения, Сальмия удобна для моря и международного быта, Хавалли — для более доступной аренды и центрального положения.",
+        "Рабочая резиденция Article 18 зависит от работодателя и разрешения Public Authority for Manpower. Частному иностранному работнику также нужен exit permit для выезда; отдельной digital nomad визы и сопоставимой с соседями Golden Residency на официальных порталах не найдено.",
+    ),
+    "move-to-jordan": (
+        "Иордания подходит прежде всего для переезда по офферу, учёбы, семейного основания или крупной покупки недвижимости. Амман концентрирует международные организации, компании, школы и частную медицину; Акаба предлагает море и работу в туризме, порту и свободной зоне; Ирбид — университетскую среду и более доступную аренду.",
+        "Рабочий маршрут зависит от работодателя, разрешения Ministry of Labour и доступности профессии для иностранца. В отличие от стран Персидского залива, зарплатный доход может облагаться прогрессивным налогом; туристический въезд не заменяет право на работу или долгую резиденцию.",
+    ),
+    "move-to-lebanon": (
+        "Ливан подходит для переезда с подтверждённой работой, учёбой, семейным основанием или собственным иностранным доходом. Бейрут даёт самый широкий рынок международных организаций и сервисов, Джуния — прибрежный быт рядом со столицей, Триполи — более низкий бюджет и локальную среду.",
+        "Право на въезд зависит от паспорта, а работа требует отдельного разрешения и резиденции. Экономическая и валютная нестабильность, перебои электроэнергии и меняющаяся ситуация с безопасностью требуют запаса денег и проверки официальных предупреждений перед каждой поездкой.",
+    ),
+    "move-to-israel": (
+        "Израиль подходит прежде всего тем, у кого есть подтверждённое право на алию, семейное основание или работодатель с разрешением на найм иностранца. Тель-Авив даёт самый глубокий рынок технологий и бизнеса, Иерусалим — государственный и академический сектор, Хайфа — промышленность, исследования и более доступное жильё.",
+        "Туристический въезд и ETA-IL не дают права работать. Рынок жилья и повседневные расходы высоки, а региональная безопасность меняется быстро; перед поездкой нужно проверить официальные предупреждения, маршруты транспорта, укрытие и страховое покрытие.",
+    ),
+    "move-to-iran": (
+        "Иран стоит рассматривать для переезда только при ясном законном основании: подтверждённом контракте, учёбе, семье или одобренной инвестиции. Тегеран даёт самый широкий рынок работы и услуг, Шираз — более спокойный ритм, Исфахан — промышленность и инженерные проекты. Для обычного независимого удалёнщика понятного долгосрочного маршрута нет.",
+        "FCDO советует отказаться от любых поездок в Иран и указывает на высокий риск задержания. Иностранные банковские карты обычно не работают, курс риала нестабилен, а туристическая eVisa не разрешает работу. До решения о переезде нужны письменный план работодателя, действующая страховка, законный доступ к деньгам и независимый сценарий выезда.",
+    ),
+    "move-to-yemen": (
+        "Йемен может рассматриваться только как командировка или переезд по подтверждённому контракту, гуманитарному назначению либо семейному основанию с профессиональным планом безопасности. Сана концентрирует учреждения, Аден — органы международно признанного правительства и порт, Мукалла — функции Хадрамаута и Аравийского моря.",
+        "FCDO советует отказаться от любых поездок в Йемен и рекомендует находящимся в стране немедленно уехать. Терроризм, постоянный риск похищения, произвольные задержания, мины, закрытие дорог, дефицит топлива и ограниченная консульская помощь делают обычный пробный переезд неприемлемым.",
+    ),
+    "move-to-syria": (
+        "Сирия может рассматриваться только при подтверждённом основании — обычно контракте, учёбе или семье — и с отдельным планом безопасности. Дамаск даёт больше учреждений и сервисов, Алеппо связан с промышленностью и восстановлением, Латакия — с портом и побережьем.",
+        "FCDO советует отказаться от любых поездок в Сирию и сообщает об отсутствии консульской поддержки внутри страны. Терроризм, похищения, вооружённые столкновения, мины, перебои инфраструктуры и внезапное закрытие границ делают обычный пробный переезд неприемлемым.",
+    ),
+    "move-to-iraq": (
+        "Ирак имеет смысл рассматривать прежде всего при подтверждённом контракте в энергетике, инфраструктуре, международной организации или другом проекте с готовым пакетом безопасности. Багдад концентрирует государственные и деловые функции, Эрбиль — международные компании и сервисы Иракского Курдистана, Басра — нефтегазовый сектор и портовую логистику.",
+        "Федеральный Ирак и Иракский Курдистан используют разные визовые и резидентские процедуры. Туристическая eVisa не заменяет разрешение на работу, а расходы иностранного специалиста сильно зависят от охраняемого жилья, транспорта, страховки и эвакуационного покрытия.",
+    ),
     "move-to-china": (
         "Китай имеет смысл при конкретном работодателе или деловом партнёре. Без привязки к компании долгий легальный stay затруднителен.",
         "Great Firewall блокирует Google, WhatsApp, Instagram, LinkedIn — VPN нужен с первого дня. Языковой барьер и геополитика требуют серьёзной подготовки.",
@@ -1690,6 +1810,74 @@ EN_COUNTRY_NOTES: dict[str, tuple[str, str]] = {
     "move-to-uzbekistan": (
         "Tashkent is a modern city with 1BR from $300–500/month. Samarkand and Bukhara are UNESCO heritage sites. Visa-free 30 days for most countries.",
         "Summer hits 40–45°C in July–August. Banking for foreigners is still developing — Visa/Mastercard not accepted everywhere, SWIFT with restrictions.",
+    ),
+    "move-to-georgia": (
+        "Georgia can work as a trial move or a longer base when your passport is covered by the official visa-free list and your work arrangement is handled separately. Tbilisi has the deepest services, Batumi adds the coast and strong seasonality, while Kutaisi lowers the monthly baseline.",
+        "Visa-free stay does not itself authorize local work. From 1 March 2026, foreign employment and entrepreneurial activity are regulated through a right-to-work process and suitable immigration status; the 1% small-business rate is also conditional rather than automatic.",
+    ),
+    "move-to-turkey": (
+        "Türkiye fits several different plans: Istanbul for the deepest job and service market, Antalya for a coast-first base, and Izmir or Ankara for a different balance of cost and city life. Start with the passport-specific entry rule and a credible basis for staying beyond 90 days.",
+        "Tourist entry does not authorize local work or guarantee approval of a short-term residence permit. The Digital Nomad Identification Certificate is limited to listed citizenships, applicants aged 21–55 and documented foreign income.",
+    ),
+    "move-to-kyrgyzstan": (
+        "Kyrgyzstan can work as an affordable trial move, a remote-work base or a regional hub in Central Asia. Bishkek has the broadest services, Osh offers a more local and lower-cost setting, and Karakol trades city depth for mountain access and seasonality.",
+        "Visa-free time, stay registration, work authorization and tax residence are separate checks. Since 31 December 2025, the general document-free limit is 90 days in 180 for EAEU citizens and 30 days in 60 for many listed nationalities; the exact rule remains passport-specific.",
+    ),
+    "move-to-armenia": (
+        "Armenia can work for a trial move, an entrepreneurial plan or employment centred on Yerevan when passport rules and the long-stay basis are checked first. Yerevan concentrates services and jobs, Gyumri lowers the budget, and Dilijan offers a quieter mountain setting.",
+        "Up to 180 visa-free days per year apply only to passports covered by official lists or agreements. Visa-free entry does not authorize ordinary local work and is not a dedicated digital-nomad visa; migration procedures are scheduled to change from 1 November 2026.",
+    ),
+    "move-to-azerbaijan": (
+        "Azerbaijan can work for a trial move or an employment plan centred on Baku when entry, address registration, residence and local-work rights are handled separately. Ganja and Sheki lower the budget but have smaller job, healthcare and international-service markets.",
+        "The standard eVisa is single-entry and permits up to 30 days within its 90-day validity. Stays longer than 15 days require free place-of-stay registration; Kazakhstan citizens have a 30-day registration deadline.",
+    ),
+    "move-to-qatar": (
+        "Qatar works best as an employment-led move: the employer arranges the Work Residence Permit, while housing, insurance and school allowances can matter more than headline salary. Doha has the broadest job and service base, Al Wakrah lowers rent, and Lusail offers newer districts at a higher budget.",
+        "Visitor entry is passport-specific and commonly grants 30 or 90 days, but it does not authorize local work. No dedicated digital-nomad route was found on the official portals; a longer stay needs employment, family, property or another recognised ground.",
+    ),
+    "move-to-saudi-arabia": (
+        "Saudi Arabia works best as a career-led move with the employer package agreed before arrival. Riyadh has the deepest professional market and major-project pipeline, Jeddah offers a Red Sea commercial base, and Al Khobar connects residents to the Eastern Province energy cluster.",
+        "The tourist eVisa covers tourism, visits and Umrah but does not replace a work visa and Iqama. No dedicated digital-nomad visa was found on official portals; qualifying Premium Residency products offer an independent long-stay route, but their financial and professional thresholds are high.",
+    ),
+    "move-to-oman": (
+        "Oman suits people seeking a calmer Gulf base without the scale of Dubai or Riyadh. Muscat has the main professional market and international schools, Salalah adds the khareef season and a slower rhythm, while Sohar is tied to industry, logistics and the port.",
+        "The standard work status is arranged and maintained by a local employer. Official portals do not list a dedicated digital-nomad visa; tourist entry does not authorize work, while Golden Residency requires a qualifying investment and launched with a minimum OMR 200,000 threshold in 2025.",
+    ),
+    "move-to-bahrain": (
+        "Bahrain is a compact Gulf base for people arriving with an offer in finance, fintech, professional services or regional business. Manama has the main job market and international services, Muharraq suits airport access and a calmer routine, while Riffa fits car-based family life.",
+        "Ordinary employment is arranged through the employer and LMRA. Golden Residency lasts ten years through several qualifying routes, but a holder normally still needs a separate permit for salaried work; no dedicated digital-nomad visa was found on official portals.",
+    ),
+    "move-to-kuwait": (
+        "Kuwait works best with a strong offer that clearly covers housing, insurance, flights and school. Kuwait City concentrates offices and government services, Salmiya suits coastal and international daily life, while Hawalli offers more affordable rent and a central location.",
+        "Article 18 work residence depends on the employer and a Public Authority for Manpower permit. Private-sector foreign workers also need an exit permit to leave; no dedicated digital-nomad visa or Gulf-style Golden Residency was found on official portals.",
+    ),
+    "move-to-jordan": (
+        "Jordan works best for an employer-led move, study, family sponsorship or a qualifying property purchase. Amman concentrates international organisations, companies, schools and private healthcare; Aqaba adds the Red Sea, tourism, port and free-zone work; Irbid offers a university setting and lower rent.",
+        "The employment route depends on the employer, Ministry of Labour approval and whether the occupation is open to a foreign worker. Unlike the Gulf states, employment income can face progressive tax; visitor entry does not create work rights or long-term residence.",
+    ),
+    "move-to-lebanon": (
+        "Lebanon can fit a move based on confirmed employment, study, family ties or documented foreign income. Beirut has the deepest international and service market, Jounieh offers coastal life near the capital, and Tripoli lowers the budget in a more local setting.",
+        "Entry remains passport-specific, while employment requires a separate permit and residence. Economic and currency volatility, electricity gaps and a changing security environment require a cash buffer and a fresh official travel-advice check before every trip.",
+    ),
+    "move-to-israel": (
+        "Israel works most clearly for people with confirmed Law of Return eligibility, a family basis or an employer authorised to hire a foreign worker. Tel Aviv has the deepest technology and business market, Jerusalem centres government and academia, and Haifa combines industry, research and lower housing costs.",
+        "Tourist entry and ETA-IL do not create work rights. Housing and routine expenses are high, while regional security can change quickly; check official warnings, transport, shelter access and insurance before every trip.",
+    ),
+    "move-to-iran": (
+        "Iran is a realistic relocation only with a clear legal basis: a confirmed job, study place, family route or approved investment. Tehran offers the broadest employment and service base, Shiraz a slower daily rhythm, and Isfahan industrial and engineering work. There is no clear independent long-stay route for an ordinary remote worker.",
+        "FCDO advises against all travel to Iran and highlights a high detention risk. Foreign payment cards generally do not work, the rial is volatile, and a tourist eVisa does not authorise employment. A move needs a written employer plan, valid insurance, lawful access to funds and an independent exit plan.",
+    ),
+    "move-to-yemen": (
+        "Yemen is only a plausible relocation case for a verified employment assignment, humanitarian posting or family basis backed by professional security planning. Sana'a concentrates institutions, Aden hosts internationally recognised government functions and a major port, while Mukalla anchors Hadramawt and the Arabian Sea coast.",
+        "FCDO advises against all travel to Yemen and tells those in the country to leave immediately. Terrorism, constant kidnap risk, arbitrary detention, mines, road closures, fuel shortages and limited consular help make a casual trial move unsuitable.",
+    ),
+    "move-to-syria": (
+        "Syria is only a realistic relocation case with a verified basis, usually an employer, study or family, plus a separate security plan. Damascus has the broadest institutional base, Aleppo links to industry and reconstruction, and Latakia to the port and coast.",
+        "FCDO advises against all travel to Syria and says there is no in-country consular support. Terrorism, kidnapping, armed clashes, mines, infrastructure failures and sudden border closures make a casual trial move unsuitable.",
+    ),
+    "move-to-iraq": (
+        "Iraq is mainly a realistic move with a confirmed contract in energy, infrastructure, an international organisation or another project providing a complete security package. Baghdad centres government and business, Erbil hosts international firms and Kurdistan Region services, and Basra anchors oil, gas and port logistics.",
+        "Federal Iraq and the Kurdistan Region use separate visa and residence procedures. A visitor eVisa does not replace work permission, while an international employee's real costs depend heavily on secure housing, transport, insurance and evacuation cover.",
     ),
     "move-to-china": (
         "Shanghai (French Concession, Jing'an) has a developed expat scene. High-speed rail covers Beijing–Shanghai in 4.5 hours. Shenzhen is the tech hub — ByteDance, Tencent, DJI.",
@@ -2025,6 +2213,551 @@ RU_COUNTRY_DATA: dict[str, dict] = {
         "pros": ["Самарканд/Бухара — уникальные UNESCO-объекты (Регистан, Тимуриды)", "Ташкент: 1BR $300–500/мес, современный город с советской инфраструктурой", "Русский язык понятен большинству старшего поколения — коммуникация проще", "Visa-free 30 дней для большинства стран, простая процедура"],
         "cons": ["Жаркое лето: 40–45°C июль–август (сухость и пыль тяжелее ЮВА-влажности)", "Банковская инфраструктура для иностранцев: Visa/MC работают не везде, SWIFT с ограничениями", "Expat-рынок минимальный: мало международных компаний и вакансий для иностранцев", "Узбекский + русский (не английский) — языковой барьер выше, чем в ЮВА"],
         "top_cities": ["Ташкент", "Самарканд", "Бухара", "Фергана"],
+    },
+    "move-to-georgia": {
+        "budget": "$900–1 600",
+        "climate": "Умеренный/Горный",
+        "english": "Средний",
+        "visa_label": "Безвиз / ВНЖ",
+        "description": "Переезд в Грузию удобно начинать с проверки паспорта: граждане стран из приложения к постановлению №255 могут находиться без визы один полный год, для остальных правила отличаются. Для одного человека рабочий ориентир составляет $900–1 600 в месяц с долгосрочной арендой. Тбилиси удобнее по работе и сервисам, Батуми заметно зависит от летнего сезона, Кутаиси обычно дешевле.",
+        "visas": [
+            ("Безвизовый въезд", "Один полный год только для граждан из официального перечня", "Паспорт страны из приложения к постановлению №255", "Тест страны и проживание без местной работы"),
+            ("Краткосрочная виза / eVisa", "Зависит от гражданства и разрешённых въездов", "Паспорт, цель поездки и документы из официального визового навигатора", "Граждане стран без годового безвиза"),
+            ("Рабочий ВНЖ", "Срок определяется решением; затем оформляется карта", "Основание деятельности, право на работу и документы по доходу или обороту", "Местная занятость и предпринимательская деятельность"),
+            ("Учебный / семейный ВНЖ", "По основанию и подтверждающим документам", "Зачисление в учебное заведение или семейная связь", "Учёба и воссоединение семьи"),
+        ],
+        "costs": ("$900–1 600", "$400–900", "$250–450", "$20–60"),
+        "pros": [
+            "Годовой безвизовый срок доступен гражданам стран из официального перечня — удобно для теста без немедленной подачи на ВНЖ",
+            "Тбилиси даёт лучший выбор клиник, международных сервисов, коворкингов и авиасвязей внутри страны",
+            "Три разных сценария: деловой Тбилиси, сезонный морской Батуми и более спокойный Кутаиси",
+            "Статус малого бизнеса может дать ставку 1% для подходящего грузинского дохода, если заявитель оформил статус и соблюдает условия",
+        ],
+        "cons": [
+            "Безвизовый въезд сам по себе не разрешает местную работу или предпринимательскую деятельность",
+            "С 1 марта 2026 года для регулируемой работы иностранцу нужно отдельно проверить право на работу и подходящий миграционный статус",
+            "Аренда в Батуми сильно меняется летом; долгосрочную цену и условия выселения на сезон нужно фиксировать в договоре",
+            "Налоговые 183 дня и режим 1% решают разные вопросы: резидентство не означает автоматического применения льготной ставки",
+        ],
+        "top_cities": ["Тбилиси", "Батуми", "Кутаиси"],
+        "city_profiles": [
+            ("Тбилиси", "$1 000–1 700", "работа, сервисы, медицина и круглогодичная жизнь", "самая высокая аренда и загруженный трафик"),
+            ("Батуми", "$800–1 400", "море, мягкая зима и сезонная база", "летний скачок аренды, влажность и туристический сезон"),
+            ("Кутаиси", "$650–1 100", "спокойный ритм и меньший бюджет", "меньше международных сервисов и карьерных возможностей"),
+        ],
+    },
+    "move-to-turkey": {
+        "budget": "$1 000–1 800",
+        "climate": "Разнообразный",
+        "english": "Ниже среднего",
+        "visa_label": "Digital Nomad / ВНЖ / Work Permit",
+        "description": "Переезд в Турцию в 2026 году требует раздельно проверить въезд, проживание и работу. Туристический срок зависит от паспорта и в общем случае не превышает 90 дней за 180 дней. Для одного человека рабочий ориентир составляет $1 000–1 800 в месяц с долгосрочной арендой, но высокая инфляция и город меняют расчёт быстрее, чем во многих направлениях каталога.",
+        "visas": [
+            ("Безвиз / eVisa / туристическая виза", "По гражданству; максимум туристического stay — 90 дней из 180", "Паспорт и условия официального визового режима", "Тест страны и короткая поездка"),
+            ("Digital Nomad Visa", "После сертификата — подача через визовый центр или консульство", "Гражданство из перечня, возраст 21–55, диплом, иностранный контракт, доход $3 000/мес. или $36 000/год", "Подходящие удалённые специалисты"),
+            ("Краткосрочный ВНЖ", "До 2 лет за одно решение; срок определяет ведомство", "Подтверждённая цель, адрес, страховка и другие документы по основанию", "Недвижимость, деловые связи, туризм и другие законные основания"),
+            ("Разрешение на работу", "Первая выдача — до 1 года и не дольше договора", "Работодатель и одобрение Министерства труда; внутренний маршрут обычно требует действующий ВНЖ не менее 6 месяцев", "Местная занятость"),
+        ],
+        "costs": ("$1 000–1 800", "$500–1 000", "$250–450", "$40–100"),
+        "pros": [
+            "Стамбул даёт крупнейший выбор работы, образования, клиник, авиасвязей и международных сервисов",
+            "Анталья и Измир предлагают море и более спокойный ритм без отказа от городской инфраструктуры",
+            "Официальный digital nomad маршрут существует для граждан перечисленных стран с иностранным контрактом и доходом от $3 000 в месяц",
+            "Развитый внутренний транспорт позволяет сравнивать несколько городов до долгой аренды",
+        ],
+        "cons": [
+            "Высокая инфляция делает цены в TRY и USD нестабильными; бюджет нужно пересчитывать непосредственно перед переездом",
+            "Туристический въезд не гарантирует краткосрочный ВНЖ, даже при наличии договора аренды",
+            "Для местной работы требуется разрешение; digital nomad маршрут относится к иностранным работодателям или клиентам",
+            "Стамбул требует большего бюджета и времени на дорогу, а прибрежные города дорожают в высокий сезон",
+        ],
+        "top_cities": ["Стамбул", "Анталья", "Измир", "Анкара"],
+        "city_profiles": [
+            ("Стамбул", "$1 300–2 200", "работа, бизнес, образование и перелёты", "дорогая аренда, пробки и длинные маршруты"),
+            ("Анталья", "$900–1 500", "море, семьи и удалённая работа", "сезонная аренда и туристическая нагрузка"),
+            ("Измир", "$1 000–1 700", "город у моря и более спокойный ритм", "меньше международных вакансий, чем в Стамбуле"),
+            ("Анкара", "$850–1 400", "учёба, госструктуры и более ровный бюджет", "нет моря и меньше lifestyle-инфраструктуры для экспатов"),
+        ],
+    },
+    "move-to-kyrgyzstan": {
+        "budget": "$650–1 100",
+        "climate": "Континентальный/Горный",
+        "english": "Низкий",
+        "visa_label": "Безвиз / Digital Nomad / ВНЖ",
+        "description": "Переезд в Кыргызстан в 2026 году начинается с проверки паспорта. После изменений от 31 декабря 2025 года граждане ЕАЭС могут находиться без отдельного документа до 90 дней в каждом 180-дневном периоде, а граждане многих стран из официального перечня — до 30 дней в каждом 60-дневном периоде. Для одного человека реалистичный ориентир с долгосрочной арендой составляет $650–1 100 в месяц.",
+        "visas": [
+            ("Безвиз / eVisa", "По паспорту; для многих стран 30 дней из 60, для ЕАЭС 90 из 180", "Паспорт и результат официальной проверки режима въезда", "Тест страны и короткое проживание"),
+            ("Digital Nomad status / DN visa", "DN visa — до 1 года", "Статус или ходатайство уполномоченного органа; работа в IT и разработке ПО", "Подходящие удалённые IT-специалисты"),
+            ("Unified Permit", "По одобренной заявке", "Работодатель или предприниматель подаёт через eVisa; документ объединяет рабочую визу и разрешения", "Местная занятость"),
+            ("Временный ВНЖ", "По основанию и решению ведомства", "Работа, учёба, семья или другое законное основание и действующий пакет документов", "Долгосрочное проживание"),
+        ],
+        "costs": ("$650–1 100", "$300–600", "$180–320", "$15–40"),
+        "pros": [
+            "Бишкек остаётся одной из наиболее доступных столиц региона при наличии городских сервисов и русскоязычной среды",
+            "Русский широко используется в Бишкеке и в деловой среде, а кыргызский помогает глубже встроиться в повседневную жизнь",
+            "Официальный Digital Nomad status и DN visa создают отдельный маршрут для подходящих IT- и software-специалистов",
+            "Горы, Иссык-Куль и Каракол доступны для коротких поездок без международного перелёта",
+        ],
+        "cons": [
+            "Регистрационный срок зависит от гражданства: при отсутствии освобождения регистрацию нужно оформить в течение пяти рабочих дней",
+            "Зимний смог в Бишкеке — подтверждённая городская проблема; качество воздуха нужно учитывать при выборе района и сезона",
+            "Английский вне международных сервисов ограничен, а инфраструктура за пределами Бишкека менее предсказуема",
+            "Безвизовый въезд и Digital Nomad status не заменяют Unified Permit для обычной работы у местного работодателя",
+        ],
+        "top_cities": ["Бишкек", "Ош", "Каракол"],
+        "city_profiles": [
+            ("Бишкек", "$750–1 200", "сервисы, коворкинги, перелёты и удалённая работа", "зимний смог, трафик и рост аренды"),
+            ("Ош", "$500–800", "меньший бюджет и более локальный ритм", "меньше международных сервисов и вакансий"),
+            ("Каракол", "$550–900", "горы, туризм и спокойная база", "сезонность, холодная зима и ограниченный рынок жилья"),
+        ],
+    },
+    "move-to-armenia": {
+        "budget": "$900–1 600",
+        "climate": "Континентальный/Горный",
+        "english": "Средний в Ереване",
+        "visa_label": "Безвиз / ВНЖ / Work Permit",
+        "description": "Переезд в Армению в 2026 году начинается с проверки гражданства: для паспортов из официальных безвизовых списков общий ориентир — до 180 дней в течение одного года, если международное соглашение не устанавливает другое правило. Для одного человека с долгосрочной арендой разумно планировать $900–1 600 в месяц. Ереван заметно дороже Гюмри, а Дилижан зависит от сезона и доступности жилья.",
+        "visas": [
+            ("Безвиз / eVisa / visitor visa", "По гражданству; безвиз обычно до 180 дней в год, visitor visa до 120 дней с возможным продлением ещё на 60", "Паспорт и результат официальной проверки МИД", "Тест страны и короткое проживание"),
+            ("Временный ВНЖ", "До 1 года с возможностью продления", "Работа, предпринимательство, учёба, семья или другое подтверждённое основание", "Долгосрочное проживание"),
+            ("Рабочий маршрут", "По трудовому основанию и сроку решения", "Работодатель подаёт через workpermit.am; для граждан ЕАЭС действует освобождение от разрешения на работу на срок договора", "Местная занятость"),
+            ("Постоянный ВНЖ", "5 лет с возможностью продления", "Подходящее семейное, армянское происхождение или предпринимательское основание и документы ведомства", "Заявители с устойчивой связью со страной"),
+        ],
+        "costs": ("$900–1 600", "$450–900", "$220–400", "$15–45"),
+        "pros": [
+            "Ереван предлагает развитую IT- и предпринимательскую среду, коворкинги, частную медицину и прямые международные рейсы",
+            "Для многих паспортов доступно до 180 безвизовых дней в течение года, что удобно для аккуратного теста страны",
+            "Русский широко используется в Ереване и сфере услуг, а армянский важен для долгой интеграции и регионов",
+            "Гюмри и Дилижан дают более спокойные сценарии с меньшим бюджетом и быстрым доступом к природе",
+        ],
+        "cons": [
+            "Ереван уже нельзя считать сверхдешёвой столицей: аренда в Кентроне и Арабкире заметно подняла общий бюджет",
+            "Отдельная digital nomad виза не подтверждается официальными миграционными источниками; туристический срок не решает вопрос работы",
+            "С 1 ноября 2026 года запланированы изменения миграционных процедур и сборов, поэтому пакет нужно перепроверять перед подачей",
+            "За пределами Еревана меньше международных вакансий, клиник и англоязычных сервисов, а качество отопления жилья требует проверки",
+        ],
+        "top_cities": ["Ереван", "Гюмри", "Дилижан"],
+        "city_profiles": [
+            ("Ереван", "$1 000–1 700", "работа, IT, медицина, перелёты и городские сервисы", "дорогая центральная аренда, трафик и жаркое лето"),
+            ("Гюмри", "$600–950", "меньший бюджет, культурная среда и спокойный ритм", "меньше вакансий и международных сервисов"),
+            ("Дилижан", "$700–1 200", "природа, семьи и удалённая работа", "небольшой рынок аренды, сезонность и необходимость чаще ездить"),
+        ],
+    },
+    "move-to-azerbaijan": {
+        "budget": "$800–1 500",
+        "climate": "Умеренный/Полузасушливый",
+        "english": "Средний в Баку",
+        "visa_label": "eVisa / ВНЖ / Work Permit",
+        "description": "Переезд в Азербайджан в 2026 году начинается с проверки паспорта. Для граждан стран с безвизовым режимом общий предел обычно составляет до 90 дней, а официальная eVisa действует 90 дней и разрешает один въезд с пребыванием до 30 дней. Если поездка длится больше 15 дней, нужен отдельный бесплатный учёт по месту пребывания. Для одного человека с долгосрочной арендой разумно планировать $800–1 500 в месяц: Баку формирует верхнюю часть диапазона, Гянджа и Шеки обычно дешевле.",
+        "visas": [
+            ("Безвиз / eVisa / обычная виза", "По гражданству; безвиз обычно до 90 дней, eVisa — один въезд и до 30 дней в пределах 90-дневной действительности", "Паспорт и результат официальной проверки визового режима", "Разведочная поездка и короткое проживание"),
+            ("Регистрация по месту пребывания", "При проживании свыше 15 дней; для граждан Казахстана — свыше 30 дней", "Заявление принимающей стороны или иностранца и копия паспорта; госпошлины нет", "Любой длительный визит"),
+            ("Временный ВНЖ", "Обычно до 1 года с возможностью продления до 2 лет при сохранении основания", "Работа, семья, учёба, предпринимательство, инвестиции или другое основание из Миграционного кодекса", "Долгосрочное проживание"),
+            ("Разрешение на работу", "До 1 года либо на более короткий срок трудового договора", "Заявление работодателя, подходящая вакансия и действующее миграционное основание; предусмотрены исключения", "Местная занятость"),
+        ],
+        "costs": ("$800–1 500", "$400–900", "$220–380", "$20–55"),
+        "pros": [
+            "Баку объединяет основной рынок международной работы, частные клиники, метро, коворкинги и прямые авиарейсы",
+            "Официальная eVisa оформляется онлайн; стандартное рассмотрение занимает до трёх рабочих дней, срочное — до трёх часов",
+            "Русский заметно помогает в Баку и части сервисов, хотя государственный и основной язык страны — азербайджанский",
+            "Гянджа и Шеки дают более спокойный ритм и меньший бюджет, а размеры страны упрощают короткие поездки между регионами",
+        ],
+        "cons": [
+            "Отдельная digital nomad виза не подтверждается официальными миграционными страницами; туристический въезд не даёт автоматического права на местную работу",
+            "Баку заметно дороже региональных городов, а хорошая долгосрочная аренда часто требует депозита и тщательной проверки договора",
+            "После 15 дней нужно проконтролировать регистрацию адреса; выезд прекращает прежнюю регистрацию и после возвращения срок считается заново",
+            "За пределами Баку меньше международных вакансий, частной медицины, англоязычных сервисов и ликвидного долгосрочного жилья",
+        ],
+        "top_cities": ["Баку", "Гянджа", "Шеки"],
+        "city_profiles": [
+            ("Баку", "$900–1 600", "работа, перелёты, медицина, метро и международные сервисы", "дорогая центральная аренда, трафик и сильный ветер"),
+            ("Гянджа", "$550–900", "меньший бюджет, обычная городская инфраструктура и спокойный ритм", "меньше международных вакансий, рейсов и англоязычных услуг"),
+            ("Шеки", "$550–950", "историческая среда, природа, туризм и медленный ритм", "небольшой рынок долгосрочной аренды, сезонность и ограниченная медицина"),
+        ],
+    },
+    "move-to-qatar": {
+        "budget": "$1 800–3 200",
+        "climate": "Пустынный",
+        "english": "Высокий",
+        "visa_label": "Visa Waiver / Work RP / Property RP",
+        "description": "Переезд в Катар в 2026 году обычно начинается не с туристической визы, а с трудового предложения. Право на въезд зависит от паспорта: официальный перечень включает 30- и 90-дневные режимы, а остальные посетители проверяют Hayya и МВД. Для одного человека с долгосрочной арендой разумно планировать $1 800–3 200 в месяц. Главный риск бюджета — жильё; пакет работодателя может заметно изменить итоговую сумму.",
+        "visas": [
+            ("Visa waiver / visitor visa / Hayya", "По паспорту; распространены режимы на 30 или 90 дней", "Паспорт, условия МВД или Hayya, иногда жильё, страховка и обратный билет", "Разведочная поездка и короткий визит"),
+            ("Work Residence Permit", "Обычно продлевается работодателем ежегодно", "Катарский работодатель, рабочая виза, медосмотр, биометрия и заверенные документы", "Наёмные специалисты"),
+            ("Family Residence Visa", "Обычно 1–5 лет в пределах статуса спонсора", "Действующий RP спонсора, подтверждение профессии, дохода, жилья и заверенные семейные документы", "Супруги и дети резидента"),
+            ("Property Residence", "При сохранении подходящей недвижимости и выполнении условий", "Недвижимость от QAR 730 000 в разрешённой зоне; от QAR 3 650 000 доступны дополнительные преимущества", "Покупатели недвижимости"),
+        ],
+        "costs": ("$1 800–3 200", "$1 000–2 100", "$350–650", "$45–110"),
+        "pros": [
+            "Доха предлагает современную инфраструктуру, метро, международный аэропорт, частную медицину и большой рынок квалифицированной занятости",
+            "Английский широко используется на работе и в сфере услуг, что снижает бытовой порог адаптации",
+            "Государственная налоговая служба освобождает зарплаты, выплаты и надбавки от местного подоходного налога",
+            "Небольшие расстояния позволяют выбирать между Дохой, Лусаилом и Аль-Вакрой без полной смены профессионального рынка",
+        ],
+        "cons": [
+            "Жильё, международная школа и семейная медицина могут сделать переезд дорогим, если работодатель не покрывает эти статьи",
+            "Основной рабочий маршрут привязан к работодателю; смена работы и семейное спонсорство требуют отдельных процедур",
+            "Отдельная digital nomad виза не подтверждается официальными порталами, а visitor status не разрешает местную занятость",
+            "Очень жаркое и влажное лето ограничивает прогулки, а жизнь за пределами зон метро часто требует автомобиля",
+        ],
+        "top_cities": ["Доха", "Аль-Вакра", "Лусаил"],
+        "city_profiles": [
+            ("Доха", "$2 000–3 500", "работа, метро, школы, медицина, перелёты и городские сервисы", "высокая аренда, трафик и дорогие международные школы"),
+            ("Аль-Вакра", "$1 500–2 500", "меньшая аренда, семейный ритм и доступ к метро", "дольше ехать к части офисов и меньше сервисов рядом"),
+            ("Лусаил", "$2 000–3 600", "новые дома, набережная, трамвай и современные районы", "премиальная аренда и незрелая инфраструктура отдельных кварталов"),
+        ],
+    },
+    "move-to-saudi-arabia": {
+        "budget": "$1 700–3 200",
+        "climate": "Пустынный",
+        "english": "Высокий",
+        "visa_label": "Work Visa / Iqama / Premium Residency",
+        "description": "Переезд в Саудовскую Аравию в 2026 году обычно начинается с оффера: компания получает рабочую визу, оформляет разрешение на работу и резидентскую карту Iqama. Туристическая eVisa для подходящих паспортов действует один год, допускает несколько въездов и пребывание до 90 дней, но не является рабочим статусом. Для одного человека с долгосрочной арендой разумно планировать $1 700–3 200 в месяц; жильё, автомобиль, страховка и школа делают пакет работодателя важнее одной суммы зарплаты.",
+        "visas": [
+            ("Tourist eVisa", "1 год, несколько въездов; до 90 дней пребывания", "Подходящее гражданство, паспорт и условия официального eVisa-портала", "Разведочная поездка, туризм, визиты и умра — не работа"),
+            ("Work Visa + Iqama", "По трудовому договору; продление через работодателя", "Саудовский работодатель, рабочая виза, разрешение на работу, медосмотр и документы", "Наёмные специалисты"),
+            ("Family Residence", "В пределах действующего статуса спонсора", "Iqama спонсора, подтверждение родства и текущий пакет МВД/МИД", "Супруги и дети резидента"),
+            ("Premium Residency", "Годовая, бессрочная или специальный продукт", "От SAR 100 000 в год или SAR 800 000 бессрочно; для специальных продуктов действуют отдельные инвестиционные и профессиональные критерии", "Инвесторы, предприниматели, владельцы недвижимости и квалифицированные специалисты"),
+        ],
+        "costs": ("$1 700–3 200", "$750–1 700", "$300–600", "$120–350"),
+        "pros": [
+            "Эр-Рияд концентрирует международные компании, государственные проекты, консалтинг, технологии и быстро растущую городскую инфраструктуру",
+            "Рабочие процессы, визы и разрешения всё чаще проходят через Qiwa, Absher и другие государственные цифровые сервисы",
+            "В текущей системе нет общего подоходного налога с обычной зарплаты; предпринимательская деятельность, иностранные обязательства и источник дохода проверяются отдельно",
+            "Premium Residency создаёт независимые от работодателя варианты для подходящих инвесторов, предпринимателей, специалистов и владельцев недвижимости",
+        ],
+        "cons": [
+            "Обычный рабочий маршрут зависит от работодателя; до переезда нужно письменно согласовать жильё, медстраховку, перелёты, школу и выходные выплаты",
+            "Отдельная digital nomad виза не подтверждается официальными порталами, а туристическая eVisa не даёт права на местную работу",
+            "Экстремальная летняя жара и автомобильная зависимость заметно влияют на повседневную жизнь, особенно за пределами районов с метро",
+            "Правовые и общественные нормы отличаются от европейских; перед переездом нужно проверить правила поведения, лекарств, алкоголя, одежды и публичного контента",
+        ],
+        "top_cities": ["Эр-Рияд", "Джидда", "Эль-Хубар"],
+        "city_profiles": [
+            ("Эр-Рияд", "$2 000–3 600", "карьера, штаб-квартиры, консалтинг, технологии и крупные проекты", "самая высокая аренда, трафик, сухая жара и длинные поездки"),
+            ("Джидда", "$1 800–3 200", "Красное море, торговля, логистика и более прибрежный образ жизни", "влажное лето и меньший корпоративный рынок, чем в столице"),
+            ("Эль-Хубар", "$1 700–3 000", "энергетика, семейные районы и близость к Даммаму и Бахрейну", "более узкий рынок вакансий и сильная зависимость от автомобиля"),
+        ],
+    },
+    "move-to-oman": {
+        "budget": "$1 500–2 800",
+        "climate": "Пустынный",
+        "english": "Высокий",
+        "visa_label": "Work Visa / Family / Golden Residency",
+        "description": "Переезд в Оман в 2026 году чаще всего строится вокруг оффера: работодатель получает разрешение Министерства труда и оформляет рабочую визу, после чего нужен resident card. Для туристической поездки официальный ROP eVisa Wizard подбирает режим по гражданству, месту проживания и цели; распространены варианты на 10 или 30 дней, но они не являются рабочим статусом. Для одного человека с долгосрочной арендой разумно планировать $1 500–2 800 в месяц, причём автомобиль, школа и страховка заметно меняют семейный бюджет.",
+        "visas": [
+            ("Tourist eVisa / eligible visa-free entry", "По паспорту; в eVisa Wizard встречаются 10- и 30-дневные варианты", "Гражданство, цель поездки, паспорт и результат официального визового мастера", "Разведочная поездка и туризм — не работа"),
+            ("Work Visa + Resident Card", "По трудовому договору и разрешению; продление через спонсора", "Оманский работодатель, work permit, паспорт, медосмотр и совпадение профессии", "Наёмные специалисты"),
+            ("Joining Relatives Visa", "В пределах статуса резидента; в старом описании ROP — до двух лет", "Действующая резиденция спонсора, подтверждение родства и текущий пакет ROP", "Супруги и дети младше 21 года"),
+            ("Golden / Investor Residency", "5 или 10 лет; 10-летняя программа возобновляемая", "Инвестиционный маршрут через недвижимость, компанию, облигации, акции, депозит или рабочие места; порог программы от OMR 200 000", "Инвесторы, предприниматели и обеспеченные заявители"),
+        ],
+        "costs": ("$1 500–2 800", "$650–1 400", "$280–550", "$140–350"),
+        "pros": [
+            "Маскат сочетает море, горы, международный аэропорт, частные клиники и спокойный городской ритм",
+            "Английский широко используется в международной рабочей среде и сервисах, хотя арабский остаётся официальным языком",
+            "Golden Residency даёт возобновляемый 10-летний инвестиционный маршрут через несколько типов активов и бизнеса",
+            "В 2026 году общего подоходного налога с зарплаты ещё нет; новый PIT начнёт действовать с 2028 года для дохода свыше OMR 42 000",
+        ],
+        "cons": [
+            "Рабочая виза привязана к работодателю и профессии в разрешении; официальный портал прямо запрещает работать на другого спонсора",
+            "Отдельная digital nomad виза не подтверждается официальными источниками, а туристическая eVisa не является разрешением на работу",
+            "Маскат растянут вдоль побережья и почти всегда требует автомобиля; общественный транспорт покрывает не все ежедневные маршруты",
+            "Оманизация ограничивает найм иностранцев в отдельных профессиях и секторах, поэтому оффер нужно проверять до переезда",
+        ],
+        "top_cities": ["Маскат", "Салала", "Сохар"],
+        "city_profiles": [
+            ("Маскат", "$1 700–3 000", "работа, школы, клиники, перелёты и международные сервисы", "самая высокая аренда, автомобильная зависимость и жаркое лето"),
+            ("Салала", "$1 200–2 200", "спокойный ритм, природа, туризм и сезон хариф", "меньше вакансий, перелётов и специализированной медицины"),
+            ("Сохар", "$1 200–2 100", "порт, логистика, промышленность и более низкая аренда", "узкий профессиональный рынок и меньше международных сервисов"),
+        ],
+    },
+    "move-to-bahrain": {
+        "budget": "$1 500–2 700",
+        "climate": "Пустынный",
+        "english": "Высокий",
+        "visa_label": "Work Permit / Family / Golden Residency",
+        "description": "Переезд в Бахрейн в 2026 году чаще всего начинается с оффера: работодатель оформляет рабочий пермит через LMRA, а семейный статус зависит от действующего разрешения спонсора. Гостевой въезд проверяется по паспорту и статусу проживания через официальный eVisa-портал; он не даёт права на работу. Независимые варианты есть у подходящих владельцев недвижимости, инвесторов, пенсионеров и заявителей на 10-летнюю Golden Residency. Для одного человека с долгосрочной арендой практичный ориентир — $1 500–2 700 в месяц.",
+        "visas": [
+            ("Visitor visa / eVisa", "Срок и кратность зависят от паспорта, резиденции и выбранной категории", "Паспорт, цель поездки и результат официальной проверки eligibility", "Разведочная поездка и туризм — не работа"),
+            ("Work Permit + residence", "Обычно 1–2 года по категории и заявлению работодателя", "Оффер, работодатель в Бахрейне и одобрение LMRA", "Наёмные специалисты"),
+            ("Family residence", "В пределах статуса спонсора", "Рабочий статус спонсора, доход от BHD 400 и документы о родстве", "Супруги и иждивенцы до 24 лет"),
+            ("Golden Residency", "10 лет", "Недвижимость от BHD 200 000, зарплата резидента от BHD 2 000 за пятилетний период, пенсия нерезидента от BHD 4 000 либо подтверждённый талант", "Квалифицирующиеся собственники, сотрудники, пенсионеры и таланты"),
+        ],
+        "costs": ("$1 500–2 700", "$750–1 400", "$300–550", "$120–300"),
+        "pros": [
+            "Компактная география сокращает многие ежедневные поездки между деловыми, жилыми и прибрежными районами",
+            "Манама — региональный центр финансов, финтеха и профессиональных услуг с широким использованием английского",
+            "Golden Residency даёт 10-летний статус и позволяет включить супруга, детей и родителей",
+            "Self-Sponsor Residency создаёт отдельный маршрут для подходящих инвесторов, владельцев жилья и пенсионеров",
+        ],
+        "cons": [
+            "Обычный рабочий статус зависит от работодателя и правил LMRA; смену работодателя нужно оформлять отдельно",
+            "Гостевая виза не разрешает работу, а отдельная digital nomad виза на официальных порталах не найдена",
+            "Летняя жара и влажность снижают практичность пеших маршрутов, поэтому автомобиль часто становится частью бюджета",
+            "Аренда, международная школа и частная страховка могут сильнее базовых расходов изменить семейный пакет",
+        ],
+        "top_cities": ["Манама", "Мухаррак", "Эр-Рифа"],
+        "city_profiles": [
+            ("Манама", "$1 700–3 000", "финансы, финтех, международные компании, клиники и рестораны", "самая высокая аренда, трафик и плотная городская среда"),
+            ("Мухаррак", "$1 400–2 500", "аэропорт, историческая среда, Амвадж и более спокойный ритм", "меньше офисных вакансий и ежедневные поездки в Манаму"),
+            ("Эр-Рифа", "$1 400–2 500", "семейные районы, школы, виллы и более тихий быт", "зависимость от автомобиля и меньше сервисов в пешей доступности"),
+        ],
+    },
+    "move-to-kuwait": {
+        "budget": "$1 600–2 900",
+        "climate": "Пустынный",
+        "english": "Высокий",
+        "visa_label": "Work Residence 18 / Family 22",
+        "description": "Переезд в Кувейт в 2026 году обычно начинается с оффера: работодатель получает разрешение на работу и оформляет въезд, затем резиденцию Article 18, страховку и Civil ID. Туристическая виза допускает однократный въезд и пребывание до 90 дней, но запрещает работу. Семейная резиденция Article 22 требует подтверждения родства и дохода спонсора от KWD 450. Для одного человека с долгосрочной арендой практичный ориентир — $1 600–2 900 в месяц. До принятия оффера нужно отдельно проверить exit permit: частному иностранному работнику требуется одобрение работодателя для выезда.",
+        "visas": [
+            ("Tourist visa / eVisa", "Разрешение на въезд действует 30 дней; однократное пребывание до 90 дней", "Паспорт от 6 месяцев, подходящая категория и одобрение через официальный Kuwait Visa", "Разведочная поездка и туризм — не работа"),
+            ("Private-sector work residence — Article 18", "По сроку разрешения и спонсорства; продление через работодателя", "Оффер, разрешение Public Authority for Manpower, справка о несудимости, медосмотр и страховка", "Наёмные специалисты частного сектора"),
+            ("Government work residence — Article 17", "По государственному контракту и спонсорству", "Государственный работодатель, въездное разрешение и пакет резиденции", "Сотрудники государственного сектора"),
+            ("Family residence — Article 22", "В пределах действующего статуса спонсора", "Доход спонсора от KWD 450, подтверждение родства, жильё и действующая резиденция", "Супруги и дети резидентов"),
+        ],
+        "costs": ("$1 600–2 900", "$750–1 500", "$300–600", "$100–300"),
+        "pros": [
+            "Высокие доходы в отдельных международных, нефтегазовых, медицинских и образовательных ролях могут давать хороший потенциал накоплений",
+            "Английский широко используется в международной рабочей среде, клиниках, школах и повседневных сервисах",
+            "Эль-Кувейт, Сальмия и Хавалли образуют связанную городскую агломерацию с большим выбором жилья и услуг",
+            "В бюджете 2026/27 налог на доходы физических лиц указан с нулевыми поступлениями; широкого PIT с обычной зарплаты сейчас нет",
+        ],
+        "cons": [
+            "Article 18 привязан к работодателю, а частному иностранному работнику нужен exit permit с одобрением для выезда из страны",
+            "Отдельной digital nomad визы нет, а туристическая виза прямо запрещает работу и требует выезда по окончании срока",
+            "Экстремальная летняя жара и автомобильная среда ограничивают пеший быт и повышают расходы на транспорт",
+            "Школа, семейное жильё, страховка и условия employer package меняют бюджет сильнее обычных ежедневных расходов",
+        ],
+        "top_cities": ["Эль-Кувейт", "Сальмия", "Хавалли"],
+        "city_profiles": [
+            ("Эль-Кувейт", "$1 800–3 200", "офисы, государственные учреждения, банки, деловые встречи и короткие поездки на работу", "высокая аренда в ключевых районах и менее жилой ритм центра"),
+            ("Сальмия", "$1 500–2 700", "набережная, международные рестораны, магазины, школы и большой выбор квартир", "плотный трафик, неоднородное качество домов и дорогая аренда у моря"),
+            ("Хавалли", "$1 300–2 400", "центральное положение, доступная аренда, сервисы и повседневные покупки", "плотная застройка, трафик и меньше тихих прибрежных пространств"),
+        ],
+    },
+    "move-to-jordan": {
+        "budget": "$1 000–2 100",
+        "climate": "Аридный (жаркий)",
+        "english": "Средний",
+        "visa_label": "Work Residence / Property Residency",
+        "description": "Переезд в Иорданию в 2026 году чаще всего строится вокруг оффера, учёбы, семьи или крупной покупки недвижимости. Туристическая eVisa и виза по прибытии зависят от гражданства и не разрешают работу. Для трудоустройства работодатель оформляет разрешение Ministry of Labour, а затем рабочую резиденцию; часть профессий закрыта или ограничена для иностранцев. Пятилетний ВНЖ за недвижимость требует объект от JOD 200 000 у застройщика, JOD 300 000 у другого продавца или JOD 150 000 вне столичной провинции. Рабочий бюджет одного человека с долгосрочной арендой — $1 000–2 100 в месяц.",
+        "visas": [
+            ("Visitor eVisa / visa on arrival", "Зависит от гражданства и категории; однократная виза по прибытии стоит JOD 40", "Паспорт, право на выбранный режим и проверка списка гражданств MOI", "Разведочная поездка и туризм — не работа"),
+            ("Work visa + work residence", "По сроку контракта и разрешения; продление через работодателя", "Оффер, доступная иностранцу профессия, разрешение Ministry of Labour и документы MOI", "Наёмные специалисты"),
+            ("Family / follower residence", "В пределах действующей резиденции спонсора", "Статус спонсора, подтверждение родства и пакет Ministry of Interior", "Супруги, дети и другие подходящие члены семьи"),
+            ("Five-year property residence", "5 лет с возможностью продления", "Недвижимость от JOD 200 000 у застройщика, JOD 300 000 у другого продавца или JOD 150 000 вне столичной провинции; владение 5 лет", "Покупатели подходящей недвижимости и их семьи"),
+        ],
+        "costs": ("$1 000–2 100", "$400–900", "$250–500", "$80–250"),
+        "pros": [
+            "Амман концентрирует международные организации, НКО, профессиональные услуги, школы и сильную частную медицину",
+            "Английский распространён в международной рабочей среде и сервисах Аммана и Акабы, хотя арабский важен для самостоятельного быта",
+            "Компактные расстояния позволяют совмещать столичную базу с поездками к Мёртвому морю, Петре, Вади-Рам и Акабе",
+            "Пятилетняя резиденция через подходящую недвижимость создаёт независимый от работодателя маршрут для капиталоёмкого сценария",
+        ],
+        "cons": [
+            "Рабочее разрешение зависит от работодателя, сектора и списка профессий, доступных иностранцам",
+            "Отдельной digital nomad визы на официальных порталах не найдено, а гостевой статус не даёт права на местную работу",
+            "В Иордании действует прогрессивный налог на доходы физических лиц, поэтому оффер нужно сравнивать по чистой сумме",
+            "Амман дорог для региона, автомобиль или такси часто нужны из-за холмистой застройки, а дефицит воды влияет на бытовой график",
+        ],
+        "top_cities": ["Амман", "Акаба", "Ирбид"],
+        "city_profiles": [
+            ("Амман", "$1 100–2 300", "международные организации, технологии, банки, школы, клиники и основной рынок квалифицированной работы", "самая высокая аренда, пробки, холмистые районы и дорогой семейный сценарий"),
+            ("Акаба", "$1 000–1 900", "Красное море, туризм, гостиницы, портовая логистика и проекты специальной экономической зоны", "меньше профессиональных вакансий, жаркое лето и удалённость от столичных сервисов"),
+            ("Ирбид", "$800–1 500", "университеты, образование, спокойный северный город и более доступная аренда", "меньше международных работодателей, частной медицины и англоязычной инфраструктуры"),
+        ],
+    },
+    "move-to-lebanon": {
+        "budget": "$900–2 000",
+        "climate": "Средиземноморский",
+        "english": "Средний",
+        "visa_label": "Work Residence / Income Residence",
+        "description": "Переезд в Ливан в 2026 году требует сначала проверить паспортный режим и текущую обстановку, затем выбрать отдельное основание для проживания. Для работы нужны разрешение на работу, рабочая виза и резиденция. General Security также описывает годовую резиденцию по подтверждённому доходу или банковскому счёту без права работать и шестимесячную многократную резиденцию по банковской выписке. Практичный бюджет одного человека с долгосрочной арендой — $900–2 000 в месяц; в Бейруте и при частом использовании генератора он выше.",
+        "visas": [
+            ("Tourist / visit visa", "Срок и способ оформления зависят от гражданства", "Паспорт, маршрут по списку General Security, жильё, обратный билет и подтверждение средств", "Разведочная поездка и визит — не работа"),
+            ("Work visa + work residence", "По сроку разрешения и контракта", "Оффер, разрешение Ministry of Labour, рабочая виза, контракт и пакет General Security", "Наёмные специалисты"),
+            ("Annual income / bank residence", "До 1 года по сроку паспорта", "Подтверждённый доход или заблокированный банковский счёт, жильё и нотариальное обязательство не работать", "Финансово независимые заявители без местной работы"),
+            ("Six-month bank-statement residence", "6 месяцев, многократный въезд", "Счёт в ливанском банке от LBP 1,5 млрд или эквивалента, выписка за 3 месяца и обязательство не работать", "Краткий самостоятельный резидентский сценарий"),
+        ],
+        "costs": ("$900–2 000", "$350–900", "$250–550", "$100–300"),
+        "pros": [
+            "Бейрут сочетает арабскую, французскую и английскую рабочую среду, университеты, частную медицину и международные организации",
+            "Средиземное море, горы и компактные расстояния дают разнообразный быт без внутренних перелётов",
+            "General Security публикует самостоятельный годовой маршрут по доходу или банковскому счёту без местной работы",
+            "При доходе в стабильной иностранной валюте часть повседневных расходов можно планировать в долларах США",
+        ],
+        "cons": [
+            "Официальные предупреждения по безопасности меняются по районам; перед поездкой нужен свежий маршрут и план выезда",
+            "Электроснабжение часто требует частного генератора, поэтому аренду нельзя сравнивать без счёта за электричество",
+            "Банковские, валютные и платёжные условия нестабильны; резерв и доступ к деньгам нужно распределять заранее",
+            "Местная работа зависит от работодателя, разрешения Ministry of Labour и резиденции, а отдельной digital nomad визы не найдено",
+        ],
+        "top_cities": ["Бейрут", "Джуния", "Триполи"],
+        "city_profiles": [
+            ("Бейрут", "$1 100–2 400", "международные организации, образование, технологии, медиа, частная медицина и крупнейший выбор сервисов", "самая дорогая аренда, трафик, генераторные расходы и повышенная чувствительность к обстановке"),
+            ("Джуния", "$900–1 800", "море, рестораны, прибрежный быт и доступ к Большому Бейруту", "зависимость от автомобиля, летняя сезонность и ежедневные пробки в сторону столицы"),
+            ("Триполи", "$700–1 400", "более доступная аренда, исторический центр, северное побережье и локальный городской ритм", "меньше международных работодателей, англоязычных сервисов и специализированной медицины"),
+        ],
+    },
+    "move-to-israel": {
+        "budget": "$2 000–4 200",
+        "climate": "Средиземноморский",
+        "english": "Высокий",
+        "visa_label": "Aliyah / B/1 Work / Family",
+        "description": "Переезд в Израиль в 2026 году обычно строится вокруг права на алию, семейной процедуры или работодателя, имеющего разрешение нанимать иностранцев. С 1 января 2025 года путешественникам из безвизовых стран до поездки нужна ETA-IL; она остаётся гостевым разрешением и не даёт права работать. Для работы нужен статус B/1, привязанный к лицензированному работодателю и сектору. Правомочные по Закону о возвращении могут запросить A/1 до пяти лет с правом жить и работать. Практичный бюджет одного человека с долгосрочной арендой — $2 000–4 200 в месяц.",
+        "visas": [
+            ("B/2 visitor + ETA-IL", "По решению на въезд; ETA нужна гражданам безвизовых стран", "Подходящий паспорт, ETA-IL или B/2 и документы поездки", "Разведочная поездка и визит — не работа"),
+            ("B/1 work visa", "До 1 года за выдачу; продление по процедуре", "Работодатель с разрешением PIBA, контракт и виза для конкретного сектора", "Иностранные специалисты и работники разрешённых отраслей"),
+            ("A/1 temporary residence", "До 5 лет", "Подтверждённое право на алию по Закону о возвращении", "Правомочные заявители, ещё не решившие вопрос гражданства"),
+            ("Spouse graduated procedure", "Поэтапный процесс", "Реальные отношения с гражданином или постоянным резидентом, документы и проверки PIBA", "Супруги и подходящие партнёры"),
+        ],
+        "costs": ("$2 000–4 200", "$900–2 200", "$450–850", "$120–350"),
+        "pros": [
+            "Тель-Авив и центральный округ дают сильный рынок технологий, стартапов, финансов и международного бизнеса",
+            "Для правомочных по Закону о возвращении существует отдельный путь A/1 с правом жить и работать до пяти лет",
+            "Хайфа сочетает Технион, исследования, порт, промышленность и более доступную аренду, чем Тель-Авив",
+            "Иврит важен для интеграции, но английский широко используется в технологиях, академической среде и международных компаниях",
+        ],
+        "cons": [
+            "Тель-Авив и Иерусалим требуют высокого бюджета; депозит, муниципальный налог и первоначальное обустройство увеличивают старт",
+            "B/1 привязан к разрешённому работодателю и сектору; туристический B/2 нельзя считать маршрутом к местной работе",
+            "Налог на доход прогрессивный, а без tax coordination при нескольких работодателях возможно удержание по максимальной ставке 47%",
+            "Обстановка безопасности и транспортные ограничения меняются; план жилья должен включать доступ к защищённому пространству и маршрут выезда",
+        ],
+        "top_cities": ["Тель-Авив", "Иерусалим", "Хайфа"],
+        "city_profiles": [
+            ("Тель-Авив", "$2 700–5 000", "технологии, стартапы, финансы, международный бизнес, море и активная городская среда", "самая высокая аренда, конкуренция за жильё и дорогой повседневный быт"),
+            ("Иерусалим", "$2 100–3 900", "государственный сектор, университеты, НКО, история и семейные районы", "сложная районная специфика, высокая аренда и ограниченный транспорт в шаббат"),
+            ("Хайфа", "$1 600–3 000", "Технион, исследования, промышленность, порт, медицина и более доступное жильё", "меньший рынок международных вакансий и холмистая городская среда"),
+        ],
+    },
+    "move-to-iran": {
+        "budget": "$700–1 800",
+        "climate": "Разнообразный",
+        "english": "Низкий",
+        "visa_label": "eVisa / Temporary Work Visa / Residence",
+        "description": "Переезд в Иран в 2026 году обычно возможен через работодателя, университет, семью или одобренную инвестицию. Официальная eVisa служит для въезда по заявленной цели и не заменяет разрешение на работу. Для Temporary Work Visa работодателю нужны согласования и трудовой сертификат; затем статус пребывания оформляется по конкретному основанию. Практичный бюджет одного иностранца — $700–1 800 в месяц, но из-за инфляции 42,2%, нескольких курсов риала и ограничений международных платежей любую смету нужно пересчитывать перед договором.",
+        "visas": [
+            ("Tourist eVisa", "По сроку в выданном разрешении", "Паспорт, анкета MFA, маршрут и решение по конкретному гражданству", "Туризм и короткий визит — без права на работу"),
+            ("Entry Visa (A)", "По одобренному приглашению", "Иранская принимающая сторона и предварительное согласование", "Деловые встречи, конференции и семейные визиты"),
+            ("Temporary Work Visa (F)", "По контракту и разрешению; продление через компетентные органы", "Работодатель-спонсор, квалификация и одобренный трудовой сертификат", "Наёмные специалисты, инженеры и технические сотрудники"),
+            ("Investment Visa (I)", "По одобренному инвестиционному проекту", "Письмо OIETAI и документы инвестиции", "Одобренные иностранные инвесторы и связанный персонал"),
+        ],
+        "costs": ("$700–1 800", "$250–900", "$180–400", "$40–160"),
+        "pros": [
+            "Тегеран концентрирует головные офисы, университеты, специализированную медицину и международные функции",
+            "Исфахан связан с промышленностью, производством и инженерными проектами, а Шираз — с медициной, образованием и туризмом",
+            "Повседневные местные расходы могут быть низкими для получателя стабильного иностранного дохода при законном доступе к средствам",
+            "Метро и недорогой городской транспорт помогают снизить расходы в Тегеране и других крупных городах",
+        ],
+        "cons": [
+            "FCDO советует отказаться от любых поездок; риск задержания и ограниченная консульская помощь делают обычный пробный переезд неприемлемым",
+            "Иностранные карты обычно не работают, у риала несколько курсов, а уличный обмен валюты незаконен",
+            "Temporary Work Visa и разрешение зависят от работодателя, квалификации и проверки возможности найма местного специалиста",
+            "Интернет-ограничения, высокая инфляция, загрязнение воздуха Тегерана и быстро меняющиеся транспортные условия усложняют повседневную работу",
+        ],
+        "top_cities": ["Тегеран", "Шираз", "Исфахан"],
+        "city_profiles": [
+            ("Тегеран", "$900–2 200", "головные офисы, технологии, университеты, дипломатические и профессиональные функции", "дорогая аренда на севере, загрязнение воздуха, трафик и повышенная чувствительность к безопасности"),
+            ("Шираз", "$650–1 400", "медицина, образование, туризм и более спокойный городской ритм", "меньший рынок международных вакансий и необходимость персидского языка"),
+            ("Исфахан", "$700–1 500", "промышленность, производство, инженерные проекты и историческая городская среда", "меньше международных сервисов и вакансий вне конкретного работодателя"),
+        ],
+    },
+    "move-to-yemen": {
+        "budget": "$500–1 300",
+        "climate": "Разнообразный",
+        "english": "Низкий",
+        "visa_label": "eVisa / Work Permit / Residence",
+        "description": "Переезд в Йемен в 2026 году возможен только после индивидуального одобрения въезда и отдельного оформления работы или проживания. Официальная eVisa действует для въезда через подконтрольные международно признанному правительству пункты, но не заменяет разрешение на работу. Работодатель оформляет въезд иностранного работника и его учёт через компетентные службы. Редакционный бюджет одного человека — $500–1 300 в месяц, однако охраняемое жильё, водитель, связь, страховка и эвакуация могут увеличить реальную стоимость назначения в несколько раз.",
+        "visas": [
+            ("Yemen eVisa / Entry Visa", "По индивидуальному решению и разрешённому пункту въезда", "Заявление в официальной системе, паспорт и документы по цели", "Короткий визит без права на местную работу"),
+            ("Work Entry + Work Permit", "По контракту и решениям компетентных служб", "Работодатель, рабочая въездная виза, регистрация иностранной рабочей силы и разрешение", "Иностранные специалисты с проверенным работодателем"),
+            ("Humanitarian / Organisation Route", "По проекту и аккредитации организации", "Регистрация организации, разрешения проекта, письма на визу и резиденцию", "Сотрудники признанных международных и гуманитарных организаций"),
+            ("Family / Residence Basis", "По семейному основанию и индивидуальному решению", "Подтверждение родства, спонсора, адреса и законного въезда", "Семья гражданина или законного резидента"),
+        ],
+        "costs": ("$500–1 300", "$180–600", "$180–400", "$50–150"),
+        "pros": [
+            "Сана остаётся главным центром учреждений, образования и части гуманитарной работы",
+            "Аден связан с портом, логистикой и структурами международно признанного правительства",
+            "Мукалла может быть рабочей базой для проектов в Хадрамауте и на побережье Аравийского моря",
+            "Базовые местные расходы выглядят низкими в долларах, если жильё и выплаты законно организует работодатель",
+        ],
+        "cons": [
+            "FCDO советует отказаться от любых поездок и немедленно покинуть страну; страховка может не действовать",
+            "Терроризм, похищения, произвольные задержания, вооружённые столкновения, мины и закрытие дорог остаются критическими рисками",
+            "Сана и Аден находятся в разных экономических зонах с разными курсами риала, банковскими правилами и доступностью наличных",
+            "Топливо, электричество, вода, интернет, медицина, авиасообщение и поставки могут работать с длительными перебоями",
+        ],
+        "top_cities": ["Сана", "Аден", "Мукалла"],
+        "city_profiles": [
+            ("Сана", "$550–1 400", "учреждения, образование и отдельные гуманитарные функции по подтверждённому назначению", "контроль де-факто властей, высокий риск задержания, авиаударов и ограниченный выезд"),
+            ("Аден", "$500–1 250", "порт, логистика, правительственные и международные проекты", "нестабильная безопасность, отдельный валютный рынок, перебои электричества и воды"),
+            ("Мукалла", "$450–1 100", "проекты в Хадрамауте, порт и побережье Аравийского моря", "малый международный рынок, дорожные риски и ограниченная специализированная медицина"),
+        ],
+    },
+    "move-to-syria": {
+        "budget": "$450–1 100",
+        "climate": "Средиземноморский",
+        "english": "Низкий",
+        "visa_label": "eVisa / Work Permit / Residence",
+        "description": "Переезд в Сирию в 2026 году требует решения по въездной визе и отдельного основания для работы или проживания. Официальные каналы направляют визовые заявления через eVisa, но доступность и срок зависят от паспорта и цели. Иностранцу нельзя работать без разрешения, связанного с конкретным работодателем. Редакционный бюджет одного человека — $450–1 100 в месяц, однако защищённое жильё, резервное электричество и вода, транспорт, страховка и эвакуационное покрытие могут поднять расходы намного выше.",
+        "visas": [
+            ("Syria eVisa / Entry Visa", "По решению для конкретного паспорта и цели", "Заявление через официальный eVisa, паспорт и документы по цели поездки", "Короткий визит без права на местную работу"),
+            ("Work Entry + Work Permit", "По контракту и разрешению компетентного органа", "Работодатель, законный статус пребывания и разрешение на работу", "Иностранные специалисты с подтверждённым работодателем"),
+            ("Study Status", "По программе и решению органов", "Зачисление в признанное учебное заведение и требуемые согласования", "Студенты с подтверждённым обучением"),
+            ("Family / Residence Basis", "По семейному основанию и индивидуальному решению", "Подтверждение родства, спонсора и документов проживания", "Семья гражданина или законного резидента"),
+        ],
+        "costs": ("$450–1 100", "$150–500", "$160–350", "$40–120"),
+        "pros": [
+            "Дамаск концентрирует государственные учреждения, международные организации, крупные больницы и университеты",
+            "Алеппо связан с торговлей, производством и проектами восстановления при наличии конкретного работодателя",
+            "Латакия даёт портовую и прибрежную среду с более мягким средиземноморским климатом",
+            "Базовые местные расходы могут быть низкими в сравнении с другими столицами региона, если жильё и выплаты организованы законно",
+        ],
+        "cons": [
+            "FCDO советует отказаться от любых поездок; консульская помощь внутри Сирии недоступна, а страховка может не действовать",
+            "Терроризм, похищения, вооружённые столкновения, мины и неразорвавшиеся боеприпасы остаются существенными рисками",
+            "Электричество, интернет, мобильная связь, вода, медицина и поставки могут работать с длительными перебоями",
+            "Карты и электронные платежи почти не используются, снятие наличных ограничено, а валютная и ценовая среда нестабильна",
+        ],
+        "top_cities": ["Дамаск", "Алеппо", "Латакия"],
+        "city_profiles": [
+            ("Дамаск", "$550–1 300", "государственные и международные организации, образование, медицина и центральные офисы", "повышенные требования к безопасности, дорогая подходящая иностранцу аренда и перебои инфраструктуры"),
+            ("Алеппо", "$400–900", "промышленность, торговля и проекты восстановления по конкретному контракту", "разрушенная инфраструктура, мины и ограниченные международные сервисы"),
+            ("Латакия", "$450–1 000", "порт, логистика, побережье и более мягкий климат", "небольшой рынок международной работы и зависимость от текущей транспортной обстановки"),
+        ],
+    },
+    "move-to-iraq": {
+        "budget": "$1 200–2 800",
+        "climate": "Аридный (жаркий)",
+        "english": "Низкий",
+        "visa_label": "eVisa / Work Permit / Residence",
+        "description": "Переезд в Ирак в 2026 году обычно связан с работодателем в энергетике, строительстве, логистике, международных организациях или профессиональных услугах. Федеральная eVisa и визы Иракского Курдистана оформляются через разные официальные системы; разрешение одной юрисдикции нельзя автоматически считать разрешением другой. Для местной работы работодатель проходит процедуру Ministry of Labour, проверку потребности в иностранном специалисте, въездное и резидентское оформление. Практичный бюджет иностранного специалиста — $1 200–2 800 в месяц без премиального охраняемого комплекса.",
+        "visas": [
+            ("Federal Iraq eVisa", "По решению официального портала", "Паспорт, подходящая категория, eVisa и документы поездки", "Поездка в федеральный Ирак — не работа"),
+            ("Kurdistan Region eVisa", "30 дней пребывания; въезд в пределах 90-дневной действительности", "Подходящий паспорт или предварительная заявка через представительство KRG", "Визит в Иракский Курдистан"),
+            ("Federal work permit + residence", "По контракту и разрешению; продление через работодателя", "Работодатель, проверка местного рынка труда, квалификация, въезд, страховка и резиденция", "Иностранные специалисты в федеральном Ираке"),
+            ("KRG work and residence", "По региональному разрешению и спонсору", "Работодатель или уполномоченная компания, одобрение труда, виза и карточка резидента", "Работа и проживание в Иракском Курдистане"),
+        ],
+        "costs": ("$1 200–2 800", "$450–1 200", "$250–550", "$120–400"),
+        "pros": [
+            "Энергетика, инфраструктура, строительство и международные проекты могут предлагать сильный пакет работодателя",
+            "Эрбиль даёт наиболее развитую международную среду, англоязычные сервисы и прямое авиасообщение",
+            "Повседневные местные расходы ниже стран Залива, если жильё и безопасность уже покрывает работодатель",
+            "Басра остаётся ключевым центром нефтегазовой отрасли, портов и связанной логистики",
+        ],
+        "cons": [
+            "Официальные предупреждения по безопасности охватывают значительную часть страны и требуют маршрута, страховки и плана эвакуации",
+            "Федеральные и курдистанские визы, работа и резиденция не взаимозаменяемы; каждую поездку между регионами нужно проверять отдельно",
+            "Разрешение на работу зависит от работодателя и проверки доступности местных работников по специальности",
+            "Жильё международного стандарта, охраняемый транспорт, генератор, частная медицина и эвакуационное покрытие резко повышают бюджет",
+        ],
+        "top_cities": ["Багдад", "Эрбиль", "Басра"],
+        "city_profiles": [
+            ("Багдад", "$1 400–3 200", "государственные контракты, инфраструктура, банки, международные организации и деловые функции", "сложная безопасность, трафик, жара и высокая стоимость охраняемого жилья"),
+            ("Эрбиль", "$1 300–2 800", "международные компании, НКО, строительство, сервисы и региональные офисы", "отдельные правила KRG, дорогие районы для иностранцев и зависимость от автомобиля"),
+            ("Басра", "$1 200–2 700", "нефть, газ, инженерные проекты, порты и промышленная логистика", "экстремальная жара, ограниченный городской сервис и часто закрытый корпоративный быт"),
+        ],
     },
     "move-to-china": {
         "budget": "$1 000–2 000",
@@ -2457,6 +3190,380 @@ COUNTRY_EN_DATA: dict[str, dict] = {
         ],
         "top_cities": ["Tashkent", "Samarkand", "Bukhara", "Fergana"],
     },
+    "move-to-georgia": {
+        "description": "A move to Georgia starts with the passport rule: citizens listed in Government Ordinance No. 255 may stay visa-free for one full year, while other passports follow different routes. A practical solo baseline is $900–1,600 per month with a long-term lease. Tbilisi is strongest for work and services, Batumi is highly seasonal, and Kutaisi generally costs less.",
+        "visas": [
+            ("Visa-free entry", "One full year only for citizens on the official list", "A passport listed in the annex to Ordinance No. 255", "Testing the country and living without local work"),
+            ("Short-stay visa / eVisa", "Depends on nationality and permitted entries", "Passport, trip purpose and documents shown by the official visa navigator", "Travellers without the one-year exemption"),
+            ("Work residence permit", "Validity follows the approved basis; residence card follows", "Qualifying activity, right to work and required income or turnover evidence", "Local employment and entrepreneurial activity"),
+            ("Study / family residence", "Based on the approved ground and evidence", "Enrollment or a qualifying family relationship", "Students and family reunification"),
+        ],
+        "pros": [
+            "A one-year visa-free period is available to citizens on the official list, which can support a careful trial move",
+            "Tbilisi has the country's broadest mix of clinics, international services, coworking and year-round connections",
+            "Three distinct bases: business-focused Tbilisi, seasonal coastal Batumi and lower-cost Kutaisi",
+            "Qualifying Georgian-source small-business income may receive a 1% rate after the status is granted and conditions are met",
+        ],
+        "cons": [
+            "Visa-free entry does not by itself authorize local employment or entrepreneurial activity",
+            "From 1 March 2026, regulated work requires a separate right-to-work check and suitable immigration status",
+            "Batumi rents can change sharply in summer; the lease should state the term, price and seasonal termination rules",
+            "The 183-day tax-residence test and the 1% small-business regime are separate rules, and neither automatically grants the other",
+        ],
+        "top_cities": ["Tbilisi", "Batumi", "Kutaisi"],
+    },
+    "move-to-turkey": {
+        "description": "Moving to Türkiye in 2026 requires separate checks for entry, residence and work. Passport-specific tourist permission is generally capped at 90 days in any 180-day period. A practical solo baseline is $1,000–1,800 per month with a long-term lease, but high inflation and city choice can change the calculation quickly.",
+        "visas": [
+            ("Visa-free / eVisa / tourist visa", "Passport-specific; tourist stay cannot exceed 90 days in 180", "Passport and the official nationality-based visa rules", "A trial stay and short visit"),
+            ("Digital Nomad Visa", "Certificate first, followed by a visa-centre or consular application", "Listed citizenship, age 21–55, degree, foreign contract and $3,000 monthly or $36,000 annual income", "Eligible remote professionals"),
+            ("Short-term residence permit", "Up to two years per decision; duration is discretionary", "Documented purpose, address, insurance and evidence for the selected ground", "Property, business connections, tourism and other statutory grounds"),
+            ("Work permit", "First permit up to one year and no longer than the contract", "Employer process and Labour Ministry approval; domestic filing normally needs a residence permit valid for at least six months", "Local employment"),
+        ],
+        "pros": [
+            "Istanbul offers the country's deepest market for work, universities, hospitals, flights and international services",
+            "Antalya and Izmir combine the coast with full city infrastructure and a slower daily rhythm",
+            "An official digital-nomad route exists for listed citizenships with a foreign contract and income from $3,000 per month",
+            "Strong domestic transport makes it practical to test several cities before signing a long lease",
+        ],
+        "cons": [
+            "High inflation makes TRY and USD budgets volatile, so figures need a fresh check immediately before moving",
+            "Tourist entry does not guarantee a short-term residence permit, even with a rental agreement",
+            "Local work requires authorization; the digital-nomad route is built around foreign employers or clients",
+            "Istanbul needs a larger budget and commute allowance, while coastal rents rise in high season",
+        ],
+        "top_cities": ["Istanbul", "Antalya", "Izmir", "Ankara"],
+    },
+    "move-to-kyrgyzstan": {
+        "description": "Moving to Kyrgyzstan in 2026 starts with a passport check. Following the 31 December 2025 changes, EAEU citizens may generally stay without a separate document for up to 90 days in each 180-day period, while many nationalities on the official list are limited to 30 days in each 60-day period. A realistic solo baseline with a long-term lease is $650–1,100 per month.",
+        "visas": [
+            ("Visa-free entry / eVisa", "Passport-specific; many listed countries get 30 days in 60, EAEU citizens 90 in 180", "Passport and the result of the official visa-regime check", "A trial stay and short residence"),
+            ("Digital Nomad status / DN visa", "DN visa up to 1 year", "Status or a petition by the authorized body; ICT or software-product work", "Eligible remote technology professionals"),
+            ("Unified Permit", "Based on the approved application", "Employer or entrepreneur files through eVisa; the document combines the work visa and labour permits", "Local employment"),
+            ("Temporary residence permit", "Based on the approved ground and current decision", "Employment, study, family or another lawful basis with current evidence", "Long-term residence"),
+        ],
+        "pros": [
+            "Bishkek remains one of the more affordable regional capitals while retaining core city services and a strong Russian-language environment",
+            "Russian is widely used in Bishkek and business, while Kyrgyz becomes more valuable in local daily life",
+            "The official Digital Nomad status and DN visa create a dedicated route for qualifying ICT and software professionals",
+            "Mountains, Issyk-Kul and Karakol are reachable for short trips without an international flight",
+        ],
+        "cons": [
+            "Registration deadlines depend on nationality; people without an exemption generally must register within five working days",
+            "Winter smog in Bishkek is a documented city problem and should affect the choice of season and neighbourhood",
+            "English is limited outside international services, and infrastructure becomes less consistent beyond Bishkek",
+            "Visa-free entry and Digital Nomad status do not replace the Unified Permit for ordinary local employment",
+        ],
+        "top_cities": ["Bishkek", "Osh", "Karakol"],
+    },
+    "move-to-armenia": {
+        "description": "Moving to Armenia in 2026 starts with citizenship: passports covered by official visa-free lists generally receive up to 180 days in one year unless a treaty sets another period. A practical solo baseline with a long-term lease is $900–1,600 per month. Yerevan costs materially more than Gyumri, while Dilijan depends on season and limited housing supply.",
+        "visas": [
+            ("Visa-free / eVisa / visitor visa", "Passport-specific; visa-free stay is generally up to 180 days per year, visitor visa up to 120 days with a possible 60-day extension", "Passport and the official MFA eligibility result", "A trial stay and short residence"),
+            ("Temporary residence", "Up to one year, renewable", "Employment, entrepreneurship, study, family or another documented ground", "Long-term residence"),
+            ("Employment route", "Based on employment and the authority's decision", "Employer files through workpermit.am; EAEU citizens are exempt from work permits for the employment-contract period", "Local employment"),
+            ("Permanent residence", "Five years, renewable", "Qualifying family, Armenian-origin or entrepreneurial ground and current authority evidence", "Applicants with a durable connection to Armenia"),
+        ],
+        "pros": [
+            "Yerevan has a developed technology and entrepreneurial environment, coworking, private healthcare and direct international flights",
+            "Many passports receive up to 180 visa-free days per year, supporting a careful trial before applying for residence",
+            "Russian is widely used in Yerevan and services, while Armenian matters for deeper integration and regional life",
+            "Gyumri and Dilijan offer slower alternatives with lower costs and easier access to nature",
+        ],
+        "cons": [
+            "Yerevan is no longer an ultra-cheap capital; rent in Kentron and Arabkir materially raises the monthly baseline",
+            "Official migration sources do not confirm a dedicated digital-nomad visa, and tourist time does not settle local-work rights",
+            "Migration processes and fees are scheduled to change on 1 November 2026, so applicants must recheck the filing route",
+            "Outside Yerevan there are fewer international jobs, clinics and English-language services, while apartment heating needs scrutiny",
+        ],
+        "top_cities": ["Yerevan", "Gyumri", "Dilijan"],
+    },
+    "move-to-azerbaijan": {
+        "description": "Moving to Azerbaijan in 2026 starts with the passport. Listed visa-free nationalities generally receive up to 90 days, while the official eVisa is valid for 90 days and permits one entry with a stay of up to 30 days. A separate, free place-of-stay registration applies when the visit exceeds 15 days. A practical solo budget with a long-term lease is $800–1,500 per month; Baku sits at the upper end, while Ganja and Sheki normally cost less.",
+        "visas": [
+            ("Visa-free / eVisa / entry visa", "Passport-specific; visa-free stays are generally up to 90 days, while the eVisa is single-entry with up to 30 days inside its 90-day validity", "Passport and the official visa-regime result", "A scouting trip and short stay"),
+            ("Place-of-stay registration", "Required for a stay longer than 15 days; Kazakhstan citizens have 30 days", "Receiving-party or traveller application and passport copy; no state fee", "Any longer visit"),
+            ("Temporary residence", "Normally up to one year and renewable for up to two years while the ground remains valid", "Employment, family, study, entrepreneurship, investment or another Migration Code ground", "Long-term residence"),
+            ("Work permit", "Up to one year or the shorter employment-contract period", "Employer application, a qualifying vacancy and valid migration basis; exemptions apply", "Local employment"),
+        ],
+        "pros": [
+            "Baku concentrates the international job market, private healthcare, metro, coworking and direct flights",
+            "The official eVisa is online; standard processing is up to three working days and urgent processing up to three hours",
+            "Russian remains useful in Baku and some services, while Azerbaijani is the state and main language",
+            "Ganja and Sheki offer a slower rhythm and lower spending, while the country's scale supports short regional trips",
+        ],
+        "cons": [
+            "Official migration pages do not confirm a dedicated digital-nomad visa, and visitor status does not automatically authorize local work",
+            "Baku costs materially more than regional cities, and good long-term rentals often require a deposit and careful contract review",
+            "The address registration deadline needs active follow-up; departure ends the old registration and re-entry starts a new deadline",
+            "Outside Baku there are fewer international jobs, private clinics, English-language services and dependable long-term rentals",
+        ],
+        "top_cities": ["Baku", "Ganja", "Sheki"],
+    },
+    "move-to-qatar": {
+        "description": "Moving to Qatar in 2026 normally starts with an employment offer rather than a tourist visa. Entry is passport-specific: the official lists include 30- and 90-day arrangements, while other visitors check Hayya and the Ministry of Interior. A practical solo budget with a long-term lease is $1,800–3,200 per month. Housing is the largest variable, so the employer package can materially change the result.",
+        "visas": [
+            ("Visa waiver / visitor visa / Hayya", "Passport-specific; 30- and 90-day arrangements are common", "Passport, current MOI or Hayya conditions, and sometimes accommodation, insurance and onward travel", "Scouting and short visits"),
+            ("Work Residence Permit", "Normally renewed annually by the employer", "Qatari employer, work entry visa, medical exam, biometrics and attested documents", "Employed professionals"),
+            ("Family Residence Visa", "Usually one to five years within the sponsor's status", "Sponsor's valid RP, profession, income and housing evidence plus attested family documents", "Spouses and children of residents"),
+            ("Property Residence", "While qualifying property and conditions remain in place", "Property from QAR 730,000 in an eligible area; QAR 3,650,000 unlocks additional benefits", "Property buyers"),
+        ],
+        "pros": [
+            "Doha combines modern infrastructure, metro, a major international airport, private healthcare and a large skilled-employment market",
+            "English is widely used at work and in services, lowering the initial day-to-day language barrier",
+            "The General Tax Authority excludes salaries, wages and allowances from local personal income tax",
+            "Short distances make Doha, Lusail and Al Wakrah realistic choices within one professional market",
+        ],
+        "cons": [
+            "Housing, international school and family healthcare can make the move expensive when the employer package excludes them",
+            "The main work route is employer-led; changing jobs and sponsoring family require separate procedures",
+            "Official portals do not confirm a dedicated digital-nomad visa, and visitor status does not authorize local employment",
+            "Very hot, humid summers limit outdoor life, while areas beyond metro coverage often favour car ownership",
+        ],
+        "top_cities": ["Doha", "Al Wakrah", "Lusail"],
+    },
+    "move-to-saudi-arabia": {
+        "description": "Moving to Saudi Arabia in 2026 normally starts with a job offer: the company obtains the work visa, arranges the work permit and completes the Iqama residence process. For eligible passports, the tourist eVisa is valid for one year, allows multiple entries and a stay of up to 90 days, but it is not a work status. A practical solo budget with a long-term lease is $1,700–3,200 per month; housing, car, insurance and school support can make the employer package more important than salary alone.",
+        "visas": [
+            ("Tourist eVisa", "One year, multiple entry; up to 90 days of stay", "Eligible nationality, passport and current official eVisa conditions", "Scouting, tourism, visits and Umrah — not employment"),
+            ("Work Visa + Iqama", "Linked to the employment contract and renewed through the employer", "Saudi employer, work visa, work permit, medical checks and supporting documents", "Employed professionals"),
+            ("Family Residence", "Within the sponsor's valid residence status", "Sponsor's Iqama, proof of relationship and the current MOI/MOFA package", "Spouses and children of residents"),
+            ("Premium Residency", "Annual, unlimited-duration or a specialist product", "SAR 100,000 annually or SAR 800,000 unlimited; specialist products have separate investment and professional criteria", "Investors, entrepreneurs, property owners and qualified specialists"),
+        ],
+        "pros": [
+            "Riyadh concentrates multinational employers, public projects, consulting, technology and a rapidly expanding urban system",
+            "Qiwa, Absher and other government platforms digitise much of the employment, visa and residence workflow",
+            "The current system has no general personal income tax on ordinary employment salary; business activity, source rules and home-country duties remain separate checks",
+            "Premium Residency offers employer-independent options for qualifying investors, entrepreneurs, professionals and property owners",
+        ],
+        "cons": [
+            "The standard work route is employer-led; housing, medical insurance, flights, school and end-of-service terms should be written into the package",
+            "Official portals do not list a dedicated digital-nomad visa, and the tourist eVisa does not authorize local employment",
+            "Extreme summer heat and car dependence shape daily life, especially outside districts served by the Riyadh Metro",
+            "Legal and social rules differ from Europe; travellers should check current rules on conduct, medicines, alcohol, clothing and public content before arrival",
+        ],
+        "top_cities": ["Riyadh", "Jeddah", "Al Khobar"],
+    },
+    "move-to-oman": {
+        "description": "Moving to Oman in 2026 usually starts with an employment offer: the employer obtains Ministry of Labour approval and the work visa, followed by a resident card. For a tourist trip, the official ROP eVisa Wizard selects the route by nationality, residence and purpose; 10- and 30-day options are common, but they are not work status. A practical solo budget with a long-term lease is $1,500–2,800 per month, while a car, school and insurance materially change a family budget.",
+        "visas": [
+            ("Tourist eVisa / eligible visa-free entry", "Passport-specific; the eVisa Wizard commonly shows 10- and 30-day options", "Nationality, purpose, passport and the official visa-wizard result", "Scouting and tourism — not employment"),
+            ("Work Visa + Resident Card", "Linked to the employment approval and renewed through the sponsor", "Omani employer, work permit, passport, medical exam and matching occupation", "Employed professionals"),
+            ("Joining Relatives Visa", "Within the resident sponsor's status; the older ROP description states up to two years", "Sponsor's valid residence, relationship evidence and the current ROP package", "Spouses and children under 21"),
+            ("Golden / Investor Residency", "Five or ten years; the 10-year programme is renewable", "Investment through property, a company, bonds, shares, deposit or job creation; programme threshold from OMR 200,000", "Investors, entrepreneurs and high-net-worth applicants"),
+        ],
+        "pros": [
+            "Muscat combines coast, mountains, an international airport, private healthcare and a calm urban rhythm",
+            "English is widely used in international workplaces and services, while Arabic remains the official language",
+            "Golden Residency creates a renewable 10-year investment route through several asset and business categories",
+            "There is no general salary income tax in 2026; the new PIT starts in 2028 for annual income above OMR 42,000",
+        ],
+        "cons": [
+            "The work visa is tied to the employer and approved occupation; the official portal expressly prohibits work for another sponsor",
+            "Official sources do not list a dedicated digital-nomad visa, and tourist eVisa status is not work authorization",
+            "Muscat stretches along the coast and normally requires a car because public transport does not cover every daily route",
+            "Omanisation restricts foreign hiring in selected roles and sectors, so the offer should be verified before relocation",
+        ],
+        "top_cities": ["Muscat", "Salalah", "Sohar"],
+    },
+    "move-to-bahrain": {
+        "description": "Moving to Bahrain in 2026 usually starts with an offer: the employer obtains the work permit through LMRA, while family status depends on the sponsor's valid permit. Visitor entry is checked by passport and residence status through the official eVisa portal; it does not authorize work. Independent routes exist for qualifying property owners, investors, retirees and ten-year Golden Residency applicants. A practical solo range with a long-term lease is $1,500–2,700 per month.",
+        "visas": [
+            ("Visitor visa / eVisa", "Duration and entries depend on passport, residence and selected category", "Passport, travel purpose and the official eligibility result", "Scouting and tourism — not employment"),
+            ("Work Permit + residence", "Usually one or two years depending on category and employer filing", "Bahraini employer, job offer and LMRA approval", "Employed professionals"),
+            ("Family residence", "Within the sponsor's valid status", "Sponsor's work status, income from BHD 400 and relationship documents", "Spouses and dependants up to age 24"),
+            ("Golden Residency", "Ten years", "Property from BHD 200,000, resident salary from BHD 2,000 over five years, non-resident pension from BHD 4,000, or documented talent", "Qualifying owners, employees, retirees and talent"),
+        ],
+        "pros": [
+            "Compact geography shortens many daily trips between business, residential and coastal districts",
+            "Manama is a regional finance, fintech and professional-services centre where English is widely used",
+            "Golden Residency provides ten-year status and can include a spouse, children and parents",
+            "Self-Sponsor Residency creates a separate route for qualifying investors, homeowners and retirees",
+        ],
+        "cons": [
+            "Ordinary work status depends on the employer and LMRA rules; an employer transfer requires its own process",
+            "Visitor status does not authorize work, and no dedicated digital-nomad visa was found on official portals",
+            "Summer heat and humidity reduce walkability, so a car often becomes part of the monthly budget",
+            "Rent, international school and private insurance can change a family package more than basic daily spending",
+        ],
+        "top_cities": ["Manama", "Muharraq", "Riffa"],
+    },
+    "move-to-kuwait": {
+        "description": "Moving to Kuwait in 2026 usually begins with an offer: the employer secures the work permit and entry, followed by Article 18 residence, insurance and a Civil ID. A tourist visa allows single entry and a stay of up to 90 days but prohibits work. Article 22 family residence requires relationship evidence and sponsor income from KWD 450. A practical solo range with a long-term lease is $1,600–2,900 per month. Before accepting an offer, check the exit-permit process: a private-sector foreign worker needs employer approval to leave Kuwait.",
+        "visas": [
+            ("Tourist visa / eVisa", "Entry permit valid for 30 days; single stay up to 90 days", "Passport valid for at least six months, eligible category and official Kuwait Visa approval", "Scouting and tourism — not employment"),
+            ("Private-sector work residence — Article 18", "Linked to the permit and sponsorship; renewed through the employer", "Offer, Public Authority for Manpower permit, police certificate, medical exam and insurance", "Private-sector professionals"),
+            ("Government work residence — Article 17", "Linked to the government contract and sponsorship", "Government employer, work-entry approval and residence package", "Government-sector employees"),
+            ("Family residence — Article 22", "Within the sponsor's valid status", "Sponsor income from KWD 450, relationship evidence, housing and valid residence", "Spouses and children of residents"),
+        ],
+        "pros": [
+            "Strong packages in selected international, oil and gas, medical and education roles can create meaningful savings potential",
+            "English is widely used in international workplaces, clinics, schools and daily services",
+            "Kuwait City, Salmiya and Hawalli form one connected urban area with broad housing and service choice",
+            "The 2026/27 budget records zero individual income-tax revenue; broad PIT does not currently apply to ordinary salary",
+        ],
+        "cons": [
+            "Article 18 is employer-linked, and a private-sector foreign worker needs an approved exit permit to leave the country",
+            "There is no dedicated digital-nomad visa, while the tourist visa expressly prohibits work and requires departure on expiry",
+            "Extreme summer heat and car-based urban form limit walkability and raise transport costs",
+            "School, family housing, insurance and employer-package terms change the budget more than routine daily spending",
+        ],
+        "top_cities": ["Kuwait City", "Salmiya", "Hawalli"],
+    },
+    "move-to-jordan": {
+        "description": "Moving to Jordan in 2026 usually depends on an offer, study, family sponsorship or a substantial property purchase. Visitor eVisas and visas on arrival are nationality-specific and do not authorize work. For employment, the employer secures Ministry of Labour approval and the work-residence process; some occupations are closed or restricted for foreign workers. Five-year property residence requires qualifying real estate from JOD 200,000 through a developer, JOD 300,000 from another seller, or JOD 150,000 outside the Capital Governorate. A practical solo budget with long-term rent is $1,000–2,100 per month.",
+        "visas": [
+            ("Visitor eVisa / visa on arrival", "Nationality and category specific; a single visa on arrival is listed at JOD 40", "Passport, eligibility for the selected route and the MOI nationality check", "Scouting and tourism — not employment"),
+            ("Work visa + work residence", "Linked to the contract and permit; renewed through the employer", "Offer, an occupation open to foreign workers, Ministry of Labour permit and MOI documents", "Employed professionals"),
+            ("Family / follower residence", "Within the sponsor's valid residence", "Sponsor status, relationship evidence and the Ministry of Interior package", "Eligible spouses, children and family members"),
+            ("Five-year property residence", "Five years, renewable", "Property from JOD 200,000 through a developer, JOD 300,000 from another seller, or JOD 150,000 outside the Capital Governorate; five-year holding period", "Qualifying property buyers and families"),
+        ],
+        "pros": [
+            "Amman concentrates international organisations, NGOs, professional services, schools and strong private healthcare",
+            "English is common in international workplaces and services in Amman and Aqaba, although Arabic matters for independent daily life",
+            "Compact distances make the Dead Sea, Petra, Wadi Rum and Aqaba practical trips from a capital-city base",
+            "Five-year residence through qualifying property creates an employer-independent route for a capital-intensive plan",
+        ],
+        "cons": [
+            "Work permission depends on the employer, sector and the list of occupations available to foreign workers",
+            "No dedicated digital-nomad visa was found on official portals, and visitor status does not authorize local employment",
+            "Jordan applies progressive personal income tax, so compare an offer on net rather than headline salary",
+            "Amman is expensive for the region, hills often favour taxis or a car, and water scarcity shapes household routines",
+        ],
+        "top_cities": ["Amman", "Aqaba", "Irbid"],
+    },
+    "move-to-lebanon": {
+        "description": "Moving to Lebanon in 2026 starts with a passport-specific entry check and a fresh security review, followed by a separate residence basis. Local employment requires a work permit, work visa and residence. General Security also describes annual residence based on documented income or a bank account with no right to work, plus a six-month multiple-entry residence based on a Lebanese bank statement. A practical solo budget with long-term rent is $900–2,000 per month, with Beirut and generator-heavy housing near the upper end.",
+        "visas": [
+            ("Tourist / visit visa", "Duration and filing route depend on nationality", "Passport, General Security nationality route, accommodation, return ticket and funds", "Scouting and visits — not employment"),
+            ("Work visa + work residence", "Linked to the permit and contract", "Offer, Ministry of Labour approval, work visa, contract and General Security package", "Employed professionals"),
+            ("Annual income / bank residence", "Up to one year within passport validity", "Documented income or blocked bank balance, housing and a notarised undertaking not to work", "Financially independent applicants without local work"),
+            ("Six-month bank-statement residence", "Six months, multiple entry", "Lebanese bank balance of at least LBP 1.5 billion or equivalent, three-month statement and no-work undertaking", "Short independent residence plan"),
+        ],
+        "pros": [
+            "Beirut combines Arabic, French and English workplaces with universities, private healthcare and international organisations",
+            "The Mediterranean coast, mountains and short distances create varied daily life without domestic flights",
+            "General Security publishes an independent annual route based on income or a bank balance for applicants who will not work locally",
+            "For people paid in stable foreign currency, many daily expenses can be planned in US dollars",
+        ],
+        "cons": [
+            "Official security advice changes by area; every trip needs a current route check and an independent departure plan",
+            "Private generators often fill electricity gaps, so rent comparisons need the separate power bill",
+            "Banking, exchange and payment conditions remain volatile; access to reserves should be diversified before arrival",
+            "Local work depends on the employer, Ministry of Labour permission and residence; no dedicated digital-nomad visa was found",
+        ],
+        "top_cities": ["Beirut", "Jounieh", "Tripoli"],
+    },
+    "move-to-israel": {
+        "description": "Moving to Israel in 2026 usually depends on Law of Return eligibility, a family procedure or an employer authorised to hire foreign workers. Since 1 January 2025, visa-exempt travellers need ETA-IL before travel; it remains visitor authorisation and does not permit work. Employment requires B/1 status tied to a licensed employer and sector. People eligible under the Law of Return can request A/1 residence for up to five years with permission to live and work. A practical solo budget with long-term rent is $2,000–4,200 per month.",
+        "visas": [
+            ("B/2 visitor + ETA-IL", "Entry period follows the decision; ETA applies to visa-exempt travellers", "Eligible passport, ETA-IL or B/2 and trip documents", "Scouting and visits — not employment"),
+            ("B/1 work visa", "Up to one year per issue; extensions follow procedure", "PIBA-authorised employer, contract and sector-specific visa", "Foreign experts and workers in approved sectors"),
+            ("A/1 temporary residence", "Up to five years", "Confirmed eligibility for Aliyah under the Law of Return", "Eligible applicants still considering citizenship"),
+            ("Spouse graduated procedure", "Multi-stage process", "Genuine relationship with a citizen or permanent resident, documents and PIBA checks", "Eligible spouses and partners"),
+        ],
+        "pros": [
+            "Tel Aviv and the central district provide a strong technology, startup, finance and international-business market",
+            "People eligible under the Law of Return have a distinct A/1 route allowing residence and work for up to five years",
+            "Haifa combines the Technion, research, port industry and lower rent than Tel Aviv",
+            "Hebrew matters for integration, while English is common in technology, academia and international companies",
+        ],
+        "cons": [
+            "Tel Aviv and Jerusalem require a high budget; deposits, municipal tax and setup costs raise the first-month total",
+            "B/1 is tied to an authorised employer and sector; B/2 visitor status is not a route to local employment",
+            "Income tax is progressive, and without tax coordination multiple-employer withholding can reach the 47% maximum rate",
+            "Security conditions and transport restrictions can change; housing plans should include shelter access and an independent departure route",
+        ],
+        "top_cities": ["Tel Aviv", "Jerusalem", "Haifa"],
+    },
+    "move-to-iran": {
+        "description": "Moving to Iran in 2026 normally requires an employer, university, family basis or approved investment. The official eVisa supports entry for the declared purpose and does not replace work permission. A Temporary Work Visa needs an employer sponsor and approved labour certificate, followed by status formalities tied to that basis. A practical solo budget is $700–1,800 per month, but 42.2% inflation, multiple rial exchange rates and international-payment restrictions mean every quote needs a fresh check before signing.",
+        "visas": [
+            ("Tourist eVisa", "As stated in the issued authorisation", "Passport, MFA application, itinerary and passport-specific decision", "Tourism and short visits — no employment"),
+            ("Entry Visa (A)", "According to the approved invitation", "Iranian host and prior authorisation", "Business meetings, conferences and family visits"),
+            ("Temporary Work Visa (F)", "Contract and permit based; renewed through competent authorities", "Sponsor employer, qualifications and approved labour certificate", "Employed specialists, engineers and technical staff"),
+            ("Investment Visa (I)", "Linked to an approved investment project", "OIETAI approval letter and investment documents", "Approved foreign investors and related personnel"),
+        ],
+        "pros": [
+            "Tehran concentrates headquarters, universities, specialist healthcare and international functions",
+            "Isfahan supports industrial and engineering work, while Shiraz has medical, education and tourism activity",
+            "Local everyday costs can be low for someone with stable foreign income and lawful access to funds",
+            "Metro and inexpensive local transport can reduce routine costs in Tehran and other large cities",
+        ],
+        "cons": [
+            "FCDO advises against all travel; detention risk and limited consular support make a casual trial move unsuitable",
+            "Foreign cards generally fail, the rial has multiple exchange rates, and street currency exchange is illegal",
+            "The temporary work route depends on an employer, qualifications and a test of whether an Iranian worker can fill the role",
+            "Internet controls, high inflation, Tehran air pollution and changing transport conditions complicate daily work",
+        ],
+        "top_cities": ["Tehran", "Shiraz", "Isfahan"],
+    },
+    "move-to-yemen": {
+        "description": "Moving to Yemen in 2026 requires individual entry approval and separate work or residence formalities. The official eVisa supports entry through points controlled by the internationally recognised government but does not replace work permission. An employer handles foreign-worker entry and registration with the competent services. The editorial solo budget is $500–1,300 per month, although secure housing, a driver, communications, insurance and evacuation can multiply the real assignment cost.",
+        "visas": [
+            ("Yemen eVisa / Entry Visa", "According to the individual decision and authorised entry point", "Official application, passport and purpose documents", "Short visits without local employment"),
+            ("Work Entry + Work Permit", "Contract and competent-authority decision based", "Employer, work-entry visa, foreign-worker registration and permit", "Foreign specialists with a verified employer"),
+            ("Humanitarian / Organisation Route", "According to the project and organisation accreditation", "Organisation registration, project permits and visa or residence letters", "Staff of recognised international and humanitarian organisations"),
+            ("Family / Residence Basis", "According to family basis and individual decision", "Proof of relationship, sponsor, address and lawful entry", "Family of a citizen or lawful resident"),
+        ],
+        "pros": [
+            "Sana'a remains the main institutional, education and partial humanitarian-work centre",
+            "Aden links to the port, logistics and internationally recognised government institutions",
+            "Mukalla can support assignments in Hadramawt and on the Arabian Sea coast",
+            "Basic local costs appear low in dollars when housing and payments are lawfully organised by the employer",
+        ],
+        "cons": [
+            "FCDO advises against all travel and tells people to leave immediately; insurance may be invalid",
+            "Terrorism, kidnapping, arbitrary detention, armed conflict, mines and road closures remain critical risks",
+            "Sana'a and Aden sit in separate economic zones with different rial rates, banking rules and cash access",
+            "Fuel, power, water, internet, healthcare, flights and supplies can suffer long interruptions",
+        ],
+        "top_cities": ["Sana'a", "Aden", "Mukalla"],
+    },
+    "move-to-syria": {
+        "description": "Moving to Syria in 2026 requires an entry-visa decision and a separate legal basis for work or residence. Official channels direct visa applications to the eVisa system, but eligibility and authorised stay depend on passport and purpose. A foreign national may not work without a permit tied to the approved employer. The editorial solo budget is $450–1,100 per month, although secure housing, backup power and water, transport, insurance and evacuation cover can make the real assignment cost much higher. Confirm healthcare capacity, reliable transport and work connectivity again immediately before every trip.",
+        "visas": [
+            ("Syria eVisa / Entry Visa", "According to the passport-specific and purpose-specific decision", "Official eVisa application, passport and purpose documents", "Short visits without local employment"),
+            ("Work Entry + Work Permit", "Contract and competent-authority approval based", "Employer, lawful stay and a work permit", "Foreign specialists with a verified employer"),
+            ("Study Status", "According to the programme and official decision", "Admission to a recognised institution and required approvals", "Students with confirmed enrolment"),
+            ("Family / Residence Basis", "According to family basis and individual decision", "Proof of relationship, sponsor and residence documents", "Family of a citizen or lawful resident"),
+        ],
+        "pros": [
+            "Damascus concentrates government institutions, international organisations, major hospitals and universities",
+            "Aleppo links to trade, manufacturing and reconstruction projects when a specific employer is in place",
+            "Latakia offers port and coastal activity with a milder Mediterranean climate",
+            "Basic local costs can be low relative to other regional capitals when housing and payment access are lawfully arranged",
+        ],
+        "cons": [
+            "FCDO advises against all travel, in-country consular support is unavailable and insurance may be invalid",
+            "Terrorism, kidnapping, armed clashes, mines and unexploded ordnance remain material risks",
+            "Electricity, internet, mobile networks, water, healthcare and supplies can suffer long interruptions",
+            "Cards and electronic payments have minimal use, cash withdrawals are limited and currency conditions remain unstable",
+        ],
+        "top_cities": ["Damascus", "Aleppo", "Latakia"],
+    },
+    "move-to-iraq": {
+        "description": "Moving to Iraq in 2026 is usually employer-led through energy, construction, logistics, international organisations or professional services. Federal eVisa and Kurdistan Region visas use separate official systems; permission from one jurisdiction should not be assumed to cover the other. For local employment, the employer follows Ministry of Labour recruitment, labour-market, entry and residence procedures. A practical international-worker budget is $1,200–2,800 per month before premium secure-compound costs.",
+        "visas": [
+            ("Federal Iraq eVisa", "According to the official portal decision", "Passport, eligible category, eVisa and trip documents", "Federal Iraq visit — not employment"),
+            ("Kurdistan Region eVisa", "30-day stay; enter within 90-day validity", "Eligible passport or advance application through a KRG representation", "Visit to the Kurdistan Region"),
+            ("Federal work permit + residence", "Linked to contract and permit; employer-led renewal", "Employer, local labour check, qualifications, entry, insurance and residence", "Foreign specialists in federal Iraq"),
+            ("KRG work and residence", "Linked to regional approval and sponsor", "Employer or authorised company, labour approval, visa and residence card", "Work and residence in the Kurdistan Region"),
+        ],
+        "pros": [
+            "Energy, infrastructure, construction and international projects can offer a strong employer package",
+            "Erbil has the deepest international environment, English-language services and direct air links",
+            "Local daily costs can be below Gulf levels when housing and security are already covered by the employer",
+            "Basra remains a major oil, gas, port and industrial-logistics centre",
+        ],
+        "cons": [
+            "Official security warnings cover substantial areas and require route planning, insurance and evacuation arrangements",
+            "Federal and Kurdistan visas, work permission and residence are not interchangeable; cross-region travel needs a separate check",
+            "Work permission depends on the employer and a labour-market check for available Iraqi workers",
+            "International-standard housing, secure transport, generator power, private care and evacuation cover can raise the budget sharply",
+        ],
+        "top_cities": ["Baghdad", "Erbil", "Basra"],
+    },
     "move-to-china": {
         "description": "Shanghai (French Concession, Jing'an) has a developed international expat scene, 1BR $600–1,500/month. The Great Firewall blocks Google, WhatsApp, Instagram and LinkedIn from day one — VPN mandatory. Work Visa Z only via a Chinese employer. Shenzhen is the tech hub — ByteDance, Tencent, DJI.",
         "visas": [
@@ -2553,6 +3660,410 @@ COUNTRY_SEARCH_FAQS: dict[str, dict[str, list[tuple[str, str]]]] = {
             ("How do you move to South Korea in 2026?", "Choose a route for employment, study, business, family or qualifying remote income. Verify documents, income rules, validity, insurance and housing costs before moving."),
             ("Can a foreign remote worker relocate to South Korea?", "It depends on eligibility for the relevant route and evidence of qualifying overseas income. Strong infrastructure does not replace immigration requirements or a realistic budget."),
             ("How much does it cost to move to South Korea?", "Housing and the deposit are often the largest pressures. Calculate flights, temporary accommodation, insurance, connectivity and an emergency reserve separately."),
+        ],
+    },
+    "move-to-georgia": {
+        "ru": [
+            ("Нужна ли виза в Грузию?", "Это зависит от гражданства. Только граждане стран из приложения к постановлению правительства Грузии №255 могут въезжать и находиться без визы один полный год. Для остальных паспортов используйте официальный визовый навигатор и eVisa."),
+            ("Сколько стоит жизнь в Грузии в 2026 году?", "Для одного человека с долгосрочной арендой рабочий ориентир составляет примерно $900–1 600 в месяц. Тбилиси обычно дороже, Батуми сильно зависит от сезона, а Кутаиси может быть дешевле. Депозит, перелёт, страховка и оформление считаются отдельно."),
+            ("Есть ли в Грузии виза digital nomad?", "Отдельную визу digital nomad не следует считать основным действующим маршрутом. Сначала проверьте право на въезд по паспорту, затем отдельно — право выполнять конкретную работу и налоговые последствия."),
+            ("Как получить ВНЖ в Грузии?", "Основание зависит от ситуации: работа и предпринимательство, учёба, семья, инвестиции и другие категории. Для рабочего ВНЖ в 2026 году нужно учитывать право на работу, а документы и сроки проверять на сайте Агентства развития государственных сервисов."),
+            ("Правда ли, что налог в Грузии составляет 1%?", "Ставка 1% относится к подходящему доходу малого бизнеса после получения статуса и при соблюдении правил. Она не применяется автоматически ко всему доходу иностранца; зарплата, источник дохода, исключённые виды деятельности и порог оборота проверяются отдельно."),
+            ("Когда возникает налоговое резидентство Грузии?", "Базовое правило Налогового кодекса — не менее 183 дней в любом непрерывном 12-месячном периоде, который заканчивается в соответствующем налоговом году. Это отдельная проверка от визы и ВНЖ: долгий законный срок пребывания не отвечает автоматически на вопрос, где и как облагается конкретный доход."),
+            ("Тбилиси или Батуми для переезда?", "Тбилиси обычно удобнее для круглогодичной работы, клиник, школ, банков и государственных процедур. Батуми подходит тем, кому важны море и мягкая зима, но летняя аренда и туристическая нагрузка меняют бюджет. До договора запросите условия на весь срок, коммунальные платежи и право владельца менять цену."),
+        ],
+        "en": [
+            ("Do you need a visa for Georgia?", "It depends on citizenship. Only citizens covered by the annex to Georgian Government Ordinance No. 255 may enter and stay visa-free for one full year. Other passport holders should use the official visa navigator and eVisa portal."),
+            ("What is the cost of living in Georgia in 2026?", "A practical solo baseline with a long-term lease is about $900–1,600 per month. Tbilisi is usually higher, Batumi is strongly seasonal, and Kutaisi can cost less. Flights, deposit, insurance and permit costs are separate."),
+            ("Does Georgia have a digital nomad visa?", "Do not treat a separate digital-nomad visa as the default current route. First check passport-based entry, then verify whether your exact work activity is permitted and how the income is taxed."),
+            ("How do you get a Georgia residence permit?", "The basis may be work or business, study, family, investment or another statutory category. For a work residence permit in 2026, include the right-to-work rules and verify the current document list with the Public Service Development Agency."),
+            ("Is tax really 1% in Georgia?", "The 1% rate applies to qualifying small-business income after the status is granted and conditions are met. It is not an automatic rate on all foreign income; salary, source rules, excluded activities and turnover thresholds must be checked separately."),
+            ("When do you become a Georgian tax resident?", "The Tax Code's standard test is at least 183 days in any continuous 12-month period ending in the relevant tax year. This is separate from immigration status: a lawful long stay does not by itself determine how a particular salary, business payment or foreign client income is taxed."),
+            ("Should you choose Tbilisi or Batumi?", "Tbilisi is generally stronger for year-round work, clinics, schools, banking and government procedures. Batumi suits a coast-first plan and has a milder winter, but summer rent and visitor pressure can alter the budget. Before signing, ask for the full-term price, utility terms and any seasonal termination clause."),
+        ],
+    },
+    "move-to-turkey": {
+        "ru": [
+            ("Нужна ли виза в Турцию?", "Правило зависит от гражданства и типа паспорта. Часть граждан въезжает без визы, часть получает eVisa, остальным нужна консульская виза. Даже при освобождении от визы общий туристический срок не может превышать 90 дней в любом периоде 180 дней."),
+            ("Как переехать в Турцию в 2026 году?", "Сначала проверьте официальный режим въезда для своего паспорта. Для срока больше туристического выберите реальное основание: digital nomad маршрут для подходящего гражданства, краткосрочный ВНЖ, учёба, семья или работа. Затем подтвердите адрес, страховку, доход и документы конкретной категории."),
+            ("Сколько стоит жизнь в Турции?", "Для одного человека с долгосрочной арендой рабочий диапазон составляет примерно $1 000–1 800 в месяц. Стамбул обычно дороже, Анкара дешевле, а Анталья и Измир зависят от сезона. Из-за инфляции перепроверяйте аренду и повседневные цены перед подписанием договора."),
+            ("Можно ли получить ВНЖ Турции по аренде квартиры?", "Договор аренды подтверждает адрес, но сам по себе не гарантирует ВНЖ. Ведомство оценивает цель пребывания и весь пакет документов. Краткосрочный ВНЖ может выдаваться максимум на два года за одно решение, а фактический срок и одобрение остаются административным решением."),
+            ("Кому подходит digital nomad виза Турции?", "Официальная предварительная платформа принимает граждан перечисленных стран в возрасте 21–55 лет. Нужны диплом, контракт с компанией вне Турции или договор иностранного клиента, паспорт, фото и подтверждение дохода от $3 000 в месяц или $36 000 в год."),
+            ("Можно ли работать в Турции по туристическому ВНЖ?", "Туристический въезд и краткосрочный ВНЖ не следует считать разрешением на местную работу. Для местной занятости нужен work permit или применимое освобождение. Первое разрешение обычно привязано к конкретному работодателю, месту и должности и выдаётся максимум на год."),
+            ("Когда возникает налоговое резидентство Турции?", "Официальные разъяснения используют проживание более шести месяцев в календарном году как основной тест, но есть исключения и отдельные правила для источника дохода. Визовый статус, разрешение на работу и налоговое резидентство нужно проверять раздельно для своей структуры доходов."),
+        ],
+        "en": [
+            ("Do you need a visa for Türkiye?", "The rule depends on citizenship and passport type. Some travellers are visa-exempt, some qualify for an eVisa and others need a consular visa. Even with an exemption, tourist stay cannot exceed 90 days in any 180-day period."),
+            ("How do you move to Türkiye in 2026?", "Check the official passport-specific entry regime first. For a stay beyond tourism, choose a credible ground: the digital-nomad route for eligible citizenships, short-term residence, study, family or employment. Then document your address, insurance, income and category-specific evidence."),
+            ("What is the cost of living in Türkiye?", "A practical solo range with a long-term lease is about $1,000–1,800 per month. Istanbul is generally higher, Ankara can cost less, and Antalya or Izmir vary with season. Because inflation is high, recheck rent and daily prices before signing."),
+            ("Does renting a home guarantee a Turkish residence permit?", "No. A lease supports the address evidence but does not guarantee approval. Migration authorities assess the purpose and full application. A short-term permit may be issued for up to two years per decision, while the granted duration remains discretionary."),
+            ("Who qualifies for the Türkiye digital nomad visa?", "The official pre-application platform covers listed citizenships aged 21–55. Applicants need a degree, a foreign employer or client contract, passport, biometric photo and evidence of at least $3,000 monthly or $36,000 annual income."),
+            ("Can you work locally on tourist residence?", "Do not treat tourist entry or short-term residence as local work authorization. Local employment needs a work permit or a valid exemption. A first work permit is generally tied to a specific employer, workplace and role and may be issued for up to one year."),
+            ("When do you become a Turkish tax resident?", "Official guidance uses residence exceeding six months in a calendar year as the main test, with exceptions and separate income-source rules. Immigration status, work authorization and tax residence should be checked independently for the applicant's exact income structure."),
+        ],
+    },
+    "move-to-kyrgyzstan": {
+        "ru": [
+            ("Нужна ли виза в Кыргызстан?", "Правило зависит от гражданства и типа паспорта. С 31 декабря 2025 года граждане ЕАЭС обычно могут находиться до 90 дней из 180, а граждане многих стран из официального перечня — до 30 дней из 60. Для других паспортов может потребоваться eVisa или консульская виза; проверяйте режим в официальном сервисе перед поездкой."),
+            ("Нужна ли регистрация после въезда?", "Срок освобождения от регистрации зависит от гражданства. Россия, Казахстан, Беларусь и Армения имеют отдельные сроки, а граждане стран без освобождения должны зарегистрироваться по месту пребывания в течение пяти рабочих дней. Хозяин жилья или принимающая сторона должны заранее подтвердить, кто оформляет регистрацию."),
+            ("Сколько стоит жизнь в Кыргызстане в 2026 году?", "Для одного человека с долгосрочной арендой разумно планировать примерно $650–1 100 в месяц. Бишкек обычно требует большего бюджета, Ош дешевле, а Каракол зависит от туристического сезона. Перелёт, депозит, страховка и оформление считаются отдельно."),
+            ("Есть ли в Кыргызстане digital nomad виза?", "Да, официальный портал принимает заявки на Digital Nomad status, а действующие визовые правила предусматривают DN visa сроком до одного года для подходящих специалистов в информационных технологиях и разработке программных продуктов. До подачи проверьте текущую процедуру и перечень документов на государственном портале."),
+            ("Можно ли работать в Кыргызстане без разрешения?", "Безвизовый въезд не следует считать разрешением на обычную местную работу. Для иностранного работника действует Unified Permit, который объединяет рабочую визу, разрешение работодателю на привлечение иностранной рабочей силы и разрешение на работу. Заявка подаётся через официальный eVisa portal."),
+            ("Когда возникает налоговое резидентство Кыргызстана?", "Базовый тест Налогового кодекса — нахождение в стране 183 дня или больше в любом последовательном 12-месячном периоде, заканчивающемся в текущем налоговом периоде. Налогообложение конкретного иностранного дохода зависит также от источника, статуса и соглашения об избежании двойного налогообложения."),
+            ("Кыргызстан или Киргизия: как правильно?", "Официальное краткое название государства — Кыргызстан, поэтому именно его использует этот гид. Форма «Киргизия» остаётся распространённым поисковым запросом и разговорным вариантом, но в документах и при обращении к государственным органам лучше использовать официальное название."),
+        ],
+        "en": [
+            ("Do you need a visa for Kyrgyzstan?", "The answer depends on citizenship and passport type. Since 31 December 2025, EAEU citizens generally receive up to 90 days in 180, while many nationalities on the official list are limited to 30 days in 60. Other travellers may need an eVisa or consular visa, so run the passport check before travel."),
+            ("Do foreigners need to register after arrival?", "Registration exemptions and deadlines are nationality-specific. Russia, Kazakhstan, Belarus and Armenia have separate periods, while travellers without an exemption generally must register at their place of stay within five working days. Confirm in writing whether the host or landlord will complete it."),
+            ("What is the cost of living in Kyrgyzstan in 2026?", "A practical solo budget with a long-term lease is about $650–1,100 per month. Bishkek normally needs more, Osh can cost less, and Karakol changes with the tourism season. Flights, deposit, insurance and permit costs are separate."),
+            ("Does Kyrgyzstan have a digital nomad visa?", "Yes. The state portal accepts Digital Nomad status applications, and current visa rules provide a DN visa for up to one year for qualifying ICT and software-product professionals. Check the current process and evidence on the official portal before applying."),
+            ("Can a foreigner work locally without a permit?", "Do not treat visa-free entry as ordinary local-work authorization. Kyrgyzstan uses a Unified Permit that combines the work visa, the employer's permission to hire foreign labour and the worker's permit. Applications are handled through the official eVisa portal."),
+            ("When do you become a Kyrgyz tax resident?", "The Tax Code's standard test is presence for 183 days or more in any consecutive 12-month period ending in the current tax period. Treatment of a particular foreign income stream also depends on source rules, the person's status and any applicable tax treaty."),
+            ("Should you choose Bishkek, Osh or Karakol?", "Bishkek is strongest for flights, clinics, coworking and government procedures. Osh fits a lower-cost, more local city plan. Karakol is best for mountain access and slower living, but housing, transport and services are more seasonal."),
+        ],
+    },
+    "move-to-armenia": {
+        "ru": [
+            ("Нужна ли виза в Армению?", "Правило зависит от гражданства и типа паспорта. Граждане стран из официального безвизового перечня или соглашений обычно могут находиться до 180 дней в течение одного года, если договор не устанавливает другой срок. Остальным может понадобиться eVisa или visitor visa."),
+            ("Сколько стоит жизнь в Армении в 2026 году?", "Для одного человека с долгосрочной арендой разумный диапазон составляет примерно $900–1 600 в месяц. Ереван обычно дороже, Гюмри дешевле, а Дилижан зависит от сезона. Перелёт, депозит, страховка и оформление считаются отдельно."),
+            ("Есть ли в Армении digital nomad виза?", "Официальные страницы МИД и Миграционной службы не показывают отдельную digital nomad визу. Удалёнщики используют паспортный режим и при необходимости выбирают подтверждаемое основание для ВНЖ, например предпринимательство, работу, учёбу или семью."),
+            ("Как получить временный ВНЖ Армении?", "Временный статус выдаётся на срок до одного года с возможностью продления. Нужно подтвердить законное основание и подать актуальный пакет через Миграционную и гражданскую службу; трудовой маршрут работодатель оформляет онлайн через workpermit.am."),
+            ("Нужно ли разрешение на работу в Армении?", "Для большинства иностранных работников работодатель запускает процедуру на workpermit.am, которая связывает разрешение на работу и временный статус. Граждане стран ЕАЭС и их семьи освобождены от разрешительных документов на период трудового договора."),
+            ("Когда возникает налоговое резидентство Армении?", "Государственная налоговая служба указывает два основных теста: фактическое пребывание 183 дня или больше в налоговом году либо центр жизненных интересов в Армении. Статус действует для всего налогового года, а конкретный иностранный доход нужно проверять отдельно."),
+            ("Ереван, Гюмри или Дилижан для переезда?", "Ереван удобнее для работы, клиник, перелётов и государственных процедур. Гюмри подходит для меньшего бюджета и городского ритма без столичной нагрузки. Дилижан выбирают за природу и спокойствие, но рынок аренды и сервисов там меньше."),
+        ],
+        "en": [
+            ("Do you need a visa for Armenia?", "The answer depends on citizenship and passport type. Citizens covered by an official visa-free list or agreement generally receive up to 180 days in one year unless a treaty sets another period. Other travellers may need an eVisa or visitor visa."),
+            ("What is the cost of living in Armenia in 2026?", "A practical solo range with a long-term lease is about $900–1,600 per month. Yerevan is normally higher, Gyumri can cost less, and Dilijan varies with season. Flights, deposit, insurance and filing costs are separate."),
+            ("Does Armenia have a digital nomad visa?", "The official MFA and Migration Service pages do not show a dedicated digital-nomad visa. Remote workers use their passport-based stay and, where needed, select a documented residence ground such as entrepreneurship, employment, study or family."),
+            ("How do you get temporary residence in Armenia?", "Temporary status is issued for up to one year and can be extended. Applicants need a documented lawful ground and the current Migration and Citizenship Service package; an employer submits the employment route online through workpermit.am."),
+            ("Do foreigners need a work permit in Armenia?", "For most foreign workers, the employer starts the workpermit.am process linking work authorization and temporary status. EAEU citizens and their family members are exempt from permit documents for the employment-contract period."),
+            ("When do you become an Armenian tax resident?", "The State Revenue Committee identifies two main tests: actual presence for 183 days or more in the fiscal year, or a centre of vital interests in Armenia. Residence then applies for the full fiscal year, while treatment of a specific foreign income stream requires a separate check."),
+            ("Should you choose Yerevan, Gyumri or Dilijan?", "Yerevan is strongest for jobs, clinics, flights and government procedures. Gyumri fits a lower-cost city plan. Dilijan suits nature and slower living, but its rental market and service base are smaller."),
+        ],
+    },
+    "move-to-azerbaijan": {
+        "ru": [
+            ("Нужна ли виза в Азербайджан?", "Правило зависит от гражданства и типа паспорта. Для стран из официального безвизового перечня срок обычно составляет до 90 дней. Для подходящих заявителей eVisa действует 90 дней, разрешает один въезд и пребывание до 30 дней; перед поездкой нужно проверить себя на официальном сайте."),
+            ("Сколько стоит жизнь в Азербайджане в 2026 году?", "Для одного человека с долгосрочной арендой разумный ориентир — $800–1 500 в месяц. Баку обычно ближе к верхней границе, Гянджа и Шеки дешевле. Перелёт, временное жильё, депозит, страховка и оформление считаются отдельно."),
+            ("Нужна ли регистрация после въезда?", "Если пребывание превышает 15 дней, принимающая сторона или сам иностранец должны оформить бесплатную регистрацию по месту пребывания. Для граждан Казахстана срок составляет 30 дней. Отель обычно подаёт заявление за гостя, но статус регистрации стоит проверить."),
+            ("Есть ли в Азербайджане digital nomad виза?", "Официальные страницы eVisa и Государственной миграционной службы не показывают отдельную digital nomad визу. Удалённая работа на иностранного заказчика не отменяет паспортный срок, регистрацию адреса, налоговую проверку и возможное основание для ВНЖ."),
+            ("Как получить временный ВНЖ Азербайджана?", "Нужно иметь основание из Миграционного кодекса: например, работу, близкое родство, учёбу, предпринимательскую или инвестиционную связь. Заявление подают минимум за 30 дней до окончания законного срока пребывания; пакет и сбор зависят от основания."),
+            ("Нужно ли разрешение на работу?", "Для обычной оплачиваемой работы разрешение оформляет работодатель. Оно обычно действует до года либо до окончания более короткого договора. У закона есть исключения, включая постоянных резидентов и некоторых предпринимателей, поэтому статус проверяют до начала работы."),
+            ("Когда возникает налоговое резидентство?", "Налоговый кодекс относит к резидентам человека, который фактически находится в Азербайджане более 182 дней в любом 12-месячном периоде, заканчивающемся в календарном году. Договор об избежании двойного налогообложения и источник конкретного дохода проверяются отдельно."),
+            ("Баку, Гянджа или Шеки для переезда?", "Баку удобнее для работы, клиник, перелётов, метро и официальных процедур. Гянджа подходит для меньшего бюджета и обычного городского ритма. Шеки выбирают за природу и историческую среду, но аренда, медицина и транспорт там ограниченнее."),
+        ],
+        "en": [
+            ("Do you need a visa for Azerbaijan?", "The answer depends on citizenship and passport type. Nationalities on the official visa-free list generally receive up to 90 days. For eligible applicants, the eVisa is valid for 90 days, allows one entry and a stay of up to 30 days; use the official checker before travel."),
+            ("What is the cost of living in Azerbaijan in 2026?", "A practical solo range with a long-term lease is $800–1,500 per month. Baku normally sits near the upper end, while Ganja and Sheki cost less. Flights, temporary housing, deposit, insurance and filing fees are separate."),
+            ("Do you need registration after arrival?", "A stay longer than 15 days requires free registration at the place of stay by the host or traveller. Kazakhstan citizens have 30 days. Hotels normally file for guests, but the traveller should verify that registration was completed."),
+            ("Does Azerbaijan have a digital nomad visa?", "The official eVisa and State Migration Service pages do not show a dedicated digital-nomad visa. Remote work for a foreign client does not remove passport limits, address registration, tax analysis or the need for a residence ground on a longer stay."),
+            ("How do you get temporary residence in Azerbaijan?", "Applicants need a Migration Code ground such as employment, close family, study, entrepreneurship or a qualifying investment link. The application should be filed at least 30 days before lawful stay expires; documents and fees depend on the ground."),
+            ("Do foreigners need a work permit?", "For ordinary paid employment, the employer files the work-permit application. The permit normally lasts up to one year or the shorter contract period. Legal exemptions include permanent residents and some entrepreneurs, so status must be checked before work begins."),
+            ("When do you become an Azerbaijani tax resident?", "The Tax Code treats an individual as resident after actual presence in Azerbaijan for more than 182 days in any 12-month period ending in a calendar year. A tax treaty and the source of each income stream still require separate analysis."),
+            ("Should you choose Baku, Ganja or Sheki?", "Baku is strongest for jobs, clinics, flights, metro and official procedures. Ganja fits a lower-cost conventional city plan. Sheki offers nature and heritage, but housing, healthcare and transport choices are more limited."),
+        ],
+    },
+    "move-to-qatar": {
+        "ru": [
+            ("Нужна ли виза в Катар?", "Правило зависит от гражданства и типа паспорта. МВД Катара публикует режимы въезда по прибытии на 30 или 90 дней для разных групп стран; другим путешественникам может понадобиться разрешение через Hayya. Условия страховки, жилья и обратного билета нужно проверить перед вылетом."),
+            ("Сколько стоит жизнь в Катаре в 2026 году?", "Для одного человека с долгосрочной арендой практичный диапазон составляет $1 800–3 200 в месяц. Доха и Лусаил обычно дороже Аль-Вакры. Депозит, мебель, автомобиль, частная страховка и школа считаются отдельно; компенсации работодателя сильно меняют бюджет."),
+            ("Можно ли переехать в Катар без работодателя?", "Для большинства специалистов основной маршрут — Work Residence Permit через катарского работодателя. Независимые основания существуют для подходящих владельцев недвижимости, инвесторов и некоторых членов семей, но visitor visa или Hayya сами по себе не являются долгосрочным ВНЖ."),
+            ("Есть ли в Катаре digital nomad виза?", "На официальных порталах Hayya, МВД и Hukoomi отдельная digital nomad виза не найдена. Удалённая работа на иностранную компанию не продлевает visitor status автоматически; нужно отдельно проверить право на проживание, налоговый статус и условия работы из Катара."),
+            ("Как оформляется Work Residence Permit?", "Катарский работодатель организует въездной рабочий документ и переводит его в Residence Permit. Обычно требуются заверенные документы, медосмотр и биометрия. RP продлевается работодателем, а смена компании проходит по отдельной процедуре."),
+            ("Можно ли перевезти семью?", "Резидент с подходящим статусом может подать на Family Residence Visa для супруга и детей. Ведомство проверяет действующий RP, профессию, доход, жильё и заверенные свидетельства. Порог и пакет нужно сверять по текущим правилам МВД перед подачей."),
+            ("Есть ли подоходный налог с зарплаты?", "Государственная налоговая служба указывает, что зарплаты, выплаты и надбавки не облагаются местным подоходным налогом. При этом предпринимательский доход, услуги, иностранные обязательства и налоговое резидентство требуют отдельного анализа; резидентский тест включает постоянное жильё или более 183 дней в году."),
+            ("Доха, Аль-Вакра или Лусаил для переезда?", "Доха удобнее для работы, школ, клиник и метро. Аль-Вакра подходит семьям, которым важна меньшая аренда и спокойный ритм. Лусаил выбирают за новые дома, трамвай и набережную, но бюджет там часто ближе к премиальному."),
+        ],
+        "en": [
+            ("Do you need a visa for Qatar?", "The answer depends on citizenship and passport type. Qatar's MOI lists 30- and 90-day arrival arrangements for different groups, while other travellers may need a Hayya permit. Recheck insurance, accommodation and onward-travel conditions before departure."),
+            ("What is the cost of living in Qatar in 2026?", "A practical solo range with a long-term lease is $1,800–3,200 per month. Doha and Lusail normally cost more than Al Wakrah. Deposit, furniture, car, private insurance and school are separate; employer allowances can change the budget substantially."),
+            ("Can you move to Qatar without an employer?", "For most professionals, the main route is a Work Residence Permit through a Qatari employer. Independent grounds exist for qualifying property owners, investors and some family members, but a visitor visa or Hayya permit is not a long-term residence permit."),
+            ("Does Qatar have a digital nomad visa?", "No dedicated digital-nomad visa was found on the official Hayya, MOI or Hukoomi portals. Working remotely for a foreign company does not automatically extend visitor status; residence rights, tax status and permission to work from Qatar need separate checks."),
+            ("How does the Work Residence Permit work?", "The Qatari employer arranges work entry and converts it into a Residence Permit. Attested documents, a medical exam and biometrics are normally required. The employer renews the RP, while an employer change follows a separate process."),
+            ("Can a resident sponsor family?", "A resident with qualifying status can apply for Family Residence Visas for a spouse and children. The authority reviews the sponsor's valid RP, profession, income, housing and attested certificates. Recheck the current threshold and document package before filing."),
+            ("Is salary subject to personal income tax?", "The General Tax Authority states that salaries, wages and allowances are outside local income tax. Business income, services, foreign obligations and tax residence still need separate analysis; the resident test includes a permanent home or more than 183 days in the year."),
+            ("Should you choose Doha, Al Wakrah or Lusail?", "Doha is strongest for jobs, schools, clinics and metro access. Al Wakrah suits families seeking lower rent and a quieter rhythm. Lusail offers newer housing, tram and waterfront districts, but its budget often sits closer to the premium end."),
+        ],
+    },
+    "move-to-saudi-arabia": {
+        "ru": [
+            ("Нужна ли виза в Саудовскую Аравию?", "Правило зависит от гражданства и цели поездки. Граждане 66 подходящих стран могут подать на официальную туристическую eVisa: она действует один год, допускает несколько въездов и пребывание до 90 дней. Для работы, учёбы и других целей нужна соответствующая категория."),
+            ("Сколько стоит жизнь в Саудовской Аравии в 2026 году?", "Для одного человека с долгосрочной арендой практичный ориентир — $1 700–3 200 в месяц. Эр-Рияд обычно дороже Джидды и Эль-Хубара. Депозит, автомобиль, частная страховка, перелёты и международная школа считаются отдельно; компенсации работодателя сильно меняют бюджет."),
+            ("Можно ли переехать без работодателя?", "Основной маршрут для специалиста — Work Visa и Iqama через саудовского работодателя. Независимый путь возможен через подходящий продукт Premium Residency: бессрочный, годовой, для инвестора, предпринимателя, владельца недвижимости, талантов или одарённых заявителей. У каждого продукта отдельные условия."),
+            ("Есть ли digital nomad виза?", "На официальных визовых и резидентских порталах отдельная digital nomad виза не найдена. Туристическая eVisa не превращает удалённую работу в самостоятельное основание для проживания; до поездки нужно отдельно проверить миграционный статус, договор, налоги и правила деятельности."),
+            ("Как оформляются рабочая виза и Iqama?", "Работодатель получает рабочую визу через государственные системы, после въезда оформляет разрешение на работу и резидентскую карту Iqama. Министерство труда указывает, что разрешение на работу является условием выдачи или продления обычной резиденции. Конкретный пакет зависит от профессии и работодателя."),
+            ("Что даёт Premium Residency?", "Статус не привязан к работодателю и включает бессрочный вариант за SAR 800 000, продлеваемый годовой за SAR 100 000 и специальные продукты. Например, инвесторский маршрут требует не менее SAR 7 млн, а недвижимость — подходящий объект стоимостью от SAR 4 млн. Условия нужно сверять перед подачей."),
+            ("Когда возникает налоговое резидентство?", "ZATCA считает физлицо резидентом, если у него есть постоянное жильё и не менее 30 дней присутствия за налоговый год либо если оно находится в стране не менее 183 дней. Общего налога на обычную зарплату сейчас нет, но бизнес, услуги, доход из других стран и обязательства дома анализируются отдельно."),
+            ("Эр-Рияд, Джидда или Эль-Хубар для переезда?", "Эр-Рияд сильнее по вакансиям, штаб-квартирам и крупным проектам. Джидда подходит для торговли, логистики и жизни у Красного моря. Эль-Хубар удобен для энергетического сектора и семейной базы рядом с Даммамом и Бахрейном, но рынок там уже."),
+        ],
+        "en": [
+            ("Do you need a visa for Saudi Arabia?", "The rule depends on citizenship and travel purpose. Citizens of 66 eligible countries can use the official tourist eVisa: it is valid for one year, allows multiple entries and a stay of up to 90 days. Work, study and other purposes require the relevant status."),
+            ("What is the cost of living in Saudi Arabia in 2026?", "A practical solo range with a long-term lease is $1,700–3,200 per month. Riyadh normally costs more than Jeddah or Al Khobar. Deposit, car, private insurance, flights and international school are separate; employer allowances can materially change the result."),
+            ("Can you move without an employer?", "The standard professional route is a Work Visa and Iqama through a Saudi employer. An independent path may exist through a qualifying Premium Residency product: unlimited-duration, annual, investor, entrepreneur, property owner, special talent or gifted. Each product has separate conditions."),
+            ("Does Saudi Arabia have a digital nomad visa?", "No dedicated digital-nomad visa was found on the official visa and residence portals. A tourist eVisa does not create an independent residence ground for remote work; immigration status, contract, tax and activity rules need separate checks before travel."),
+            ("How do the work visa and Iqama process work?", "The employer obtains the work visa through government systems, then arranges the work permit and Iqama residence card after entry. The Ministry of Human Resources states that a work permit is a condition for issuing or renewing regular residence. Documents vary by profession and employer."),
+            ("What does Premium Residency offer?", "The status is not tied to an employer and includes an SAR 800,000 unlimited-duration option, an SAR 100,000 renewable annual option and specialist products. The investor route requires at least SAR 7 million, while the property route requires qualifying real estate from SAR 4 million. Recheck terms before filing."),
+            ("When do you become a Saudi tax resident?", "ZATCA treats an individual as resident with a permanent home and at least 30 days in the tax year, or after at least 183 days of presence. There is currently no general tax on ordinary salary, but business, services, foreign income and home-country obligations require separate analysis."),
+            ("Should you choose Riyadh, Jeddah or Al Khobar?", "Riyadh is strongest for jobs, headquarters and major projects. Jeddah fits trade, logistics and Red Sea living. Al Khobar suits energy-sector work and a family base near Dammam and Bahrain, but its overall job market is narrower."),
+        ],
+    },
+    "move-to-oman": {
+        "ru": [
+            ("Нужна ли виза в Оман?", "Правило зависит от гражданства, страны проживания и цели поездки. Официальный ROP eVisa Wizard показывает доступный режим; для подходящих заявителей встречаются туристические варианты на 10 или 30 дней. Результат нужно проверить перед вылетом, поскольку туристический статус не разрешает работу."),
+            ("Сколько стоит жизнь в Омане в 2026 году?", "Для одного человека с долгосрочной арендой практичный диапазон — $1 500–2 800 в месяц. Маскат обычно ближе к верхней границе, Салала и Сохар дешевле. Депозит, автомобиль, страховка, перелёты и школа считаются отдельно."),
+            ("Можно ли переехать в Оман без работодателя?", "Для большинства специалистов основной маршрут — рабочая виза через оманского работодателя. Независимый долгосрочный вариант существует для подходящих инвесторов через Golden Residency на 10 лет или инвесторскую визу на 5 либо 10 лет, но требуется подтверждённая инвестиция."),
+            ("Есть ли в Омане digital nomad виза?", "На официальных страницах ROP, Gov.om и Invest Oman отдельная digital nomad виза не найдена. Удалённая работа на иностранную компанию не продлевает туристический статус и не заменяет проверку права на проживание, деятельности и налогов."),
+            ("Как оформляется рабочая виза?", "Работодатель подаёт заявление и несёт ответственность за работника. Нужны work permit Министерства труда, паспорт, фотография и медосмотр; профессия в разрешении должна совпадать с визовым заявлением. После въезда оформляется resident card."),
+            ("Можно ли перевезти семью?", "Joining Relatives Visa предназначена для супруга, супруги и детей младше 21 года. Официальный сервис требует действующую резиденцию спонсора, паспорта, подтверждение родства и письмо работодателя; актуальный пакет нужно сверить перед подачей."),
+            ("Что даёт Golden Residency?", "Возобновляемая 10-летняя программа охватывает недвижимость, компанию, государственные облигации, биржевые акции, банковский депозит и создание рабочих мест. Invest Oman указывает минимальный капитал OMR 200 000; отдельная государственная услуга также предусматривает инвесторские визы на 5 и 10 лет."),
+            ("Есть ли подоходный налог и когда возникает резидентство?", "В 2026 году общего PIT с зарплаты ещё нет. Новый налог начнёт действовать с 2028 года: 5% для совокупного годового дохода свыше OMR 42 000 по правилам закона. Налоговым резидентом считается человек, находящийся в Омане не менее 183 дней за налоговый год."),
+            ("Маскат, Салала или Сохар для переезда?", "Маскат удобнее для работы, школ, клиник и перелётов. Салала подходит тем, кто ценит природу и медленный ритм, но рынок работы там меньше. Сохар логичен для порта, логистики и промышленности при более ограниченном наборе международных сервисов."),
+        ],
+        "en": [
+            ("Do you need a visa for Oman?", "The rule depends on nationality, country of residence and travel purpose. The official ROP eVisa Wizard displays the available route; eligible applicants commonly see 10- or 30-day tourist options. Recheck the result before travel because visitor status does not authorize work."),
+            ("What is the cost of living in Oman in 2026?", "A practical solo range with a long-term lease is $1,500–2,800 per month. Muscat normally sits near the upper end, while Salalah and Sohar can cost less. Deposit, car, insurance, flights and school are separate."),
+            ("Can you move to Oman without an employer?", "For most professionals, the main route is a work visa through an Omani employer. An independent long-stay option exists for qualifying investors through the 10-year Golden Residency or a five- or ten-year investor visa, but documented investment is required."),
+            ("Does Oman have a digital nomad visa?", "No dedicated digital-nomad visa was found on the official ROP, Gov.om or Invest Oman pages. Remote work for a foreign company does not extend tourist status or replace checks on residence, permitted activity and tax."),
+            ("How does the work visa process work?", "The employer files the application and assumes responsibility for the worker. The process requires a Ministry of Labour permit, passport, photo and medical exam; the occupation must match the visa request. A resident card follows after entry."),
+            ("Can a resident sponsor family?", "The Joining Relatives Visa covers a spouse and children under 21. The official service requires the sponsor's valid residence, passports, relationship evidence and an employer letter; recheck the current document package before filing."),
+            ("What does Golden Residency offer?", "The renewable 10-year programme covers property, a company, government bonds, listed shares, a bank deposit and job creation. Invest Oman states a minimum OMR 200,000 capital threshold; a separate government service also provides five- and ten-year investor visas."),
+            ("Is there personal income tax and when are you tax resident?", "There is no general salary PIT in 2026. The new tax starts in 2028 at 5% for annual total income above OMR 42,000 under the law's rules. An individual is tax resident after at least 183 days in Oman during the tax year."),
+            ("Should you choose Muscat, Salalah or Sohar?", "Muscat is strongest for jobs, schools, clinics and flights. Salalah suits nature and a slower pace but has a smaller job market. Sohar fits port, logistics and industrial work with fewer international services."),
+        ],
+    },
+    "move-to-bahrain": {
+        "ru": [
+            ("Нужна ли виза в Бахрейн?", "Правило зависит от гражданства, страны проживания и цели поездки. Официальный eVisa-портал показывает доступную категорию и условия; встречаются краткосрочные, годовые и иные варианты. Проверяйте конкретный результат перед вылетом: гостевой статус не разрешает работу."),
+            ("Сколько стоит жизнь в Бахрейне в 2026 году?", "Для одного человека с долгосрочной арендой практичный ориентир — $1 500–2 700 в месяц. Манама обычно ближе к верхней границе; депозит, автомобиль, страховка, перелёты и международная школа считаются отдельно."),
+            ("Как оформляется рабочий статус?", "Работодатель подаёт заявление через LMRA и поддерживает разрешение. Срок и сбор зависят от категории; менять работодателя или профессию нужно по официальной процедуре, а гостевая виза не заменяет рабочий пермит."),
+            ("Можно ли перевезти семью?", "Работодатель может запросить семейную резиденцию для супруга или супруги и иждивенцев до 24 лет. LMRA указывает минимальный доход работника BHD 400; документы о родстве и действующий статус спонсора обязательны."),
+            ("Что даёт Golden Residency?", "Статус выдаётся на 10 лет, разрешает многократный въезд и включение супруга, детей и родителей. Основные основания включают недвижимость от BHD 200 000, историю базовой зарплаты резидента от BHD 2 000, пенсию нерезидента от BHD 4 000 или подтверждённый талант."),
+            ("Можно ли работать с Golden Residency?", "Для обычной наёмной работы владелец Golden Residency получает отдельный рабочий пермит через работодателя. Официальная услуга делает исключение для инвестора, который является партнёром предприятия; конкретную структуру бизнеса нужно проверить до начала деятельности."),
+            ("Есть ли независимый маршрут кроме Golden Residency?", "Self-Sponsor Residency предусмотрена для подходящих инвесторов, владельцев жилой недвижимости и пенсионеров на 2, 5 или 10 лет. Это отдельная категория со своими документами и сборами BHD 200, 400 или 600."),
+            ("Есть ли в Бахрейне digital nomad виза?", "На официальных порталах NPRA, Bahrain eVisa и LMRA отдельная digital nomad виза не найдена. Удалённая работа на зарубежную компанию сама по себе не создаёт право жить в стране после окончания гостевого статуса."),
+            ("Есть ли подоходный налог с зарплаты?", "На октябрь 2026 года в Бахрейне не действует широкий личный подоходный налог на обычную зарплату. Это не отменяет НДС, социальные взносы, налоги бизнеса и обязательства в другой стране; для индивидуального решения нужна проверка источника дохода и резидентства."),
+            ("Манама, Мухаррак или Эр-Рифа для переезда?", "Манама сильнее по вакансиям и международным сервисам. Мухаррак удобен для аэропорта и островных районов, но часто требует поездок в столицу. Эр-Рифа подходит семейному сценарию с автомобилем, школами и более спокойной жилой средой."),
+        ],
+        "en": [
+            ("Do you need a visa for Bahrain?", "The rule depends on nationality, country of residence and travel purpose. The official eVisa portal displays the available category and conditions; short-stay, annual and other variants exist. Check the exact result before travel because visitor status does not authorize work."),
+            ("What is the cost of living in Bahrain in 2026?", "A practical solo range with a long-term lease is $1,500–2,700 per month. Manama normally sits near the upper end; deposit, car, insurance, flights and international school are separate."),
+            ("How does work status work?", "The employer files through LMRA and maintains the permit. Duration and fees depend on the category; changing employer or occupation follows a formal process, and a visitor visa does not replace the work permit."),
+            ("Can a resident sponsor family?", "An employer can request family residence for a spouse and dependants up to age 24. LMRA states a minimum worker income of BHD 400; relationship documents and the sponsor's valid status are required."),
+            ("What does Golden Residency offer?", "The status lasts ten years, permits unrestricted multiple entry and can include a spouse, children and parents. Main routes include property from BHD 200,000, a resident's five-year basic-salary record from BHD 2,000, a non-resident pension from BHD 4,000, or documented talent."),
+            ("Can a Golden Residency holder work?", "For ordinary salaried work, a Golden Residency holder obtains a separate work permit through the employer. The official service exempts an investor who is a partner in the establishment; verify the business structure before starting activity."),
+            ("Is there an independent route besides Golden Residency?", "Self-Sponsor Residency is available to qualifying investors, residential-property owners and retirees for two, five or ten years. It is a separate category with its own documents and fees of BHD 200, 400 or 600."),
+            ("Does Bahrain have a digital nomad visa?", "No dedicated digital-nomad visa was found on the official NPRA, Bahrain eVisa or LMRA portals. Remote work for a foreign company does not by itself create a right to stay after visitor status expires."),
+            ("Is salary subject to personal income tax?", "As of October 2026, Bahrain does not operate a broad personal income tax on ordinary salary. VAT, social insurance, business taxation and obligations in another country remain separate; individual advice depends on income source and residence."),
+            ("Should you choose Manama, Muharraq or Riffa?", "Manama is strongest for jobs and international services. Muharraq suits airport access and island districts but often means commuting to the capital. Riffa fits car-based family life, schools and a quieter residential setting."),
+        ],
+    },
+    "move-to-jordan": {
+        "ru": [
+            ("Нужна ли виза в Иорданию?", "Правило зависит от гражданства. MOI разделяет страны на требующие и не требующие предварительного одобрения; для подходящих заявителей доступны eVisa и виза по прибытии. Ministry of Tourism указывает JOD 40 за однократную визу по прибытии. Проверяйте именно свой паспорт и разрешённый срок в решении или пограничном штампе."),
+            ("Сколько стоит жизнь в Иордании в 2026 году?", "Для одного человека с долгосрочной арендой рабочий ориентир — $1 000–2 100 в месяц. Амман чаще ближе к верхней границе, Ирбид — к нижней. Депозит, перелёт, страховка, автомобиль и международная школа считаются отдельно."),
+            ("Как получить рабочую резиденцию?", "Сначала нужен оффер. Работодатель проверяет, доступна ли профессия иностранцу, и оформляет разрешение Ministry of Labour; затем используются сервисы MOI для рабочей визы и резиденции. Начинать работу по туристическому статусу нельзя."),
+            ("Все ли профессии доступны иностранцам?", "Нет. Актуальный справочник Ministry of Labour отдельно перечисляет закрытые профессии, профессии с согласованием, отраслевые квоты и категории специализированных навыков. Должность в оффере нужно сверить до переезда."),
+            ("Можно ли перевезти семью?", "MOI предоставляет отдельный маршрут Family / Follower Residence. Нужны действующая резиденция спонсора, подтверждение родства и пакет по конкретной категории. Семейный статус не следует считать автоматическим разрешением на работу."),
+            ("Есть ли ВНЖ за недвижимость?", "Да. По правилам июля 2026 года пятилетняя возобновляемая резиденция доступна при покупке подходящего объекта от JOD 200 000 у застройщика, JOD 300 000 у другого продавца или JOD 150 000 вне столичной провинции. Объект нужно сохранять пять лет."),
+            ("Есть ли digital nomad виза?", "На официальных порталах MOI, Ministry of Labour и Invest Jordan отдельная digital nomad виза не найдена. Удалённый доход сам по себе не создаёт право на долгий stay или работу; нужно отдельное основание для проживания и проверка налогов."),
+            ("Как облагается зарплата?", "Иордания не является безналоговой страной Залива. ISTD указывает прогрессивную шкалу для налогооблагаемого дохода физлица от 5% до 30% и отдельные освобождения. Итог зависит от резидентства, источника дохода и семейных вычетов."),
+            ("Амман, Акаба или Ирбид?", "Амман лучше для международной карьеры, школ и медицины. Акаба подходит для моря, туризма, порта и специальной зоны, но рынок работы уже. Ирбид дешевле и силён университетами, однако международных сервисов меньше."),
+            ("Что проверить в оффере?", "Попросите письменно указать чистую зарплату, налоговое удержание, рабочее разрешение, страховку, жильё, транспорт, перелёты, испытательный срок и условия прекращения контракта. Затем сопоставьте пакет с районом проживания и школьными расходами."),
+        ],
+        "en": [
+            ("Do you need a visa for Jordan?", "The answer depends on nationality. MOI separates nationalities that need prior approval from those that do not; eligible travellers can use an eVisa or visa on arrival. The Ministry of Tourism lists JOD 40 for a single visa on arrival. Check your passport and the authorised stay shown in the decision or border stamp."),
+            ("What is the cost of living in Jordan in 2026?", "A practical solo range with long-term rent is $1,000–2,100 per month. Amman usually sits near the upper end and Irbid near the lower end. Deposit, flights, insurance, a car and international school are separate."),
+            ("How do you get work residence?", "Start with an offer. The employer checks whether the occupation is open to a foreign worker and secures Ministry of Labour approval, followed by MOI work-visa and residence services. Do not begin employment on visitor status."),
+            ("Are all occupations open to foreign workers?", "No. The current Ministry of Labour guide separately lists closed occupations, occupations requiring approval, sector ratios and specialised-skill categories. Check the exact job title before relocating."),
+            ("Can a resident sponsor family?", "MOI provides a separate Family / Follower Residence service. The application depends on the sponsor's valid residence, relationship documents and the category-specific package. Family status should not be treated as automatic work permission."),
+            ("Is there residence through property?", "Yes. Under the July 2026 rules, renewable five-year residence is available for qualifying property from JOD 200,000 through a developer, JOD 300,000 from another seller, or JOD 150,000 outside the Capital Governorate. The property must be held for five years."),
+            ("Does Jordan have a digital nomad visa?", "No dedicated digital-nomad visa was found on the official MOI, Ministry of Labour or Invest Jordan portals. Foreign remote income does not by itself create long-stay or work rights; use a separate residence basis and check tax exposure."),
+            ("Is salary subject to income tax?", "Jordan is not a tax-free Gulf jurisdiction. ISTD describes progressive rates from 5% to 30% on taxable natural-person income, with separate exemptions. The result depends on residence, income source and family deductions."),
+            ("Should you choose Amman, Aqaba or Irbid?", "Amman is strongest for international careers, schools and healthcare. Aqaba suits coast, tourism, port and special-zone work but has a narrower market. Irbid is cheaper and university-led, with fewer international services."),
+            ("What should you check in the job offer?", "Ask for net salary, tax withholding, work-permit responsibility, insurance, housing, transport, flights, probation and termination terms in writing. Then compare the package with the target neighbourhood and school costs."),
+        ],
+    },
+    "move-to-lebanon": {
+        "ru": [
+            ("Нужна ли виза в Ливан?", "Правило зависит от гражданства. General Security публикует список паспортов и маршруты через границу, консульство или предварительное одобрение. Перед покупкой билета проверьте свой паспорт, срок пребывания и текущие условия въезда; туристический статус не разрешает работу."),
+            ("Сколько стоит жизнь в Ливане в 2026 году?", "Для одного человека с долгосрочной арендой рабочий диапазон — $900–2 000 в месяц. Бейрут чаще ближе к верхней границе. Депозит, перелёт, страховка, автомобиль, школа и отдельный счёт за генератор считаются сверх базового месяца."),
+            ("Как получить рабочую резиденцию?", "Сначала нужен оффер и разрешение Ministry of Labour. Затем оформляются рабочая виза и резиденция General Security; для первой выдачи нужны действующий work permit, контракт, паспорт и документы работодателя. По гостевому статусу начинать работу нельзя."),
+            ("Есть ли ВНЖ по доходу или банковскому счёту?", "Да. General Security описывает годовую резиденцию по ежемесячному доходу или банковскому счёту. Заявитель подтверждает жильё и нотариально обязуется не работать; срок зависит от действительности паспорта и не превышает года."),
+            ("Что даёт шестимесячная банковская резиденция?", "Это многократная резиденция на шесть месяцев для владельца счёта в ливанском банке. Официальный минимум — LBP 1,5 млрд или эквивалент, плюс выписка за три месяца и обязательство не заниматься оплачиваемой работой."),
+            ("Можно ли перевезти семью?", "General Security предусматривает годовую резиденцию для супруги и детей держателя рабочей резиденции второй категории и семейное включение в некоторые финансовые маршруты. Состав семьи, возраст и право на работу нужно проверять по конкретной категории."),
+            ("Есть ли digital nomad виза?", "На официальном портале General Security отдельная digital nomad виза не найдена. Для иностранного дохода ближе годовая резиденция по доходу или банковскому счёту, но она требует обязательства не работать в Ливане; налоговую применимость нужно проверять отдельно."),
+            ("Как облагается зарплата?", "Ministry of Finance публикует прогрессивные ставки налога на зарплаты от 2% до 20%. Пороговые суммы и пересчёт валютного дохода менялись, поэтому оффер нужно считать по актуальным таблицам и чистой сумме с местным налоговым специалистом."),
+            ("Бейрут, Джуния или Триполи?", "Бейрут сильнее по международной работе, образованию и медицине. Джуния даёт море и доступ к столице при зависимости от автомобиля. Триполи дешевле и локальнее, но международных вакансий и специализированных сервисов меньше."),
+            ("Что проверить перед переездом?", "Проверьте официальные предупреждения по конкретным районам, доступность аэропорта и дорог, запас лекарств, страховку, план выезда, источник электричества в квартире и доступ к деньгам. Только затем подписывайте долгую аренду."),
+        ],
+        "en": [
+            ("Do you need a visa for Lebanon?", "The answer depends on nationality. General Security publishes passport lists and routes through the border, a mission or prior approval. Check the exact passport, authorised stay and current entry conditions before booking; visitor status does not authorize work."),
+            ("What is the cost of living in Lebanon in 2026?", "A practical solo range with long-term rent is $900–2,000 per month. Beirut usually sits near the upper end. Deposit, flights, insurance, a car, school and a separate generator bill sit outside the baseline month."),
+            ("How do you get work residence?", "Start with an offer and Ministry of Labour permission. The work visa and General Security residence follow; first issue requires a valid work permit, contract, passport and employer documents. Do not begin employment on visitor status."),
+            ("Is there residence based on income or a bank account?", "Yes. General Security describes annual residence based on monthly income or a bank account. The applicant provides housing evidence and a notarised undertaking not to work; validity follows the passport and does not exceed one year."),
+            ("What is the six-month bank residence?", "It is a six-month multiple-entry residence for the holder of a Lebanese bank account. The official minimum is LBP 1.5 billion or equivalent, plus a certified three-month statement and an undertaking not to perform paid work."),
+            ("Can family members obtain residence?", "General Security provides annual residence for the wife and children of a category-two work resident and family inclusion in some financial routes. Family composition, age and work rights need a route-specific check."),
+            ("Does Lebanon have a digital-nomad visa?", "No dedicated digital-nomad visa was found on the General Security portal. Annual residence based on income or a bank account is the closer foreign-income route, but it requires an undertaking not to work in Lebanon; tax treatment needs a separate review."),
+            ("Is salary subject to personal income tax?", "The Ministry of Finance publishes progressive salary rates from 2% to 20%. Thresholds and foreign-currency conversion rules have changed, so compare an offer on current tables and net pay with a local tax professional."),
+            ("Should you choose Beirut, Jounieh or Tripoli?", "Beirut is strongest for international work, education and healthcare. Jounieh offers the coast and capital access with car dependence. Tripoli is cheaper and more local, with fewer international jobs and specialised services."),
+            ("What should you check before relocating?", "Review official area-specific security advice, airport and road access, medicine, insurance, an independent departure plan, the apartment's electricity source and access to funds. Sign a long lease only after those checks."),
+        ],
+    },
+    "move-to-israel": {
+        "ru": [
+            ("Нужна ли виза в Израиль?", "Правило зависит от гражданства и типа паспорта. С 1 января 2025 года путешественникам из безвизовых стран нужна ETA-IL до посадки; другим требуется B/2 или иной статус. Проверяйте официальный список MFA и срок паспорта перед поездкой."),
+            ("Сколько стоит жизнь в Израиле в 2026 году?", "Практичный диапазон для одного человека с долгосрочной арендой — $2 000–4 200 в месяц. Тель-Авив обычно дороже, Хайфа ближе к нижней границе. Депозит, муниципальный налог, перелёт, страховка и обустройство считаются отдельно."),
+            ("Как получить рабочую визу B/1?", "Работодатель сначала должен иметь разрешение PIBA на найм иностранца в подходящем секторе. Затем оформляются приглашение, виза и лицензия B/1. Работать можно только у зарегистрированного работодателя и в разрешённой сфере."),
+            ("Можно ли поменять туристический статус на рабочий?", "Официальное руководство для иностранных работников указывает, что въехавший по B/2 или студенческому статусу обычно не может конвертировать его в B/1 после въезда. Рабочий маршрут нужно согласовать с работодателем заранее."),
+            ("Что даёт A/1 по Закону о возвращении?", "Правомочный на алию заявитель, который ещё не решил вопрос гражданства, может получить временную резиденцию A/1 до пяти лет. Она разрешает жить и работать; после этого можно рассматривать гражданство или A/5 по условиям процедуры."),
+            ("Как переезжает супруг гражданина Израиля?", "PIBA использует поэтапную семейную процедуру. Заявление подаётся с доказательствами реальных отношений, личными документами и проверками; срок и промежуточный статус зависят от обстоятельств пары."),
+            ("Есть ли digital nomad виза?", "На официальных порталах MFA и PIBA отдельная digital nomad виза не найдена. ETA-IL и B/2 предназначены для визита, а не местной занятости; удалённый доход и налоговые последствия нужно проверять индивидуально."),
+            ("Как облагается зарплата?", "Израиль применяет прогрессивный подоходный налог и систему налоговых льгот. Официальный гид на 2026 год указывает максимальное удержание 47% при нескольких работодателях без tax coordination; итог зависит от дохода и credit points."),
+            ("Тель-Авив, Иерусалим или Хайфа?", "Тель-Авив сильнее по технологиям и международному бизнесу, но дороже. Иерусалим подходит для государства, университетов и НКО. Хайфа дешевле, сильна исследованиями и промышленностью, но вакансий меньше."),
+            ("Что проверить перед переездом?", "Проверьте официальный статус, чистую зарплату, жильё с защищённым пространством, страховку, предупреждения по районам, доступность аэропорта и независимый план выезда. Только после этого подписывайте долгую аренду."),
+        ],
+        "en": [
+            ("Do you need a visa for Israel?", "The rule depends on nationality and passport type. Since 1 January 2025, visa-exempt travellers need ETA-IL before boarding; others need B/2 or another status. Check the MFA list and passport validity before travel."),
+            ("What is the cost of living in Israel in 2026?", "A practical solo range with long-term rent is $2,000–4,200 per month. Tel Aviv is usually higher and Haifa closer to the lower end. Deposit, municipal tax, flights, insurance and setup are separate."),
+            ("How do you get a B/1 work visa?", "The employer first needs PIBA permission to hire a foreign worker in the relevant sector. The invitation, visa and B/1 licence follow. Employment is limited to the registered employer and authorised field."),
+            ("Can visitor status be converted to work status?", "The official foreign-worker guide says a person entering on B/2 or student status generally cannot convert it to B/1 after arrival. Agree the work route with the employer before travel."),
+            ("What does A/1 under the Law of Return provide?", "A person eligible for Aliyah who has not decided on citizenship can receive A/1 temporary residence for up to five years. It permits living and working; citizenship or A/5 can be considered later under the procedure."),
+            ("How does a spouse of an Israeli move?", "PIBA uses a graduated family procedure. The application includes evidence of a genuine relationship, civil documents and checks; timing and intermediate status depend on the couple's circumstances."),
+            ("Does Israel have a digital-nomad visa?", "No dedicated digital-nomad visa was found on the MFA or PIBA portals. ETA-IL and B/2 cover visits rather than local employment; foreign remote income and tax exposure need an individual review."),
+            ("Is salary subject to income tax?", "Israel applies progressive income tax and tax credits. The official 2026 guide notes maximum 47% withholding for multiple employers without tax coordination; the final result depends on income and credit points."),
+            ("Should you choose Tel Aviv, Jerusalem or Haifa?", "Tel Aviv leads in technology and international business but costs more. Jerusalem suits government, universities and NGOs. Haifa is cheaper and strong in research and industry, with fewer openings."),
+            ("What should you check before relocating?", "Confirm status, net salary, housing with protected-space access, insurance, area warnings, airport access and an independent departure plan. Sign a long lease only after those checks."),
+        ],
+    },
+    "move-to-iran": {
+        "ru": [
+            ("Нужна ли виза в Иран?", "Правило зависит от гражданства, цели и текущей политики. Официальный портал MFA принимает eVisa-заявки, но решение и срок указываются индивидуально. Перед поездкой проверьте паспорт в системе и требования выбранного консульства."),
+            ("Сколько стоит жизнь в Иране в 2026 году?", "Редакционный ориентир для одного человека — $700–1 800 в месяц, в Тегеране часто $900–2 200. Из-за высокой инфляции и разных курсов риала пересчитывайте аренду и расходы по свежим законным котировкам перед договором."),
+            ("Можно ли работать по туристической eVisa?", "Нет. Туристическая eVisa покрывает визит, а не местную занятость. Для Temporary Work Visa нужен иранский работодатель, предварительные согласования и одобренный трудовой сертификат."),
+            ("Как оформляется Temporary Work Visa?", "Принимающий работодатель запускает согласование до въезда. Трудовое законодательство допускает разрешение, когда подходящего иранского специалиста нет, квалификация иностранца подтверждена и предусмотрена передача навыков; разрешение обычно выдаётся максимум на год и продлевается отдельно."),
+            ("Есть ли в Иране digital nomad виза?", "На официальном MFA-портале отдельная digital nomad виза не найдена. Туристический статус не становится рабочим или резидентским из-за зарубежного работодателя; налоги и законность деятельности требуют отдельной проверки."),
+            ("Работают ли иностранные банковские карты?", "Обычно нет. FCDO предупреждает, что иностранные дебетовые и кредитные карты в Иране не работают и легально получить наличные сложно. До въезда согласуйте законный способ оплаты, резерв и поддержку работодателя."),
+            ("Как облагается доход иностранца?", "Доход от работы в Иране может подпадать под иранский подоходный налог и удержание работодателем. Пороговые значения меняются вместе с ежегодными бюджетными правилами, поэтому запросите расчёт чистой зарплаты и местное заключение до подписания контракта."),
+            ("Безопасно ли сейчас переезжать?", "FCDO на 11 октября 2026 года советует отказаться от любых поездок в Иран и указывает на высокий риск задержания. Проверяйте рекомендации своей страны, страховку, доступность маршрутов и независимый план выезда непосредственно перед каждым решением."),
+            ("Тегеран, Шираз или Исфахан?", "Тегеран даёт самый широкий рынок работы и сервисов, но дороже, загрязнённее и перегруженнее. Шираз спокойнее и силён в медицине и образовании. Исфахан удобен при конкретном промышленном или инженерном проекте."),
+            ("Что проверить в контракте?", "Зафиксируйте чистую зарплату, трудовой сертификат и визу, жильё, страховку, легальный доступ к деньгам, интернет для работы, поездки семьи, эвакуацию и выход из договора. Не переводите депозит до проверки статуса и собственника."),
+        ],
+        "en": [
+            ("Do you need a visa for Iran?", "The rule depends on nationality, purpose and current policy. The official MFA portal accepts eVisa applications, but the decision and authorised stay are case specific. Check the passport and the selected consulate before travel."),
+            ("What is the cost of living in Iran in 2026?", "The editorial solo range is $700–1,800 per month, with Tehran often $900–2,200. High inflation and multiple rial exchange rates make old conversions unreliable, so reprice rent and expenses through lawful current channels before signing."),
+            ("Can you work on a tourist eVisa?", "No. A tourist eVisa covers a visit rather than local employment. The Temporary Work Visa requires an Iranian sponsor employer, prior approvals and an approved labour certificate."),
+            ("How does the Temporary Work Visa work?", "The host employer starts approvals before entry. Labour law requires evidence that a suitable Iranian worker is unavailable, that the foreign specialist is qualified and that skills will be transferred; a work permit is generally issued for no more than one year and renewed separately."),
+            ("Does Iran have a digital nomad visa?", "No dedicated digital-nomad visa was found in the official MFA catalogue. A foreign employer does not convert visitor status into work or residence permission; activity and tax treatment need a case-specific check."),
+            ("Do foreign bank cards work in Iran?", "Generally no. FCDO says non-Iranian debit and credit cards do not work and obtaining cash legally can be difficult. Agree a lawful payment method, reserve and employer support before entry."),
+            ("Is foreign employment income taxed?", "Employment income connected to Iran may be subject to Iranian income tax and employer withholding. Thresholds can change with annual budget rules, so obtain a net-pay calculation and current local advice before accepting a contract."),
+            ("Is it safe to relocate now?", "As of 11 October 2026, FCDO advises against all travel to Iran and highlights a high detention risk. Check your own government's advice, insurance validity, transport routes and an independent exit plan immediately before each decision."),
+            ("Should you choose Tehran, Shiraz or Isfahan?", "Tehran has the broadest job and service base but costs more and suffers traffic and pollution. Shiraz is calmer with medical and education activity. Isfahan works best with a specific industrial or engineering assignment."),
+            ("What should the job contract cover?", "Put net salary, labour certificate and visa, housing, insurance, lawful access to funds, work connectivity, family travel, evacuation and termination terms in writing. Verify status and ownership before paying a deposit."),
+        ],
+    },
+    "move-to-yemen": {
+        "ru": [
+            ("Нужна ли виза в Йемен?", "Да. Официальная система eVisa работает с 2025 года, но заявление требует одобрения компетентных органов и использования разрешённого пункта въезда. Проверьте паспорт, маршрут и территориальную применимость решения до покупки билета."),
+            ("Сколько стоит жизнь в Йемене в 2026 году?", "Редакционный ориентир для одного человека — $500–1 300 в месяц. Охраняемое жильё, водитель, генератор, вода, спутниковая или резервная связь, страховка и эвакуация могут увеличить стоимость профессионального назначения в несколько раз."),
+            ("Можно ли работать по eVisa?", "Нет. Въездная eVisa не заменяет рабочий статус. Работодатель должен оформить рабочую въездную визу, регистрацию иностранной рабочей силы и разрешение через компетентные службы до начала занятости."),
+            ("Что должен оформить работодатель?", "Запросите письменную схему въезда, разрешения на работу, регистрации и проживания для конкретной территории. Министерство социальных дел и труда в Адене публикует электронные услуги для въезда и учёта иностранной рабочей силы."),
+            ("Есть ли digital nomad виза?", "Отдельная digital nomad виза в проверенных официальных источниках не найдена. Туристический или гостевой въезд не создаёт права на работу или резиденцию; удалённая деятельность и налог требуют отдельной проверки."),
+            ("Почему нельзя использовать один курс риала?", "Страна разделена на экономические зоны. World Bank фиксирует отдельные институты, валютные рынки и ликвидность в Сане и районах международно признанного правительства. Считайте бюджет для конкретного города и способа выплаты."),
+            ("Как облагается зарплата?", "Закон №17 от 2010 года охватывает налог на зарплаты и вознаграждения за работу в Йемене. Из-за институционального разделения и изменений применения запросите у работодателя расчёт чистой зарплаты для конкретной территории."),
+            ("Безопасно ли сейчас переезжать?", "На 11 октября 2026 года FCDO советует отказаться от любых поездок и рекомендует находящимся в Йемене немедленно уехать. Риски включают терроризм, похищения, задержания, мины, авиаудары и внезапное закрытие маршрутов."),
+            ("Сана, Аден или Мукалла?", "Сана — главный институциональный центр, но находится под контролем де-факто властей. Аден подходит только для подтверждённых правительственных, портовых и международных проектов. Мукалла имеет смысл при конкретном назначении в Хадрамауте."),
+            ("Что проверить в контракте?", "Зафиксируйте чистую зарплату и валюту выплаты, территорию разрешения, жильё, охрану, водителя, топливо, воду, электричество, связь, медицину, страховку, эвакуацию, ротацию и досрочный выезд семьи."),
+        ],
+        "en": [
+            ("Do you need a visa for Yemen?", "Yes. The official eVisa system has operated since 2025, but an application needs competent-authority approval and an authorised entry point. Check the passport, route and territorial validity before buying a ticket."),
+            ("What is the cost of living in Yemen in 2026?", "The editorial solo range is $500–1,300 per month. Secure housing, a driver, generator power, water, backup communications, insurance and evacuation can multiply the cost of a professional assignment."),
+            ("Can you work on an eVisa?", "No. An entry eVisa does not replace work status. The employer must arrange work entry, foreign-worker registration and the relevant permit before employment begins."),
+            ("What should the employer arrange?", "Ask for a written entry, work-permit, registration and residence sequence for the specific territory. The Aden labour ministry publishes electronic services for foreign-worker entry and registration."),
+            ("Does Yemen have a digital-nomad visa?", "No dedicated digital-nomad visa was found in the official sources checked. Visitor entry does not create work or residence rights; remote activity and tax treatment need individual review."),
+            ("Why can one rial exchange rate mislead?", "The country is split into separate economic zones. The World Bank records different institutions, currency markets and liquidity conditions in Sana'a and internationally recognised government areas. Build the budget for the exact city and payment route."),
+            ("Is employment income taxed?", "Income Tax Law No. 17 of 2010 covers salary and remuneration for work in Yemen. Institutional division and changing administration make a territory-specific net-pay calculation from the employer essential."),
+            ("Is it safe to relocate now?", "As of 11 October 2026, FCDO advises against all travel and tells people in Yemen to leave immediately. Risks include terrorism, kidnapping, detention, mines, air strikes and sudden route closures."),
+            ("Should you choose Sana'a, Aden or Mukalla?", "Sana'a is the main institutional centre but is controlled by de facto authorities. Aden only fits verified government, port or international assignments. Mukalla makes sense with a specific Hadramawt posting."),
+            ("What should the contract cover?", "Put net salary and payment currency, permit territory, housing, security, driver, fuel, water, power, connectivity, healthcare, insurance, evacuation, rotation and early family departure in writing."),
+        ],
+    },
+    "move-to-syria": {
+        "ru": [
+            ("Нужна ли виза в Сирию?", "Правило зависит от паспорта и цели. Официальные каналы направляют заявления через eVisa, а решение и разрешённый срок индивидуальны. Проверьте доступность в системе и у сирийского консульства до покупки билета."),
+            ("Сколько стоит жизнь в Сирии в 2026 году?", "Редакционный ориентир для одного человека — $450–1 100 в месяц, в Дамаске $550–1 300. Защищённое жильё, генератор, вода, служебный транспорт, страховка и эвакуация могут поднять реальную стоимость намного выше."),
+            ("Можно ли работать по туристической визе?", "Нет. Въездная или гостевая виза не заменяет разрешение на работу. Закон требует разрешения для иностранца, а занятость привязывается к одобренному работодателю и законному статусу пребывания."),
+            ("Как получить разрешение на работу?", "Процесс должен запускать подтверждённый работодатель. До начала работы проверьте въездное основание, разрешение компетентного органа, имя работодателя, срок, профессию и последующее оформление проживания."),
+            ("Есть ли digital nomad виза?", "Отдельная digital nomad виза в проверенных официальных источниках не найдена. Удалённый доход не превращает гостевой статус в разрешение на работу или проживание; нужны индивидуальная правовая и налоговая проверки."),
+            ("Работают ли иностранные банковские карты?", "Полагаться на них нельзя. FCDO сообщает об ограничениях финансовых операций, снятия наличных и почти полном отсутствии электронных платежей. Законный способ получения средств и резерв согласуйте до въезда."),
+            ("Как облагается доход?", "Зарплата и вознаграждение за работу в Сирии могут подпадать под сирийский налог на доход. Поскольку правила и пороги меняются, запросите у работодателя расчёт чистой зарплаты и актуальную консультацию по конкретному статусу."),
+            ("Безопасно ли сейчас переезжать?", "На 11 октября 2026 года FCDO советует отказаться от любых поездок в Сирию. Терроризм, похищения, боевые действия, мины и внезапное закрытие маршрутов требуют проверки рекомендаций своей страны, страховки и независимого плана выезда."),
+            ("Дамаск, Алеппо или Латакия?", "Дамаск даёт больше учреждений, медицины и международных функций. Алеппо имеет смысл при конкретном промышленном или восстановительном проекте. Латакия связана с портом и побережьем, но рынок международной работы меньше."),
+            ("Что проверить в контракте?", "Зафиксируйте чистую зарплату и валюту выплаты, визу и разрешение, жильё, охрану, воду и электричество, транспорт, связь, медицину, страховку, эвакуацию, ротацию и досрочный выезд семьи."),
+        ],
+        "en": [
+            ("Do you need a visa for Syria?", "The rule depends on passport and purpose. Official channels direct applications through eVisa, while the decision and authorised stay are individual. Check eligibility in the system and with a Syrian consulate before buying a ticket."),
+            ("What is the cost of living in Syria in 2026?", "The editorial solo range is $450–1,100 per month, with Damascus at $550–1,300. Secure housing, generator power, water, company transport, insurance and evacuation can push the real assignment cost much higher."),
+            ("Can you work on a tourist visa?", "No. An entry or visitor visa does not replace a work permit. Syrian law requires permission for a foreign worker, tied to the approved employer and lawful stay."),
+            ("How do you get a work permit?", "A verified employer should start the process. Before work begins, confirm the entry basis, competent-authority permit, employer name, duration, occupation and the related residence formalities."),
+            ("Does Syria have a digital-nomad visa?", "No dedicated digital-nomad visa was found in the official sources checked. Foreign remote income does not turn visitor status into work or residence permission; legal and tax treatment need an individual review."),
+            ("Do foreign bank cards work?", "Do not rely on them. FCDO reports restrictions on financial transactions and cash withdrawals, with minimal electronic payments. Agree a lawful way to receive funds and hold a reserve before entry."),
+            ("Is employment income taxed?", "Salary and remuneration for work in Syria may fall within Syrian income tax. As rules and thresholds can change, obtain a net-pay calculation from the employer and current advice for the specific status."),
+            ("Is it safe to relocate now?", "As of 11 October 2026, FCDO advises against all travel to Syria. Terrorism, kidnapping, conflict, mines and sudden route closures require a fresh check of your government's advice, insurance and an independent exit plan."),
+            ("Should you choose Damascus, Aleppo or Latakia?", "Damascus has the broadest institutional, medical and international base. Aleppo makes sense for a specific industrial or reconstruction project. Latakia links to the port and coast but has a smaller international job market."),
+            ("What should the job contract cover?", "Put net salary and payment currency, visa and permit, housing, security, water and power, transport, connectivity, healthcare, insurance, evacuation, rotation and early family departure in writing."),
+        ],
+    },
+    "move-to-iraq": {
+        "ru": [
+            ("Нужна ли виза в Ирак?", "Да, маршрут зависит от гражданства, цели и территории. Федеральный Ирак использует Iraqi eVisa, а Иракский Курдистан — отдельный портал KRG. Проверяйте паспорт в нужной системе и не считайте региональную визу автоматическим разрешением для всей страны."),
+            ("Сколько стоит жизнь в Ираке в 2026 году?", "Для иностранного специалиста практичный диапазон — $1 200–2 800 в месяц. Охраняемый комплекс, служебный транспорт, генератор, страховка и эвакуационное покрытие могут поднять сумму значительно выше."),
+            ("Как получить разрешение на работу?", "В федеральном Ираке работодатель подаёт запрос, подтверждает необходимость иностранного специалиста и проходит проверку местного рынка труда. Затем оформляются въезд, work permit, страховка и резиденция. Процесс KRG отдельный."),
+            ("Действует ли виза KRG в Багдаде и Басре?", "Не следует это предполагать. Официальные системы федерального Ирака и Иракского Курдистана разделены. До перемещения между регионами подтвердите разрешение у обеих компетентных служб и перевозчика."),
+            ("Сколько действует виза Иракского Курдистана?", "Официальный портал KRG указывает 30 дней разрешённого пребывания и 90 дней действительности для въезда. Конкретная доступность eVisa или визы по прибытии зависит от паспорта."),
+            ("Можно ли перевезти семью?", "Семейный статус зависит от резиденции основного заявителя, работодателя и юрисдикции. В условиях повышенного риска международные организации могут классифицировать отдельные назначения как non-family; пакет нужно подтвердить до переезда."),
+            ("Есть ли digital nomad виза?", "На официальных федеральных и KRG-порталах отдельная digital nomad виза не найдена. Гостевая eVisa не заменяет рабочий или резидентский статус; удалённый доход и налоги требуют индивидуальной проверки."),
+            ("Как облагается доход?", "General Commission for Taxes публикует прогрессивную шкалу физических лиц 3%, 5%, 10% и 15% после применимых освобождений. Резидентство, источник дохода и правила KRG требуют расчёта местного специалиста."),
+            ("Багдад, Эрбиль или Басра?", "Багдад подходит для государства, инфраструктуры и международных организаций. Эрбиль удобнее для международной среды и региональных офисов. Басра ориентирована на нефть, газ, порты и инженерные проекты."),
+            ("Что проверить в контракте?", "Зафиксируйте чистую зарплату, юрисдикцию разрешения, жильё, охрану, транспорт, генератор, медицину, страхование, эвакуацию, ротацию и перелёты. Без этих пунктов сравнение одной зарплаты не показывает реальную ценность оффера."),
+        ],
+        "en": [
+            ("Do you need a visa for Iraq?", "Yes; the route depends on nationality, purpose and territory. Federal Iraq uses Iraqi eVisa, while the Kurdistan Region has a separate KRG portal. Check the passport in the relevant system and do not assume a regional visa covers the whole country."),
+            ("What is the cost of living in Iraq in 2026?", "A practical international-worker range is $1,200–2,800 per month. A secure compound, company transport, generator power, insurance and evacuation cover can push the figure substantially higher."),
+            ("How do you get a work permit?", "In federal Iraq the employer applies, demonstrates the need for a foreign specialist and completes a local labour-market check. Entry, work permit, insurance and residence follow. The KRG process is separate."),
+            ("Does a KRG visa cover Baghdad and Basra?", "Do not assume that it does. Federal Iraq and Kurdistan Region systems are separate. Before cross-region travel, confirm permission with both competent authorities and the carrier."),
+            ("How long is a Kurdistan Region visa valid?", "The official KRG portal states a 30-day authorised stay and 90-day entry validity. Access to eVisa or visa on arrival remains passport-specific."),
+            ("Can family members relocate?", "Family status depends on the main applicant's residence, employer and jurisdiction. Under elevated risk, international organisations may classify assignments as non-family; confirm the package before relocation."),
+            ("Does Iraq have a digital-nomad visa?", "No dedicated digital-nomad visa was found on the federal or KRG official portals. A visitor eVisa does not replace work or residence status; foreign remote income and tax need individual review."),
+            ("Is income subject to tax?", "The General Commission for Taxes publishes progressive individual bands of 3%, 5%, 10% and 15% after applicable allowances. Residence, income source and KRG treatment require local calculation."),
+            ("Should you choose Baghdad, Erbil or Basra?", "Baghdad suits government, infrastructure and international organisations. Erbil offers a stronger international environment and regional offices. Basra centres oil, gas, ports and engineering projects."),
+            ("What should the contract cover?", "Put net salary, permit jurisdiction, housing, security, transport, generator power, healthcare, insurance, evacuation, rotation and flights in writing. Headline salary alone does not show the offer's real value."),
+        ],
+    },
+    "move-to-kuwait": {
+        "ru": [
+            ("Нужна ли виза в Кувейт?", "Правило зависит от гражданства и категории. Официальный Kuwait Visa выдаёт туристическую визу для подходящих заявителей: въездное разрешение действует 30 дней, однократное пребывание — до 90 дней. Паспорт должен действовать не менее шести месяцев; туристический статус запрещает работу."),
+            ("Сколько стоит жизнь в Кувейте в 2026 году?", "Для одного человека с долгосрочной арендой практичный ориентир — $1 600–2 900 в месяц. Сальмия и деловые районы Эль-Кувейта обычно ближе к верхней границе. Депозит, автомобиль, страховка, перелёты и международная школа считаются отдельно."),
+            ("Как оформляется рабочая резиденция Article 18?", "Работодатель получает разрешение Public Authority for Manpower и въездную рабочую визу. После въезда понадобятся заверенная справка о несудимости, медосмотр, страховка, паспорт и документы спонсора; затем оформляются резиденция и Civil ID."),
+            ("Можно ли перевезти семью?", "Family residence Article 22 требует действующего статуса спонсора, подтверждения родства и дохода от KWD 450. Отдельно проверяются жильё, страховка и документы каждого члена семьи; сам семейный статус не следует считать автоматическим правом на работу."),
+            ("Нужен ли exit permit для поездки из Кувейта?", "Частные иностранные работники с Article 18 должны получать разрешение на выезд с одобрением работодателя. В 2026 году запущено предварительное разрешение на несколько поездок, но его также выдаёт уполномоченное лицо работодателя через портал As'hal."),
+            ("Можно ли переехать без работодателя?", "На официальном портале существуют Article 19 для коммерческой или профессиональной деятельности и Article 24 для заявителей с подтверждённым источником средств. Условия первой выдачи изложены неполно, поэтому эти категории нельзя считать простым независимым маршрутом без предварительной проверки в MOI."),
+            ("Есть ли в Кувейте digital nomad виза?", "На официальных порталах MOI, Kuwait Visa и Kuwait Government Online отдельная digital nomad виза не найдена. Удалённая работа на зарубежную компанию сама по себе не продлевает туристический статус и не заменяет разрешение на проживание и деятельность."),
+            ("Есть ли подоходный налог с зарплаты?", "В государственном бюджете 2026/27 строка налога на доходы физических лиц указана с нулевыми поступлениями, и широкого PIT с обычной зарплаты сейчас нет. Корпоративные налоги, социальные платежи и обязательства в другой стране проверяются отдельно."),
+            ("Эль-Кувейт, Сальмия или Хавалли для переезда?", "Эль-Кувейт удобнее для офисов, банков и государственных учреждений. Сальмия даёт море, международные сервисы и школы при более дорогой аренде. Хавалли обычно доступнее и центральнее, но плотнее и сильнее зависит от трафика."),
+            ("Что проверить в оффере до переезда?", "Попросите письменно указать жильё или allowance, страховку, школу, перелёты, probation, условия смены работодателя и exit permit. Затем сопоставьте чистый доход с арендой в нужном районе и стартовыми расходами на депозит, автомобиль и документы."),
+        ],
+        "en": [
+            ("Do you need a visa for Kuwait?", "The rule depends on nationality and category. Official Kuwait Visa issues a tourist visa to eligible applicants: the entry permit is valid for 30 days and a single stay can last up to 90 days. The passport needs at least six months' validity, and tourist status prohibits work."),
+            ("What is the cost of living in Kuwait in 2026?", "A practical solo range with a long-term lease is $1,600–2,900 per month. Salmiya and Kuwait City's business districts normally sit near the upper end. Deposit, car, insurance, flights and international school are separate."),
+            ("How does Article 18 work residence work?", "The employer obtains a Public Authority for Manpower permit and the work-entry visa. After entry, the package includes an authenticated police certificate, medical exam, insurance, passport and sponsor documents, followed by residence and a Civil ID."),
+            ("Can a resident sponsor family?", "Article 22 family residence requires the sponsor's valid status, relationship evidence and income from KWD 450. Housing, insurance and each dependant's documents are checked separately; family status should not be treated as automatic work permission."),
+            ("Do workers need an exit permit to travel?", "Private-sector foreign workers under Article 18 need an employer-approved exit permit. A multiple-trip pre-approval service launched in 2026, but the employer's authorized person still grants it through the As'hal portal."),
+            ("Can you move without an employer?", "The official catalogue lists Article 19 for commercial or professional activity and Article 24 for applicants with a documented source of support. First-issue conditions are not fully explained online, so neither should be treated as an easy independent route without an MOI check."),
+            ("Does Kuwait have a digital nomad visa?", "No dedicated digital-nomad visa was found on the official MOI, Kuwait Visa or Kuwait Government Online portals. Remote work for a foreign company does not by itself extend tourist status or replace residence and activity permission."),
+            ("Is salary subject to personal income tax?", "The 2026/27 state budget records zero revenue from individual income tax, and broad PIT does not currently apply to ordinary salary. Corporate tax, social payments and obligations in another country remain separate."),
+            ("Should you choose Kuwait City, Salmiya or Hawalli?", "Kuwait City is best for offices, banks and government services. Salmiya adds coast, international services and schools with higher rent. Hawalli is often more affordable and central but denser and more traffic-dependent."),
+            ("What should you check in the job offer?", "Ask for housing or allowance, insurance, school, flights, probation, employer-transfer terms and the exit-permit process in writing. Then compare net pay with rent in the target district and setup costs for deposit, car and documents."),
         ],
     },
 }
@@ -2808,7 +4319,7 @@ def ru_country_article(slug: str, facts: sqlite3.Row | None) -> str:
 
     <div class="ep-section" id="ru-costs">
       <p class="ep-section-label">Стоимость жизни</p>
-      <h2 class="ep-h2">Реальный месячный бюджет в {html.escape(prep)}</h2>
+      <h2 class="ep-h2">Рабочий месячный бюджет в {html.escape(prep)}</h2>
       <div class="ep-budget-ledger">
         <div class="ep-budget-total"><span>Рабочий ориентир</span><strong>{html.escape(total)}</strong><small>один человек, без стартовых расходов</small></div>
         <dl>
@@ -2868,10 +4379,10 @@ def ru_country_article(slug: str, facts: sqlite3.Row | None) -> str:
 
 
 _CLIMATE_EN = {
-    "Тропический": "Tropical", "Субтропический": "Subtropical",
+    "Пустынный": "Desert", "Тропический": "Tropical", "Субтропический": "Subtropical",
     "Умеренный": "Temperate", "Умеренный/Горный": "Temperate/Mountain",
     "Континентальный": "Continental", "Континентальный/Аридный": "Continental/Arid",
-    "Аридный (жаркий)": "Arid (Hot)", "Разнообразный": "Varied",
+    "Аридный (жаркий)": "Arid (Hot)", "Средиземноморский": "Mediterranean", "Разнообразный": "Varied",
 }
 _ENGLISH_EN = {
     "Высокий": "High", "Средний": "Medium", "Низкий": "Low",
@@ -3157,6 +4668,23 @@ def _ru_countries_catalog_content() -> str:
         "move-to-brunei": "Безопасность и высокий уровень доходов в небольшом закрытом рынке.",
         "move-to-myanmar": "Низкая стоимость жизни, но критически важна проверка текущей ситуации.",
         "move-to-uzbekistan": "Доступный быт, растущие города и удобная региональная база.",
+        "move-to-georgia": "Годовой безвиз для паспортов из перечня, разные города и отдельная проверка права на работу.",
+        "move-to-turkey": "Большой рынок, средиземноморские города и разные маршруты для stay, работы и удалёнщиков.",
+        "move-to-kyrgyzstan": "Доступная база в Центральной Азии, отдельный IT-маршрут и разные правила регистрации по паспорту.",
+        "move-to-armenia": "До 180 безвизовых дней для подходящих паспортов, сильный Ереван и отдельная проверка права на работу.",
+        "move-to-azerbaijan": "eVisa до 30 дней, обязательный учёт длинного визита и выбор между Баку, Гянджой и Шеки.",
+        "move-to-qatar": "Переезд через работодателя, современная Доха и бюджет, который сильно зависит от компенсации жилья.",
+        "move-to-saudi-arabia": "Рабочая Iqama, Premium Residency и выбор между Эр-Риядом, Джиддой и Эль-Хубаром.",
+        "move-to-oman": "Спокойная жизнь в Заливе, рабочая резиденция и Golden Residency для инвесторов.",
+        "move-to-bahrain": "Компактная жизнь в Заливе, рабочий статус через LMRA и 10-летняя Golden Residency.",
+        "move-to-kuwait": "Оффер и Article 18, семейная резиденция, exit permit и выбор между Эль-Кувейтом, Сальмией и Хавалли.",
+        "move-to-jordan": "Оффер и work permit, налог на доход, пятилетний ВНЖ за недвижимость и выбор между Амманом, Акабой и Ирбидом.",
+        "move-to-lebanon": "Работа, резиденция по доходу или банковскому счёту, актуальная безопасность и выбор между Бейрутом, Джунией и Триполи.",
+        "move-to-israel": "Алия, B/1 через работодателя, семейная процедура, высокий бюджет и выбор между Тель-Авивом, Иерусалимом и Хайфой.",
+        "move-to-iran": "Рабочая виза через работодателя, валютные ограничения, актуальная безопасность и выбор между Тегераном, Ширазом и Исфаханом.",
+        "move-to-yemen": "Индивидуальная eVisa, работа через работодателя, разделённая валютная среда и критические риски безопасности.",
+        "move-to-syria": "Въезд через eVisa, работа только с разрешением, критические риски безопасности и выбор между Дамаском, Алеппо и Латакией.",
+        "move-to-iraq": "Разные правила федерального Ирака и KRG, переезд по контракту и выбор между Багдадом, Эрбилем и Басрой.",
     }
     regions = [
         ("Юго-Восточная Азия", "Самый широкий выбор бюджетов и форматов жизни", [
@@ -3171,9 +4699,10 @@ def _ru_countries_catalog_content() -> str:
             "move-to-sri-lanka", "move-to-india", "move-to-nepal",
         ]),
         ("Центральная Азия", "Близкая логистика и города с более доступным стартом", [
-            "move-to-kazakhstan", "move-to-uzbekistan",
+            "move-to-kazakhstan", "move-to-uzbekistan", "move-to-kyrgyzstan",
         ]),
-        ("Персидский залив", "Международная карьера и высокий уровень сервиса", ["move-to-uae"]),
+        ("Кавказ и Западная Азия", "Близкая логистика, горы, море и понятный тестовый переезд", ["move-to-georgia", "move-to-turkey", "move-to-armenia", "move-to-azerbaijan", "move-to-jordan", "move-to-lebanon", "move-to-israel", "move-to-iran", "move-to-yemen", "move-to-syria", "move-to-iraq"]),
+        ("Персидский залив", "Международная карьера и высокий уровень сервиса", ["move-to-uae", "move-to-qatar", "move-to-saudi-arabia", "move-to-oman", "move-to-bahrain", "move-to-kuwait"]),
     ]
 
     def country_row(slug: str) -> str:
@@ -3223,8 +4752,8 @@ def _ru_countries_catalog_content() -> str:
       </div>
     </div>
     <div class="rta-directory-hero-stats" aria-label="О каталоге">
-      <div><strong>20</strong><span>направлений</span></div>
-      <div><strong>5</strong><span>регионов</span></div>
+      <div><strong>37</strong><span>направлений</span></div>
+      <div><strong>6</strong><span>регионов</span></div>
       <div><strong>2026</strong><span>актуальный обзор</span></div>
     </div>
   </header>
@@ -3290,13 +4819,31 @@ def _en_countries_catalog_content() -> str:
         "move-to-brunei": "Safety and high incomes in a small, selective market.",
         "move-to-myanmar": "Low costs, but current conditions require extra caution.",
         "move-to-uzbekistan": "Affordable living and fast-changing regional cities.",
+        "move-to-georgia": "One-year visa-free access for listed passports, distinct cities and a separate work-right check.",
+        "move-to-turkey": "A large market, Mediterranean cities and separate routes for stay, work and eligible nomads.",
+        "move-to-kyrgyzstan": "An affordable Central Asian base with an ICT route and passport-specific registration rules.",
+        "move-to-armenia": "Up to 180 visa-free days for eligible passports, a strong Yerevan base and a separate local-work check.",
+        "move-to-azerbaijan": "A 30-day eVisa, mandatory registration for longer visits and a Baku, Ganja or Sheki choice.",
+        "move-to-qatar": "An employer-led move, modern Doha and a budget shaped by housing allowances.",
+        "move-to-saudi-arabia": "A work Iqama, Premium Residency and a Riyadh, Jeddah or Al Khobar choice.",
+        "move-to-oman": "A calmer Gulf base, employer-led residence and Golden Residency for investors.",
+        "move-to-bahrain": "A compact Gulf base, LMRA work status and ten-year Golden Residency.",
+        "move-to-kuwait": "An offer-led Article 18 move, family residence, exit permits and three urban districts to compare.",
+        "move-to-jordan": "An employer-led work permit, progressive income tax, five-year property residence and three distinct city choices.",
+        "move-to-lebanon": "Work residence, income or bank-based residence, live security checks and three coastal city choices.",
+        "move-to-israel": "Aliyah, employer-led B/1 work, family status, high costs and three major city choices.",
+        "move-to-iran": "Employer-led work permission, currency constraints, live security checks and three city scenarios.",
+        "move-to-yemen": "Individual eVisa approval, employer-led work, split currency markets and critical security risks.",
+        "move-to-syria": "eVisa entry, permit-only work, critical security constraints and three assignment-led city choices.",
+        "move-to-iraq": "Separate federal and KRG rules, employer-led relocation and three contract-driven city choices.",
     }
     regions = [
         ("Southeast Asia", "The broadest mix of budgets and lifestyles", ["move-to-thailand", "move-to-malaysia", "move-to-bali", "move-to-vietnam", "move-to-singapore", "move-to-philippines", "move-to-cambodia", "move-to-laos", "move-to-myanmar", "move-to-brunei"]),
         ("East Asia", "Powerful infrastructure with a higher entry threshold", ["move-to-taiwan", "move-to-japan", "move-to-china", "move-to-south-korea"]),
         ("South Asia", "Contrasting cities, nature and daily-life conditions", ["move-to-sri-lanka", "move-to-india", "move-to-nepal"]),
-        ("Central Asia", "Accessible urban bases and easier regional logistics", ["move-to-kazakhstan", "move-to-uzbekistan"]),
-        ("The Gulf", "International careers and premium services", ["move-to-uae"]),
+        ("Central Asia", "Accessible urban bases and easier regional logistics", ["move-to-kazakhstan", "move-to-uzbekistan", "move-to-kyrgyzstan"]),
+        ("Caucasus & Western Asia", "Short regional links, mountains, coast and a practical trial move", ["move-to-georgia", "move-to-turkey", "move-to-armenia", "move-to-azerbaijan", "move-to-jordan", "move-to-lebanon", "move-to-israel", "move-to-iran", "move-to-yemen", "move-to-syria", "move-to-iraq"]),
+        ("The Gulf", "International careers and premium services", ["move-to-uae", "move-to-qatar", "move-to-saudi-arabia", "move-to-oman", "move-to-bahrain", "move-to-kuwait"]),
     ]
 
     def row(slug: str) -> str:
@@ -3315,7 +4862,7 @@ def _en_countries_catalog_content() -> str:
     thailand = RU_COUNTRY_DATA["move-to-thailand"]
     return f"""
 <article class="rta-country-directory">
-  <header class="rta-directory-hero"><div class="rta-directory-hero-copy"><p class="rta-directory-eyebrow">Relocate to Asia · destination finder</p><h1>Find a country that fits your real life</h1><p>Start with legal stay, budget, work, healthcare and the city—not a beautiful image.</p><div class="rta-directory-actions"><a class="rta-directory-primary" href="#all-countries">Browse all countries</a><a href="/compare/">Compare destinations</a></div></div><div class="rta-directory-hero-stats" aria-label="About this directory"><div><strong>20</strong><span>destinations</span></div><div><strong>5</strong><span>regions</span></div><div><strong>2026</strong><span>planning overview</span></div></div></header>
+  <header class="rta-directory-hero"><div class="rta-directory-hero-copy"><p class="rta-directory-eyebrow">Relocate to Asia · destination finder</p><h1>Find a country that fits your real life</h1><p>Start with legal stay, budget, work, healthcare and the city—not a beautiful image.</p><div class="rta-directory-actions"><a class="rta-directory-primary" href="#all-countries">Browse all countries</a><a href="/compare/">Compare destinations</a></div></div><div class="rta-directory-hero-stats" aria-label="About this directory"><div><strong>37</strong><span>destinations</span></div><div><strong>6</strong><span>regions</span></div><div><strong>2026</strong><span>planning overview</span></div></div></header>
   <nav class="rta-directory-nav" aria-label="Directory navigation"><a href="#start">Start with your goal</a><a href="#popular">Popular choices</a><a href="#all-countries">All destinations</a><a href="/compare/">Compare</a></nav>
   <section class="rta-directory-scenarios" id="start"><header><p>Start with the life you want</p><h2>What should the move make easier?</h2></header><div>{scenarios_html}</div></section>
   <section class="rta-directory-featured" id="popular"><div class="rta-directory-spotlight"><div class="rta-directory-spotlight-visual"><span>🇹🇭</span><small>Destination in focus</small></div><div class="rta-directory-spotlight-copy"><p>A strong all-round starting point</p><h2>Thailand</h2><p>{notes['move-to-thailand']}</p><dl><div><dt>Budget</dt><dd>{_normalize_budget_en(thailand['budget'])}/mo</dd></div><div><dt>Routes</dt><dd>{thailand['visa_label']}</dd></div></dl><a href="/countries/move-to-thailand/">Open the Thailand guide →</a></div></div><div class="rta-directory-shortlist"><header><p>Four more countries for a first comparison</p><h2>Shortlist</h2></header>{featured}</div></section>
@@ -5967,6 +7514,23 @@ COUNTRY_META_DESCRIPTIONS_EN = {
     "move-to-malaysia": "Move to Malaysia in 2026: visa routes, cost of living, Kuala Lumpur vs Penang, healthcare and long-term planning.",
     "move-to-taiwan": "Move to Taiwan in 2026: Gold Card and work routes, living costs, Taipei alternatives and practical relocation steps.",
     "move-to-south-korea": "Move to South Korea in 2026: visa routes, Seoul living costs, housing deposits and planning for foreign professionals.",
+    "move-to-georgia": "Move to Georgia in 2026: passport-specific visa rules, cost of living in Tbilisi, Batumi and Kutaisi, work permits and tax basics.",
+    "move-to-turkey": "Move to Türkiye in 2026: visa and residence routes, Istanbul and Antalya living costs, digital nomad eligibility, work permits and tax basics.",
+    "move-to-kyrgyzstan": "Move to Kyrgyzstan in 2026: passport-specific entry and registration, Bishkek living costs, digital nomad status, work permits and tax basics.",
+    "move-to-armenia": "Move to Armenia in 2026: passport-specific entry, Yerevan living costs, residence permits, local work and tax-residence rules.",
+    "move-to-azerbaijan": "Move to Azerbaijan in 2026: visa rules, Baku living costs, address registration, residence permits, work and tax residence.",
+    "move-to-qatar": "Move to Qatar in 2026: entry rules, Doha living costs, work and family residence, property routes and tax basics.",
+    "move-to-saudi-arabia": "Move to Saudi Arabia in 2026: tourist eVisa, work visa and Iqama, Premium Residency, Riyadh costs and tax residence.",
+    "move-to-oman": "Move to Oman in 2026: tourist eVisa, work and family residence, Golden Residency, Muscat costs and the 2028 tax change.",
+    "move-to-bahrain": "Move to Bahrain in 2026: eVisa, LMRA work and family residence, Golden Residency, Manama costs and tax basics.",
+    "move-to-kuwait": "Move to Kuwait in 2026: tourist visa, Article 18 work residence, family sponsorship, exit permits, costs and tax basics.",
+    "move-to-jordan": "Move to Jordan in 2026: visitor visa, work and family residence, property residency, costs, cities and income tax.",
+    "move-to-lebanon": "Move to Lebanon in 2026: visa rules, work and income residence, Beirut costs, cities, safety and tax basics.",
+    "move-to-israel": "Move to Israel in 2026: ETA-IL, B/1 work visa, Aliyah, family status, living costs, cities, safety and tax.",
+    "move-to-iran": "Move to Iran in 2026: eVisa, employer-led work permission, residence, Tehran costs, banking limits, safety and tax.",
+    "move-to-yemen": "Move to Yemen in 2026: eVisa, work permits, residence, city costs, currency fragmentation, safety and tax.",
+    "move-to-syria": "Move to Syria in 2026: eVisa, work permits, residence, Damascus costs, money constraints, safety and tax.",
+    "move-to-iraq": "Move to Iraq in 2026: federal and KRG visas, work permits, residence, Baghdad and Erbil costs, safety and tax.",
 }
 
 COUNTRY_META_DESCRIPTIONS_RU = {
@@ -5976,6 +7540,23 @@ COUNTRY_META_DESCRIPTIONS_RU = {
     "move-to-malaysia": "Переезд в Малайзию в 2026 году: стоимость жизни, визовые маршруты, Куала-Лумпур или Пенанг, медицина и долгосрочный план.",
     "move-to-taiwan": "Переезд на Тайвань в 2026 году: Gold Card, рабочие маршруты, стоимость жизни, документы и практические шаги.",
     "move-to-south-korea": "Переезд в Южную Корею в 2026 году: визовые маршруты, стоимость жизни, жильё и план для иностранных специалистов.",
+    "move-to-georgia": "Переезд в Грузию в 2026 году: виза по гражданству, стоимость жизни в Тбилиси, Батуми и Кутаиси, ВНЖ, работа и налоги.",
+    "move-to-turkey": "Переезд в Турцию в 2026 году: визы и ВНЖ, стоимость жизни в Стамбуле и Анталье, digital nomad, работа и налоги.",
+    "move-to-kyrgyzstan": "Переезд в Кыргызстан в 2026 году: въезд и регистрация по гражданству, стоимость жизни в Бишкеке, digital nomad, работа и налоги.",
+    "move-to-armenia": "Переезд в Армению в 2026 году: въезд по гражданству, стоимость жизни в Ереване, ВНЖ, работа и налоговое резидентство.",
+    "move-to-azerbaijan": "Переезд в Азербайджан в 2026 году: виза, стоимость жизни в Баку, регистрация, ВНЖ, работа и налоговое резидентство.",
+    "move-to-qatar": "Переезд в Катар в 2026 году: въезд, стоимость жизни в Дохе, рабочий и семейный ВНЖ, недвижимость и налоги.",
+    "move-to-saudi-arabia": "Переезд в Саудовскую Аравию в 2026 году: eVisa, рабочая виза и Iqama, Premium Residency, расходы и налоги.",
+    "move-to-oman": "Переезд в Оман в 2026 году: eVisa, рабочий и семейный ВНЖ, Golden Residency, расходы и налог с 2028 года.",
+    "move-to-bahrain": "Переезд в Бахрейн в 2026 году: eVisa, рабочий и семейный ВНЖ, Golden Residency, расходы и налоги.",
+    "move-to-kuwait": "Переезд в Кувейт в 2026 году: туристическая виза, рабочая и семейная резиденция, exit permit, расходы и налоги.",
+    "move-to-jordan": "Переезд в Иорданию в 2026 году: виза, рабочая и семейная резиденция, ВНЖ за недвижимость, расходы и налоги.",
+    "move-to-lebanon": "Переезд в Ливан в 2026 году: виза, рабочая резиденция, ВНЖ по доходу, расходы, безопасность и налоги.",
+    "move-to-israel": "Переезд в Израиль в 2026 году: ETA-IL, B/1, алия, семейный статус, расходы, города, безопасность и налоги.",
+    "move-to-iran": "Переезд в Иран в 2026 году: eVisa, работа через работодателя, резиденция, расходы Тегерана, банки, безопасность и налоги.",
+    "move-to-yemen": "Переезд в Йемен в 2026 году: eVisa, разрешение на работу, резиденция, расходы городов, валюты, безопасность и налоги.",
+    "move-to-syria": "Переезд в Сирию в 2026 году: eVisa, разрешение на работу, резиденция, расходы Дамаска, деньги, безопасность и налоги.",
+    "move-to-iraq": "Переезд в Ирак в 2026 году: федеральная и KRG eVisa, работа, резиденция, расходы, безопасность и налоги.",
 }
 
 
@@ -7009,6 +8590,56 @@ def page_source_panel(path: str, *, lang: str) -> dict | None:
             _official_source("World Bank Data: Population, Total", "https://data.worldbank.org/indicator/SP.POP.TOTL", "Public World Bank population indicator used for country-scale context.", "Открытые данные по населению — помогают понять масштаб страны.", lang=lang),
             _official_source("World Bank Data: GDP Per Capita", "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD", "Public macro indicator used only as background, not as a personal budget figure.", "Макроэкономический показатель для общего контекста. Не личный бюджет — просто ориентир.", lang=lang),
         ],
+        "georgia": [
+            _official_source("Georgia: Law On The Legal Status Of Aliens", "https://www.matsne.gov.ge/en/document/view/2278806?publication=20", "Primary law for entry, visa and lawful-stay rules, including the general 90-in-180 framework.", "Основной закон о въезде, визах и законном пребывании, включая общее правило 90 дней из 180.", lang=lang),
+            _official_source("Georgia: Ordinance No. 255 One-Year Entry List", "https://matsne.gov.ge/en/document/view/2867361?fullscreen=1&impose=parallelEn", "Official annex listing citizenships eligible to enter and stay visa-free for one full year.", "Официальное приложение со списком гражданств, которым разрешён безвизовый въезд и пребывание один полный год.", lang=lang),
+            _official_source("Georgia eVisa: Countries And Requirements", "https://www.evisa.gov.ge/geovisa/countries/index.html", "Official passport-specific navigator for eVisa eligibility and supporting-document requirements.", "Официальный визовый навигатор: доступность eVisa и документы зависят от гражданства.", lang=lang),
+            _official_source("Public Service Development Agency: Residence Permits", "https://sda.gov.ge/en/products/migration-residence-permits/", "Official residence-permit categories, evidence, timing and service fees.", "Официальные категории ВНЖ, документы, сроки подачи и сборы.", lang=lang),
+            _official_source("Georgia: Law On Labour Migration", "https://www.matsne.gov.ge/en/document/view/2806732", "Current legal framework for a foreign national's right to work and linked immigration status.", "Действующая правовая основа для права иностранца на работу и связанного миграционного статуса.", lang=lang),
+            _official_source("Georgia Tax Code", "https://new.matsne.gov.ge/en/document/view/1043717?publication=173", "Primary source for the 183-day residence test and conditional small-business tax rates.", "Первоисточник по правилу 183 дней и условным ставкам для малого бизнеса.", lang=lang),
+            _official_source("World Bank Data: Georgia", "https://data.worldbank.org/country/georgia", "Country indicators used for population, internet access and life-expectancy context.", "Страновые показатели населения, доступа к интернету и продолжительности жизни.", lang=lang),
+        ],
+        "turkey": [
+            _official_source("Türkiye MFA: General Visa Information", "https://www.mfa.gov.tr/general-information-about-turkish-visas.en.mfa", "Official explanation of passport-specific visa rules, the 90-in-180 maximum and the separation between tourist, work and study purposes.", "Официальные правила по гражданству, максимум 90 дней из 180 и различие между туризмом, работой и учёбой.", lang=lang),
+            _official_source("Türkiye eVisa: Official Application And Requirements", "https://evisa.gov.tr/en/info/what-do-i-need-for-my-e-visa-application/", "Official eVisa eligibility and passport-validity checks based on nationality and travel dates.", "Официальная проверка доступности eVisa и срока действия паспорта по гражданству и датам поездки.", lang=lang),
+            _official_source("Migration Management: Residence Permit Types", "https://en.goc.gov.tr/residence-permit-types", "Official short-term, family, student and long-term residence categories, conditions and maximum durations.", "Официальные категории краткосрочного, семейного, студенческого и долгосрочного ВНЖ, условия и максимальные сроки.", lang=lang),
+            _official_source("Migration Management: 2026 Residence Permit Fees", "https://en.goc.gov.tr/documents-for-residence-permit-fee-amount", "Official 2026 residence-card and nationality-dependent permit-fee information.", "Официальные сборы 2026 года за карту ВНЖ и зависящие от гражданства платежи.", lang=lang),
+            _official_source("Türkiye Ministry Of Labour: Work Permit", "https://www.csgb.gov.tr/en/frequently-asked-questions/directorate-general-of-international-labour-force/work-permit/", "Official work-permit effect, application sequence and employer-linked first-permit logic.", "Официальная логика разрешения на работу, последовательность подачи и привязка первого разрешения к работодателю.", lang=lang),
+            _official_source("GoTürkiye: Digital Nomad Application Requirements", "https://goturkiye.com/digitalnomads/application-requirements-for-digital-nomad-visa-and-short-term-residence", "Official citizenship list, age range, degree, foreign-contract and income requirements for the identification certificate.", "Официальный список гражданств, возраст, диплом, иностранный контракт и доход для Digital Nomad Identification Certificate.", lang=lang),
+            _official_source("Türkiye Revenue Administration: Taxation Guide", "https://cdn.gib.gov.tr/api/gibportal-file/file/getFileResources?objectKey=arsiv%2Fonceki-dokumanlar%2Fuser_upload%2Fyayinlar%2FTaxation.pdf", "Official English overview of individual residence and income-source principles; personal treatment still needs a current case-specific check.", "Официальный англоязычный обзор налогового резидентства и источника дохода; личную ситуацию нужно дополнительно проверить по актуальным правилам.", lang=lang),
+            _official_source("World Bank Data: Türkiye", "https://data.worldbank.org/country/turkiye", "Country indicators used for population, inflation, internet and life-expectancy context.", "Страновые показатели населения, инфляции, интернета и продолжительности жизни.", lang=lang),
+        ],
+        "kyrgyzstan": [
+            _official_source("Kyrgyz Republic: 2025 Stay-Period Amendment", "https://www.gov.kg/ru/npa/s/4751", "Current amendment setting the 90-in-180 rule for EAEU citizens and 30-in-60 rule for many listed nationalities.", "Актуальная поправка: 90 дней из 180 для граждан ЕАЭС и 30 дней из 60 для многих граждан из перечня.", lang=lang),
+            _official_source("Kyrgyz Republic eVisa: Entry, DN Visa And Unified Permit", "https://www.ereg.e-gov.kg/get_information.php?lng=en", "Official passport checker and current descriptions of the DN visa, resident card and Unified Permit.", "Официальная проверка режима въезда и актуальные описания DN visa, resident card и Unified Permit.", lang=lang),
+            _official_source("Kyrgyz Republic: Digital Nomad Portal", "https://dnomad.e-gov.kg/index.php?lng=en", "Official application portal for Digital Nomad status in the Kyrgyz Republic.", "Официальный портал подачи на статус Digital Nomad в Кыргызской Республике.", lang=lang),
+            _official_source("Digital Development Ministry: Foreigner Registration", "https://digital.gov.kg/press/novyj-poryadok-registraczii/", "Official explanation of nationality-specific registration exemptions and the 2024 procedure.", "Официальное разъяснение о сроках освобождения от регистрации по гражданству и порядке 2024 года.", lang=lang),
+            _official_source("Kyrgyz Republic: Online Stay Registration", "https://ereg.e-gov.kg/index.php?lng=en", "Official online service for stay registration and residence-permit status checks.", "Официальный онлайн-сервис регистрации по месту пребывания и проверки статуса ВНЖ.", lang=lang),
+            _official_source("Digital Development Ministry: Residence Permit Duration", "https://digital.gov.kg/chavo-drn/na-kakoj-srok-vydaetsya-vid-na-zhitelstvo/", "Official guidance on temporary and permanent residence-permit validity.", "Официальное разъяснение о сроках временного и постоянного вида на жительство.", lang=lang),
+            _official_source("Kyrgyz Republic Tax Code", "https://cbd.minjust.gov.kg/112340/edition/57656/ru", "Primary legal source for the 183-day individual tax-residence test and income-tax rules.", "Первоисточник по правилу 183 дней для налогового резидентства и подоходному налогу.", lang=lang),
+            _official_source("World Bank Data: Kyrgyz Republic", "https://data.worldbank.org/country/kyrgyz-republic", "Country indicators used for population, internet access, inflation and life-expectancy context.", "Страновые показатели населения, доступа к интернету, инфляции и продолжительности жизни.", lang=lang),
+            _official_source("World Bank: Air Quality Analysis For Bishkek", "https://www.worldbank.org/en/events/2023/12/12/report-launch-air-quality-analysis-for-bishkek", "Evidence base for treating Bishkek winter air pollution as a material relocation factor.", "Исследование, подтверждающее, что зимнее загрязнение воздуха в Бишкеке — существенный фактор для переезда.", lang=lang),
+        ],
+        "armenia": [
+            _official_source("Armenia MFA: Visa And Passport Checker", "https://www.mfa.am/en/visa/", "Official passport-specific visa tool, 180-day visa-free framework, visitor-visa limits and the temporary 2026–2027 exemption.", "Официальная проверка визы по паспорту, правило 180 дней, visitor visa и временное освобождение 2026–2027.", lang=lang),
+            _official_source("Armenia eVisa: Official Application", "https://evisa.mfa.am/", "Official Ministry of Foreign Affairs portal for eVisa applications.", "Официальный портал МИД Армении для подачи на eVisa.", lang=lang),
+            _official_source("Migration Service: Residency Status And Visa", "https://migration.mia.gov.am/en/residency-status-and-visa", "Current temporary, employment-based and permanent residence routes and validity periods.", "Актуальные временный, рабочий и постоянный маршруты ВНЖ и сроки действия.", lang=lang),
+            _official_source("Armenia: Residence Application Service", "https://migration.e-gov.am/en/service/residency_application/info", "Official residence application entry point and document lists by ground.", "Официальная подача на статус проживания и списки документов по основаниям.", lang=lang),
+            _official_source("Armenia Work Permit Platform", "https://workpermit.am/en/home", "Official employer process and EAEU exemption for the employment-contract period.", "Официальная процедура работодателя и освобождение граждан ЕАЭС на срок трудового договора.", lang=lang),
+            _official_source("Armenia State Revenue Committee: Resident Individual", "https://www.src.am/storage/File_Link_Uploade/1GeneralInfo_67977eccea69b.pdf", "Official 183-day and centre-of-vital-interests tests for individual tax residence.", "Официальные тесты 183 дней и центра жизненных интересов для налогового резидентства.", lang=lang),
+            _official_source("Armenia MIA: Migration Changes From November 2026", "https://mia.gov.am/2026/01/21/azh-30/", "Official notice on digitisation, residence categories and fee changes scheduled for 1 November 2026.", "Официальное сообщение о цифровизации, категориях проживания и изменениях сборов с 1 ноября 2026 года.", lang=lang),
+            _official_source("World Bank Data: Armenia", "https://data.worldbank.org/country/armenia", "Country indicators used for population, inflation, internet access and life-expectancy context.", "Страновые показатели населения, инфляции, доступа к интернету и продолжительности жизни.", lang=lang),
+        ],
+        "azerbaijan": [
+            _official_source("Azerbaijan State Migration Service: Visa Information", "https://www.migration.gov.az/en/page/49", "Official entry-visa purposes, visa-free country list and stay-registration reminder.", "Официальные цели въездных виз, перечень безвизовых стран и напоминание о регистрации пребывания.", lang=lang),
+            _official_source("ASAN Visa: eVisa Conditions", "https://www.evisa.gov.az/en/conditions", "Official 90-day validity, single-entry status, 30-day stay and processing times for the electronic visa.", "Официальные условия eVisa: срок действия 90 дней, один въезд, пребывание до 30 дней и сроки рассмотрения.", lang=lang),
+            _official_source("State Migration Service: Place-Of-Stay Registration", "https://www.migration.gov.az/index.php/en/oyq", "Official 15-day registration deadline, Kazakhstan exception, documents and no-fee rule.", "Официальный срок регистрации 15 дней, исключение для Казахстана, документы и отсутствие госпошлины.", lang=lang),
+            _official_source("State Migration Service: Temporary Residence", "https://www.migration.gov.az/en/page/73", "Official temporary-residence grounds, validity and application document framework.", "Официальные основания временного проживания, сроки и общий состав документов.", lang=lang),
+            _official_source("State Migration Service: Work Permit", "https://migration.gov.az/en/page/75", "Official employer-led work-permit rules, validity, timing and extension process.", "Официальные правила разрешения на работу через работодателя, срок, рассмотрение и продление.", lang=lang),
+            _official_source("State Migration Service: Migration FAQ", "https://www.migration.gov.az/en/questions", "Official answers on residence filing, work-permit exemptions and address changes.", "Официальные ответы по подаче на ВНЖ, исключениям из work permit и смене адреса.", lang=lang),
+            _official_source("Azerbaijan Tax Code: English Edition", "https://taxes.gov.az/uploads/qanun/2016/mecelle_eng.pdf", "Primary legal source for the more-than-182-day individual tax-residence test.", "Первоисточник по правилу более 182 дней для налогового резидентства физлица.", lang=lang),
+            _official_source("World Bank Data: Azerbaijan", "https://data.worldbank.org/country/azerbaijan", "Country indicators used for population, income, inflation, internet access and life-expectancy context.", "Страновые показатели населения, дохода, инфляции, доступа к интернету и продолжительности жизни.", lang=lang),
+        ],
         "japan": [
             _official_source("Japan Immigration Services Agency: Digital Nomad / Designated Activities", "https://www.moj.go.jp/isa/applications/status/designatedactivities53_00001.html", "Primary rule page for stay length, activity and no-extension language.", "Здесь прямым текстом: 6 месяцев, не продлевается, работать на японских работодателей нельзя.", lang=lang),
             _official_source("Japan MOFA: Specified Visa For Digital Nomad", "https://www.mofa.go.jp/ca/fna/pagewe_000001_00046.html", "MOFA visa page for documents, income proof and insurance requirements.", "Список документов, требования к доходу и страховке от MOFA.", lang=lang),
@@ -7110,12 +8741,126 @@ def page_source_panel(path: str, *, lang: str) -> dict | None:
             _official_source("Hong Kong Immigration Department", "https://www.immd.gov.hk/eng/services/visas/TTPS.html", "Official Immigration Department page for the Top Talent Pass Scheme.", "Страница Департамента иммиграции по Top Talent Pass Scheme — условия и процедура.", lang=lang),
         ],
         "qatar": [
-            _official_source("Hayya Official Portal", "https://hayya.qa/", "Official Hayya portal for Qatar entry and visitor permit checks.", "Официальный портал Hayya — проверка условий въезда и visitor permits в Катар.", lang=lang),
-            _official_source("Qatar Ministry of Interior", "https://portal.moi.gov.qa/", "Official Qatar MOI portal for immigration and visa services.", "Официальный портал МВД Катара по иммиграционным и визовым вопросам.", lang=lang),
+            _official_source("Qatar MOI: On-Arrival Visas", "https://portal.moi.gov.qa/wps/portal/MOIInternet/departmentcommittees/ganationalborderexpatriateaffairs/", "Official 30- and 90-day on-arrival categories and nationality-specific entry conditions.", "Официальные категории въезда по прибытии на 30 и 90 дней и условия по гражданству.", lang=lang),
+            _official_source("Hayya Official Portal", "https://hayya.qa/", "Official portal for Qatar visitor permit and entry checks.", "Официальный портал для проверки visitor permit и условий въезда в Катар.", lang=lang),
+            _official_source("Hukoomi: Residence And Work Permits", "https://portal.www.gov.qa/wps/wcm/connect/Hukoomi%2BWeb%2BContent/Hukoomi/Topics/Visas%2Band%2BOfficial%2BDocuments/residenceandworkpermits", "Official employer-led Work Residence Permit and family sponsorship overview.", "Официальный обзор Work Residence Permit через работодателя и семейного спонсорства.", lang=lang),
+            _official_source("Hukoomi: Visa And Family Residence Overview", "https://portal.www.gov.qa/wps/wcm/connect/hukoomi%2Bweb%2Bcontent/hukoomi/topics/visas%2Band%2Bofficial%2Bdocuments/visas", "Official family residence and visit overview, including sponsor, income and document checks.", "Официальный обзор семейного проживания и визитов, включая спонсора, доход и документы.", lang=lang),
+            _official_source("Qatar Ministry Of Labour: Work Permit Guide", "https://www.mol.gov.qa/admin/EServices/User%20Guide%20for%20Work-Permits%20-%20%28Categories-%20Family-Residency.%20Permanent%20-Residency.%20GCC%20Citizen.%20Investors%20Residency%29.pdf", "Official work-permit process for family-sponsored, permanent-resident, GCC and investor residents.", "Официальная процедура work permit для семейных, постоянных, GCC- и investor-резидентов.", lang=lang),
+            _official_source("Qatar Ministry Of Justice: Real Estate Residence", "https://www.moj.gov.qa/en/departments/non-qatari-ownership-and-use-real-estate", "Official QAR 730,000 and QAR 3,650,000 property-residence thresholds and annual-stay condition.", "Официальные пороги QAR 730 000 и QAR 3 650 000 для недвижимости и условие ежегодного пребывания.", lang=lang),
+            _official_source("Qatar General Tax Authority: Income Tax", "https://gta.gov.qa/en/laws", "Official salary exemption, 10% taxable-income context and individual residence definition.", "Официальное освобождение зарплаты, контекст ставки 10% и определение налогового резидента.", lang=lang),
+            _official_source("World Bank Data: Qatar", "https://data.worldbank.org/country/qatar", "Country indicators used for population, income, inflation, internet access and life expectancy.", "Страновые показатели населения, дохода, инфляции, доступа к интернету и продолжительности жизни.", lang=lang),
         ],
         "saudi": [
-            _official_source("Saudi eVisa Official Portal", "https://visa.visitsaudi.com/", "Official Saudi tourism eVisa portal for application and stay checks.", "Официальный портал Saudi eVisa — подача заявки и проверка условий пребывания.", lang=lang),
-            _official_source("Visit Saudi: Visa Information", "https://www.visitsaudi.com/en/travel-regulations", "Official tourism visa information and travel regulation hub.", "Официальный туристический раздел по визам и правилам въезда в Саудовскую Аравию.", lang=lang),
+            _official_source("Saudi eVisa Official Portal", "https://visa.visitsaudi.com/", "Official one-year, multiple-entry tourism eVisa and 90-day stay conditions for eligible nationalities.", "Официальные условия годовой многократной туристической eVisa и пребывания до 90 дней для подходящих гражданств.", lang=lang),
+            _official_source("Saudi National Platform: Visit Visa", "https://my.gov.sa/en/experience/615129/615469", "Official visa finder covering eVisa, visa on arrival and mission applications by nationality and travel purpose.", "Официальный визовый навигатор: eVisa, виза по прибытии и подача через консульство в зависимости от гражданства и цели.", lang=lang),
+            _official_source("Saudi HRSD: Issue And Renew Work Permit", "https://www.hrsd.gov.sa/en/ministry-services/services/%D8%A5%D8%B5%D8%AF%D8%A7%D8%B1-%D9%88-%D8%AA%D8%AC%D8%AF%D9%8A%D8%AF-%D8%B1%D8%AE%D8%B5-%D8%A7%D9%84%D8%B9%D9%85%D9%84", "Official employer service explaining that the work permit is a condition for ordinary residence issuance or renewal.", "Официальный сервис работодателя: разрешение на работу является условием выдачи или продления обычной резиденции.", lang=lang),
+            _official_source("Saudi National Platform: Family Residence Visa", "https://my.gov.sa/en/services/2695079", "Official residence-visa service for first-degree family members of Saudi residents and citizens.", "Официальный сервис резидентской визы для ближайших родственников резидентов и граждан.", lang=lang),
+            _official_source("Premium Residency Center: Product Terms", "https://pr.gov.sa/services-terms", "Official thresholds and conditions for investor, entrepreneur, property owner, talent, annual and unlimited-duration products.", "Официальные пороги и условия для инвесторов, предпринимателей, владельцев недвижимости, талантов, годового и бессрочного статуса.", lang=lang),
+            _official_source("Premium Residency Regulations", "https://pr.gov.sa/premium-residency-regulations", "Official SAR 100,000 annual, SAR 800,000 unlimited-duration and specialist-product fee framework.", "Официальные сборы: SAR 100 000 за годовой, SAR 800 000 за бессрочный статус и условия специальных продуктов.", lang=lang),
+            _official_source("ZATCA: Income Tax And Tax Residence", "https://zatca.gov.sa/en/Pages/IncomeTax.aspx", "Official income-tax scope; ZATCA residence guidance uses the permanent-home plus 30-day test or 183 days of presence.", "Официальная сфера действия подоходного налога; для резидентства применяется постоянное жильё плюс 30 дней либо 183 дня присутствия.", lang=lang),
+            _official_source("World Bank Data: Saudi Arabia", "https://data.worldbank.org/country/saudi-arabia", "Country indicators used for population, income, inflation, internet access, unemployment and life expectancy.", "Страновые показатели населения, дохода, инфляции, интернета, безработицы и продолжительности жизни.", lang=lang),
+        ],
+        "oman": [
+            _official_source("Royal Oman Police: eVisa Portal", "https://evisa.rop.gov.om/", "Official visa eligibility wizard and application portal for passport-specific tourist routes.", "Официальный визовый мастер и портал подачи для туристических режимов по паспорту.", lang=lang),
+            _official_source("Gov.om: Get A Work Visa", "https://gov.om/en/w/get-a-work-visa", "Official employer-led work visa requirements, documents, fee and occupation-matching rule.", "Официальные требования рабочей визы через работодателя, документы, сбор и совпадение профессии.", lang=lang),
+            _official_source("Gov.om: Joining Relatives Visa", "https://gov.om/en/w/get-joining-relatives-visa", "Official family residence service for spouses and children under 21.", "Официальный сервис семейной резиденции для супругов и детей младше 21 года.", lang=lang),
+            _official_source("Gov.om: Investor Visa", "https://gov.om/en/w/get-investor-visa", "Official five- and ten-year investor visa service and current government fees.", "Официальная услуга инвесторской визы на 5 и 10 лет и действующие государственные сборы.", lang=lang),
+            _official_source("Invest Oman: Golden Residency", "https://investoman.om/tr/media-center/blog/seyahat-1/oman-steps-into-the-global-spotlight-with-launch-of-10-year-golden-residency-12", "Official renewable 10-year programme, seven investment routes and OMR 200,000 threshold.", "Официальная возобновляемая программа на 10 лет, семь инвестиционных маршрутов и порог OMR 200 000.", lang=lang),
+            _official_source("Oman Tax Authority: Personal Income Tax Law", "https://tms.taxoman.gov.om/portal/en/web/taxportal/w/issuance-of-personal-income-tax-pit-law", "Official 2028 start date, OMR 42,000 annual threshold and 5% rate.", "Официальная дата начала в 2028 году, годовой порог OMR 42 000 и ставка 5%.", lang=lang),
+            _official_source("Oman Tax Authority: Income Tax Law", "https://tms.taxoman.gov.om/portal/documents/20126/1455220/income%2Btax%2Blaw%2Benglish.pdf", "Primary source for the 183-day individual tax-residence test.", "Первоисточник по правилу 183 дней для налогового резидентства физлица.", lang=lang),
+            _official_source("World Bank Data: Oman", "https://data.worldbank.org/country/oman", "Country indicators used for population, income, inflation, internet access, unemployment and life expectancy.", "Страновые показатели населения, дохода, инфляции, интернета, безработицы и продолжительности жизни.", lang=lang),
+        ],
+        "bahrain": [
+            _official_source("Bahrain eVisa Portal", "https://www.evisa.gov.bh/", "Official passport-specific visa eligibility checker and application portal.", "Официальная проверка визовой доступности по паспорту и портал подачи.", lang=lang),
+            _official_source("LMRA: Employer Services", "https://www.lmra.gov.bh/en/page/show/213", "Official work-permit, renewal, occupation-change, employer-transfer and dependant-service overview.", "Официальный обзор рабочих разрешений, продления, смены профессии и работодателя, а также статуса иждивенцев.", lang=lang),
+            _official_source("LMRA: Family Sponsorship", "https://blog.lmra.gov.bh/en/2021/03/10/announcement-sponsorship-of-the-expatriate-employee-family/", "Official BHD 400 income threshold and spouse/dependant sponsorship rules up to age 24.", "Официальный порог дохода BHD 400 и правила спонсорства супруга и иждивенцев до 24 лет.", lang=lang),
+            _official_source("Bahrain Golden Residency", "https://services.bahrain.bh/wps/portal/GoldenResidency_en", "Official ten-year programme, benefits, qualifying routes, documents and current fees.", "Официальная 10-летняя программа: преимущества, основания, документы и действующие сборы.", lang=lang),
+            _official_source("Bahrain: Work Permit For Golden Residency Holders", "https://www.bahrain.bh/wps/portal/en/BNP/ServicesCatalogue/GSX-UI-PServiceDetails?psID=2750", "Official separate work-permit requirement and investor-partner exception.", "Официальное требование отдельного рабочего пермита и исключение для инвестора-партнёра.", lang=lang),
+            _official_source("Bahrain: Self-Sponsor Residency Manual", "https://www.bahrain.bh/wps/wcm/connect/0928feee-f790-4596-bc8b-de7f59a1ba48/Self-SponsorResidencyServices_UserManual.pdf?CACHEID=ROOTWORKSPACE-0928feee-f790-4596-bc8b-de7f59a1ba48-pKtrDjs&MOD=AJPERES", "Official two-, five- and ten-year self-sponsor routes for investors, homeowners and retirees.", "Официальные самостоятельные маршруты на 2, 5 и 10 лет для инвесторов, владельцев жилья и пенсионеров.", lang=lang),
+            _official_source("Bahrain National Bureau For Revenue", "https://www.nbr.gov.bh/", "Official tax portal for VAT and business-tax obligations; individual salary treatment requires case-specific review.", "Официальный налоговый портал по НДС и налогам бизнеса; налогообложение личного дохода требует проверки конкретной ситуации.", lang=lang),
+            _official_source("World Bank Data: Bahrain", "https://data.worldbank.org/country/bahrain", "Country indicators used for population, income, inflation, internet access, unemployment and life expectancy.", "Страновые показатели населения, дохода, инфляции, интернета, безработицы и продолжительности жизни.", lang=lang),
+        ],
+        "jordan": [
+            _official_source("Jordan MOI: Visa And Residence E-Services", "https://moi.gov.jo/EN/Pages/E_Applications_for_Visa_and_Residence_Permits", "Official portal listing visit, work, family, work-residence and five-year residence services.", "Официальный портал с гостевыми, рабочими, семейными и пятилетними резидентскими сервисами.", lang=lang),
+            _official_source("Jordan MOI: Restricted And Non-Restricted Nationalities", "https://moi.gov.jo/en/pages/restricted_and_non_restricted_countries_nationalities", "Official nationality list showing who needs prior approval before entry.", "Официальный список гражданств, которым требуется или не требуется предварительное одобрение.", lang=lang),
+            _official_source("Jordan MOI: Visa FAQ", "https://www.moi.gov.jo/EN/Modules/FAQ", "Official eVisa guidance covering eligible categories, residence-based exceptions and electronic applications.", "Официальные разъяснения по eVisa, категориям заявителей и электронной подаче.", lang=lang),
+            _official_source("Jordan Ministry Of Tourism: Visa Information", "https://www.mota.gov.jo/EN/Pages/Visa_information", "Official JOD 40 single visa-on-arrival fee and nationality-specific advance-visa warning.", "Официальный сбор JOD 40 за однократную визу по прибытии и предупреждение о проверке гражданства.", lang=lang),
+            _official_source("Jordan Ministry Of Labour: Non-Jordanian Workers", "https://mol.gov.jo/EN/Pages/NonJordanian_workers", "Official current work-permit hub for non-Jordanian workers and occupation rules.", "Официальный раздел разрешений на работу иностранцев и правил по профессиям.", lang=lang),
+            _official_source("Invest Jordan: Citizenship And Residence Through Investment", "https://invest.jo/en/ready-doing-business/jordanian-citizenship-through-investment", "Official 2026 five-year property-residence thresholds and holding conditions.", "Официальные пороги и условия пятилетнего ВНЖ через недвижимость по правилам 2026 года.", lang=lang),
+            _official_source("Jordan Income And Sales Tax Department: Individual Rates", "https://istd.gov.jo/En/NewsDetails/13_increase_in_tax_revenue", "Official progressive individual income-tax rates and personal exemption context.", "Официальная прогрессивная шкала налога физлиц и контекст личных освобождений.", lang=lang),
+            _official_source("World Bank Data: Jordan", "https://data.worldbank.org/country/jordan", "Country indicators used for population, income, inflation, internet access, unemployment and life expectancy.", "Страновые показатели населения, дохода, инфляции, интернета, безработицы и продолжительности жизни.", lang=lang),
+        ],
+        "lebanon": [
+            _official_source("Lebanese General Security: Visa Conditions", "https://www.general-security.gov.lb/en/posts/159", "Official visa types, prior approval, visitor documents and work-visa distinction.", "Официальные типы виз, предварительное одобрение, документы гостя и отличие рабочей визы.", lang=lang),
+            _official_source("Lebanese General Security: Annual Residence", "https://www.general-security.gov.lb/en/posts/241", "Official annual residence routes for family, monthly income, bank balance and qualifying investors.", "Официальные годовые маршруты для семьи, ежемесячного дохода, банковского счёта и подходящих инвесторов.", lang=lang),
+            _official_source("Lebanese General Security: Six-Month Bank Residence", "https://www.general-security.gov.lb/en/posts/497", "Official multiple-entry residence, LBP 1.5 billion balance and no-work undertaking.", "Официальная многократная резиденция, баланс LBP 1,5 млрд и обязательство не работать.", lang=lang),
+            _official_source("Lebanese General Security: Work Residence", "https://www.general-security.gov.lb/en/posts/23", "Official first-issue and renewal documents linking work permit, contract and residence.", "Официальные документы первой выдачи и продления, связывающие work permit, контракт и резиденцию.", lang=lang),
+            _official_source("Lebanese General Security: Residence Fees", "https://www.general-security.gov.lb/en/posts/169", "Official current fees by work-residence category and other annual residence types.", "Официальные действующие сборы по категориям рабочей и другой годовой резиденции.", lang=lang),
+            _official_source("Lebanon Ministry Of Finance: Salary Tax", "https://finance.gov.lb/ar-lb/Taxation/Individuals/D-S/Pages/Tax-on-DASS.aspx", "Official progressive salary rates; current thresholds and foreign-currency treatment require a live calculation.", "Официальные прогрессивные ставки зарплатного налога; пороги и валютный доход требуют актуального расчёта.", lang=lang),
+            _official_source("UK FCDO: Lebanon Travel Advice", "https://www.gov.uk/foreign-travel-advice/lebanon", "Current area-specific security warnings, departure planning and insurance implications.", "Актуальные предупреждения по районам, план выезда и влияние рекомендаций на страховку.", lang=lang),
+            _official_source("World Bank Data: Lebanon", "https://data.worldbank.org/country/lebanon", "Country indicators used for population, income, inflation, internet access, unemployment and life expectancy.", "Страновые показатели населения, дохода, инфляции, интернета, безработицы и продолжительности жизни.", lang=lang),
+        ],
+        "israel": [
+            _official_source("Israel Ministry Of Tourism: ETA-IL", "https://www.gov.il/en/service/group_entry_to_israel", "Official 1 January 2025 ETA requirement and passport-validity rules for visa-exempt travellers.", "Официальное требование ETA с 1 января 2025 года и сроки действия паспорта для безвизовых путешественников.", lang=lang),
+            _official_source("Israel MFA: Tourist Visa Requirements", "https://www.gov.il/en/departments/dynamiccollectors/ashrotzarim?skip=0", "Official passport-specific visa and ETA eligibility catalogue.", "Официальный каталог визовых требований и ETA по гражданству и типу паспорта.", lang=lang),
+            _official_source("PIBA: Foreign Worker Rights", "https://www.gov.il/BlobFolder/generalpage/foreign_workers_rights_booklets/he/foreign_workers_rights_booklets_en.pdf", "Official B/1 employer, sector, full-time work and registration rules.", "Официальные правила B/1 по работодателю, отрасли, полной занятости и регистрации.", lang=lang),
+            _official_source("PIBA: A/1 Under The Law Of Return", "https://www.gov.il/en/service/law_of_return_entitled_request_to_settle1", "Official five-year temporary residence with permission to live and work for eligible applicants.", "Официальная временная резиденция до пяти лет с правом жить и работать для правомочных заявителей.", lang=lang),
+            _official_source("PIBA: Status For Spouses", "https://www.gov.il/en/service/requesting-status-for-foreign-life-partner", "Official graduated family-status application for spouses of citizens and permanent residents.", "Официальная поэтапная семейная процедура для супругов граждан и постоянных резидентов.", lang=lang),
+            _official_source("Ministry Of Aliyah: New Immigrant Rights", "https://www.gov.il/en/pages/new-olim-rights-guide?chapterindex=12", "Official current guide to arrival documents, health-fund registration and initial absorption support.", "Официальный актуальный гид по документам после прибытия, регистрации в больничной кассе и начальной поддержке.", lang=lang),
+            _official_source("Israel Tax Authority: 2026 Tax Coordination", "https://www.gov.il/en/pages/income-tax-guide-for--tax-relief-and-tax-coordination?chapterIndex=1", "Official 2026 relief, credit-point and multiple-employer withholding guidance.", "Официальные правила 2026 года по льготам, credit points и удержанию при нескольких работодателях.", lang=lang),
+            _official_source("UK FCDO: Israel Travel Advice", "https://www.gov.uk/foreign-travel-advice/israel", "Current area-specific warnings, insurance implications and regional-security updates.", "Актуальные предупреждения по районам, влияние на страховку и обновления региональной безопасности.", lang=lang),
+            _official_source("World Bank Data: Israel", "https://data.worldbank.org/country/israel", "Country indicators used for population, income, inflation, internet access, unemployment and life expectancy.", "Страновые показатели населения, дохода, инфляции, интернета, безработицы и продолжительности жизни.", lang=lang),
+        ],
+        "iran": [
+            _official_source("Iran MFA: Electronic Visa Portal", "https://evisa.mfa.ir/en/", "Official application entry point and passport-specific decision workflow for Iranian visas.", "Официальный портал подачи и проверки визового решения по конкретному паспорту.", lang=lang),
+            _official_source("Iran MFA: Visa Types", "https://evisa.mfa.ir/en/visa-types/", "Official catalogue covering tourist, entry, temporary work, education, investment and family-related visa purposes.", "Официальный каталог туристической, въездной, временной рабочей, учебной, инвестиционной и семейной целей.", lang=lang),
+            _official_source("Iran Embassy: Entry Visa With The Right To Work", "https://iran-embassy.org.in/consular/visa/visit3.htm", "Official consular explanation that the inviting Iranian party must obtain prior permission for work entry.", "Официальное консульское разъяснение: иранская принимающая сторона заранее получает разрешение для рабочего въезда.", lang=lang),
+            _official_source("ILO NATLEX: Iran Labour Code", "https://natlex.ilo.org/dyn/natlex2/natlex2/files/download/21843/IRN21843%20Eng2.pdf", "Primary labour-law text covering employer need, foreign-worker qualifications, skills transfer and one-year permit validity.", "Текст трудового законодательства по потребности работодателя, квалификации иностранца, передаче навыков и годовому разрешению.", lang=lang),
+            _official_source("Iranian National Tax Administration", "https://tax.gov.ir/", "Official tax authority portal; current payroll treatment and annual thresholds require a case-specific calculation.", "Официальный налоговый портал; удержания и ежегодные пороги нужно считать для конкретного контракта.", lang=lang),
+            _official_source("UK FCDO: Iran Entry Requirements", "https://www.gov.uk/foreign-travel-advice/iran/entry-requirements", "Current visa, passport, dual-national and entry-rule cautions.", "Актуальные визовые, паспортные и въездные предупреждения, включая двойное гражданство.", lang=lang),
+            _official_source("UK FCDO: Iran Safety And Security", "https://www.gov.uk/foreign-travel-advice/iran/safety-and-security", "Current all-travel warning, detention risk, money restrictions and emergency-planning context.", "Действующее предупреждение против любых поездок, риск задержания, денежные ограничения и планирование выезда.", lang=lang),
+            _official_source("World Bank Data: Iran", "https://data.worldbank.org/country/iran-islamic-rep", "Country indicators used for population, income, inflation, internet access, unemployment and life expectancy.", "Страновые показатели населения, дохода, инфляции, интернета, безработицы и продолжительности жизни.", lang=lang),
+        ],
+        "yemen": [
+            _official_source("Yemen MOFA: eVisa Launch", "https://www.mofa-ye.org/Pages/32929/", "Official 2025 launch notice and link to the national electronic visa system.", "Официальное сообщение о запуске национальной электронной визы в 2025 году.", lang=lang),
+            _official_source("Yemen eVisa: Official Portal", "https://yemenevisa.org/visas", "Official application entry point for authority-approved visas through recognised entry points.", "Официальный портал заявления на визу с одобрением компетентных органов и разрешённым пунктом въезда.", lang=lang),
+            _official_source("Yemen Ministry Of Social Affairs And Labour", "https://www.mosal-ye.net/ar", "Official Aden ministry services for foreign-worker entry visas and workforce registration.", "Официальные услуги министерства в Адене для въездной визы и регистрации иностранной рабочей силы.", lang=lang),
+            _official_source("ILO NATLEX: Yemen Labour Code", "https://natlex.ilo.org/dyn/natlex2/r/natlex/fe/details?p3_isn=44043", "Primary labour-law record, including the statutory cap on non-Yemeni employment.", "Карточка первичного трудового закона, включая установленный предел занятости не-йеменцев.", lang=lang),
+            _official_source("Yemen Tax Authority: Income Tax Law No. 17", "https://tax.gov.ye/images/portfolio/tax/files/incometax/17-en.pdf", "Primary income-tax law covering salary and remuneration; current territorial administration needs local calculation.", "Первичный закон о налоге на зарплаты и вознаграждения; актуальное применение нужно считать по территории.", lang=lang),
+            _official_source("UK FCDO: Yemen Entry Requirements", "https://www.gov.uk/foreign-travel-advice/yemen/entry-requirements", "Current visa, passport registration, currency declaration and cash-access rules.", "Актуальные правила визы, регистрации паспорта, декларирования валюты и доступа к наличным.", lang=lang),
+            _official_source("UK FCDO: Yemen Safety And Security", "https://www.gov.uk/foreign-travel-advice/yemen/safety-and-security", "Current all-travel warning, kidnapping, detention, landmine, transport and fuel risks.", "Действующее предупреждение против любых поездок, похищения, задержания, мины, транспорт и топливо.", lang=lang),
+            _official_source("World Bank Data: Yemen", "https://data.worldbank.org/?locations=YE", "Country indicators used for population, income, internet access, unemployment and life expectancy.", "Страновые показатели населения, дохода, интернета, безработицы и продолжительности жизни.", lang=lang),
+            _official_source("World Bank: Yemen Economic Monitor", "https://www.worldbank.org/en/news/press-release/2025/11/17/economic-hardship-deepens-in-yemen", "Evidence on separate economic zones, rial volatility, food inflation, liquidity and public-service disruption.", "Данные о разных экономических зонах, курсе риала, продовольственной инфляции, ликвидности и перебоях госуслуг.", lang=lang),
+        ],
+        "syria": [
+            _official_source("Syria eVisa: Official Portal", "https://www.evisa.sy", "Official entry point for passport-specific Syrian visa applications and decisions.", "Официальный портал подачи и получения решения по визе для конкретного паспорта.", lang=lang),
+            _official_source("Syrian Embassy In Paris: Visa Notice", "https://ambassadesyrie.fr/new/visa/", "Official embassy notice directing all entry-visa applications to the national eVisa portal.", "Официальное сообщение посольства: заявления на въездную визу подаются через национальный портал eVisa.", lang=lang),
+            _official_source("ILO NATLEX: Syrian Labour Law No. 17", "https://www.ilo.org/dyn/natlex/natlex_browse.details?p_isn=84492&p_lang=en", "Primary labour-law record covering the permit requirement for non-national workers.", "Карточка первичного трудового закона с требованием разрешения для иностранных работников.", lang=lang),
+            _official_source("WIPO Lex: Syria Income Tax Law", "https://www.wipo.int/wipolex/en/legislation/details/20751", "Primary income-tax law used to verify the scope of salary and wage taxation; current calculations need a local check.", "Первичный закон о налоге на доход для проверки охвата зарплаты; актуальный расчёт требует местной проверки.", lang=lang),
+            _official_source("UK FCDO: Syria Entry Requirements", "https://www.gov.uk/foreign-travel-advice/syria/entry-requirements", "Current eVisa, passport and prior-travel cautions, with nationality-specific limits.", "Актуальные сведения об eVisa, паспорте и предыдущих поездках с ограничениями по гражданству.", lang=lang),
+            _official_source("UK FCDO: Syria Safety And Security", "https://www.gov.uk/foreign-travel-advice/syria/safety-and-security", "Current all-travel warning, terrorism, kidnapping, mines, infrastructure and money restrictions.", "Действующее предупреждение против любых поездок, терроризм, похищения, мины, инфраструктура и денежные ограничения.", lang=lang),
+            _official_source("World Bank Data: Syrian Arab Republic", "https://data.worldbank.org/country/syrian-arab-republic?most_recent_value_desc=false", "Country indicators used for population, income, internet access, unemployment and life expectancy.", "Страновые показатели населения, дохода, интернета, безработицы и продолжительности жизни.", lang=lang),
+            _official_source("World Bank: Syria Economic Update", "https://www.worldbank.org/en/news/press-release/2025/07/07/new-world-bank-report-highlights-syria-s-economic-challenges-and-recovery-prospects-for-2025", "Macroeconomic context for inflation, banking constraints and the uncertainty behind any living-cost estimate.", "Макроэкономический контекст инфляции, банковских ограничений и неопределённости любой оценки расходов.", lang=lang),
+        ],
+        "iraq": [
+            _official_source("Iraq Ur Portal: Federal eVisa", "https://ur.gov.iq/index/show-eservice/51423/18/org", "Official federal Iraqi electronic entry-visa service with electronic payment.", "Официальный федеральный сервис электронной въездной визы Ирака с онлайн-оплатой.", lang=lang),
+            _official_source("Iraq Ministry Of Labour: Foreign Workers", "https://ur.gov.iq/index/show-eservice/51008/10030/org", "Official employer-led recruitment, labour-market check, work-permit renewal and document process.", "Официальный процесс найма через работодателя, проверки рынка труда, продления разрешения и документов.", lang=lang),
+            _official_source("KRG: Visa Issuance", "https://xizmet.gov.krd/en/service/moi-29-en-0", "Official passport eligibility, eVisa and visa-on-arrival rules for the Kurdistan Region.", "Официальные правила по паспортам, eVisa и визе по прибытии для Иракского Курдистана.", lang=lang),
+            _official_source("KRG: Foreign National Visa Application", "https://service.gov.krd/en/service/dfr-14-en", "Official advance application and requirement to leave or obtain a residence card before expiry.", "Официальная предварительная заявка и требование выехать либо получить карточку резидента до истечения визы.", lang=lang),
+            _official_source("KRG Official eVisa Portal", "https://visit.gov.krd/", "Official 30-day stay, 90-day entry validity and passport-specific eligibility checker.", "Официальные 30 дней пребывания, 90 дней для въезда и проверка доступности по паспорту.", lang=lang),
+            _official_source("Iraq General Commission For Taxes", "https://tax.mof.gov.iq/%D8%AF%D9%84%D9%8A%D9%84-%D8%B6%D8%B1%D9%8A%D8%A8%D8%A9-%D8%A7%D9%84%D8%AF%D8%AE%D9%84/", "Official income-tax guide, allowances and progressive individual rates.", "Официальный гид по подоходному налогу, освобождениям и прогрессивным ставкам физлиц.", lang=lang),
+            _official_source("UK FCDO: Iraq Travel Advice", "https://www.gov.uk/foreign-travel-advice/iraq", "Current area-specific warnings, insurance implications and security planning.", "Актуальные предупреждения по районам, влияние на страховку и планирование безопасности.", lang=lang),
+            _official_source("World Bank Data: Iraq", "https://data.worldbank.org/country/iraq", "Country indicators used for population, income, inflation, internet access, unemployment and life expectancy.", "Страновые показатели населения, дохода, инфляции, интернета, безработицы и продолжительности жизни.", lang=lang),
+        ],
+        "kuwait": [
+            _official_source("Kuwait Visa: Tourist Visa", "https://kuwaitvisa.moi.gov.kw/", "Official tourist-visa portal with passport, entry-validity, stay-duration and work-prohibition rules.", "Официальный туристический визовый портал: паспорт, срок въезда, пребывание и запрет работы.", lang=lang),
+            _official_source("Kuwait Government Online: Work Visa For Private Contract", "https://e.gov.kw/sites/kgoenglish/Pages/Services/MOI/PrivateSectorWorkEntryVisa.aspx", "Official employer-led private-sector work-entry visa, permit documents and current fee.", "Официальная рабочая въездная виза частного сектора через работодателя, документы и действующий сбор.", lang=lang),
+            _official_source("Kuwait Government Online: Article 18 Residence", "https://www.e.gov.kw/sites/kgoEnglish/Pages/Services/MOI/WorkResidenceArticle18.aspx", "Official first issue, renewal, cancellation and transfer requirements for private-sector residence.", "Официальные требования первой выдачи, продления, отмены и переноса резиденции Article 18.", lang=lang),
+            _official_source("Kuwait Government Online: Family Residence", "https://e.gov.kw/sites/kgoenglish/Pages/Services/MOI/EntryJoinHisFamily.aspx", "Official Article 22 family-entry route and KWD 450 sponsor-income threshold.", "Официальный семейный маршрут Article 22 и порог дохода спонсора KWD 450.", lang=lang),
+            _official_source("Kuwait MOI: Residence Services", "https://www.moi.gov.kw/main/eservices/residence/services", "Official catalogue for Articles 17, 18, 19, 22, 23 and 24 residence categories.", "Официальный каталог категорий резиденции Articles 17, 18, 19, 22, 23 и 24.", lang=lang),
+            _official_source("Kuwait Government Online: Multiple-Trip Exit Permits", "https://e.gov.kw/sites/kgoenglish/Pages/ApplicationPages/NewsDetail.aspx?nid=34679510", "Official 2026 service allowing employers to pre-approve multiple departures for workers.", "Официальный сервис 2026 года для предварительного одобрения работодателем нескольких выездов работника.", lang=lang),
+            _official_source("Kuwait Ministry Of Finance: 2026/27 Budget", "https://mof.gov.kw/MofBudget/PDF/Budget27-26Eng.pdf", "Official budget records zero individual income-tax revenue and separates company-tax receipts.", "Официальный бюджет: нулевые поступления налога на доходы физлиц и отдельные налоги компаний.", lang=lang),
+            _official_source("World Bank Data: Kuwait", "https://data.worldbank.org/country/kuwait", "Country indicators used for population, income, inflation, internet access, unemployment and life expectancy.", "Страновые показатели населения, дохода, инфляции, интернета, безработицы и продолжительности жизни.", lang=lang),
         ],
     }
     guide_sources = {
@@ -7152,6 +8897,23 @@ def page_source_panel(path: str, *, lang: str) -> dict | None:
             "united-arab-emirates": ["uae"],
             "singapore": ["singapore"],
             "south-korea": ["south-korea"],
+            "georgia": ["georgia"],
+            "turkey": ["turkey"],
+            "kyrgyzstan": ["kyrgyzstan"],
+            "armenia": ["armenia"],
+            "azerbaijan": ["azerbaijan"],
+            "qatar": ["qatar"],
+            "saudi-arabia": ["saudi"],
+            "oman": ["oman"],
+            "bahrain": ["bahrain"],
+            "kuwait": ["kuwait"],
+            "jordan": ["jordan"],
+            "lebanon": ["lebanon"],
+            "israel": ["israel"],
+            "iran": ["iran"],
+            "yemen": ["yemen"],
+            "syria": ["syria"],
+            "iraq": ["iraq"],
         }
         keys = country_source_map.get(country_key, ["world_bank"])
     elif compare_match:
@@ -9159,6 +10921,23 @@ RU_COUNTRY_FACT_VALUES = {
     "move-to-brunei": {"capital": "Бандар-Сери-Бегаван", "languages": "малайский"},
     "move-to-myanmar": {"capital": "Нейпьидо", "languages": "бирманский"},
     "move-to-uzbekistan": {"capital": "Ташкент", "languages": "узбекский"},
+    "move-to-georgia": {"capital": "Тбилиси", "languages": "грузинский"},
+    "move-to-turkey": {"capital": "Анкара", "languages": "турецкий"},
+    "move-to-kyrgyzstan": {"capital": "Бишкек", "languages": "кыргызский, русский"},
+    "move-to-armenia": {"capital": "Ереван", "languages": "армянский"},
+    "move-to-azerbaijan": {"capital": "Баку", "languages": "азербайджанский"},
+    "move-to-qatar": {"capital": "Доха", "languages": "арабский"},
+    "move-to-saudi-arabia": {"capital": "Эр-Рияд", "languages": "арабский"},
+    "move-to-oman": {"capital": "Маскат", "languages": "арабский"},
+    "move-to-bahrain": {"capital": "Манама", "languages": "арабский"},
+    "move-to-kuwait": {"capital": "Эль-Кувейт", "languages": "арабский"},
+    "move-to-jordan": {"capital": "Амман", "languages": "арабский"},
+    "move-to-lebanon": {"capital": "Бейрут", "languages": "арабский"},
+    "move-to-israel": {"capital": "Иерусалим", "languages": "иврит, арабский"},
+    "move-to-iran": {"capital": "Тегеран", "languages": "персидский"},
+    "move-to-yemen": {"capital": "Сана", "languages": "арабский"},
+    "move-to-syria": {"capital": "Дамаск", "languages": "арабский"},
+    "move-to-iraq": {"capital": "Багдад", "languages": "арабский, курдский"},
 }
 
 
@@ -9288,7 +11067,8 @@ def ru_country(slug: str):
     internal_links = polish_ru_data(internal_links)
     source_panel_data = polish_ru_data(source_panel_data)
     if source_panel_data:
-        source_panel_data = {**source_panel_data, "sources": source_panel_data["sources"][:5]}
+        source_limit = 9 if slug in {"move-to-israel", "move-to-yemen"} else (8 if slug in {"move-to-armenia", "move-to-azerbaijan", "move-to-qatar", "move-to-saudi-arabia", "move-to-oman", "move-to-bahrain", "move-to-kuwait", "move-to-jordan", "move-to-lebanon", "move-to-iran", "move-to-yemen", "move-to-syria", "move-to-iraq"} else (9 if slug == "move-to-kyrgyzstan" else (8 if slug == "move-to-turkey" else (7 if slug == "move-to-georgia" else 5))))
+        source_panel_data = {**source_panel_data, "sources": source_panel_data["sources"][:source_limit]}
     schema = [
         breadcrumb_schema([("Страны", "/ru/countries/")], row["title"], path),
         organization_schema(),
@@ -10486,10 +12266,10 @@ def render_blog_index(*, lang: str, page: int = 1):
     is_ru = lang == "ru"
     path = "/ru/blog/" if is_ru else "/blog/"
     search_query = request.args.get("q", "").strip()[:160]
-    if search_query:
-        page = 1
     query_page = request.args.get("page", type=int)
-    if query_page and not search_query:
+    if search_query:
+        page = max(query_page or 1, 1)
+    elif query_page:
         if query_page <= 1:
             return redirect(path, 301)
         return redirect(f"{path}page/{query_page}/", 301)
@@ -10501,7 +12281,7 @@ def render_blog_index(*, lang: str, page: int = 1):
         if is_ru else
         "Guides, comparisons and practical relocation advice for expats moving across Asia."
     )
-    if page > 1:
+    if page > 1 and not search_query:
         _pg = f"Страница {page}" if is_ru else f"Page {page}"
         title = f"{_base_title} — {_pg}"
         description = f"{_base_description} {_pg}."
@@ -10510,23 +12290,41 @@ def render_blog_index(*, lang: str, page: int = 1):
         description = _base_description
     total_posts = one("SELECT COUNT(*) AS count FROM posts WHERE lang = ?", (lang,))["count"]
     total_pages = max((total_posts + per_page - 1) // per_page, 1)
-    if page > total_pages:
+    if page > total_pages and not search_query:
         abort(404)
-    posts = many(
-        """
-        SELECT id, slug, title, excerpt, date, lang, content
-        FROM posts
-        WHERE lang = ?
-        ORDER BY date DESC, id DESC
-        LIMIT ? OFFSET ?
-        """,
-        (lang, per_page, (page - 1) * per_page),
-    )
     if search_query:
         terms = search_query.casefold().split()
         candidates = many("SELECT * FROM posts WHERE lang = ? ORDER BY date DESC, id DESC", (lang,))
-        posts = [post for post in candidates if all(term in plain_text(post["title"] + " " + (post["excerpt"] or "") + " " + (post["content"] or "")).casefold() for term in terms)]
-        page, total_pages, total_posts = 1, 1, len(posts)
+        ranked_matches = []
+        for position, post in enumerate(candidates):
+            title_text = plain_text(post["title"] or "").casefold()
+            excerpt_text = plain_text(post["excerpt"] or "").casefold()
+            content_text = plain_text(post["content"] or "").casefold()
+            searchable = f"{title_text} {excerpt_text} {content_text}"
+            if all(term in searchable for term in terms):
+                score = sum(
+                    8 if term in title_text else 3 if term in excerpt_text else 1
+                    for term in terms
+                )
+                ranked_matches.append((score, position, post))
+        ranked_matches.sort(key=lambda match: (-match[0], match[1]))
+        matches = [post for _, _, post in ranked_matches]
+        total_posts = len(matches)
+        total_pages = max((total_posts + per_page - 1) // per_page, 1)
+        if page > total_pages:
+            abort(404)
+        posts = matches[(page - 1) * per_page:page * per_page]
+    else:
+        posts = many(
+            """
+            SELECT id, slug, title, excerpt, date, lang, content
+            FROM posts
+            WHERE lang = ?
+            ORDER BY date DESC, id DESC
+            LIMIT ? OFFSET ?
+            """,
+            (lang, per_page, (page - 1) * per_page),
+        )
     posts = [{**dict(post), "topic": article_topic(post, lang), "reading_time": reading_minutes(post["content"] or "")} for post in posts]
     if is_ru:
         # Only prose fields are translated. The slug is URL data and must stay
@@ -10540,10 +12338,11 @@ def render_blog_index(*, lang: str, page: int = 1):
             }
             for post in posts
         ]
-    en_path = "/blog/" if page == 1 else f"/blog/page/{page}/"
-    ru_path = "/ru/blog/" if page == 1 else f"/ru/blog/page/{page}/"
+    seo_page = 1 if search_query else page
+    en_path = "/blog/" if seo_page == 1 else f"/blog/page/{seo_page}/"
+    ru_path = "/ru/blog/" if seo_page == 1 else f"/ru/blog/page/{seo_page}/"
     alternates = localized_page_alternates(en_path=en_path, ru_path=ru_path)
-    canonical_path = path if page == 1 else f"{path}page/{page}/"
+    canonical_path = path if seo_page == 1 else f"{path}page/{seo_page}/"
     trust_panel = blog_trust_panel(lang=lang)
     depth_panel = blog_depth_panel(lang=lang)
     if is_ru:
@@ -10551,8 +12350,8 @@ def render_blog_index(*, lang: str, page: int = 1):
         description = polish_ru_text(description)
         trust_panel = polish_ru_data(trust_panel)
         depth_panel = polish_ru_data(depth_panel)
-    blog_breadcrumb_title = f"Страница {page}" if is_ru and page > 1 else f"Page {page}" if page > 1 else title
-    blog_breadcrumbs = [(_base_title, path)] if page > 1 else []
+    blog_breadcrumb_title = f"Страница {page}" if is_ru and seo_page > 1 else f"Page {page}" if seo_page > 1 else title
+    blog_breadcrumbs = [(_base_title, path)] if seo_page > 1 else []
     schema_items = [
         breadcrumb_schema(blog_breadcrumbs, blog_breadcrumb_title, canonical_path),
         collection_schema(title, description, canonical_path),
@@ -10570,14 +12369,20 @@ def render_blog_index(*, lang: str, page: int = 1):
         alternates=alternates,
         schema=schema_items,
     )
+    if search_query:
+        search_params = urlencode({"q": search_query})
+        page_urls = [f"{path}?{search_params}" + (f"&page={num}" if num > 1 else "") for num in range(1, total_pages + 1)]
+    else:
+        page_urls = [path if num == 1 else f"{path}page/{num}/" for num in range(1, total_pages + 1)]
     pagination = {
         "page": page,
         "per_page": per_page,
         "total_posts": total_posts,
         "total_pages": total_pages,
         "base_path": path,
-        "prev_url": path if page == 2 else f"{path}page/{page - 1}/" if page > 2 else "",
-        "next_url": f"{path}page/{page + 1}/" if page < total_pages else "",
+        "page_urls": page_urls,
+        "prev_url": page_urls[page - 2] if page > 1 else "",
+        "next_url": page_urls[page] if page < total_pages else "",
     }
     if search_query:
         seo["meta_robots"] = "noindex,follow"

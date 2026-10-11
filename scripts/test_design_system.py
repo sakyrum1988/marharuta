@@ -52,6 +52,21 @@ class DesignSystemTests(unittest.TestCase):
         self.assertIn('@media (max-width: 980px)', css)
         self.assertNotIn("matchMedia('(max-width: 720px)')", js)
         self.assertIn('if (wasOpen) btn.focus()', js)
+        self.assertIn("document.documentElement.classList.toggle('rta-nav-lock'", js)
+        self.assertIn('html.rta-nav-lock { overflow: hidden; }', css)
+
+    def test_mobile_navigation_has_localized_state_labels(self):
+        for path, open_label, close_label in (
+            ('/', 'Open menu', 'Close menu'),
+            ('/ru/', 'Открыть меню', 'Закрыть меню'),
+        ):
+            with self.subTest(path=path):
+                body = self.client.get(path).get_data(as_text=True)
+                button = next(attrs for tag, attrs in Document(body).tags
+                              if tag == 'button' and attrs.get('id') == 'rta-burger')
+                self.assertEqual(button['aria-label'], open_label)
+                self.assertEqual(button['data-open-label'], open_label)
+                self.assertEqual(button['data-close-label'], close_label)
 
     def test_home_owns_its_layout_and_uses_local_responsive_artwork(self):
         for prefix in ('', '/ru'):

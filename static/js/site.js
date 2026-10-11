@@ -2,6 +2,16 @@
   var nav = document.getElementById('rta-nav');
   var btn = document.getElementById('rta-burger');
   var triggers = nav ? nav.querySelectorAll('.rta-nav-trigger') : [];
+  var compactLayout = window.matchMedia('(max-width: 980px)');
+
+  function setMenuState(open) {
+    if (!nav || !btn) return;
+    nav.classList.toggle('rta-nav--open', open);
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    btn.setAttribute('aria-label', open ? btn.dataset.closeLabel : btn.dataset.openLabel);
+    document.documentElement.classList.toggle('rta-nav-lock', open && compactLayout.matches);
+    if (!open) closeSubmenus();
+  }
 
   function closeSubmenus(except) {
     triggers.forEach(function(trigger){
@@ -26,30 +36,30 @@
   });
 
   if (btn) {
-    btn.addEventListener('click', function(){
-      var open = nav.classList.toggle('rta-nav--open');
-      btn.setAttribute('aria-expanded', open);
-      if (!open) closeSubmenus();
+    btn.addEventListener('click', function(event){
+      var open = !nav.classList.contains('rta-nav--open');
+      setMenuState(open);
+      if (open && event.detail === 0) {
+        requestAnimationFrame(function(){
+          var firstLink = nav.querySelector('.rta-nav-links a');
+          if (firstLink) firstLink.focus();
+        });
+      }
     });
     document.addEventListener('click', function(e){
       if (!nav.contains(e.target)) {
-        nav.classList.remove('rta-nav--open');
-        btn.setAttribute('aria-expanded', 'false');
-        closeSubmenus();
+        setMenuState(false);
       }
     });
     document.addEventListener('keydown', function(e){
       if (e.key === 'Escape') {
         var wasOpen = nav.classList.contains('rta-nav--open');
-        nav.classList.remove('rta-nav--open');
-        btn.setAttribute('aria-expanded', 'false');
-        closeSubmenus();
+        setMenuState(false);
         if (wasOpen) btn.focus();
       }
     });
   }
 
-  var compactLayout = window.matchMedia('(max-width: 980px)');
   /* Long FAQ answers are progressive disclosure: questions stay scannable,
      while the original answer nodes and their links remain in the document. */
   document.querySelectorAll('.rta-reading-body .faq-item').forEach(function(item){
@@ -72,9 +82,7 @@
   });
 
   compactLayout.addEventListener('change', function(event){
-    if (nav) nav.classList.remove('rta-nav--open');
-    if (btn) btn.setAttribute('aria-expanded', 'false');
-    closeSubmenus();
+    setMenuState(false);
   });
 
   /* Reading progress bar */

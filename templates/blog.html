@@ -57,7 +57,7 @@
         <div class="rta-page-numbers">
           {% for num in range(1, pagination.total_pages + 1) %}
           {% if num == pagination.page %}<span class="is-current" aria-current="page">{{ num }}</span>
-          {% else %}<a href="{{ pagination.base_path if num == 1 else pagination.base_path ~ 'page/' ~ num ~ '/' }}" aria-label="{{ ('Страница ' if ru else 'Page ') ~ num }}">{{ num }}</a>{% endif %}
+          {% else %}<a href="{{ pagination.page_urls[num - 1] }}" aria-label="{{ ('Страница ' if ru else 'Page ') ~ num }}">{{ num }}</a>{% endif %}
           {% endfor %}
         </div>
         {% if pagination.next_url %}<a class="rta-page-link" rel="next" href="{{ pagination.next_url }}">{{ 'Вперёд →' if ru else 'Next →' }}</a>{% endif %}

@@ -82,7 +82,8 @@
 {% set nav_compare = 'Сравнения' if is_ru_page else 'Compare' %}
 {% set nav_tools = 'Инструменты' if is_ru_page else 'Tools' %}
 {% set nav_blog = 'Блог' if is_ru_page else 'Blog' %}
-{% set nav_menu = 'Меню' if is_ru_page else 'Menu' %}
+{% set nav_menu_open = 'Открыть меню' if is_ru_page else 'Open menu' %}
+{% set nav_menu_close = 'Закрыть меню' if is_ru_page else 'Close menu' %}
 {% set footer_tagline = 'Практический гид по релокации в Азию: страны, визы, города, расходы и инструменты планирования.' if is_ru_page else 'Your complete guide to relocating across Asia — costs, visas, cities and tools.' %}
 {% set footer_countries = 'Страны' if is_ru_page else 'Countries' %}
 {% set footer_tools = 'Инструменты' if is_ru_page else 'Tools' %}
@@ -141,7 +142,7 @@
 <nav class="rta-nav" id="rta-nav" aria-label="{{ 'Основная навигация' if is_ru_page else 'Primary navigation' }}">
   <div class="rta-nav-inner">
     <a href="{{ home_url }}" class="rta-logo">Relocate to Asia</a>
-    <button class="rta-burger" id="rta-burger" aria-label="{{ nav_menu }}" aria-expanded="false" aria-controls="rta-nav-links">
+    <button class="rta-burger" id="rta-burger" aria-label="{{ nav_menu_open }}" aria-expanded="false" aria-controls="rta-nav-links" data-open-label="{{ nav_menu_open }}" data-close-label="{{ nav_menu_close }}">
       <span></span><span></span><span></span>
     </button>
     <div class="rta-nav-links" id="rta-nav-links">

@@ -1295,6 +1295,7 @@ body { font: 400 17px/1.7 var(--rta-sans); background: var(--rta-paper); color: 
 .rta-footer-bottom { border-color: #396065; color: #c8dedd; font-size: 14px; }
 
 @media (max-width: 980px) {
+  html.rta-nav-lock { overflow: hidden; }
   .rta-footer-inner { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .rta-footer-col:first-child { grid-column: 1 / -1; }
   .rta-nav-inner { height: 64px; padding-inline: 24px; }

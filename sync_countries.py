@@ -50,6 +50,21 @@ COUNTRIES: dict[str, str] = {
     "move-to-mexico": "MX",
     "move-to-colombia": "CO",
     "move-to-turkey": "TR",
+    "move-to-kyrgyzstan": "KG",
+    "move-to-armenia": "AM",
+    "move-to-azerbaijan": "AZ",
+    "move-to-qatar": "QA",
+    "move-to-saudi-arabia": "SA",
+    "move-to-oman": "OM",
+    "move-to-bahrain": "BH",
+    "move-to-kuwait": "KW",
+    "move-to-jordan": "JO",
+    "move-to-lebanon": "LB",
+    "move-to-israel": "IL",
+    "move-to-iran": "IR",
+    "move-to-yemen": "YE",
+    "move-to-syria": "SY",
+    "move-to-iraq": "IQ",
 }
 
 # World Bank indicator codes → column name

@@ -1,9 +1,12 @@
 """Regression tests for cache expiration, FAQ markup and asset versioning."""
 import hashlib
+import html
+import re
 import sys
 import unittest
 from pathlib import Path
 from unittest.mock import patch
+from urllib.parse import urlencode
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import app as site
@@ -43,6 +46,34 @@ class TechnicalRegressionTests(unittest.TestCase):
         cached = site._PAGE_CACHE['/blog/']
         self.client.get('/blog/?page=2')
         self.assertEqual(site._PAGE_CACHE['/blog/'], cached)
+
+    def test_blog_search_paginates_and_preserves_query(self):
+        for path, query in (('/blog/', 'visa'), ('/ru/blog/', 'виза')):
+            with self.subTest(path=path):
+                first = self.client.get(path, query_string={'q': query})
+                second = self.client.get(path, query_string={'q': query, 'page': 2})
+                self.assertEqual(first.status_code, 200)
+                self.assertEqual(second.status_code, 200)
+                first_body = html.unescape(first.get_data(as_text=True))
+                second_body = html.unescape(second.get_data(as_text=True))
+                self.assertEqual(first_body.count('<article class="rta-journal-story'), 10)
+                self.assertGreater(second_body.count('<article class="rta-journal-story'), 0)
+                self.assertLessEqual(second_body.count('<article class="rta-journal-story'), 10)
+                self.assertIn('page=2', first_body)
+                search_url = path + '?' + urlencode({'q': query})
+                self.assertIn(search_url + '&page=2', first_body)
+                self.assertIn(f'rel="prev" href="{search_url}"', second_body)
+                self.assertIn('noindex,follow', second_body)
+                first_slugs = set(re.findall(r'<h3><a href="([^"]+)"', first_body))
+                second_slugs = set(re.findall(r'<h3><a href="([^"]+)"', second_body))
+                self.assertFalse(first_slugs & second_slugs)
+                self.assertEqual(self.client.get(path, query_string={'q': query, 'page': 999}).status_code, 404)
+
+    def test_blog_search_prioritizes_title_matches(self):
+        body = self.client.get('/blog/', query_string={'q': 'visa'}).get_data(as_text=True)
+        titles = re.findall(r'<h3><a href="[^"]+">(.*?)</a></h3>', body, re.S)
+        self.assertGreater(len(titles), 1)
+        self.assertIn('visa', html.unescape(re.sub(r'<[^>]+>', '', titles[0])).casefold())
 
     def test_faq_supports_old_and_new_class_tokens(self):
         for css_class in ('faq-item', 'rta-depth-faq-item', 'other rta-depth-faq-item compact'):
@@ -84,6 +115,55 @@ class TechnicalRegressionTests(unittest.TestCase):
         self.assertIn('script-src', csp)
         self.assertIn('https://www.googletagmanager.com', csp)
         self.assertIn('https://www.google-analytics.com', csp)
+
+    def test_new_destinations_are_complete_and_bilingual(self):
+        for path, country, catalog_path in (
+            ('/countries/move-to-georgia/', 'Georgia', '/countries/'),
+            ('/ru/countries/move-to-georgia/', 'Грузия', '/ru/countries/'),
+            ('/countries/move-to-turkey/', 'Türkiye', '/countries/'),
+            ('/ru/countries/move-to-turkey/', 'Турция', '/ru/countries/'),
+            ('/countries/move-to-kyrgyzstan/', 'Kyrgyzstan', '/countries/'),
+            ('/ru/countries/move-to-kyrgyzstan/', 'Кыргызстан', '/ru/countries/'),
+            ('/countries/move-to-armenia/', 'Armenia', '/countries/'),
+            ('/ru/countries/move-to-armenia/', 'Армения', '/ru/countries/'),
+            ('/countries/move-to-azerbaijan/', 'Azerbaijan', '/countries/'),
+            ('/ru/countries/move-to-azerbaijan/', 'Азербайджан', '/ru/countries/'),
+            ('/countries/move-to-qatar/', 'Qatar', '/countries/'),
+            ('/ru/countries/move-to-qatar/', 'Катар', '/ru/countries/'),
+            ('/countries/move-to-saudi-arabia/', 'Saudi Arabia', '/countries/'),
+            ('/ru/countries/move-to-saudi-arabia/', 'Саудовская Аравия', '/ru/countries/'),
+            ('/countries/move-to-oman/', 'Oman', '/countries/'),
+            ('/ru/countries/move-to-oman/', 'Оман', '/ru/countries/'),
+            ('/countries/move-to-bahrain/', 'Bahrain', '/countries/'),
+            ('/ru/countries/move-to-bahrain/', 'Бахрейн', '/ru/countries/'),
+            ('/countries/move-to-kuwait/', 'Kuwait', '/countries/'),
+            ('/ru/countries/move-to-kuwait/', 'Кувейт', '/ru/countries/'),
+            ('/countries/move-to-jordan/', 'Jordan', '/countries/'),
+            ('/ru/countries/move-to-jordan/', 'Иордания', '/ru/countries/'),
+            ('/countries/move-to-lebanon/', 'Lebanon', '/countries/'),
+            ('/ru/countries/move-to-lebanon/', 'Ливан', '/ru/countries/'),
+            ('/countries/move-to-israel/', 'Israel', '/countries/'),
+            ('/ru/countries/move-to-israel/', 'Израиль', '/ru/countries/'),
+            ('/countries/move-to-iran/', 'Iran', '/countries/'),
+            ('/ru/countries/move-to-iran/', 'Иран', '/ru/countries/'),
+            ('/countries/move-to-yemen/', 'Yemen', '/countries/'),
+            ('/ru/countries/move-to-yemen/', 'Йемен', '/ru/countries/'),
+            ('/countries/move-to-syria/', 'Syria', '/countries/'),
+            ('/ru/countries/move-to-syria/', 'Сирия', '/ru/countries/'),
+            ('/countries/move-to-iraq/', 'Iraq', '/countries/'),
+            ('/ru/countries/move-to-iraq/', 'Ирак', '/ru/countries/'),
+        ):
+            with self.subTest(path=path):
+                response = self.client.get(path)
+                body = response.get_data(as_text=True)
+                self.assertEqual(response.status_code, 200)
+                self.assertIn(country, body)
+                self.assertIn('2026', body)
+                self.assertIn('rta-source-panel', body)
+                english_path = path.removeprefix('/ru')
+                self.assertIn(english_path, body)
+                catalog = self.client.get(catalog_path).get_data(as_text=True)
+                self.assertIn(path, catalog)
 
 
 if __name__ == '__main__':
