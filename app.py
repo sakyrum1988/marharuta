@@ -1463,6 +1463,19 @@ COUNTRY_FORMS_RU = {
     "move-to-iran": ("Иран", "Иран", "Иране"),
     "move-to-yemen": ("Йемен", "Йемен", "Йемене"),
     "move-to-syria": ("Сирия", "Сирию", "Сирии"),
+    "move-to-cyprus": ("Кипр", "Кипр", "Кипре"),
+    "move-to-timor-leste": ("Тимор-Лесте", "Тимор-Лесте", "Тиморе-Лесте"),
+    "move-to-turkmenistan": ("Туркменистан", "Туркменистан", "Туркменистане"),
+    "move-to-sharm-el-sheikh": ("Шарм-эль-Шейх", "Шарм-эль-Шейх", "Шарм-эль-Шейхе"),
+    "move-to-tajikistan": ("Таджикистан", "Таджикистан", "Таджикистане"),
+    "move-to-palestine": ("Палестина", "Палестину", "Палестине"),
+    "move-to-north-korea": ("Северная Корея", "Северную Корею", "Северной Корее"),
+    "move-to-mongolia": ("Монголия", "Монголию", "Монголии"),
+    "move-to-maldives": ("Мальдивы", "Мальдивы", "Мальдивах"),
+    "move-to-bhutan": ("Бутан", "Бутан", "Бутане"),
+    "move-to-afghanistan": ("Афганистан", "Афганистан", "Афганистане"),
+    "move-to-bangladesh": ("Бангладеш", "Бангладеш", "Бангладеш"),
+    "move-to-pakistan": ("Пакистан", "Пакистан", "Пакистане"),
     "move-to-iraq": ("Ирак", "Ирак", "Ираке"),
 }
 
@@ -1503,6 +1516,19 @@ COUNTRY_EN_NAMES = {
     "move-to-iran": "Iran",
     "move-to-yemen": "Yemen",
     "move-to-syria": "Syria",
+    "move-to-cyprus": "Cyprus",
+    "move-to-timor-leste": "Timor-Leste",
+    "move-to-turkmenistan": "Turkmenistan",
+    "move-to-sharm-el-sheikh": "Sharm el-Sheikh",
+    "move-to-tajikistan": "Tajikistan",
+    "move-to-palestine": "Palestine",
+    "move-to-north-korea": "North Korea",
+    "move-to-mongolia": "Mongolia",
+    "move-to-maldives": "Maldives",
+    "move-to-bhutan": "Bhutan",
+    "move-to-afghanistan": "Afghanistan",
+    "move-to-bangladesh": "Bangladesh",
+    "move-to-pakistan": "Pakistan",
     "move-to-iraq": "Iraq",
 }
 
@@ -1530,6 +1556,19 @@ COUNTRY_FLAGS = {
     "move-to-iran": "🇮🇷",
     "move-to-yemen": "🇾🇪",
     "move-to-syria": "🇸🇾",
+    "move-to-cyprus": "🇨🇾",
+    "move-to-timor-leste": "🇹🇱",
+    "move-to-turkmenistan": "🇹🇲",
+    "move-to-sharm-el-sheikh": "🇪🇬",
+    "move-to-tajikistan": "🇹🇯",
+    "move-to-palestine": "🇵🇸",
+    "move-to-north-korea": "🇰🇵",
+    "move-to-mongolia": "🇲🇳",
+    "move-to-maldives": "🇲🇻",
+    "move-to-bhutan": "🇧🇹",
+    "move-to-afghanistan": "🇦🇫",
+    "move-to-bangladesh": "🇧🇩",
+    "move-to-pakistan": "🇵🇰",
     "move-to-iraq": "🇮🇶",
 }
 
@@ -1564,6 +1603,7 @@ def ru_country_destination(slug: str) -> str:
         "move-to-taiwan": "на Тайвань",
         "move-to-philippines": "на Филиппины",
         "move-to-sri-lanka": "на Шри-Ланку",
+        "move-to-maldives": "на Мальдивы",
     }
     return special.get(slug, f"в {ru_country_accusative(slug)}")
 
@@ -1586,6 +1626,19 @@ def compact_number(value) -> str:
         return f"{value / 1_000:.0f} тыс."
     return f"{value:.0f}"
 
+
+def compact_number_en(value) -> str:
+    if value is None:
+        return "N/A"
+    try:
+        value = float(value)
+    except (TypeError, ValueError):
+        return str(value)
+    if value >= 1_000_000:
+        return f"{value / 1_000_000:.1f}M".replace(".0M", "M")
+    if value >= 1_000:
+        return f"{value / 1_000:.0f}K"
+    return f"{value:.0f}"
 
 RU_COUNTRY_NOTES = {
     "move-to-thailand": (
@@ -1723,6 +1776,58 @@ RU_COUNTRY_NOTES = {
     "move-to-syria": (
         "Сирия может рассматриваться только при подтверждённом основании — обычно контракте, учёбе или семье — и с отдельным планом безопасности. Дамаск даёт больше учреждений и сервисов, Алеппо связан с промышленностью и восстановлением, Латакия — с портом и побережьем.",
         "FCDO советует отказаться от любых поездок в Сирию и сообщает об отсутствии консульской поддержки внутри страны. Терроризм, похищения, вооружённые столкновения, мины, перебои инфраструктуры и внезапное закрытие границ делают обычный пробный переезд неприемлемым.",
+    ),
+    "move-to-cyprus": (
+        "Республика Кипр подходит гражданам ЕС, специалистам с местным работодателем, удалённым сотрудникам зарубежных компаний и инвесторам. Никосия концентрирует государственные и профессиональные функции, Лимасол — международный бизнес, Пафос — более спокойную прибрежную жизнь.",
+        "Кипр остаётся вне полной Шенгенской зоны и применяет собственные правила въезда. Страница относится к территории под эффективным контролем Республики Кипр; въезд через север острова власти Республики могут считать незаконным.",
+    ),
+    "move-to-timor-leste": (
+        "Тимор-Лесте подходит прежде всего специалистам с контрактом в международной организации, развитии, инфраструктуре, энергетике или образовании, а также предпринимателям с зарегистрированным местным бизнесом. Дили концентрирует почти всю международную работу и медицину, Баукау даёт более локальную и доступную среду, Атауро — островной проектный или туристический сценарий.",
+        "Туристическая виза по прибытии не разрешает работу. Для найма нужен work permit, для долгого бизнеса — Business Visa Class II; медицина ограничена, а серьёзный случай обычно требует эвакуации в Австралию или Сингапур.",
+    ),
+    "move-to-turkmenistan": (
+        "Туркменистан реалистичен прежде всего для специалиста с заранее подтверждённым работодателем, международного проекта, дипломатической или межправительственной миссии. Ашхабад концентрирует работодателей, гостиницы и частную медицину; Туркменбаши связан с портом, логистикой и нефтегазом, Мары — с газовыми и инфраструктурными проектами.",
+        "Для любой визовой категории нужно приглашение Государственной миграционной службы через местного спонсора. Туристический статус не разрешает работу; интернет, международные платежи, медицина и перемещения вне основных городов требуют отдельного плана.",
+    ),
+    "move-to-sharm-el-sheikh": (
+        "Шарм-эль-Шейх — азиатская часть Египта на Синайском полуострове и практичный вариант для специалистов с контрактом в отеле, дайвинге, туризме или локальном сервисе. Для удалённого работника это скорее сезонная база после проверки законного статуса, связи, налогов и банков, чем готовая nomad-программа.",
+        "Бесплатный штамп South Sinai действует только для короткой поездки до 15 дней в курортной зоне и не разрешает работу. Для долгого проживания нужна обычная египетская виза или резиденция, а для найма — разрешение через работодателя.",
+    ),
+    "move-to-tajikistan": (
+        "Таджикистан подходит специалистам с подтверждённым работодателем, сотрудникам международных проектов, студентам и крупным инвесторам. Душанбе даёт самый широкий рынок работы и услуг, Худжанд — торговлю и промышленность Согдийской области, Хорог — редкие проекты развития и туризма в Памире.",
+        "eVisa и туристический статус не разрешают трудоустройство. Для работы нужны виза категории M и отдельное разрешение миграционного органа; для поездки в ГБАО нужен специальный пропуск, а медицина вне Душанбе очень ограничена.",
+    ),
+    "move-to-palestine": (
+        "Для иностранца практический сценарий переезда относится прежде всего к Западному берегу и обычно связан с работой в международной организации, местным работодателем, учёбой или семьёй. Рамалла концентрирует учреждения, NGO, финансы и связь; Вифлеем — туризм, образование и гуманитарные проекты; Иерихон — сельское хозяйство и региональные проекты.",
+        "Въезд и длительное пребывание согласуются по израильским и COGAT-процедурам, а трудоустройство требует отдельного разрешения палестинского Минтруда. FCDO советует отказаться от любых поездок в Газу: гражданские переходы могут быть закрыты, а выезд — невозможен.",
+    ),
+    "move-to-north-korea": (
+        "Северная Корея не является обычным направлением для добровольной релокации. Реалистичны только редкие дипломатические, международные, гуманитарные, журналистские или иные назначения с официальным спонсором, заранее согласованными визой, жильём, перемещениями, оплатой, связью и эвакуацией.",
+        "FCDO советует отказаться от всех поездок, кроме необходимых. Общий въезд остаётся ограниченным, иностранцев почти всегда сопровождает назначенный гид, поездки за пределы Пхеньяна требуют разрешения, а арест возможен за действия, которые в других странах считаются незначительными.",
+    ),
+    "move-to-mongolia": (
+        "Монголия подходит специалистам с подтверждённым работодателем, инвесторам, студентам и семьям с законным основанием. Улан-Батор концентрирует почти всю международную работу и сложные услуги, Эрдэнэт связан с горнодобывающей промышленностью, Дархан — с производством, строительством и агросектором.",
+        "Туристический безвизовый въезд или K2 eVisa не разрешают работу, отдельной digital nomad визы нет. Перед переездом нужно проверить зимнее качество воздуха, отопление жилья, дорогу до работы, медицинскую эвакуацию и полный процесс работодателя от pre-work permit до residence permit.",
+    ),
+    "move-to-maldives": (
+        "Мальдивы подходят прежде всего для переезда по подтверждённому контракту, семейному основанию или одобренному инвестиционному проекту. Мале концентрирует государство и сервисы, Хулхумале — новое жильё и связь с аэропортом, Адду — региональные услуги и более спокойный островной быт.",
+        "Туристическая виза по прибытии не даёт права на работу, а отдельной digital nomad визы в официальных категориях не найдено. Удалённость островов, импортные цены и ограниченная сложная медицина требуют заранее проверить жильё, питание, транспорт, страховку и медицинскую эвакуацию.",
+    ),
+    "move-to-bhutan": (
+        "Бутан подходит для переезда главным образом по подтверждённой работе, учёбе или инвестиционному проекту. Тхимпху концентрирует государственные учреждения и работодателей, Паро — аэропорт и туризм, Пхунчолинг — торговлю и логистику на границе с Индией.",
+        "Туристическая eVisa с SDF $100 за ночь предназначена для поездки, а не для экономного долгого проживания или работы. Рабочий статус привязан к работодателю, рынок небольшой, импорт дорог, а сложная медицина часто требует эвакуации в Индию или Таиланд.",
+    ),
+    "move-to-afghanistan": (
+        "Афганистан нельзя рассматривать как обычное направление для добровольного переезда. Реалистичны только обязательные рабочие, гуманитарные, семейные или дипломатические назначения через организацию с профессиональным планом безопасности, защищённым жильём, транспортом, связью и сценарием эвакуации.",
+        "FCDO советует отказаться от любых поездок: иностранцам угрожают теракты, похищения, произвольные задержания и крайне ограниченная консульская помощь. Ограничения особенно жёстко затрагивают женщин; границы, связь и банковские услуги могут меняться без предупреждения.",
+    ),
+    "move-to-bangladesh": (
+        "Бангладеш подходит прежде всего для переезда по подтверждённой работе, инвестиционному проекту, учёбе или семье. Дакка концентрирует международные компании и учреждения, Чаттограм — порт, промышленность и логистику, Силхет — более компактную городскую среду и связи с диаспорой.",
+        "Краткий въезд не даёт права на работу, а отдельной digital nomad визы в официальных категориях не найдено. Плотный трафик, загрязнение воздуха, наводнения, качество частной медицины и актуальная безопасность должны войти в бюджет и выбор района до подписания аренды.",
+    ),
+    "move-to-pakistan": (
+        "Пакистан подходит для переезда по конкретному основанию: подтверждённой работе, учёбе, семье или инвестиционному проекту. Исламабад удобнее для государственных, дипломатических и международных функций, Лахор — для образования, технологий и культуры, Карачи — для финансов, торговли, портов и крупнейшего рынка труда.",
+        "Туристическая eVisa не разрешает местную работу, отдельной digital nomad визы нет, а условия въезда и регистрации зависят от паспорта. Перед выбором города нужно сверить актуальные региональные предупреждения, страховку, транспорт, качество воздуха, энергоснабжение и доступ к частной медицине.",
     ),
     "move-to-iraq": (
         "Ирак имеет смысл рассматривать прежде всего при подтверждённом контракте в энергетике, инфраструктуре, международной организации или другом проекте с готовым пакетом безопасности. Багдад концентрирует государственные и деловые функции, Эрбиль — международные компании и сервисы Иракского Курдистана, Басра — нефтегазовый сектор и портовую логистику.",
@@ -1874,6 +1979,58 @@ EN_COUNTRY_NOTES: dict[str, tuple[str, str]] = {
     "move-to-syria": (
         "Syria is only a realistic relocation case with a verified basis, usually an employer, study or family, plus a separate security plan. Damascus has the broadest institutional base, Aleppo links to industry and reconstruction, and Latakia to the port and coast.",
         "FCDO advises against all travel to Syria and says there is no in-country consular support. Terrorism, kidnapping, armed clashes, mines, infrastructure failures and sudden border closures make a casual trial move unsuitable.",
+    ),
+    "move-to-cyprus": (
+        "The Republic of Cyprus works for EU citizens, specialists with a local employer, remote staff serving companies abroad and qualifying investors. Nicosia concentrates government and professional roles, Limassol international business, and Paphos a quieter coastal lifestyle.",
+        "Cyprus is not yet fully in the Schengen area and applies its own entry rules. This page covers territory under the effective control of the Republic of Cyprus; Republic authorities may treat arrival through the north as illegal entry.",
+    ),
+    "move-to-timor-leste": (
+        "Timor-Leste mainly suits specialists with a contract in an international organisation, development, infrastructure, energy or education, plus entrepreneurs running a registered local business. Dili concentrates almost all international work and healthcare, Baucau provides a more local and lower-cost setting, while Atauro is an island project or tourism case.",
+        "A tourist visa on arrival does not authorise employment. A job needs a work permit and long-term business uses Business Visa Class II; healthcare is limited and a serious case will usually require evacuation to Australia or Singapore.",
+    ),
+    "move-to-turkmenistan": (
+        "Turkmenistan is mainly realistic for a specialist with a confirmed employer, an international project, or a diplomatic or intergovernmental posting. Ashgabat concentrates employers, hotels and private healthcare; Turkmenbashi serves port, logistics and hydrocarbons work, while Mary supports gas and infrastructure projects.",
+        "Every visa category needs an invitation approved by the State Migration Service through a local sponsor. Tourist status does not authorise work; internet access, international payments, healthcare and travel outside the main cities all need separate planning.",
+    ),
+    "move-to-sharm-el-sheikh": (
+        "Sharm el-Sheikh sits in Egypt's Asian territory on the Sinai Peninsula and can work for specialists with a confirmed hotel, diving, tourism or local-services contract. For a remote worker it is a seasonal base only after checking lawful status, connectivity, tax and banking, rather than a ready-made nomad programme.",
+        "The free South Sinai permission stamp is only for a short resort stay of up to 15 days and does not authorise work. A longer stay needs a standard Egyptian visa or residence status, while employment requires an employer-led work permit.",
+    ),
+    "move-to-tajikistan": (
+        "Tajikistan works best for specialists with a verified employer, international-project staff, students and substantial investors. Dushanbe has the broadest work and services, Khujand anchors trade and industry in Sughd, while Khorog supports a small number of development and tourism projects in the Pamirs.",
+        "An eVisa or tourist status does not authorise employment. Work needs a category M visa and a separate migration-authority permit; GBAO travel needs an additional permit, and healthcare outside Dushanbe is very limited.",
+    ),
+    "move-to-palestine": (
+        "For a foreign national, a practical relocation case mainly concerns the West Bank and normally depends on an international-organisation posting, a local employer, study or family. Ramallah concentrates institutions, NGOs, finance and telecoms; Bethlehem tourism, education and humanitarian work; Jericho agriculture and regional projects.",
+        "Entry and longer stay follow Israeli and COGAT procedures, while employment needs a separate Palestinian Ministry of Labour permit. FCDO advises against all travel to Gaza: civilian crossings may be closed and departure may become impossible.",
+    ),
+    "move-to-north-korea": (
+        "North Korea is not a normal voluntary-relocation destination. The only realistic cases are rare diplomatic, international, humanitarian, journalistic or other assignments with an official sponsor and pre-arranged visa, housing, movement, payment, communications and evacuation.",
+        "FCDO advises against all but essential travel. General entry remains restricted, foreign nationals are almost always accompanied by an assigned guide, travel outside Pyongyang needs permission, and conduct considered minor elsewhere can lead to arrest.",
+    ),
+    "move-to-mongolia": (
+        "Mongolia works best for specialists with a verified employer, investors, students and families with a lawful basis. Ulaanbaatar concentrates almost all international work and advanced services, Erdenet links to mining, and Darkhan to manufacturing, construction and agriculture.",
+        "Visa-free tourism or a K2 eVisa does not authorise employment, and there is no dedicated digital-nomad visa. Before moving, verify winter air quality, home heating, the commute, medical evacuation and the employer's complete process from pre-work permit to residence permit.",
+    ),
+    "move-to-maldives": (
+        "The Maldives mainly works as a relocation destination through a verified employment contract, family basis or approved investment project. Malé concentrates government and services, Hulhumalé offers newer housing and airport access, while Addu provides regional roles and a slower island setting.",
+        "A tourist visa on arrival does not authorise employment, and no dedicated digital-nomad visa appears in the official categories reviewed. Inter-island logistics, imported prices and limited advanced care make housing, meals, transport, insurance and medical evacuation essential contract checks.",
+    ),
+    "move-to-bhutan": (
+        "Bhutan mainly works as a relocation destination through verified employment, study or a qualifying investment project. Thimphu concentrates government and employers, Paro combines the airport with tourism, and Phuentsholing anchors trade and logistics on the Indian border.",
+        "The tourist eVisa and US$100 nightly SDF cover travel, not low-cost long residence or employment. Work status is employer-linked, the market is small, imports cost more and complex healthcare often requires evacuation to India or Thailand.",
+    ),
+    "move-to-afghanistan": (
+        "Afghanistan is not a normal voluntary-relocation destination. A move is only realistic for an essential employment, humanitarian, family or diplomatic assignment backed by an organisation with professional security, secure housing, transport, communications and an extraction plan.",
+        "FCDO advises against all travel because foreign nationals face terrorism, kidnapping, arbitrary detention and severely limited consular support. Restrictions affect women especially, while borders, communications and access to banking can change without warning.",
+    ),
+    "move-to-bangladesh": (
+        "Bangladesh is mainly a realistic move with a verified job, investment project, study place or family basis. Dhaka concentrates international employers and institutions, Chattogram anchors ports, industry and logistics, while Sylhet offers a smaller urban base with strong diaspora links.",
+        "Short-stay entry does not authorise work, and no dedicated digital-nomad visa appears in the official categories reviewed. Traffic, air pollution, flooding, private healthcare, live security conditions and district choice belong in the relocation budget before signing a lease.",
+    ),
+    "move-to-pakistan": (
+        "Pakistan is a realistic move with a defined basis: a verified job, study place, family connection or qualifying investment. Islamabad best fits government, diplomatic and international work, Lahore combines education, technology and culture, while Karachi offers the country's largest finance, trade and port economy.",
+        "A tourist eVisa does not authorise local employment, no dedicated digital-nomad visa appears in the official category list, and entry or registration rules remain passport-specific. City selection also needs live checks on regional security advice, insurance, transport, air quality, power reliability and private healthcare access.",
     ),
     "move-to-iraq": (
         "Iraq is mainly a realistic move with a confirmed contract in energy, infrastructure, an international organisation or another project providing a complete security package. Baghdad centres government and business, Erbil hosts international firms and Kurdistan Region services, and Basra anchors oil, gas and port logistics.",
@@ -2759,6 +2916,422 @@ RU_COUNTRY_DATA: dict[str, dict] = {
             ("Басра", "$1 200–2 700", "нефть, газ, инженерные проекты, порты и промышленная логистика", "экстремальная жара, ограниченный городской сервис и часто закрытый корпоративный быт"),
         ],
     },
+    "move-to-cyprus": {
+        "budget": "€1 400–2 900",
+        "climate": "Средиземноморский",
+        "english": "Высокий",
+        "visa_label": "EU / Work / Nomad / Investor",
+        "description": "Переезд в Республику Кипр в 2026 году зависит от гражданства и источника дохода. Граждане ЕС могут работать без отдельного work permit и при долгом проживании оформляют Registration Certificate (MEU1). Для граждан третьих стран местная работа обычно требует работодателя и единого разрешения; у квалифицированного персонала зарегистрированных компаний иностранных интересов ориентир включает зарплату от €2 500 gross, подходящую квалификацию или опыт и контракт на 2–3 года. Digital Nomad Visa снова принимает заявления в пределах квоты 500 разрешений: нужен зарубежный работодатель или клиенты и чистый доход от €3 500 в месяц; разрешение дают на год с продлением ещё до двух лет. Ускоренный investor permit начинается с инвестиции €300 000 и подтверждённого годового дохода от €50 000. Редакционный бюджет одного человека — €1 400–2 900 в месяц.",
+        "visas": [
+            ("EU Registration / MEU1", "Пока сохраняется основание проживания", "Паспорт или ID, работа/самозанятость либо достаточные средства и медпокрытие; регистрация при долгом пребывании", "Гражданин ЕС/ЕЭЗ и подходящие члены семьи"),
+            ("Employment / Single Permit", "По контракту и категории работодателя", "Оффер, заявление работодателя, разрешение на въезд, биометрия и регистрация; для key personnel действуют отдельные критерии", "Гражданин третьей страны с местной работой"),
+            ("Digital Nomad Residence", "1 год + продление до 2 лет", "Работа только на зарубежного работодателя или клиентов, €3 500 net в месяц, страховка, жильё, справка и меданализы", "Удалённый специалист вне ЕС/ЕЭЗ"),
+            ("Investor Immigration Permit", "Постоянный статус при сохранении условий", "Инвестиция от €300 000, средства из-за рубежа, годовой доход от €50 000 и проверка благонадёжности", "Инвестор из третьей страны"),
+        ],
+        "costs": ("€1 400–2 900", "€650–1 650", "€280–520", "€80–300"),
+        "pros": [
+            "Евро, право ЕС и понятные маршруты для граждан ЕС, специалистов, nomads и инвесторов",
+            "Английский широко используется в международном бизнесе, услугах и повседневной жизни",
+            "Тёплый климат, море, два международных аэропорта и компактные расстояния",
+            "Никосия, Лимасол и Пафос дают разные сочетания карьеры, цены и прибрежного образа жизни",
+        ],
+        "cons": [
+            "Лимасол дорог по аренде, а депозит, автомобиль, кондиционирование и частная страховка увеличивают стартовый бюджет",
+            "Вне главных коридоров общественный транспорт ограничен, поэтому часто нужен автомобиль",
+            "Бюрократия требует личных визитов, заверенных переводов, биометрии и точного статуса до начала работы",
+            "Разделение острова влияет на въезд, недвижимость, страховку и признание документов; север нельзя считать тем же правовым режимом",
+        ],
+        "top_cities": ["Никосия", "Лимасол", "Пафос"],
+        "city_profiles": [
+            ("Никосия", "€1 400–2 300", "государство, финансы, право, образование, технологии и круглогодичный рынок", "нет моря, жаркое лето, разделённый центр и необходимость выбирать район по дороге"),
+            ("Лимасол", "€1 900–3 300", "международные компании, финтех, судоходство, IT, сервисы и самая активная expat-среда", "самая высокая аренда, пробки, дефицит хорошего жилья и сезонное давление на цены"),
+            ("Пафос", "€1 450–2 500", "удалённая работа, туризм, недвижимость, аэропорт и спокойный прибрежный ритм", "меньше профессиональных вакансий, сезонность и зависимость от автомобиля за пределами центра"),
+        ],
+    },
+    "move-to-timor-leste": {
+        "budget": "$1 000–2 200",
+        "climate": "Тропический, сезон дождей",
+        "english": "Средний",
+        "visa_label": "Work / Business II",
+        "description": "Переезд в Тимор-Лесте в 2026 году начинается с правильной цели въезда. Туристическую визу обычно выдают по прибытии в аэропорту или морском порту Дили на срок до 30 дней за $30 наличными; её можно продлить ещё на 30 дней, подав заявление заранее. Для сухопутного въезда правила и предварительное разрешение зависят от пункта и паспорта. Туристический статус не разрешает работу. Work Permit выдаётся на срок до года, допускает один или несколько въездов и может продлеваться; для наёмного сотрудника нужны контракт и положительное заключение органа труда. Business Visa Class I предназначена для разведки рынка на срок до 60 дней, а Class II — для партнёра или администратора зарегистрированной компании: сначала шесть месяцев, затем продления на два года при выполнении условий и пребывании свыше 183 дней. Отдельной digital nomad визы не найдено. Редакционный бюджет одного человека — $1 000–2 200 в месяц: Дили дорог из-за ограниченного качественного жилья, импорта, автомобиля и эвакуационной страховки.",
+        "visas": [
+            ("Tourist Visa on Arrival", "До 30 дней; продление ещё на 30", "Паспорт от 6 месяцев, 2 чистые страницы, обратный билет, жильё, средства и $30 наличными", "Короткая поездка без работы"),
+            ("Work Permit", "До 1 года с продлением", "Контракт или service agreement, заключение органа труда, квалификация, жильё, средства и одобрение", "Наёмный или независимый специалист, включая NGO"),
+            ("Business Visa Class I / II", "I: до 60 дней; II: 6 месяцев с продлением на 2 года", "Цель бизнеса; для II — регистрация компании, экономическая лицензия, налоговая справка, медицина и police clearance", "Исследование рынка или управление местной компанией"),
+            ("Temporary Stay / Residence", "По категории и решению", "Семья, учёба, лечение, религиозная или иная законная цель; средства, жильё и документы основания", "Семья, студент или заявитель на резиденцию"),
+        ],
+        "costs": ("$1 000–2 200", "$500–1 300", "$250–500", "$80–350"),
+        "pros": [
+            "Значимые роли в развитии, международных организациях, инфраструктуре, образовании и энергетике",
+            "Доллар США используется как официальная валюта, что упрощает расчёт контракта и бюджета",
+            "Тёплое море, дайвинг, горы и небольшие расстояния создают сильную природную среду",
+            "Португальский и тетум дополняются английским и индонезийским в международной работе",
+        ],
+        "cons": [
+            "Качественное жильё, импортная еда, связь, автомобиль и международная школа делают Дили дорогим",
+            "Медицина ограничена даже в столице; сложный случай требует дорогой эвакуации в Австралию или Сингапур",
+            "Рынок работы очень мал, а большинство вакансий требует заранее подтверждённого работодателя или проекта",
+            "Дороги вне Дили плохие, в сезон дождей возможны оползни и изоляция, экстренные службы ненадёжны",
+        ],
+        "top_cities": ["Дили", "Баукау", "Атауро"],
+        "city_profiles": [
+            ("Дили", "$1 200–2 500", "международные организации, государство, нефтегазовые и инфраструктурные проекты, школы и основные клиники", "высокая аренда качественного жилья, пробки, импортные цены, жара и ограниченная сложная медицина"),
+            ("Баукау", "$700–1 400", "региональное управление, образование, сельское хозяйство, местный бизнес и более спокойный ритм", "почти нет международного рынка, слабая медицина, меньше связи, магазинов и надёжного жилья"),
+            ("Атауро", "$800–1 600", "дайвинг, экотуризм, морские исследования и небольшие проекты развития", "это остров, а не полноценный городской рынок: паром зависит от погоды, снабжение и медицина очень ограничены"),
+        ],
+    },
+    "move-to-turkmenistan": {
+        "budget": "$1 200–2 800",
+        "climate": "Резко континентальный, пустынный",
+        "english": "Низкий",
+        "visa_label": "Work Visa / Permit",
+        "description": "Переезд в Туркменистан в 2026 году возможен главным образом через местного спонсора. Для туристической, деловой, рабочей, инвестиционной, семейной и учебной визы требуется Letter of Invitation, одобренный Государственной миграционной службой. Туристу приглашение оформляет лицензированное агентство; работодателю нужны рабочая виза WP и отдельное разрешение на трудовую деятельность, причём закон закрепляет приоритет местного рынка труда. При пребывании более трёх рабочих дней требуется регистрация через отель или спонсора. Отдельной digital nomad визы нет, а туристический или деловой статус не заменяет разрешение на работу. Редакционный бюджет одного человека — $1 200–2 800 в месяц: итог сильно зависит от служебного жилья, официального курса, доступа к наличным, импортных товаров и медицинской эвакуации.",
+        "visas": [
+            ("Tourist Visa (TU)", "По датам приглашения и визы", "LOI от лицензированного турагентства, паспорт от 6 месяцев после выезда, анкета, фото и сбор", "Организованная поездка без работы"),
+            ("Work Visa (WP) + work permit", "По контракту и одобрению", "Работодатель получает LOI и разрешение миграционной службы; действует приоритет местных работников", "Специалист с подтверждённым работодателем"),
+            ("Business BS1/BS2 / Investor IN", "По приглашению и решению", "Приглашение зарегистрированного партнёра или организации, заявленная деловая либо инвестиционная цель", "Переговоры, управление проектом или инвестиция без подмены трудового статуса"),
+            ("Family / Private / Student", "По основанию и одобрению", "Приглашающее лицо или учреждение, LOI, документы семьи либо учёбы и регистрация", "Семья, частный визит или обучение"),
+        ],
+        "costs": ("$1 200–2 800", "$600–1 600", "$250–550", "$50–250"),
+        "pros": [
+            "Контракты в нефтегазе, строительстве, логистике и международных проектах могут включать жильё и транспорт",
+            "Ашхабад чистый, организованный и относительно спокойный при соблюдении местных правил",
+            "Низкая стоимость местного транспорта и топлива уменьшает повседневные расходы",
+            "Русский язык часто помогает в профессиональной и бытовой коммуникации наряду с туркменским",
+        ],
+        "cons": [
+            "Виза, регистрация и право на работу зависят от местного спонсора; самостоятельный пробный переезд почти невозможен",
+            "Многие сайты и приложения заблокированы, VPN незаконны, мобильная сеть и интернет ненадёжны",
+            "Международные карты и банкоматы работают ограниченно, а разница курсов осложняет честный расчёт бюджета",
+            "Сложная медицина ограничена; за пределами Ашхабада обычно нужен план эвакуации и хороший страховой лимит",
+        ],
+        "top_cities": ["Ашхабад", "Туркменбаши", "Мары"],
+        "city_profiles": [
+            ("Ашхабад", "$1 400–3 000", "государственные и международные организации, нефтегаз, строительство, посольства, образование и основные клиники", "самая дорогая аренда, строгие правила, ограниченный интернет и зависимость от работодателя"),
+            ("Туркменбаши", "$900–1 800", "порт, логистика, нефтепереработка, Каспий и проектные назначения", "малый рынок жилья и услуг, промышленный профиль, жара и удалённость от сложной медицины"),
+            ("Мары", "$700–1 400", "газовые, энергетические, строительные, аграрные и региональные проекты", "очень ограниченный иностранный рынок, мало английского, слабая медицина и меньше рейсов"),
+        ],
+    },
+    "move-to-sharm-el-sheikh": {
+        "budget": "$700–1 500",
+        "climate": "Жаркий пустынный, сухой",
+        "english": "Средний в туризме",
+        "visa_label": "Work Permit / Residence",
+        "description": "Переезд в Шарм-эль-Шейх в 2026 году нужно отделять от короткого отпуска. Для некоторых паспортов при прилёте прямо в Шарм-эль-Шейх доступен бесплатный штамп South Sinai до 15 дней, если не покидать курортную зону; он не подходит для работы или долгого проживания. Обычная туристическая eVisa стоит $30 за один въезд или $65 за несколько въездов, а виза по прибытии обычно даёт до 30 дней; право зависит от гражданства. Работу оформляет египетский работодатель: нужны разрешение, подтверждённый опыт, документы компании, проверка безопасности и тест на ВИЧ, а доля иностранцев обычно ограничена. Инвестор может получить резиденцию на срок проекта через структуру GAFI. Отдельной digital nomad визы нет. Реалистичный бюджет одного человека — $700–1 500 в месяц; сезон, район, курортная наценка и качество жилья меняют итог сильнее среднего по Египту.",
+        "visas": [
+            ("South Sinai permission stamp", "До 15 дней", "Прилёт в Шарм-эль-Шейх, подходящий паспорт и пребывание только в курортной зоне Южного Синая", "Короткий отпуск без работы"),
+            ("Tourist eVisa / visa on arrival", "Обычно до 30 дней; eVisa действует для въезда до 3 месяцев", "Паспорт от 6 месяцев, право по гражданству, маршрут, жильё и сбор $30 за один въезд", "Поездка дольше 15 дней или выезд за пределы курортной зоны"),
+            ("Work permit + residence", "По разрешению и трудовому основанию", "Работодатель, подтверждённый опыт, документы компании, квота, проверка безопасности и ВИЧ-тест", "Официальная работа в отеле, дайвинге, туризме или сервисе"),
+            ("Investor residence", "Возобновляемая, привязана к проекту", "Действующий инвестиционный проект и оформление через GAFI и миграционные органы", "Учредитель или инвестор с реальным египетским проектом"),
+        ],
+        "costs": ("$700–1 500", "$300–650", "$200–400", "$50–180"),
+        "pros": [
+            "Тёплая сухая зима, Красное море, дайвинг и прямые международные рейсы",
+            "В туристической сфере часто хватает английского и русского языка",
+            "Повседневный бюджет ниже многих курортных направлений при долгосрочной аренде",
+            "Набк, Хадаба и Наама-Бей дают разные сценарии от спокойного комплекса до активного центра",
+        ],
+        "cons": [
+            "South Sinai stamp не является long-stay или рабочим статусом; легальный переезд требует отдельного оформления",
+            "Местный рынок почти полностью зависит от туризма и сезонного спроса, а зарплаты невысоки",
+            "Для сложной медицины, крупных банковских задач и государственных процедур часто нужен Каир",
+            "Летом очень жарко, районы растянуты, общественный транспорт ограничен, а курортные цены нестабильны",
+        ],
+        "top_cities": ["Набк-Бей", "Хадаба", "Наама-Бей"],
+        "city_profiles": [
+            ("Набк-Бей", "$750–1 600", "новые комплексы, спокойная жизнь, аэропорт, удалённая работа и длинная аренда", "ветер зимой, большие расстояния и зависимость от такси или автомобиля"),
+            ("Хадаба", "$650–1 400", "более локальный быт, Старый рынок, пляжи, дайвинг и сервисные вакансии", "качество домов сильно различается, часть поездок требует такси"),
+            ("Наама-Бей", "$800–1 700", "пешая доступность, рестораны, ночная жизнь, отели и центр туристического рынка", "шум, туристическая наценка и меньше спокойных вариантов долгой аренды"),
+        ],
+    },
+    "move-to-tajikistan": {
+        "budget": "$650–1 400",
+        "climate": "Континентальный, горный",
+        "english": "Низкий",
+        "visa_label": "M Work / C Investor",
+        "description": "Переезд в Таджикистан в 2026 году требует сначала проверить правила для конкретного паспорта. Для подходящих граждан доступна eVisa для туристической или деловой поездки; срок и число въездов нужно читать в выданном документе, eVisa не продлевается и не даёт права на работу. При въезде без eVisa и пребывании дольше 10 дней иностранец должен лично зарегистрироваться в OVIR; новый адрес требует новой регистрации. Для трудоустройства нужны рабочая виза категории M и отдельное разрешение уполномоченного миграционного органа. Инвестиционная виза C может выдаваться до трёх лет при подтверждённой инвестиции от $500 000 и до пяти лет при инвестиции от $1 млн. Отдельной digital nomad визы в официальных категориях не найдено. Для ГБАО и некоторых приграничных районов требуются специальные пропуска. Редакционный бюджет одного человека — $650–1 400 в месяц без международной школы, автомобиля и медицинской эвакуации.",
+        "visas": [
+            ("Tourist / Business eVisa", "По выданной eVisa, обычно до 60 дней", "Подходящий паспорт, онлайн-заявление, сбор, жильё и цель поездки; без права работы", "Короткий туризм или деловая поездка"),
+            ("M Work Visa + Permit", "По контракту и разрешению", "Местный работодатель или организация, приглашение, виза M, регистрация и отдельный work permit", "Иностранный специалист по подтверждённому договору"),
+            ("C Investment Visa", "До 3 лет; до 5 лет при $1 млн", "Подтверждение госоргана, инвестиция или капитал от $500 000 и корпоративные документы", "Крупный инвестор и подходящие члены семьи"),
+            ("Study / Family / Permanent Residence", "По основанию", "Зачисление, родство или одобрение постоянного проживания; регистрация и документы по категории", "Студент, семья резидента или заявитель на ПМЖ"),
+        ],
+        "costs": ("$650–1 400", "$250–700", "$180–350", "$40–180"),
+        "pros": [
+            "Низкие базовые расходы и доступная аренда по сравнению со многими столицами Азии",
+            "Русский язык широко помогает в Душанбе, Худжанде и деловой среде",
+            "Сильная горная природа и удобная база для Памира при наличии разрешений и подготовки",
+            "Есть спрос на отдельных специалистов в развитии, энергетике, инфраструктуре, образовании и добыче",
+        ],
+        "cons": [
+            "Небольшой рынок международной работы; местные зарплаты часто не соответствуют ожиданиям иностранца",
+            "Медицина в целом слабая, а за пределами Душанбе бывает почти недоступна; нужна эвакуационная страховка",
+            "Экономика в основном наличная, карты принимают редко, а связь и сервисы вне городов ограничены",
+            "Горные дороги, лавины, оползни, закрытие границ и отдельные пропуска усложняют поездки",
+        ],
+        "top_cities": ["Душанбе", "Худжанд", "Хорог"],
+        "city_profiles": [
+            ("Душанбе", "$750–1 600", "международные организации, государственные проекты, финансы, образование, телеком и лучшая частная медицина", "дороже остальной страны, небольшой рынок качественного жилья и ограниченный выбор сложной медицины"),
+            ("Худжанд", "$550–1 100", "торговля, текстиль, пищевая промышленность, логистика и региональный бизнес Согдийской области", "меньше международных работодателей, рейсов, английского и специализированных услуг"),
+            ("Хорог", "$650–1 300", "редкие проекты развития, исследования, туризм и работа, связанная с Памиром", "нужен GBAO permit, сложная дорога, высота, слабая медицина и быстро меняющаяся безопасность"),
+        ],
+    },
+    "move-to-palestine": {
+        "budget": "$900–2 000",
+        "climate": "Средиземноморский и полупустынный",
+        "english": "Средний",
+        "visa_label": "COGAT / Work / NGO",
+        "description": "Переезд в Палестину в 2026 году нужно планировать отдельно для Западного берега и Газы. Практический иностранный сценарий относится прежде всего к Западному берегу: въезд контролируют израильские власти, а COGAT регулирует часть визитов и длительного пребывания иностранцев. Для граждан стран с безвизовым въездом в Израиль с 2025 года обычно нужна ETA-IL; фактическое разрешение, срок и территориальные ограничения определяют на границе. Туристический статус не разрешает работу. Для найма палестинский работодатель оформляет разрешение Минтруда: закон запрещает нанимать иностранца без него, а действующее постановление предусматривает срок до года с продлением. Разрешение на работу не заменяет разрешение на въезд и пребывание. Отдельной digital nomad визы не найдено. FCDO советует отказаться от любых поездок в Газу; переходы могут оставаться закрытыми, а выезд — невозможным. Бюджет $900–2 000 относится только к Западному берегу и не включает международную школу, защищённый транспорт или эвакуацию.",
+        "visas": [
+            ("Visitor / ETA-IL or B/2", "Обычно до 90 дней при одобрении", "Паспортный режим, ETA-IL или виза, решение на границе и возможная территориальная отметка", "Короткий визит без работы"),
+            ("COGAT-sponsored stay", "По цели и индивидуальному разрешению", "Приглашение организации, подтверждение цели, жильё, страховка и согласование COGAT", "NGO, международный, академический или официальный проект"),
+            ("Palestinian Work Permit", "До 1 года с возможным продлением", "Местный работодатель, реальная потребность, квалификация и подача через отделение Минтруда", "Иностранный специалист по конкретному контракту"),
+            ("Family / special-purpose case", "По индивидуальному решению", "Документы о родстве или особом основании и отдельные согласования компетентных органов", "Семья или исключительный гуманитарный случай"),
+        ],
+        "costs": ("$900–2 000", "$400–1 100", "$250–500", "$80–300"),
+        "pros": [
+            "Рамалла даёт работу в международных организациях, развитии, финансах, телекоммуникациях и образовании",
+            "Компактные расстояния между основными городами Западного берега при открытых дорогах",
+            "Сильная арабская культурная и общественная среда, исторические города и местная кухня",
+            "Для отдельных специалистов доступны содержательные гуманитарные, исследовательские и образовательные проекты",
+        ],
+        "cons": [
+            "FCDO советует отказаться от поездок в Газу и части северного Западного берега, а для остальных районов действуют серьёзные ограничения",
+            "Блокпосты, закрытия дорог и разрешительный режим могут внезапно менять маршрут и время поездки",
+            "Право на въезд, пребывание и работу оформляется разными органами; туристический статус не заменяет рабочий",
+            "Медицина платная, сложное лечение и эвакуация требуют страховки и доступных средств",
+        ],
+        "top_cities": ["Рамалла", "Вифлеем", "Иерихон"],
+        "city_profiles": [
+            ("Рамалла", "$1 100–2 200", "Палестинская администрация, NGO, финансы, телеком, образование и наиболее широкий рынок услуг", "дорогая хорошая аренда, пробки, блокпосты и быстро меняющаяся доступность дорог"),
+            ("Вифлеем", "$850–1 700", "туризм, образование, религиозные учреждения, ремёсла и гуманитарные проекты", "зависимость от туризма, ограничения движения и более узкий рынок вакансий"),
+            ("Иерихон", "$800–1 600", "сельское хозяйство, туризм, развитие и проекты в долине Иордана", "очень жаркое лето, небольшой рынок, автомобиль и меняющаяся доступность маршрутов"),
+        ],
+    },
+    "move-to-north-korea": {
+        "budget": "По смете организации",
+        "climate": "Умеренный муссонный",
+        "english": "Низкий",
+        "visa_label": "Sponsored assignment",
+        "description": "Переезд в Северную Корею в 2026 году нельзя планировать как обычную самостоятельную релокацию. FCDO советует отказаться от всех поездок, кроме необходимых: общий въезд после закрытия границ в 2020 году возобновлён только частично, не все пассажирские маршруты работают, а многие посольства остаются закрыты. Виза нужна для любого въезда. Турист обычно едет только в организованной группе; независимому посетителю требуются спонсор и разрешение МИД. Работа, дипломатическое, гуманитарное или иное длительное назначение возможно только по индивидуальному официальному приглашению и согласованию принимающей стороны. Публичного самостоятельного маршрута для digital nomad, инвестора или обычного семейного ВНЖ не найдено. Рыночный месячный бюджет проверить невозможно: жильё, транспорт, связь, наличные, страховку и эвакуацию должна заранее обеспечить организация.",
+        "visas": [
+            ("Organised Tour Visa", "По утверждённой поездке", "Виза, одобренный оператор, фиксированный маршрут и постоянное сопровождение", "Редкая доступная туристическая группа"),
+            ("Sponsored Business / Official Visit", "По индивидуальному разрешению", "Приглашение принимающей организации, виза, регистрация и согласованный маршрут", "Необходимая официальная или деловая поездка"),
+            ("Diplomatic / International Assignment", "По аккредитации и назначению", "Государственное или международное назначение, аккредитация, жильё, транспорт и протокол безопасности", "Дипломат или сотрудник допущенной международной структуры"),
+            ("Humanitarian / Specialist Assignment", "По проекту и разрешениям", "Официальный спонсор, санкционные лицензии или исключения, рабочее согласование и план эвакуации", "Одобренный гуманитарный или технический специалист"),
+        ],
+        "costs": ("По смете организации", "Предоставляет спонсор", "Наличные и снабжение", "Водитель / сопровождение"),
+        "pros": [
+            "Возможны отдельные дипломатические, международные и гуманитарные профессиональные назначения",
+            "Пхеньян концентрирует доступные иностранцам учреждения, жильё и ограниченные международные функции",
+            "Организация обычно централизованно решает жильё, транспорт и часть снабжения",
+            "Редкое назначение может дать профессиональный опыт специалисту с подходящей аккредитацией",
+        ],
+        "cons": [
+            "FCDO советует отказаться от всех поездок, кроме необходимых; страхование может не действовать",
+            "Высокий риск произвольного задержания, отсутствия независимой юридической помощи и консульского доступа",
+            "Свободное перемещение, интернет, мобильная связь, банковские карты и независимые покупки сильно ограничены",
+            "Медицина слабая, лекарства и анестезия могут отсутствовать, а при серьёзном случае нужна эвакуация",
+        ],
+        "top_cities": ["Пхеньян", "Расон", "Вонсан"],
+        "city_profiles": [
+            ("Пхеньян", "Только пакет организации", "дипломатические миссии, международные структуры и редкие официальные назначения", "строгий контроль, ограниченная связь, наличные платежи и разрешения на выезд из города"),
+            ("Расон", "Только одобренный проект", "отдельные приграничные, торговые или проектные назначения при специальном разрешении", "доступ и правила могут меняться без предупреждения; открытого рынка жилья и услуг для иностранца нет"),
+            ("Вонсан", "Только утверждённый маршрут", "редкие туристические или официальные проекты на восточном побережье", "не является самостоятельной релокационной базой; поездка зависит от разрешения и сопровождения"),
+        ],
+    },
+    "move-to-mongolia": {
+        "budget": "$850–1 800",
+        "climate": "Резко континентальный",
+        "english": "Средний",
+        "visa_label": "Work / Investor / Study",
+        "description": "Переезд в Монголию в 2026 году требует основания, отличного от туризма. Для граждан 34 стран действует временный безвизовый туристический въезд до 30 дней до 31 декабря 2026 года, а граждане подходящих стран могут оформить K2 eVisa; ни один из этих вариантов не разрешает работу. Для найма местный работодатель сначала получает pre-work permit, затем рабочую визу категории C, а после прибытия подаёт на окончательный work permit. Residence permit нужно запросить в течение 21 дня после въезда; для работника его срок обычно совпадает с work permit. Инвесторы используют категории B1–B3, а их первоначальный residence permit может выдаваться до года с дальнейшим продлением до трёх лет. Отдельной digital nomad визы в официальных категориях не найдено. Редакционный бюджет одного человека — $850–1 800 в месяц, без международной школы и медицинской эвакуации.",
+        "visas": [
+            ("Visa-free / K2 Tourist", "Обычно до 30 дней", "Паспортные правила; для eVisa паспорт от 180 дней, онлайн-заявление и ETA", "Короткая туристическая поездка без работы"),
+            ("C Work Visa + Permit", "До 1 года с продлением", "Местный работодатель, вакансия, pre-work permit, контракт, виза C, окончательный permit и residence card", "Специалист по конкретному трудовому договору"),
+            ("B1–B3 Investor", "Residence до 1 года, продление до 3 лет", "Зарегистрированная компания или представительство, подтверждение инвестиции, B-виза и документы организации", "Инвестор, руководитель или представитель"),
+            ("Family / Study Residence", "По основанию и сроку спонсора или программы", "Подтверждение родства либо зачисление, приглашение, медицинские и адресные документы", "Семья подходящего резидента или студент"),
+        ],
+        "costs": ("$850–1 800", "$430–1 050", "$230–450", "$40–180"),
+        "pros": [
+            "Спрос на часть специалистов в добыче, энергетике, строительстве, образовании и международных проектах",
+            "Доступные базовые расходы вне самых дорогих районов Улан-Батора",
+            "Сильная природа, небольшая плотность населения и удобный выезд из столицы летом",
+            "Улан-Батор, Эрдэнэт и Дархан дают разные сценарии международной, промышленной и региональной работы",
+        ],
+        "cons": [
+            "Зимний смог Улан-Батора опасен для людей с заболеваниями дыхательных путей и семей с детьми",
+            "Очень холодная зима требует проверенного отопления, утепления и транспорта",
+            "Почти весь международный рынок работы и сложные услуги сосредоточены в столице",
+            "Медицина за пределами Улан-Батора ограничена, поэтому страховка должна покрывать эвакуацию",
+        ],
+        "top_cities": ["Улан-Батор", "Эрдэнэт", "Дархан"],
+        "city_profiles": [
+            ("Улан-Батор", "$900–2 000", "международные компании, добыча, финансы, образование, дипломатия, технологии и медицина", "зимний смог, пробки, дорогая хорошая аренда и необходимость тщательно выбирать район"),
+            ("Эрдэнэт", "$650–1 300", "горнодобывающая промышленность, инженерия, образование и более компактная городская жизнь", "узкий рынок вакансий, меньше англоязычных услуг и зависимость от столицы для сложной медицины"),
+            ("Дархан", "$650–1 200", "производство, строительство, логистика, агросектор и связь по железной дороге", "меньше международных работодателей, развлечений и специализированных сервисов"),
+        ],
+    },
+    "move-to-maldives": {
+        "budget": "$900–2 200",
+        "climate": "Тропический",
+        "english": "Высокий",
+        "visa_label": "Work / Dependent / Business",
+        "description": "Переезд на Мальдивы в 2026 году обычно начинается не с туристической поездки, а с подтверждённого основания. Туристическую визу выдают по прибытии обычно на срок до 30 дней при наличии обратного билета, зарегистрированного жилья, средств и бесплатной Traveller Declaration в IMUGA; продление остаётся решением Immigration и не превращает статус в рабочий. Для найма работодатель получает Work Permit или Employment Approval, а Work Visa оформляют через Xpat в течение 15 дней после въезда. Business Visa требует приглашения местной организации и предварительного одобрения; она допускает суммарно до 90 дней в течение 12 месяцев, но не заменяет трудовой статус. Для семьи существуют dependent и marriage routes, а инвестиционный проект проходит государственное одобрение. Редакционный бюджет одного человека — $900–2 200 в месяц без международной школы и медицинской эвакуации; жильё и питание от курортного работодателя могут заметно снизить личные расходы.",
+        "visas": [
+            ("Tourist Visa on Arrival", "Обычно до 30 дней; продление суммарно до 90 дней", "MRZ-паспорт, обратный билет, зарегистрированное жильё, средства и бесплатная декларация IMUGA за 96 часов", "Короткая поездка без работы"),
+            ("Work Permit + Work Visa", "По сроку разрешения на работу", "Работодатель, Employment Approval или Work Permit, подача через Xpat и Work Visa в течение 15 дней после въезда", "Иностранный сотрудник по конкретному контракту"),
+            ("Business Visa", "Суммарно до 90 дней за 12 месяцев", "Приглашение зарегистрированной организации и одобрение через Business Portal до поездки", "Деловые визиты без обычного найма"),
+            ("Dependent / Marriage / Corporate Resident", "Зависит от семейного или инвестиционного основания", "Спонсорство, подтверждение родства либо одобренная инвестиция, страховка и документы категории", "Семья подходящего держателя статуса, супруг гражданина или инвестор"),
+        ],
+        "costs": ("$900–2 200", "$400–1 300", "$250–550", "$120–450"),
+        "pros": [
+            "Много вакансий в туризме, гостиницах, морских сервисах и связанных операциях",
+            "Английский широко используется в туристическом секторе и профессиональной среде",
+            "Курортный контракт может включать жильё, питание, транспорт и обратный перелёт",
+            "Мале, Хулхумале и Адду дают разные сценарии столичной, новой и региональной жизни",
+        ],
+        "cons": [
+            "Нет отдельной digital nomad визы, а туристический статус не разрешает работу",
+            "Импортные товары, аренда в столичном районе и межостровные поездки заметно увеличивают бюджет",
+            "Сложная медицина сосредоточена в Мале и Хулхумале; с удалённых островов может потребоваться эвакуация",
+            "Вне курортов действуют строгие местные исламские нормы, а жизнь на небольшом острове ограничивает выбор жилья и услуг",
+        ],
+        "top_cities": ["Мале", "Хулхумале", "Адду-Сити"],
+        "city_profiles": [
+            ("Мале", "$1 200–2 500", "государство, финансы, медицина, образование, торговля и самый широкий рынок услуг", "очень высокая плотность, дорогая аренда, шум, мало пространства и зависимость от паромов"),
+            ("Хулхумале", "$1 000–2 100", "аэропорт, строительство, жильё, логистика, сервисы и удобная связь с Мале", "продолжающаяся застройка, импортные цены и ограниченный выбор за пределами столичной агломерации"),
+            ("Адду-Сити", "$700–1 500", "региональные услуги, туризм, рыболовство, логистика и более спокойный островной ритм", "узкий рынок вакансий, меньше специализированной медицины и ограниченные рейсы"),
+        ],
+    },
+    "move-to-bhutan": {
+        "budget": "$700–1 400",
+        "climate": "Горный",
+        "english": "Высокий",
+        "visa_label": "Work / Student / Investor",
+        "description": "Переезд в Бутан в 2026 году требует нетуристического основания. Для обычной поездки большинство иностранцев оформляет eVisa, платит невозвратный сбор $40 и Sustainable Development Fee $100 за ночь; граждане Индии, Бангладеш и Мальдив используют отдельные правила. Работа начинается с одобрения компетентного ведомства и заявления работодателя через immi.gov.bt. Международные студенты используют отдельную процедуру 2026 года. Инвестор, вложивший более Nu 15 млн в зарегистрированный FDI-проект, может получить трёхлетнюю Investor Card с продлением. Редакционный бюджет нетуристического резидента — $700–1 400 в месяц; туристический SDF в него не входит.",
+        "visas": [
+            ("Tourist eVisa / Permit", "На одобренный срок поездки", "Паспорт, фото, страховка, $40 и SDF $100 за ночь; отдельные правила для Индии, Бангладеш и Мальдив", "Короткая поездка без работы"),
+            ("Work Permit", "По контракту и одобрению", "Работодатель, одобрение ведомства, DOCF2025, immi.gov.bt и медицинские требования", "Иностранный специалист на конкретной работе"),
+            ("Student Visa / Permit", "По сроку признанной программы", "Зачисление, рекомендация учреждения и процедура DoI 2026", "Международный студент"),
+            ("Investor Card", "3 года с дальнейшим продлением", "FDI Registration Certificate, запуск бизнеса и инвестиция свыше Nu 15 млн", "Квалифицирующийся инвестор или представитель"),
+        ],
+        "costs": ("$700–1 400", "$180–550", "$170–350", "$60–220"),
+        "pros": [
+            "Спокойная городская среда, природа и компактный масштаб страны",
+            "Английский широко используется в образовании, администрации и профессиональной среде",
+            "Investor Card даёт опубликованный трёхлетний маршрут для крупного FDI-проекта",
+            "Тхимпху, Паро и Пхунчолинг предлагают разные сценарии государственной, туристической и торговой работы",
+        ],
+        "cons": [
+            "Нетуристические маршруты узкие и привязаны к работодателю, учебному заведению или крупной инвестиции",
+            "Туристический SDF $100 за ночь делает гостевую визу непрактичной заменой резиденции",
+            "Небольшой рынок работы, ограниченный выбор жилья и дорогие импортные товары",
+            "Сложная медицина требует эвакуационного покрытия; горные дороги, высота и муссон влияют на поездки",
+        ],
+        "top_cities": ["Тхимпху", "Паро", "Пхунчолинг"],
+        "city_profiles": [
+            ("Тхимпху", "$800–1 600", "государственные учреждения, международные проекты, образование, финансы и самый широкий выбор услуг", "самая высокая аренда, дефицит подходящего жилья, пробки и ограниченная сложная медицина"),
+            ("Паро", "$700–1 350", "международный аэропорт, туризм, гостиницы, культура и более спокойный горный быт", "малый рынок работы, сезонность, высота и зависимость от дороги в Тхимпху"),
+            ("Пхунчолинг", "$650–1 200", "торговля с Индией, логистика, промышленность и более удобный доступ к индийским сервисам", "жаркий и влажный климат, пограничные процедуры и менее развитая международная среда"),
+        ],
+    },
+    "move-to-afghanistan": {
+        "budget": "$600–1 500",
+        "climate": "Континентальный",
+        "english": "Низкий",
+        "visa_label": "Entry / Work / Residence",
+        "description": "Переезд в Афганистан в 2026 году нельзя планировать как обычную релокацию или пробный месяц. FCDO рекомендует отказаться от любых поездок из-за терактов, похищений, произвольных задержаний, закрывающихся границ и отсутствия очной британской консульской помощи. Для обязательного назначения официальная система перечисляет tourist, business, entry, residence и другие визы. Entry visa выдаётся по приглашению лицензированной организации на три месяца с пребыванием до одного месяца; работа дополнительно требует корректного рабочего статуса и permit через MoLSA. Редакционный бытовой диапазон $600–1 500 не включает профессиональную охрану, защищённый транспорт и эвакуацию — эти статьи могут многократно превысить обычный бюджет.",
+        "visas": [
+            ("Tourist Visa", "Действительна 3 месяца; пребывание 1 месяц", "Паспорт, цель поездки, бронирование и решение консульства", "Туризм; не даёт права на работу"),
+            ("Entry / Work Route", "Entry: 3 месяца, пребывание 1 месяц", "Приглашение лицензированной организации, письмо ведомства, одобрение MFA и work permit", "Обязательное назначение по контракту"),
+            ("Business Visa", "От 1 месяца до 3 лет", "Действующая бизнес-лицензия, паспорт и банковские подтверждения", "Предприниматель или представитель компании"),
+            ("Residence Visa", "От 1 месяца до 1 года", "Продолжение stay после service, business, entry, student или crew visa", "Держатель подходящей базовой визы"),
+        ],
+        "costs": ("$600–1 500", "$150–600", "$130–320", "$50–250"),
+        "pros": [
+            "Низкие цены на местное жильё, еду и базовые услуги сами по себе",
+            "Работа возможна в отдельных гуманитарных, инфраструктурных, телекоммуникационных и международных проектах",
+            "Дари и пушту открывают доступ к местной среде для специалистов с нужной языковой подготовкой",
+            "Кабул, Герат и Мазари-Шариф выполняют разные административные, торговые и региональные функции",
+        ],
+        "cons": [
+            "FCDO советует отказаться от любых поездок; риск терактов, похищения и задержания остаётся высоким",
+            "Женщины сталкиваются с жёсткими ограничениями на передвижение, одежду, образование, работу и участие в общественной жизни",
+            "Банковские карты, переводы, связь, электричество, медицина, аэропорты и наземные границы ненадёжны",
+            "Профессиональная охрана, защищённое жильё, транспорт, медицинская эвакуация и страховка резко увеличивают реальный бюджет",
+        ],
+        "top_cities": ["Кабул", "Герат", "Мазари-Шариф"],
+        "city_profiles": [
+            ("Кабул", "$700–1 700", "государственные учреждения, международные организации, дипломатические и крупнейшие коммерческие функции", "высокая заметность иностранца, терроризм, задержания, загрязнение, пробки и критическая нагрузка на воду и инфраструктуру"),
+            ("Герат", "$550–1 250", "торговля с Ираном, строительство, услуги, агробизнес и региональная логистика", "землетрясения, пограничные изменения, ограниченная специализированная медицина и сложная эвакуация"),
+            ("Мазари-Шариф", "$500–1 150", "северная торговля, сельское хозяйство, логистика и региональные проекты", "малый международный рынок, нестабильные сухопутные маршруты и ограниченные медицинские возможности"),
+        ],
+    },
+    "move-to-bangladesh": {
+        "budget": "$550–1 300",
+        "climate": "Тропический",
+        "english": "Средний",
+        "visa_label": "Visit / E2 / E3 / PI",
+        "description": "Переезд в Бангладеш в 2026 году обычно начинается с работодателя, инвестиционного проекта, учебного места или семьи. Виза по прибытии доступна только подходящим паспортам, выдаётся по усмотрению пограничной службы и обычно покрывает 15–30 дней; она не заменяет право на работу. Для E2 и PI BIDA рекомендует визу, после въезда заявление на work permit подают через OSS. E3 предназначена для коротких технических задач; актуальный BIDA guide указывает, что для неё work permit не требуется. Редакционный бюджет одного человека — $550–1 300 в месяц без международной школы, автомобиля и расширенной страховки.",
+        "visas": [
+            ("Visit / Visa on Arrival", "Обычно 15–30 дней для подходящих паспортов", "Паспорт, обратный билет, средства и подтверждение цели; решение на границе не гарантировано", "Короткая поездка без работы"),
+            ("E2 Employment + Work Permit", "Разрешение обычно на 1 год с продлением", "Оффер, E2, зарегистрированный работодатель, квалификация, контракт и подача через BIDA OSS", "Долгосрочная работа по найму"),
+            ("E3 Technical Employment", "Короткое техническое назначение", "Рекомендация, E3 и документы по установке, обслуживанию, надзору или инспекции", "Монтаж и техническая командировка"),
+            ("PI Private Investor", "По проекту и решению ведомств", "Зарегистрированный инвестиционный проект, PI и оформление через BIDA", "Инвестор и руководитель проекта"),
+        ],
+        "costs": ("$550–1 300", "$180–600", "$130–320", "$45–180"),
+        "pros": [
+            "Низкие базовые расходы на местное жильё, еду, транспорт и бытовые услуги",
+            "Крупный рынок в текстиле, производстве, телекоммуникациях, логистике, развитии и международных проектах",
+            "Английский широко используется в международном бизнесе, высшем образовании и части административных процедур",
+            "Дакка, Чаттограм и Силхет дают разные сочетания карьеры, цены и городского масштаба",
+        ],
+        "cons": [
+            "Рабочий статус связан с работодателем или проектом; независимого digital nomad маршрута в проверенных официальных категориях нет",
+            "Пробки, загрязнение воздуха, жара, муссоны и сезонные наводнения заметно влияют на ежедневный быт",
+            "FCDO предупреждает о терроризме, протестах и росте насильственной преступности, а поездки в Chittagong Hill Tracts рекомендует ограничить",
+            "Частная медицина, подходящее жильё, резервное электричество, автомобиль и международная школа быстро увеличивают бюджет",
+        ],
+        "top_cities": ["Дакка", "Чаттограм", "Силхет"],
+        "city_profiles": [
+            ("Дакка", "$650–1 400", "международные компании, развитие, финансы, технологии, дипломатические миссии и самый широкий выбор услуг", "тяжёлый трафик, загрязнение воздуха, высокая плотность и дорогие районы с хорошей инфраструктурой"),
+            ("Чаттограм", "$550–1 150", "порт, судоходство, логистика, производство, экспорт и близость к побережью", "циклоны, наводнения, меньший выбор международной медицины и отдельные риски за пределами города"),
+            ("Силхет", "$500–1 050", "компактный город, университеты, услуги и связи с зарубежной бангладешской диаспорой", "небольшой рынок квалифицированной работы, сезонные наводнения и более узкий выбор клиник"),
+        ],
+    },
+    "move-to-pakistan": {
+        "budget": "$550–1 300",
+        "climate": "Разнообразный",
+        "english": "Средний",
+        "visa_label": "eVisa / Work Visa / LTR",
+        "description": "Переезд в Пакистан в 2026 году требует цели, которая совпадает с визовой категорией. Туристическая eVisa подходит для короткой поездки, но не заменяет разрешение на работу. Рабочий маршрут строится через зарегистрированного работодателя: DGI&P описывает въездную рабочую визу до трёх месяцев и последующее продление до двух лет, а BOI перечисляет контракт и документы компании. Для инвесторов объявлена Long Term Residency на 5, 7 или 10 лет, однако официальный цифровой портал нужно проверить перед переводом средств. Редакционный бюджет одного человека — $550–1 300 в месяц без международной школы и премиальной безопасности.",
+        "visas": [
+            ("Tourist / Visit eVisa", "По решению для паспорта и цели поездки", "Онлайн-заявление, паспорт, фото, адрес и документы поездки", "Короткий визит без местной работы"),
+            ("Work Visa", "Въезд до 3 месяцев; продление до 2 лет", "Контракт, зарегистрированный работодатель, документы компании и последующее одобрение", "Иностранный специалист с оффером"),
+            ("Study Visa", "До 2 лет после необходимых согласований", "Зачисление, паспорт, фото и требуемые NOC", "Учёба в признанном учреждении"),
+            ("Long Term Residency", "5, 7 или 10 лет", "Подходящее гражданство, проверки, государственный платёж и материализация инвестиции", "Инвестор и до семи иждивенцев"),
+        ],
+        "costs": ("$550–1 300", "$180–550", "$140–300", "$40–160"),
+        "pros": [
+            "Низкие базовые расходы на жильё, питание и услуги по сравнению со многими крупными городами Азии",
+            "Английский используется в бизнесе, высшем образовании и части государственных процедур",
+            "Крупные рынки в технологиях, телекоммуникациях, финансах, текстиле, логистике и международных проектах",
+            "Исламабад, Лахор и Карачи предлагают разные карьерные и бытовые сценарии",
+        ],
+        "cons": [
+            "Рабочая виза привязана к работодателю и документам компании; туристический статус не подходит для местной занятости",
+            "FCDO предупреждает против поездок в ряд регионов, а протесты, перекрытия и отключения связи могут возникать быстро",
+            "Качество воздуха, жара, сезон дождей, перебои электричества и городской трафик заметно влияют на быт",
+            "Международная школа, защищённое жильё, частная медицина, автомобиль и страховка могут многократно увеличить бюджет",
+        ],
+        "top_cities": ["Исламабад", "Лахор", "Карачи"],
+        "city_profiles": [
+            ("Исламабад", "$700–1 400", "дипломатические миссии, государственные проекты, международные организации и более спокойная городская среда", "самый высокий из трёх городов бюджет, автомобильная зависимость и ограничения поездок в соседние районы"),
+            ("Лахор", "$550–1 100", "образование, технологии, культурные индустрии, производство и сильная городская жизнь", "зимний смог, летняя жара, плотный трафик и неравномерное качество районов"),
+            ("Карачи", "$600–1 300", "финансы, торговля, порты, штаб-квартиры, медиа и крупнейший рынок труда", "уличная преступность, очень длинные поездки, жара, влажность и более сложный выбор безопасного района"),
+        ],
+    },
     "move-to-china": {
         "budget": "$1 000–2 000",
         "climate": "Разнообразный",
@@ -3564,6 +4137,312 @@ COUNTRY_EN_DATA: dict[str, dict] = {
         ],
         "top_cities": ["Baghdad", "Erbil", "Basra"],
     },
+    "move-to-cyprus": {
+        "description": "Relocation to the Republic of Cyprus in 2026 depends on citizenship and income source. EU citizens may work without a separate work permit and register through MEU1 for longer residence. Local employment for a third-country national normally needs an employer and combined permit; key personnel at registered Companies with Foreign Interests use criteria including at least €2,500 gross monthly pay, relevant qualifications or experience and a two-to-three-year contract. Digital Nomad applications are open again within a 500-permit ceiling: the applicant works only for an overseas employer or clients and shows at least €3,500 net monthly income; residence is granted for one year and may be renewed for two more. The expedited investor permit starts with €300,000 and secure annual income of at least €50,000. The editorial solo budget is €1,400–2,900 per month.",
+        "visas": [
+            ("EU Registration / MEU1", "While the residence basis continues", "Passport or ID, employment/self-employment or sufficient resources and health cover; registration for longer stay", "EU/EEA citizen and eligible family"),
+            ("Employment / Single Permit", "Contract- and employer-category-specific", "Offer, employer filing, entry authorisation, biometrics and registration; separate criteria for key personnel", "Third-country national in local employment"),
+            ("Digital Nomad Residence", "1 year + renewal for up to 2 more", "Only foreign employer or clients, €3,500 net monthly income, insurance, housing, police record and medical tests", "Non-EU/EEA remote professional"),
+            ("Investor Immigration Permit", "Permanent while conditions remain satisfied", "Investment from €300,000, foreign-source funds, secure annual income from €50,000 and due diligence", "Qualifying third-country investor"),
+        ],
+        "pros": [
+            "Euro, EU legal framework and distinct routes for EU citizens, specialists, nomads and investors",
+            "English is widely used in international business, services and everyday transactions",
+            "Warm climate, coast, two international airports and short distances",
+            "Nicosia, Limassol and Paphos provide distinct career, cost and coastal-lifestyle choices",
+        ],
+        "cons": [
+            "Limassol rent is high, while deposits, a car, cooling and private insurance raise setup costs",
+            "Public transport is limited outside main corridors, so many households need a car",
+            "Administration can require appointments, certified translations, biometrics and the correct status before work",
+            "The island's division affects entry, property, insurance and document recognition; the north uses a different legal regime",
+        ],
+        "top_cities": ["Nicosia", "Limassol", "Paphos"],
+    },
+    "move-to-timor-leste": {
+        "description": "Relocation to Timor-Leste in 2026 starts with the correct entry purpose. A tourist visa is generally issued on arrival at Dili airport or seaport for up to 30 days for US$30 cash and may be extended for another 30 days when filed early. Land-border rules and preauthorisation depend on the crossing and passport. Tourist status does not authorise employment. A Work Permit allows up to one year, one or multiple entries and renewal; an employee needs a contract and favourable labour-authority opinion. Business Visa Class I covers market exploration for up to 60 days, while Class II serves a partner or administrator of a registered company: six months initially, then two-year extensions when conditions and more-than-183-day presence are met. No dedicated digital-nomad visa was found. The editorial solo budget is US$1,000–2,200 per month because quality housing, imports, a car and evacuation insurance make Dili expensive.",
+        "visas": [
+            ("Tourist Visa on Arrival", "Up to 30 days; another 30 by extension", "Passport valid 6 months, 2 blank pages, onward ticket, accommodation, funds and US$30 cash", "A short trip without work"),
+            ("Work Permit", "Up to 1 year, renewable", "Employment or service contract, labour opinion, qualifications, accommodation, funds and approval", "Employed or independent specialist, including NGO staff"),
+            ("Business Visa Class I / II", "I: up to 60 days; II: 6 months then 2-year extensions", "Business purpose; for II, company registration, economic licence, tax certificate, medical and police clearance", "Market research or management of a local company"),
+            ("Temporary Stay / Residence", "By category and decision", "Family, study, treatment, religious or another lawful purpose with funds, housing and basis documents", "Family, student or residence applicant"),
+        ],
+        "pros": [
+            "Meaningful roles in development, international organisations, infrastructure, education and energy",
+            "The US dollar is official currency, simplifying contract and budget calculations",
+            "Warm seas, diving, mountains and short distances create an exceptional natural setting",
+            "Portuguese and Tetum are complemented by English and Indonesian in international work",
+        ],
+        "cons": [
+            "Quality housing, imported food, connectivity, a car and international school make Dili expensive",
+            "Healthcare is limited even in the capital and advanced cases need costly evacuation to Australia or Singapore",
+            "The job market is very small and most foreign roles need a confirmed employer or project before arrival",
+            "Roads outside Dili are poor, rains cause landslides and isolation, and emergency services are unreliable",
+        ],
+        "top_cities": ["Dili", "Baucau", "Atauro"],
+    },
+    "move-to-turkmenistan": {
+        "budget": "US$1,200–2,800",
+        "climate": "Arid, sharply continental",
+        "english": "Low",
+        "visa_label": "Work Visa / Permit",
+        "description": "Relocation to Turkmenistan in 2026 is mainly possible through a local sponsor. Tourist, business, work, investor, family and student visas require a Letter of Invitation approved by the State Migration Service. A licensed agency sponsors tourists; an employer needs a WP work visa and a separate work authorisation, while the law prioritises the domestic labour market. A stay beyond three working days requires registration through a hotel or sponsor. There is no dedicated digital-nomad visa, and tourist or business status does not replace work permission. The editorial solo budget is US$1,200–2,800 per month, with employer housing, the official exchange rate, access to cash, imported goods and medical evacuation driving the real total.",
+        "visas": [
+            ("Tourist Visa (TU)", "For the dates approved in the invitation and visa", "LOI from a licensed tour agency, passport valid six months beyond departure, form, photo and fee", "An organised visit with no employment"),
+            ("Work Visa (WP) + work permit", "For the approved contract and period", "Employer obtains the LOI and migration-service work authorisation; local-worker priority applies", "A specialist with a confirmed employer"),
+            ("Business BS1/BS2 / Investor IN", "As approved in the invitation", "Invitation from a registered partner or organisation and a stated business or investment purpose", "Meetings, project oversight or investment without substituting for employment status"),
+            ("Family / Private / Student", "According to the approved basis", "Inviting person or institution, LOI, family or study evidence and local registration", "Family, a private visit or study"),
+        ],
+        "costs": ("US$1,200–2,800", "US$600–1,600", "US$250–550", "US$50–250"),
+        "pros": [
+            "Hydrocarbon, construction, logistics and international-project contracts may include housing and transport",
+            "Ashgabat is orderly, clean and comparatively calm when local rules are followed",
+            "Low local transport and fuel costs can reduce everyday spending",
+            "Russian is often useful in professional and daily communication alongside Turkmen",
+        ],
+        "cons": [
+            "Visas, registration and work rights depend on a local sponsor, making an independent trial move impractical",
+            "Many sites and apps are blocked, VPNs are illegal, and mobile and internet service are unreliable",
+            "International cards and ATMs are limited, while exchange-rate differences make budgets hard to compare",
+            "Advanced healthcare is limited; outside Ashgabat, a strong evacuation plan and insurance limit are essential",
+        ],
+        "top_cities": ["Ashgabat", "Turkmenbashi", "Mary"],
+        "city_profiles": [
+            ("Ashgabat", "US$1,400–3,000", "government and international organisations, hydrocarbons, construction, embassies, education and the main clinics", "the highest rent, strict rules, restricted internet and strong employer dependence"),
+            ("Turkmenbashi", "US$900–1,800", "port, logistics, refining, Caspian operations and project postings", "a small housing and services market, industrial focus, heat and distance from advanced care"),
+            ("Mary", "US$700–1,400", "gas, energy, construction, agriculture and regional projects", "a very small foreign market, little English, weak healthcare and fewer connections"),
+        ],
+    },
+    "move-to-sharm-el-sheikh": {
+        "budget": "US$700–1,500",
+        "climate": "Hot, dry desert",
+        "english": "Medium in tourism",
+        "visa_label": "Work Permit / Residence",
+        "description": "Relocation to Sharm el-Sheikh in 2026 needs to be separated from a short holiday. Some passport holders arriving directly by air can receive a free South Sinai permission stamp for up to 15 days when staying within the resort zone; it does not support work or long residence. A standard tourist eVisa costs US$30 single entry or US$65 multiple entry, while a visa on arrival normally allows up to 30 days; eligibility is passport-specific. An Egyptian employer arranges employment status, which requires a work permit, verified experience, company documents, security review and an HIV test, while foreign-worker ratios generally apply. A qualifying investor may receive residence for the project's operating period through GAFI. There is no dedicated digital-nomad visa. A realistic solo budget is US$700–1,500 per month, with season, neighbourhood, resort pricing and housing quality driving the total.",
+        "visas": [
+            ("South Sinai permission stamp", "Up to 15 days", "Arrival at Sharm el-Sheikh, an eligible passport and stay only within the South Sinai resort zone", "A short holiday with no work"),
+            ("Tourist eVisa / visa on arrival", "Normally up to 30 days; eVisa valid for entry for up to 3 months", "Six-month passport validity, nationality eligibility, itinerary, accommodation and US$30 single-entry fee", "A trip beyond 15 days or outside the resort zone"),
+            ("Work permit + residence", "For the approved employment basis", "Employer, verified experience, company records, quota, security review and HIV test", "Formal hotel, diving, tourism or services employment"),
+            ("Investor residence", "Renewable and tied to the project", "An operating investment project and processing through GAFI and migration authorities", "A founder or investor with a genuine Egyptian project"),
+        ],
+        "costs": ("US$700–1,500", "US$300–650", "US$200–400", "US$50–180"),
+        "pros": [
+            "Warm dry winters, the Red Sea, diving and direct international flights",
+            "English and Russian are often enough in the tourism economy",
+            "Long-term rent can keep the monthly budget below many resort destinations",
+            "Nabq, Hadaba and Naama Bay support distinct quiet, local and central lifestyles",
+        ],
+        "cons": [
+            "The South Sinai stamp is neither long-stay nor work status; a lawful move needs separate processing",
+            "The local economy depends heavily on tourism and seasonal demand, while local salaries are low",
+            "Advanced healthcare, major banking tasks and government procedures often require Cairo",
+            "Summer is extremely hot, districts are spread out, public transport is limited and resort prices fluctuate",
+        ],
+        "top_cities": ["Nabq Bay", "Hadaba", "Naama Bay"],
+        "city_profiles": [
+            ("Nabq Bay", "US$750–1,600", "new compounds, quieter living, airport access, remote work and long leases", "winter wind, long distances and dependence on taxis or a car"),
+            ("Hadaba", "US$650–1,400", "more local daily life, Old Market, beaches, diving and service work", "building quality varies sharply and some trips still need taxis"),
+            ("Naama Bay", "US$800–1,700", "walkability, restaurants, nightlife, hotels and the centre of the tourism market", "noise, tourist pricing and fewer calm long-term rentals"),
+        ],
+    },
+    "move-to-tajikistan": {
+        "description": "Relocation to Tajikistan in 2026 starts with passport-specific entry rules. Eligible nationals may use an eVisa for tourism or business; read the authorised stay and entries on the issued document, as the eVisa is not extendable and does not permit employment. A foreign national who enters without an eVisa and stays more than 10 days must register personally with OVIR, and a later address needs separate registration. Employment requires a category M work visa plus a separate permit from the authorised migration body. A category C investment visa may run for up to three years with verified investment from US$500,000 and up to five years at US$1 million. No dedicated digital-nomad visa appears in the official categories reviewed. GBAO and some border areas require additional permits. The editorial solo budget is US$650–1,400 per month, excluding international school, a car and medical evacuation.",
+        "visas": [
+            ("Tourist / Business eVisa", "As issued, commonly up to 60 days", "Eligible passport, online application, fee, accommodation and declared purpose; no employment", "Short tourism or business visit"),
+            ("M Work Visa + Permit", "For the contract and permit", "Local employer or organisation, invitation, M visa, registration and separate work permit", "Foreign specialist under a verified contract"),
+            ("C Investment Visa", "Up to 3 years; up to 5 years at US$1m", "Government-body confirmation, investment or capital from US$500,000 and corporate evidence", "Substantial investor and eligible family"),
+            ("Study / Family / Permanent Residence", "By the underlying basis", "Admission, relationship or permanent-residence approval plus category documents and registration", "Student, resident's family or permanent-residence applicant"),
+        ],
+        "pros": [
+            "Low base living costs and affordable rent relative to many Asian capitals",
+            "Russian remains useful in Dushanbe, Khujand and business settings",
+            "Exceptional mountain landscapes and Pamir access with the right permits and preparation",
+            "Selected roles exist in development, energy, infrastructure, education and mining",
+        ],
+        "cons": [
+            "The international job market is small and local salaries may not meet foreign-national expectations",
+            "Healthcare is generally poor and can be almost absent outside Dushanbe, making evacuation cover essential",
+            "The economy is mainly cash based, cards are rarely accepted and services weaken outside cities",
+            "Mountain roads, avalanches, landslides, border closures and special permits complicate travel",
+        ],
+        "top_cities": ["Dushanbe", "Khujand", "Khorog"],
+    },
+    "move-to-palestine": {
+        "description": "Relocation to Palestine in 2026 must be planned separately for the West Bank and Gaza. A practical foreign-national case mainly concerns the West Bank: Israeli authorities control entry, while COGAT regulates parts of foreign visitor and longer-stay procedure. Nationals who can visit Israel visa-free generally need ETA-IL from 2025; the actual permission, duration and any geographic restriction are decided at the border. Visitor status does not authorise employment. A Palestinian employer must arrange a Ministry of Labour permit: the labour law prohibits hiring a foreign national without one, and the current regulation provides for a permit of up to one year with renewal. A work permit does not replace entry and stay approval. No dedicated digital-nomad visa was found. FCDO advises against all travel to Gaza, where crossings may remain closed and departure can become impossible. The $900–2,000 budget applies only to the West Bank and excludes international school, protected transport and evacuation.",
+        "visas": [
+            ("Visitor / ETA-IL or B/2", "Usually up to 90 days when approved", "Passport-specific ETA-IL or visa, border decision and any geographic endorsement", "A short visit without work"),
+            ("COGAT-sponsored stay", "By purpose and individual approval", "Organisation invitation, purpose evidence, housing, insurance and COGAT coordination", "NGO, international, academic or official project"),
+            ("Palestinian Work Permit", "Up to one year, renewable", "Local employer, demonstrated need, qualifications and filing through a Ministry of Labour office", "Foreign specialist under a specific contract"),
+            ("Family / special-purpose case", "By individual decision", "Relationship or special-ground evidence and separate approvals from the competent authorities", "Family or exceptional humanitarian case"),
+        ],
+        "pros": [
+            "Ramallah offers roles in international organisations, development, finance, telecoms and education",
+            "Main West Bank cities are geographically close when roads are open",
+            "Strong Arabic cultural and community life, historic cities and local food",
+            "Some specialists can find meaningful humanitarian, research and education projects",
+        ],
+        "cons": [
+            "FCDO advises against all travel to Gaza and parts of the northern West Bank, with serious restrictions elsewhere",
+            "Checkpoints, road closures and permit rules can change routes and travel time without notice",
+            "Entry, stay and work rights involve different authorities; visitor status does not replace a work permit",
+            "Healthcare is paid, while advanced care and evacuation require insurance and accessible funds",
+        ],
+        "top_cities": ["Ramallah", "Bethlehem", "Jericho"],
+    },
+    "move-to-north-korea": {
+        "description": "Relocation to North Korea in 2026 cannot be planned as an ordinary independent move. FCDO advises against all but essential travel: general entry has only partly resumed after the 2020 border closure, not all passenger routes operate and many embassies remain closed. A visa is required for every visit. Tourists normally travel only on an organised tour; an independent visitor needs a sponsor and Ministry of Foreign Affairs permission. Employment, diplomatic, humanitarian or another long assignment requires an individual official invitation and host approval. No public independent route for a digital nomad, investor or ordinary family residence was found. An open-market monthly budget cannot be verified: the sponsoring organisation must arrange housing, transport, communications, cash access, insurance and evacuation in advance.",
+        "visas": [
+            ("Organised Tour Visa", "For the approved trip", "Visa, approved operator, fixed itinerary and continuous accompaniment", "A rare operating tourist group"),
+            ("Sponsored Business / Official Visit", "By individual permission", "Host invitation, visa, registration and approved itinerary", "Essential official or business visit"),
+            ("Diplomatic / International Assignment", "For the accreditation and posting", "Government or international posting, accreditation, housing, transport and security protocol", "Diplomat or admitted international-organisation employee"),
+            ("Humanitarian / Specialist Assignment", "For the project and approvals", "Official sponsor, sanctions licences or exemptions, work approval and evacuation plan", "Approved humanitarian or technical specialist"),
+        ],
+        "pros": [
+            "A small number of diplomatic, international and humanitarian professional postings exist",
+            "Pyongyang concentrates institutions, foreigner accommodation and limited international functions",
+            "The sponsoring organisation normally centralises housing, transport and some supplies",
+            "A rare posting may provide relevant experience for a properly accredited specialist",
+        ],
+        "cons": [
+            "FCDO advises against all but essential travel, and insurance may be invalid",
+            "Serious risk of arbitrary detention without independent legal help or reliable consular access",
+            "Movement, internet, mobile service, card payments and independent shopping are heavily restricted",
+            "Healthcare is poor, medicines and anaesthetics may be unavailable, and serious cases need evacuation",
+        ],
+        "top_cities": ["Pyongyang", "Rason", "Wonsan"],
+    },
+    "move-to-mongolia": {
+        "description": "Relocation to Mongolia in 2026 needs a basis other than tourism. Nationals of 34 countries have a temporary 30-day tourism exemption through 31 December 2026, while eligible nationalities may use a K2 eVisa; neither route authorises employment. For a local job, the employer first obtains a pre-work permit, then a category C work visa, and files for the final work permit after arrival. A residence-permit application is due within 21 days of entry and an employee's permit normally follows the work-permit term. Investors use B1–B3 categories; initial investor residence may be granted for up to one year and extended for up to three years. No dedicated digital-nomad visa appears in the official categories reviewed. The editorial solo budget is $850–1,800 per month, excluding international school and medical evacuation.",
+        "visas": [
+            ("Visa-free / K2 Tourist", "Usually up to 30 days", "Passport-specific eligibility; eVisa needs 180-day passport validity, online application and ETA", "Short tourism without employment"),
+            ("C Work Visa + Permit", "Up to 1 year with extension", "Local employer, vacancy process, pre-work permit, contract, C visa, final permit and residence card", "Specialist under a specific local contract"),
+            ("B1–B3 Investor", "Residence up to 1 year, extendable up to 3", "Registered company or representative office, investment proof, B visa and corporate documents", "Investor, executive or representative"),
+            ("Family / Study Residence", "Follows the sponsor or programme basis", "Relationship proof or enrolment, invitation, medical and address documents", "Eligible resident's family or student"),
+        ],
+        "pros": [
+            "Demand for some specialists in mining, energy, construction, education and international projects",
+            "Manageable basic costs outside Ulaanbaatar's most expensive districts",
+            "Exceptional landscapes, low population density and easy summer access from the capital",
+            "Ulaanbaatar, Erdenet and Darkhan support distinct international, industrial and regional scenarios",
+        ],
+        "cons": [
+            "Ulaanbaatar winter smog is serious for people with respiratory conditions and families with children",
+            "Extreme winter cold makes verified heating, insulation and transport essential",
+            "Almost all international employment and advanced services are concentrated in the capital",
+            "Healthcare outside Ulaanbaatar is limited, so insurance should cover medical evacuation",
+        ],
+        "top_cities": ["Ulaanbaatar", "Erdenet", "Darkhan"],
+    },
+    "move-to-maldives": {
+        "description": "Relocation to the Maldives in 2026 normally starts with a verified non-tourist basis. A tourist visa is generally issued on arrival for up to 30 days when the traveller has an MRZ passport, onward ticket, registered accommodation, funds and a free IMUGA Traveller Declaration; any extension remains discretionary and does not create work rights. For employment, the employer obtains a Work Permit or Employment Approval and the Work Visa is completed through Xpat within 15 days of arrival. A Business Visa needs an invitation from a locally registered organisation and approval before travel; it permits up to 90 cumulative days within 12 months but is not ordinary employment status. Family routes include dependent and marriage visas, while an investment project needs government approval. The editorial solo budget is $900–2,200 per month excluding international school and medical evacuation; resort contracts that include accommodation and meals can reduce out-of-pocket spending substantially.",
+        "visas": [
+            ("Tourist Visa on Arrival", "Usually up to 30 days; extension up to 90 days total", "MRZ passport, onward ticket, registered accommodation, funds and a free IMUGA declaration within 96 hours", "Short visit without employment"),
+            ("Work Permit + Work Visa", "Matches the work-permit period", "Employer, Employment Approval or Work Permit, Xpat filing and Work Visa within 15 days of arrival", "Foreign employee under a specific contract"),
+            ("Business Visa", "Up to 90 cumulative days in 12 months", "Invitation from a registered local organisation and Business Portal approval before travel", "Business visits without ordinary employment"),
+            ("Dependent / Marriage / Corporate Resident", "Depends on the family or investment basis", "Sponsorship, relationship proof or approved investment, insurance and category documents", "Eligible family, foreign spouse of a Maldivian or approved investor"),
+        ],
+        "pros": [
+            "Substantial employment market in tourism, hospitality, marine services and supporting operations",
+            "English is widely used in tourism and professional workplaces",
+            "A resort contract may include housing, meals, transport and a return flight",
+            "Malé, Hulhumalé and Addu support distinct capital, new-city and regional lifestyles",
+        ],
+        "cons": [
+            "No dedicated digital-nomad visa, while tourist status does not authorise employment",
+            "Imported goods, capital-area rent and inter-island transport can raise the real budget",
+            "Advanced care is concentrated in Malé and Hulhumalé; remote islands may require evacuation",
+            "Strict local Islamic rules apply outside resorts, and small-island life limits housing and service choice",
+        ],
+        "top_cities": ["Malé", "Hulhumalé", "Addu City"],
+    },
+    "move-to-bhutan": {
+        "description": "Relocation to Bhutan in 2026 needs a non-tourist basis. For an ordinary visit, most foreign nationals obtain an eVisa, pay a non-refundable US$40 fee and a US$100 nightly Sustainable Development Fee; India, Bangladesh and Maldives use separate rules. Employment starts with competent-agency approval and an employer filing through immi.gov.bt. International students use a separate 2026 process. An investor putting more than Nu 15 million into a registered FDI project may receive a renewable three-year Investor Card. The editorial non-tourist resident budget is $700–1,400 per month; tourist SDF is excluded.",
+        "visas": [
+            ("Tourist eVisa / Permit", "For the approved trip duration", "Passport, photo, insurance, US$40 and US$100 nightly SDF; separate India, Bangladesh and Maldives rules", "Short visit without employment"),
+            ("Work Permit", "Contract- and approval-specific", "Employer, agency approval, DOCF2025, immi.gov.bt and medical requirements", "Foreign specialist in a specific role"),
+            ("Student Visa / Permit", "For the recognised programme duration", "Admission, institution recommendation and the 2026 DoI process", "International student"),
+            ("Investor Card", "3 years with further extensions", "FDI Registration Certificate, business commencement and investment above Nu 15 million", "Qualifying investor or representative"),
+        ],
+        "pros": [
+            "Calm urban environment, exceptional nature and a compact national scale",
+            "English is widely used in education, administration and professional settings",
+            "Investor Card provides a published three-year route for a substantial FDI project",
+            "Thimphu, Paro and Phuentsholing support distinct government, tourism and trade scenarios",
+        ],
+        "cons": [
+            "Non-tourist routes are narrow and tied to an employer, institution or substantial investment",
+            "The US$100 nightly tourist SDF makes visitor status impractical as a residence substitute",
+            "Small employment market, limited housing choice and costly imported goods",
+            "Complex care requires evacuation cover, while mountain roads, altitude and monsoon affect travel",
+        ],
+        "top_cities": ["Thimphu", "Paro", "Phuentsholing"],
+    },
+    "move-to-afghanistan": {
+        "description": "Relocation to Afghanistan in 2026 cannot be planned as a normal move or trial month. FCDO advises against all travel because of terrorism, kidnapping, arbitrary detention, volatile borders and the absence of in-person British consular support. For an essential assignment, the official system lists tourist, business, entry, residence and other categories. An entry visa uses an invitation from a licensed organisation and is valid for three months with a one-month stay; employment also needs the correct work status and MoLSA permit. The editorial $600–1,500 living range excludes professional security, protected transport and evacuation, which can exceed ordinary living costs many times over.",
+        "visas": [
+            ("Tourist Visa", "Valid 3 months; 1-month stay", "Passport, travel purpose, booking and consular decision", "Tourism without employment"),
+            ("Entry / Work Route", "Entry: 3 months with a 1-month stay", "Invitation from a licensed organisation, authority letter, MFA approval and work permit", "Essential contracted assignment"),
+            ("Business Visa", "1 month to 3 years", "Valid business licence, passport and supporting bank statements", "Business owner or company representative"),
+            ("Residence Visa", "1 month to 1 year", "Continued stay after service, business, entry, student or crew status", "Holder of an eligible underlying visa"),
+        ],
+        "pros": [
+            "Local housing, food and basic services can be inexpensive in isolation",
+            "Some humanitarian, infrastructure, telecom and international projects employ foreign specialists",
+            "Dari or Pashto skills give qualified specialists access to local operations",
+            "Kabul, Herat and Mazar-i-Sharif serve distinct administrative, trade and regional roles",
+        ],
+        "cons": [
+            "FCDO advises against all travel; terrorism, kidnapping and detention risks remain high",
+            "Women face severe restrictions on movement, dress, education, employment and public life",
+            "Bank cards, transfers, communications, electricity, healthcare, airports and land borders are unreliable",
+            "Professional security, secure housing, protected transport, medical evacuation and insurance can dominate the real budget",
+        ],
+        "top_cities": ["Kabul", "Herat", "Mazar-i-Sharif"],
+    },
+    "move-to-bangladesh": {
+        "description": "Relocation to Bangladesh in 2026 normally starts with an employer, registered investment project, study place or family basis. Visa on arrival is passport-specific, discretionary and generally covers 15–30 days; it is not work permission. BIDA recommends E2 or PI status for employment and investment cases, followed by the relevant OSS process. E3 is for short technical assignments, and the current BIDA guide says this category does not require a work permit. The editorial solo budget is $550–1,300 per month before international school, a car or enhanced insurance.",
+        "visas": [
+            ("Visit / Visa on Arrival", "Usually 15–30 days for eligible passports", "Passport, onward ticket, funds and purpose evidence; border approval is discretionary", "Short visit without employment"),
+            ("E2 Employment + Work Permit", "Permit commonly starts at 1 year and may be extended", "Offer, E2 visa, registered employer, qualifications, contract and BIDA OSS filing", "Longer-term local employment"),
+            ("E3 Technical Employment", "Short technical assignment", "Recommendation, E3 visa and documents for installation, maintenance, supervision or inspection", "Technical installation or project visit"),
+            ("PI Private Investor", "Project- and approval-specific", "Registered investment project, PI visa and BIDA processing", "Investor or project principal"),
+        ],
+        "pros": [
+            "Low base costs for local housing, food, transport and everyday services",
+            "Large textile, manufacturing, telecom, logistics, development and international-project markets",
+            "English is widely used in international business, higher education and parts of administration",
+            "Dhaka, Chattogram and Sylhet offer distinct career, cost and city-scale choices",
+        ],
+        "cons": [
+            "Work status is tied to an employer or project, with no dedicated digital-nomad route in the official categories reviewed",
+            "Traffic, air pollution, heat, monsoon disruption and seasonal flooding materially affect daily life",
+            "FCDO flags terrorism, demonstrations and increased violent crime, and advises against all but essential travel to the Chittagong Hill Tracts",
+            "Private healthcare, suitable housing, backup power, a car and international school can raise the real budget sharply",
+        ],
+        "top_cities": ["Dhaka", "Chattogram", "Sylhet"],
+    },
+    "move-to-pakistan": {
+        "description": "Moving to Pakistan in 2026 requires a visa category that matches the actual purpose. A tourist eVisa covers a short visit, not local work. The employer-led route uses a short entry work visa followed by an extension of up to two years, supported by an employment agreement and company documents. Pakistan has also announced five-, seven- and ten-year Long Term Residency for qualifying investors, but applicants should verify that the digital portal is live before transferring funds. The editorial solo budget is $550–1,300 per month before international school or premium security costs.",
+        "visas": [
+            ("Tourist / Visit eVisa", "Passport- and purpose-specific decision", "Online application, passport, photo, address and trip documents", "Short visit without local employment"),
+            ("Work Visa", "Entry up to 3 months; extension up to 2 years", "Employment agreement, registered employer, company documents and subsequent approval", "Foreign professional with a job offer"),
+            ("Study Visa", "Up to 2 years after required clearances", "Admission, passport, photo and required NOCs", "Study at a recognised institution"),
+            ("Long Term Residency", "5, 7 or 10 years", "Eligible nationality, clearances, government payment and investment materialisation", "Investor plus up to seven dependants"),
+        ],
+        "pros": [
+            "Low base costs for housing, food and services compared with many large Asian cities",
+            "English is used in business, higher education and parts of government administration",
+            "Large technology, telecom, finance, textile, logistics and international-project markets",
+            "Islamabad, Lahore and Karachi offer distinct career and daily-life scenarios",
+        ],
+        "cons": [
+            "Work status depends on the employer and company documents; tourist status does not cover local employment",
+            "FCDO advises against travel to several regions, while protests, road closures and communications outages can develop quickly",
+            "Air pollution, extreme heat, monsoon disruption, power reliability and traffic materially affect daily life",
+            "International school, secure housing, private healthcare, a car and robust insurance can multiply the budget",
+        ],
+        "top_cities": ["Islamabad", "Lahore", "Karachi"],
+    },
     "move-to-china": {
         "description": "Shanghai (French Concession, Jing'an) has a developed international expat scene, 1BR $600–1,500/month. The Great Firewall blocks Google, WhatsApp, Instagram and LinkedIn from day one — VPN mandatory. Work Visa Z only via a Chinese employer. Shenzhen is the tech hub — ByteDance, Tencent, DJI.",
         "visas": [
@@ -4040,6 +4919,344 @@ COUNTRY_SEARCH_FAQS: dict[str, dict[str, list[tuple[str, str]]]] = {
             ("What should the contract cover?", "Put net salary, permit jurisdiction, housing, security, transport, generator power, healthcare, insurance, evacuation, rotation and flights in writing. Headline salary alone does not show the offer's real value."),
         ],
     },
+    "move-to-cyprus": {
+        "ru": [
+            ("Кипр относится к Азии или Европе?", "Географически ООН относит Кипр к Западной Азии, а политически Республика Кипр состоит в ЕС и еврозоне. Именно поэтому страна входит в этот азиатский каталог, но миграционные и бытовые правила во многом европейские."),
+            ("Нужна ли виза на Кипр?", "Это зависит от паспорта. Республика Кипр применяет собственные национальные правила и в октябре 2026 года ещё не выдаёт шенгенские визы. Краткий въезд не разрешает местную работу; проверьте паспорт на сайте MFA или консульства."),
+            ("Как переехать гражданину ЕС?", "Гражданин ЕС может въехать по паспорту или ID и начать работу без отдельного разрешения. Для проживания дольше трёх месяцев нужен подходящий статус, а Registration Certificate MEU1 обычно оформляют в течение четырёх месяцев после въезда."),
+            ("Как получить рабочий статус гражданину третьей страны?", "Нужен реальный оффер и процедура через работодателя до начала работы. Для key personnel зарегистрированной Company with Foreign Interests официальные критерии включают €2 500 gross в месяц, диплом или минимум два года подходящего опыта и контракт на 2–3 года."),
+            ("Работает ли Digital Nomad Visa в 2026 году?", "Да. Migration Department сообщил 31 декабря 2025 года о возобновлении приёма заявлений при общей квоте 500 разрешений. Нужны зарубежный работодатель или клиенты и чистый стабильный доход от €3 500 в месяц."),
+            ("Можно ли работать с кипрскими клиентами по Digital Nomad Visa?", "Нет по логике этой схемы: работа и услуги должны быть для работодателя или клиентов за пределами Кипра. Разрешение дают на год с возможностью продления ещё на два; семья может проживать вместе, но не получает автоматического права на местную работу."),
+            ("Что требуется инвестору?", "Ускоренный Immigration Permit требует вложить минимум €300 000 в подходящую новую недвижимость, другую недвижимость, кипрскую компанию или фонд и подтвердить безопасный годовой доход от €50 000. Источник денег, сохранение инвестиции и права на работу проверяют отдельно."),
+            ("Когда возникает налоговое резидентство?", "Основной тест — 183 дня. Также существует 60-day rule с несколькими одновременными условиями: отсутствие резидентства в другой стране и пребывания там свыше 183 дней, деятельность или должность на Кипре и постоянное жильё. Рассчитайте свой случай с налоговым специалистом."),
+            ("Никосия, Лимасол или Пафос?", "Никосия подходит государственным, финансовым и профессиональным ролям и обычно дешевле Лимасола. Лимасол даёт крупнейшую международную бизнес-среду и самую дорогую аренду. Пафос спокойнее и удобен для удалённой работы, но рынок вакансий уже."),
+            ("Что важно из-за разделения острова?", "Эта страница описывает Республику Кипр. Въезжайте через признанные порты Ларнаки, Пафоса и контролируемые Республикой морские порты: власти Республики могут считать въезд через север незаконным. Недвижимость, страховку и пересечение Green Line проверяйте отдельно."),
+        ],
+        "en": [
+            ("Is Cyprus in Asia or Europe?", "The UN geographic classification places Cyprus in Western Asia, while the Republic of Cyprus is politically an EU and euro-area member. That is why it appears in this Asia directory even though much of its legal and daily-life framework is European."),
+            ("Do you need a visa for Cyprus?", "It depends on nationality. The Republic applies its own national rules and, in October 2026, does not yet issue Schengen visas. Short-stay entry does not authorise local employment; check the passport rule with MFA or the responsible consulate."),
+            ("How does an EU citizen relocate?", "An EU citizen may enter with a passport or ID and work without a separate permit. Residence beyond three months needs a qualifying basis, and the MEU1 Registration Certificate is normally filed within four months of entry."),
+            ("How does a third-country national obtain work status?", "Start with a genuine offer and employer-led process before work. For key personnel at a registered Company with Foreign Interests, official criteria include €2,500 gross monthly pay, a degree or at least two years of relevant experience and a two-to-three-year contract."),
+            ("Is the Digital Nomad Visa open in 2026?", "Yes. On 31 December 2025 the Migration Department said applications were being accepted again under a 500-permit ceiling. The applicant needs an overseas employer or clients and stable net income of at least €3,500 per month."),
+            ("Can a digital nomad serve Cyprus clients?", "Not under this scheme: work and services must be for employers or clients established abroad. The permit lasts one year and may be renewed for a further two; family may reside with the holder but receives no automatic local work right."),
+            ("What does the investor route require?", "The expedited Immigration Permit requires at least €300,000 in eligible new housing, other property, a Cyprus company or fund, plus secure annual income from €50,000. Fund source, investment retention and work rights need separate verification."),
+            ("When do you become tax resident?", "The main test is 183 days. A separate 60-day rule applies only when several conditions align: no other tax residence or stay above 183 days elsewhere, Cyprus business, employment or office, and a permanent Cyprus home. Get an individual tax calculation."),
+            ("Should you choose Nicosia, Limassol or Paphos?", "Nicosia fits government, finance and professional roles and normally costs less than Limassol. Limassol has the largest international-business market and highest rent. Paphos is quieter and remote-work friendly, with a narrower job market."),
+            ("What does the island's division change?", "This page covers the Republic of Cyprus. Use recognised entry points such as Larnaca and Paphos airports or Republic-controlled ports: Republic authorities may treat entry through the north as illegal. Check property title, insurance and Green Line rules separately."),
+        ],
+    },
+    "move-to-timor-leste": {
+        "ru": [
+            ("Нужна ли туристическая виза в Тимор-Лесте?", "Да. В аэропорту и морском порту Дили обычно выдают однократную визу до 30 дней за $30 наличными. Нужны паспорт со сроком от шести месяцев и двумя чистыми страницами, обратный билет, жильё и средства. Для сухопутной границы заранее проверьте отдельную процедуру."),
+            ("Можно ли продлить туристическую визу?", "Можно запросить ещё 30 дней. FCDO рекомендует подавать заявление минимум за 15 дней до окончания текущего срока. Продление не создаёт права на работу и остаётся решением Migration Service."),
+            ("Как получить Work Permit?", "Для наёмного работника нужны подписанный контракт и положительное заключение органа труда; независимый специалист предъявляет service contract или регистрацию деятельности. Разрешение действует до года, может быть одно- или многократным и продлевается."),
+            ("Чем отличаются Business Visa Class I и II?", "Class I выдаётся для изучения рынка или инвестиционной возможности максимум на 60 дней и обычно не продлевается. Class II предназначена партнёру или администратору зарегистрированной компании: шесть месяцев сначала и продления на два года при соблюдении корпоративных и налоговых условий."),
+            ("Есть ли виза для digital nomad?", "Отдельной digital nomad категории в проверенных официальных правилах нет. Туристическая виза не разрешает работу, а business или work route требует реального основания. Удалённую деятельность и налоги нужно согласовать до переезда."),
+            ("Можно ли получить долгую резиденцию?", "Закон предусматривает временные категории и визу для последующего запроса постоянной резиденции. Нужны средства, жильё, чистая судимость и законная цель; профессиональная деятельность оценивается по потребности в специализированном труде и не гарантируется одной визой."),
+            ("Когда возникает налоговое резидентство?", "Налоговая служба использует тест 183 дней в любом 12-месячном периоде, начинающемся или заканчивающемся в соответствующем году, с исключением для человека, чей постоянный дом находится вне страны. Для Business Class II также заявлено пребывание свыше 183 дней."),
+            ("Дили, Баукау или Атауро?", "Дили — единственный глубокий рынок международной работы, жилья и клиник, но он дорог. Баукау дешевле и локальнее. Атауро подходит конкретному туристическому, морскому или NGO-проекту, но зависит от парома, погоды и снабжения."),
+            ("Насколько доступна медицина?", "Услуги ограничены, особенно вне Дили, а экстренная помощь ненадёжна. Серьёзный случай обычно требует эвакуации в Австралию или Сингапур, поэтому нужны специализированная страховка, доступные средства и подтверждённый маршрут эвакуации."),
+            ("Как устроены деньги, транспорт и связь?", "Официальная валюта — доллар США, мелкие номиналы полезны, карты принимают немногие места. Вне муниципальных центров мало ATM и связи. Дороги быстро портятся в сезон дождей, поэтому контракт часто должен включать автомобиль, водителя и резерв на задержки."),
+        ],
+        "en": [
+            ("Do you need a tourist visa for Timor-Leste?", "Yes. Dili airport and seaport generally issue a single-entry visa for up to 30 days for US$30 cash. You need six months' passport validity, two blank pages, an onward ticket, accommodation and funds. Check the separate procedure before using a land border."),
+            ("Can the tourist visa be extended?", "You may request another 30 days. FCDO recommends filing at least 15 days before the current visa expires. An extension does not grant employment rights and remains a Migration Service decision."),
+            ("How do you obtain a Work Permit?", "An employee needs a signed contract and favourable labour-authority opinion; an independent worker provides a service contract or business registration. The permit runs for up to one year, may allow one or multiple entries and can be renewed."),
+            ("How do Business Visa Classes I and II differ?", "Class I covers market or investment exploration for up to 60 days and is normally not extendable. Class II serves a partner or administrator of a registered company: six months initially and two-year extensions while corporate and tax conditions are maintained."),
+            ("Is there a digital-nomad visa?", "No dedicated digital-nomad category appears in the official rules reviewed. A tourist visa does not authorise work, while business or work status needs a real qualifying basis. Agree remote activity and tax treatment before moving."),
+            ("Can you obtain long residence?", "The law provides temporary-stay categories and a visa used to request permanent residence. Funds, accommodation, a clean record and a lawful purpose are required; professional activity is assessed against specialised-labour needs and is not guaranteed by the visa alone."),
+            ("When do you become tax resident?", "The Tax Authority uses a 183-day test in any 12-month period starting or ending in the relevant year, with an exception where the person's permanent place of abode is outside Timor-Leste. Business Class II also states presence above 183 days."),
+            ("Should you choose Dili, Baucau or Atauro?", "Dili is the only deep market for international work, housing and clinics, but costs more. Baucau is cheaper and more local. Atauro suits a specific tourism, marine or NGO project but depends on ferries, weather and supplies."),
+            ("How accessible is healthcare?", "Services are limited, particularly outside Dili, and emergency response is unreliable. A serious case usually needs evacuation to Australia or Singapore, so obtain specialist insurance, accessible funds and a confirmed evacuation route."),
+            ("How do money, transport and connectivity work?", "The US dollar is official currency, small notes are useful and few outlets take cards. ATMs and connectivity thin out beyond municipal capitals. Roads deteriorate in the rainy season, so a contract may need a car, driver and delay budget."),
+        ],
+    },
+    "move-to-turkmenistan": {
+        "ru": [
+            ("Нужна ли виза в Туркменистан?", "Да. Для большинства иностранцев нужна виза и заранее одобренное приглашение Государственной миграционной службы. Туристическое приглашение оформляет лицензированное агентство, остальные категории — местное лицо, компания или учреждение."),
+            ("Можно ли получить визу по прибытии?", "После получения одобренного LOI визу могут оформить по прибытии в аэропорту Ашхабада и на некоторых пунктах пропуска. Возможность конкретного маршрута нужно подтвердить у спонсора и посольства до поездки."),
+            ("Нужно ли регистрироваться после въезда?", "Да. При пребывании более трёх рабочих дней требуется регистрация в Государственной миграционной службе в течение трёх дней после прибытия. Обычно это делает отель или спонсор."),
+            ("Можно ли работать по туристической или деловой визе?", "Нет, если фактически возникает трудовая деятельность. Иностранному работнику нужны рабочая виза WP и разрешение на трудовую деятельность, оформляемые через работодателя."),
+            ("Есть ли виза для digital nomad?", "Отдельной визы для удалённых работников нет. Работа из страны должна соответствовать цели визы, миграционным правилам, налогам и ограничениям связи; туристический статус нельзя считать автоматическим разрешением."),
+            ("Какие документы нужны для рабочей визы?", "Основой служит приглашение, которое работодатель оформляет через миграционную службу. Затем обычно нужны паспорт, анкета, фото, сбор и документы работодателя; разрешение привязано к одобренной работе и месту."),
+            ("Когда возникает налоговое резидентство?", "Налоговый кодекс использует порог 183 календарных дня в течение налогового года. До переезда нужно проверить договор об избежании двойного налогообложения, источник дохода и обязанности работодателя."),
+            ("Ашхабад, Туркменбаши или Мары?", "Ашхабад выбирают для большинства международных и государственных ролей. Туркменбаши подходит портовым и нефтеперерабатывающим проектам, Мары — газу, энергетике и региональной инфраструктуре."),
+            ("Как работают интернет и банковские карты?", "Многие сайты и мессенджеры заблокированы, VPN незаконны, а международные карты и банкоматы ненадёжны. Работодатель должен заранее подтвердить рабочий канал связи, выплату зарплаты и доступ к наличным."),
+            ("Насколько доступна медицина?", "Качественная помощь ограничена даже в Ашхабаде, а вне столицы обычно доступна только базовая и экстренная помощь. Страховка должна покрывать лечение и медицинскую эвакуацию."),
+        ],
+        "en": [
+            ("Do you need a visa for Turkmenistan?", "Yes. Most foreign nationals need a visa and a Letter of Invitation approved in advance by the State Migration Service. A licensed agency sponsors tourists; a local person, company or institution sponsors other categories."),
+            ("Can you obtain a visa on arrival?", "After an approved LOI, a visa may be issued on arrival at Ashgabat airport and at some border points. Confirm the exact route with the sponsor and embassy before travel."),
+            ("Must you register after arrival?", "Yes. A stay longer than three working days requires registration with the State Migration Service within three days of arrival. The hotel or sponsor normally completes it."),
+            ("Can you work on a tourist or business visa?", "Not where the activity is employment. A foreign employee needs a WP work visa and work authorisation arranged through the employer."),
+            ("Is there a digital-nomad visa?", "No dedicated remote-work visa was found. Work from inside the country must match the visa purpose, migration rules, tax position and connectivity limits; tourist status is not automatic permission."),
+            ("What supports a work-visa application?", "The employer first requests the invitation through the migration service. The visa stage normally adds the passport, form, photo, fee and employer documents; permission is tied to the approved job and location."),
+            ("When do you become tax resident?", "The Tax Code uses 183 calendar days within the tax year. Check any double-tax treaty, income source and employer withholding before the move."),
+            ("Ashgabat, Turkmenbashi or Mary?", "Ashgabat suits most international and government roles. Turkmenbashi serves port and refining projects, while Mary supports gas, energy and regional infrastructure work."),
+            ("How do internet access and bank cards work?", "Many sites and messaging apps are blocked, VPNs are illegal, and international cards and ATMs are unreliable. Ask the employer to confirm work connectivity, salary payment and cash access in advance."),
+            ("How accessible is healthcare?", "Good care is limited even in Ashgabat, and facilities outside the capital are best used only for basic or emergency treatment. Insurance should cover treatment and medical evacuation."),
+        ],
+    },
+    "move-to-sharm-el-sheikh": {
+        "ru": [
+            ("Нужна ли виза для Шарм-эль-Шейха?", "Это зависит от паспорта и маршрута. Некоторые путешественники при прямом прилёте получают бесплатный штамп South Sinai до 15 дней. Для более долгого срока, выезда за курортную зону или другого основания нужна обычная египетская виза."),
+            ("Что разрешает штамп South Sinai?", "Он разрешает короткое пребывание до 15 дней в курортной зоне Шарм-эль-Шейха, Дахаба, Нувейбы и Табы для подходящих паспортов. Он не разрешает работу, долгую аренду как основание статуса или поездку в Каир и Хургаду."),
+            ("Сколько стоит туристическая eVisa Египта?", "Официальный портал указывает $30 за однократную и $65 за многократную туристическую eVisa. Нужны паспорт со сроком не менее шести месяцев, маршрут и сведения о жилье."),
+            ("Можно ли продлить туристическую визу?", "Заявление на продление подают в египетское паспортно-иммиграционное подразделение. Не рассчитывайте на автоматическое продление: заранее подтвердите офис, документы и допустимый срок для своего паспорта."),
+            ("Можно ли работать в Шарм-эль-Шейхе по туристической визе?", "Нет. Египетский работодатель должен оформить разрешение на работу и связанный статус проживания. Для процедуры нужны подтверждённый опыт, документы компании, проверка безопасности и ВИЧ-тест."),
+            ("Есть ли в Египте digital nomad виза?", "Отдельной digital nomad визы не найдено. Удалённая работа из Шарм-эль-Шейха требует индивидуальной проверки миграционного статуса, налогов, договора и банковских операций."),
+            ("Можно ли получить резиденцию через инвестиции?", "GAFI указывает, что иностранный инвестор может получить резиденцию на период работы проекта. Это маршрут для реального зарегистрированного бизнеса, а не покупка туристической квартиры сама по себе."),
+            ("Когда возникает налоговое резидентство Египта?", "Резидентство может возникнуть при постоянном доме в Египте или пребывании более 183 дней в течение 12 месяцев. До переезда проверьте соглашение об избежании двойного налогообложения и источник дохода."),
+            ("Набк, Хадаба или Наама-Бей?", "Набк подходит для спокойного комплекса и аэропорта, Хадаба — для локального быта, Старого рынка и дайвинга, Наама-Бей — для пешей жизни, отелей и развлечений."),
+            ("Как устроены медицина и безопасность?", "В курорте есть частные клиники, но сложное лечение может потребовать Каира или эвакуации. Южные курорты Синая обычно считаются зоной более низкого риска, однако поездки на север и вне курортов нужно сверять с актуальными предупреждениями."),
+        ],
+        "en": [
+            ("Do you need a visa for Sharm el-Sheikh?", "It depends on passport and route. Some air arrivals receive a free South Sinai stamp for up to 15 days. A longer stay, travel beyond the resort zone or another purpose needs a standard Egyptian visa."),
+            ("What does the South Sinai stamp allow?", "For eligible passports, it covers up to 15 days in the resort areas of Sharm el-Sheikh, Dahab, Nuweiba and Taba. It does not authorise work, create long-stay status or cover travel to Cairo or Hurghada."),
+            ("How much does Egypt's tourist eVisa cost?", "The official portal lists US$30 for a single-entry and US$65 for a multiple-entry tourist eVisa. You need six months' passport validity, an itinerary and accommodation details."),
+            ("Can you extend a tourist visa?", "An extension application goes to an Egyptian Passport and Immigration Office. Do not assume approval: confirm the office, documents and permitted term for your passport before expiry."),
+            ("Can you work in Sharm el-Sheikh on a tourist visa?", "No. An Egyptian employer must arrange the work permit and related residence status. The process needs verified experience, company records, security review and an HIV test."),
+            ("Does Egypt have a digital-nomad visa?", "No dedicated digital-nomad visa was found. Remote work from Sharm el-Sheikh needs an individual review of immigration status, tax, contract and banking activity."),
+            ("Can investment lead to residence?", "GAFI states that a foreign investor may receive residence for the operating period of a qualifying project. This is for a genuine registered business, not a tourist-apartment purchase by itself."),
+            ("When can Egyptian tax residence begin?", "Residence can arise through a permanent home in Egypt or more than 183 days of presence within 12 months. Check the relevant double-tax treaty and income source before moving."),
+            ("Nabq, Hadaba or Naama Bay?", "Nabq suits a quiet compound and airport access, Hadaba offers more local life, Old Market and diving, while Naama Bay prioritises walkability, hotels and entertainment."),
+            ("What about healthcare and safety?", "The resort has private clinics, but advanced treatment may require Cairo or evacuation. Southern Sinai resorts are generally treated as lower risk, while northern or off-resort travel needs a current regional-advice check."),
+        ],
+    },
+    "move-to-tajikistan": {
+        "ru": [
+            ("Нужна ли виза в Таджикистан?", "Это зависит от гражданства и цели. Для части паспортов действует безвизовый режим, граждане подходящих стран могут оформить eVisa, а работа, учёба, инвестиции и постоянное проживание требуют соответствующей категории. Проверяйте правила именно по своему паспорту."),
+            ("Сколько можно находиться по eVisa?", "В актуальной инструкции МИД указано пребывание до 60 календарных дней при сроке действия eVisa 90 дней, но старые официальные страницы всё ещё содержат предел 45 дней. Руководствуйтесь сроком в выданной eVisa и подтвердите его до поездки; продление не предусмотрено."),
+            ("Нужно ли регистрироваться в OVIR?", "Если вы въехали без eVisa и остаетесь дольше 10 дней, нужно лично зарегистрироваться в OVIR. Отели больше не делают это за гостя, а при смене адреса требуется новая регистрация. Владельцы eVisa освобождены от этой процедуры по официальной инструкции."),
+            ("Как получить право на работу?", "Нужны рабочая виза категории M и отдельное разрешение уполномоченного миграционного органа. Процесс обычно начинает местный работодатель или принимающая организация. Туристическая или деловая eVisa не заменяет трудовой статус."),
+            ("Есть ли виза для digital nomad?", "Отдельной категории для цифровых кочевников в проверенных визовых правилах нет. Туристическая и business eVisa предназначены для заявленной краткой цели, а не для независимой долгой работы; налоги и разрешённую деятельность нужно согласовать отдельно."),
+            ("Как работает инвестиционная виза C?", "Она предназначена для подтверждённого крупного инвестора и членов семьи. Официальные правила указывают порог от $500 000 для визы до трёх лет и от $1 млн для срока до пяти лет; нужны подтверждения инвестиционного органа, банка, статистики, налоговой или СЭЗ."),
+            ("Когда возникает налоговое резидентство?", "Действующий Налоговый кодекс считает физлицо резидентом при пребывании свыше 182 дней в любом 12-месячном периоде, начинающемся или заканчивающемся в текущем календарном году. Резидентский доход охватывает источники внутри и вне страны; нужен персональный расчёт."),
+            ("Нужен ли отдельный пропуск в Памир?", "Для Горно-Бадахшанской автономной области нужен GBAO permit в дополнение к визе. Его выдачу могут приостанавливать без предупреждения. Для некоторых районов в пределах 20 км от границы с Афганистаном требуется ещё один пограничный пропуск."),
+            ("Душанбе, Худжанд или Хорог?", "Душанбе даёт максимум работы, рейсов, жилья и медицины. Худжанд дешевле и подходит торговле или промышленности. Хорог имеет смысл только под конкретный проект: нужен пропуск, дороги сложные, медицина и снабжение ограничены."),
+            ("Что проверить по медицине, деньгам и дорогам?", "Страховка должна покрывать лечение и эвакуацию: качество клиник низкое, особенно вне Душанбе. Держите наличные, используйте официальные обменники, заранее проверяйте дорогу, погоду, связь, топливо и открытие границ; в горах не путешествуйте без подготовленного плана."),
+        ],
+        "en": [
+            ("Do you need a visa for Tajikistan?", "It depends on nationality and purpose. Some passports have visa-free access, eligible nationals can use an eVisa, while work, study, investment and permanent residence need the matching category. Check the rule for your exact passport."),
+            ("How long can you stay on an eVisa?", "The current MFA instruction states up to 60 calendar days within 90-day eVisa validity, while older official pages still show 45 days. Follow the authorised stay printed on the issued eVisa and confirm it before travel; extension is not available."),
+            ("Must you register with OVIR?", "If you entered without an eVisa and stay more than 10 days, register personally with OVIR. Hotels no longer do this for guests, and a new address needs another registration. Official guidance exempts eVisa holders from this procedure."),
+            ("How do you obtain work rights?", "You need a category M work visa and a separate permit from the authorised migration body. A local employer or host organisation normally starts the process. A tourist or business eVisa does not replace employment status."),
+            ("Is there a digital-nomad visa?", "No dedicated digital-nomad category appears in the official visa rules reviewed. Tourist and business eVisas serve their declared short purpose rather than independent long-term work; permitted activity and tax need case-specific advice."),
+            ("How does the category C investment visa work?", "It serves a verified substantial investor and eligible family. Official rules cite at least US$500,000 for up to three years and US$1 million for up to five years, with evidence from the investment authority, bank, statistics agency, tax body or free economic zone."),
+            ("When do you become tax resident?", "The current Tax Code treats an individual as resident after more than 182 days in any 12-month period beginning or ending in the current calendar year. Resident taxable income covers sources inside and outside Tajikistan; obtain an individual calculation."),
+            ("Do you need a separate Pamir permit?", "Gorno-Badakhshan needs a GBAO permit in addition to a visa, and issuance can stop without notice. Some areas within 20 km of the Afghanistan border need another border permit."),
+            ("Should you choose Dushanbe, Khujand or Khorog?", "Dushanbe has the broadest jobs, flights, housing and healthcare. Khujand costs less and suits trade or industry. Khorog makes sense for a specific project only: permits, difficult roads, weak healthcare and supply constraints matter."),
+            ("What should you check for healthcare, money and roads?", "Insurance should cover treatment and evacuation because care is poor, especially outside Dushanbe. Carry cash, use official exchanges and check roads, weather, communications, fuel and border status; do not enter remote mountains without a prepared plan."),
+        ],
+    },
+    "move-to-palestine": {
+        "ru": [
+            ("Что охватывает эта страница?", "Страница отдельно рассматривает Западный берег и Газу. Бюджеты, города и практические маршруты относятся к Западному берегу. Для Газы приведено предупреждение по доступу и безопасности, а не сценарий добровольной релокации."),
+            ("Может ли иностранец въехать на Западный берег?", "Въезд контролируют израильские власти. Требования зависят от паспорта: может понадобиться ETA-IL или виза, а на границе могут выдать разрешение с ограничением территории. Сохраните въездную карточку и заранее проверьте процедуру COGAT."),
+            ("Можно ли сейчас въехать в Газу?", "Не планируйте Газу как обычную поездку. FCDO советует отказаться от любых поездок; нужны специальные разрешения, переходы могут закрыться на длительный срок, а выезд может стать невозможным."),
+            ("Разрешает ли туристический статус работать?", "Нет. Для работы нужен отдельный палестинский work permit, а также действительное разрешение на въезд и пребывание. Ни ETA-IL, ни туристическая B/2 сами по себе не дают права на трудоустройство."),
+            ("Как оформить разрешение на работу?", "Заявление подаёт работодатель через местное отделение Минтруда. Нужно доказать реальную потребность и соответствие квалификации профессии. Решение принимают отдельно, разрешение выдают максимум на год и могут продлить."),
+            ("Есть ли виза для digital nomad?", "Отдельной digital nomad визы в проверенных официальных процедурах не найдено. Посетительский статус не создаёт право на местную работу или долгую резиденцию; удалённую работу и налоги нужно согласовать индивидуально."),
+            ("Можно ли приехать по линии NGO или университета?", "Да, это один из реалистичных сценариев, но приглашение организации не является готовым разрешением. Спонсор должен заранее согласовать цель, срок, въезд, пребывание, рабочий статус, жильё, страховку и перемещения."),
+            ("Что важно людям палестинского происхождения или с двойным гражданством?", "Правила могут зависеть от записи в палестинском реестре населения, места рождения, второго паспорта и истории поездок. До покупки билета получите письменное разъяснение от израильских и палестинских органов по своему случаю."),
+            ("Рамалла, Вифлеем или Иерихон?", "Рамалла даёт самый широкий рынок работы и услуг, но дороже. Вифлеем подходит туризму, образованию и гуманитарным проектам. Иерихон спокойнее и жарче, с узким рынком и большей зависимостью от автомобиля."),
+            ("Что проверить по медицине, деньгам и дорогам?", "Медицина платная: нужна страховка с лечением и эвакуацией и доступные средства. Проверьте клинику, лекарства, покрытие аренды автомобиля, наличные и карты, а перед каждой поездкой — блокпосты, закрытия дорог и рекомендации безопасности."),
+        ],
+        "en": [
+            ("What does this page cover?", "The page treats the West Bank and Gaza separately. Budgets, cities and practical routes refer to the West Bank. Gaza is covered through access and safety warnings rather than as a voluntary-relocation scenario."),
+            ("Can a foreign national enter the West Bank?", "Israeli authorities control entry. Requirements depend on passport: ETA-IL or a visa may be needed, and the border decision may include a geographic restriction. Keep the entry card and check the relevant COGAT procedure in advance."),
+            ("Can you enter Gaza now?", "Do not plan Gaza as an ordinary trip. FCDO advises against all travel; special permission is required, crossings can close for long periods and departure may become impossible."),
+            ("Does visitor status allow employment?", "No. Employment needs a separate Palestinian work permit plus valid entry and stay permission. Neither ETA-IL nor a tourist B/2 status by itself grants a right to work."),
+            ("How is a work permit obtained?", "The employer files through a local Ministry of Labour office. It must demonstrate a real need and that the applicant's qualifications match the occupation. The decision is separate, and a permit is issued for no more than one year with possible renewal."),
+            ("Is there a digital-nomad visa?", "No dedicated digital-nomad visa was found in the official procedures reviewed. Visitor status does not create a right to local work or long residence; remote work and tax consequences need individual advice."),
+            ("Can you relocate through an NGO or university?", "Yes, this is one realistic case, but an organisation invitation is not a completed permission. The sponsor should coordinate purpose, term, entry, stay, work status, housing, insurance and movement before travel."),
+            ("What matters for people of Palestinian origin or dual nationals?", "Rules may depend on Palestinian population-registry status, birthplace, second nationality and travel history. Obtain written case-specific guidance from the relevant Israeli and Palestinian authorities before booking."),
+            ("Should you choose Ramallah, Bethlehem or Jericho?", "Ramallah has the widest work and service market but costs more. Bethlehem suits tourism, education and humanitarian projects. Jericho is quieter and hotter, with fewer jobs and greater car dependence."),
+            ("What should you check for healthcare, money and roads?", "Healthcare is paid, so carry treatment and evacuation insurance plus accessible funds. Verify a clinic, medicines, car-insurance coverage, cash and cards, and check checkpoints, road closures and security advice before every journey."),
+        ],
+    },
+    "move-to-north-korea": {
+        "ru": [
+            ("Можно ли переехать в Северную Корею самостоятельно?", "Практического самостоятельного маршрута для обычного иностранца нет. Долгое пребывание возможно только при официальном назначении и спонсоре, который согласует визу, регистрацию, жильё, перемещения и условия работы с властями."),
+            ("Открыты ли границы в 2026 году?", "Общий въезд после ограничений 2020 года восстановлен лишь частично. Некоторые посольства и ограниченный туризм возобновили работу, но не все пассажирские маршруты открыты. Проверять нужно конкретное приглашение и маршрут непосредственно перед поездкой."),
+            ("Нужна ли виза?", "Да, виза требуется для любого въезда. Туристы обычно едут организованной группой. Независимому посетителю нужны официальный спонсор и разрешение Министерства иностранных дел; сама виза не гарантирует доступность маршрута."),
+            ("Можно ли работать или жить как digital nomad?", "Публичного маршрута для независимого удалёнщика не найдено. Работа возможна только по официально согласованному назначению принимающей организации; обычный туристический статус нельзя считать разрешением на работу или резиденцией."),
+            ("Может ли американец въехать в КНДР?", "Паспорт США недействителен для поездки в КНДР без специальной отметки Department of State. Её выдают лишь в ограниченных случаях национального интереса, например журналистам, Красному Кресту и по серьёзным гуманитарным основаниям."),
+            ("Можно ли свободно ездить по стране?", "Нет. Иностранца почти всегда сопровождает назначенный гид. Для выезда из Пхеньяна нужно разрешение, маршрут определяет принимающая сторона, а на въездах в города действуют проверки документов."),
+            ("Как работают деньги и связь?", "Международные банковские карты и мобильные платежи не принимаются; иностранцы обычно платят наличными в евро, долларах или юанях. Международная SIM-карта не подключается к местным сетям, а доступ к интернету и внешней связи крайне ограничен."),
+            ("Что меняют международные санкции?", "Санкции ООН ограничивают финансовые операции, торговлю, оборудование и работу с определёнными лицами и организациями. Гуманитарному проекту могут требоваться отдельные исключения и национальные лицензии; одобрение ООН не заменяет внутренние разрешения каждой страны."),
+            ("Насколько высок риск задержания?", "Иностранцев задерживали как с предъявлением обвинений, так и без него. Нарушением могут признать политическую шутку, религиозную деятельность, неправильное обращение с изображением руководителя, запрещённую фотографию или отклонение от маршрута. Консульский доступ не гарантирован."),
+            ("Можно ли рассчитывать на местную медицину?", "Нет для серьёзного случая. FCDO описывает слабые условия, низкую гигиену и возможное отсутствие антибиотиков и анестезии. Организация должна заранее подтвердить клинику, запас лекарств, страховку и реальный маршрут медицинской эвакуации."),
+        ],
+        "en": [
+            ("Can you move to North Korea independently?", "There is no practical independent route for an ordinary foreign national. Long residence is limited to an official posting with a sponsor that coordinates the visa, registration, housing, movement and work conditions with the authorities."),
+            ("Are the borders open in 2026?", "General entry has only partly resumed after the 2020 restrictions. Some embassies and limited tourism have restarted, but not all passenger routes operate. Verify the exact invitation and route immediately before travel."),
+            ("Do you need a visa?", "Yes, every traveller needs a visa. Tourists normally use an organised group. An independent visitor needs an official sponsor and Ministry of Foreign Affairs permission; a visa alone does not guarantee an operating route."),
+            ("Can you work or live as a digital nomad?", "No public route for an independent remote worker was found. Employment needs an officially approved posting through a host organisation, and tourist status should not be treated as work or residence permission."),
+            ("Can a US citizen enter North Korea?", "A US passport is not valid for DPRK travel without a special Department of State validation. It is granted only in limited national-interest cases such as journalism, Red Cross missions or compelling humanitarian grounds."),
+            ("Can foreigners travel freely?", "No. An assigned guide almost always accompanies foreign nationals. Travel outside Pyongyang needs permission, the host controls the itinerary and checkpoints verify identity when entering or leaving towns."),
+            ("How do money and communications work?", "International cards and mobile payments are not accepted; foreign nationals generally pay cash in euros, US dollars or Chinese yuan. An international SIM does not connect to local networks, while internet and outside communication are severely restricted."),
+            ("How do international sanctions affect a posting?", "UN sanctions restrict financial activity, trade, equipment and dealings with designated people or entities. Humanitarian projects may need specific exemptions and national licences; UN approval does not replace each country's domestic requirements."),
+            ("How serious is detention risk?", "Foreign nationals have been detained with or without specified charges. A political joke, religious activity, mishandling a leader's image, an unauthorised photograph or leaving the itinerary can carry severe penalties. Consular access is not guaranteed."),
+            ("Can you rely on local healthcare?", "Not for a serious condition. FCDO reports poor facilities, low hygiene and possible shortages of antibiotics and anaesthetics. The sponsor must confirm a clinic, medicine supply, insurance and a workable medical-evacuation route before travel."),
+        ],
+    },
+    "move-to-mongolia": {
+        "ru": [
+            ("Нужна ли виза в Монголию?", "Это зависит от паспорта и цели. В 2026 году граждане 34 стран могут въезжать без визы для туризма до 30 дней до 31 декабря, а для граждан подходящих стран доступна K2 eVisa. Работа, учёба и долгий статус требуют другой категории."),
+            ("Можно ли продлить туристическое пребывание?", "Immigration допускает одно продление временного или безвизового пребывания на срок до 30 дней при одобрении заявления. Это не создаёт права на работу и не заменяет residence permit."),
+            ("Есть ли digital nomad виза?", "Отдельной digital nomad категории в официальных материалах Immigration не найдено. Туристический безвизовый въезд и K2 eVisa разрешают заявленную туристическую цель, а не местную работу или независимую долгую резиденцию."),
+            ("Как получить разрешение на работу?", "Процесс начинает монгольский работодатель: размещает вакансию, получает pre-work permit, организует визу C, а после въезда подаёт на окончательный work permit. Permit обычно действует до года и может продлеваться по одному году."),
+            ("Когда нужно оформить residence permit?", "Заявление подают в Immigration в течение 21 дня после въезда. Для работника срок residence permit обычно соответствует work permit; адрес и изменения статуса нужно своевременно регистрировать."),
+            ("Как работает инвестиционный маршрут?", "Категории B1–B3 предназначены для инвестора, руководителя иностранной компании и главы представительства. Нужны зарегистрированная организация, подтверждение инвестиции и корпоративные документы. Residence обычно дают до года с возможным продлением до трёх лет."),
+            ("Можно ли перевезти семью?", "Для членов семьи инвесторов предусмотрены связанные B1-1, B2-1 и B3-1 категории; требуются приглашение и переведённые документы о браке, рождении или усыновлении. Для других резидентов основание и право семьи нужно проверять по их категории."),
+            ("Когда возникает налоговое резидентство?", "Закон относит к постоянным налоговым резидентам человека, прожившего в Монголии не менее 183 дней за последовательные 12 месяцев, а также в отдельных случаях получающего 50% или более налогооблагаемого дохода из Монголии. Резидент облагается с мирового дохода."),
+            ("Улан-Батор, Эрдэнэт или Дархан?", "Улан-Батор даёт максимум работы, школ, клиник и международных услуг, но страдает от пробок и зимнего смога. Эрдэнэт подходит промышленным специалистам, Дархан — производству и агросектору; оба дешевле, но рынок и медицина уже."),
+            ("Что проверить перед зимним переездом?", "Проверьте реальное отопление и утепление квартиры, зимний маршрут до работы, уровень PM2.5 в районе, очиститель воздуха, запас лекарств и страховку с эвакуацией. За пределами Улан-Батора качество медицины и английский персонала ограничены."),
+        ],
+        "en": [
+            ("Do you need a visa for Mongolia?", "It depends on passport and purpose. In 2026, nationals of 34 countries may enter visa-free for tourism for up to 30 days through 31 December, while eligible nationalities can use a K2 eVisa. Work, study and long residence need another category."),
+            ("Can tourist stay be extended?", "Immigration allows one approved extension of temporary or visa-free stay for up to 30 days. This does not create employment rights or replace a residence permit."),
+            ("Does Mongolia have a digital-nomad visa?", "No dedicated digital-nomad category appears in the official Immigration material reviewed. Visa-free tourism and a K2 eVisa permit the declared tourist purpose, not local employment or independent long residence."),
+            ("How do you obtain a work permit?", "A Mongolian employer starts the process by advertising the vacancy, obtaining a pre-work permit, arranging the C visa and filing for the final work permit after arrival. A permit is normally granted for up to one year and may be extended one year at a time."),
+            ("When must you obtain a residence permit?", "File with Immigration within 21 days after entry. An employee's residence normally follows the work-permit term, and address or status changes must be registered on time."),
+            ("How does the investor route work?", "B1–B3 cover an investor, executive of a foreign-invested company and representative-office head. A registered entity, investment evidence and corporate documents are required. Residence is generally granted for up to one year and may be extended for up to three years."),
+            ("Can family members relocate?", "Linked B1-1, B2-1 and B3-1 categories exist for investor-family members, with an invitation and translated marriage, birth or adoption evidence. For other residents, family eligibility must be checked against the sponsor's category."),
+            ("When do you become tax resident?", "The law treats an individual as a permanent tax resident after at least 183 days in 12 consecutive months and, separately, in some cases when 50% or more of taxable income is Mongolia-sourced. A resident is taxed on worldwide income."),
+            ("Should you choose Ulaanbaatar, Erdenet or Darkhan?", "Ulaanbaatar has the broadest jobs, schools, clinics and international services but severe traffic and winter smog. Erdenet suits industrial specialists and Darkhan manufacturing or agriculture; both cost less but have narrower work and care."),
+            ("What should you verify before a winter move?", "Inspect actual heating and insulation, test the winter commute, check district PM2.5, budget for an air purifier, carry medication and buy evacuation cover. Healthcare standards and English-speaking staff are limited outside Ulaanbaatar."),
+        ],
+    },
+    "move-to-maldives": {
+        "ru": [
+            ("Нужна ли виза на Мальдивы?", "Туристическую визу обычно выдают по прибытии на срок до 30 дней без предварительного разрешения. Нужны MRZ-паспорт, обратный или дальнейший билет, подтверждённое зарегистрированное жильё, средства и бесплатная Traveller Declaration через IMUGA в течение 96 часов до прибытия."),
+            ("Можно ли жить и удалённо работать по туристической визе?", "Туристический статус не разрешает трудоустройство, а отдельной digital nomad визы в официальных категориях Immigration не найдено. Продление до общего предела 90 дней остаётся решением ведомства и не создаёт права на работу или постоянное проживание."),
+            ("Как оформляют Work Visa?", "Сначала работодатель получает Employment Approval или Work Permit. После въезда Work Visa нужно оформить через Xpat в течение 15 дней; срок визы соответствует разрешению на работу. Не начинайте работу и не летите без письменного плана работодателя."),
+            ("Что проверить в курортном контракте?", "Попросите письменно указать жильё, питание, питьевую воду, форму, трансфер между островами, медицинскую страховку, эвакуацию, ежегодный или обратный билет, сервисный сбор, график и порядок выезда после увольнения. Эти пункты сильнее всего меняют реальный бюджет."),
+            ("Подходит ли Business Visa для работы?", "Нет. Она предназначена для одобренных деловых визитов по приглашению зарегистрированной местной организации. Разрешение оформляют до прибытия через Business Portal; суммарное пребывание ограничено 90 днями в течение 12 месяцев."),
+            ("Можно ли перевезти семью?", "Dependent Visa доступна ближайшим родственникам части иностранных специалистов; Sponsorship Declaration подают через IMUGA заранее, обычно минимум за пять рабочих дней. Для иностранного супруга гражданина Мальдив действует Marriage Visa: сначала на год, затем возможны продления до пяти лет."),
+            ("Есть ли резиденция через инвестиции?", "Corporate Resident Visa связана с инвестициями, одобренными государственными органами. Foreign Investment Law требует одобрения, регистрации, лицензии и соглашения; официальный административный сбор составляет $5 000. Конкретный проект и право семьи проверяют до перевода средств."),
+            ("Когда возникает налоговое резидентство?", "MIRA считает физлицо резидентом при наличии постоянного дома либо при пребывании или намерении пребывать более 183 дней в любом 12-месячном периоде, начинающемся или заканчивающемся в налоговом году. Временный иностранный резидент может иметь иной объём налогообложения; нужен персональный расчёт."),
+            ("Мале, Хулхумале или Адду-Сити?", "Мале даёт максимум работы, учреждений и медицины, но очень плотный и дорогой. Хулхумале предлагает более новое жильё и близость к аэропорту. Адду дешевле и спокойнее, однако вакансий, специализированной медицины и рейсов меньше."),
+            ("Что важно для здоровья и повседневной жизни?", "Полноценные больницы сосредоточены в Мале и Хулхумале; с удалённого острова дорога может занять часы, поэтому страховка должна покрывать эвакуацию. Вне курортов соблюдайте местные исламские нормы и заранее считайте лодки, перелёты и доступность импортных товаров."),
+        ],
+        "en": [
+            ("Do you need a visa for the Maldives?", "A tourist visa is generally issued on arrival for up to 30 days without preapproval. You need an MRZ passport, return or onward ticket, confirmed registered accommodation, funds and a free Traveller Declaration through IMUGA within 96 hours before arrival."),
+            ("Can you live and work remotely on tourist status?", "Tourist status does not authorise employment, and no dedicated digital-nomad visa appears in the official Immigration categories reviewed. An extension up to a 90-day total remains discretionary and does not create work or permanent-residence rights."),
+            ("How is a Work Visa arranged?", "The employer first obtains Employment Approval or a Work Permit. After arrival, the Work Visa must be completed through Xpat within 15 days and follows the permit period. Do not start work or travel without the employer's written process."),
+            ("What should a resort contract include?", "Get housing, meals, drinking water, uniform, island transfers, health insurance, evacuation, annual or return flight, service charge, schedule and exit terms in writing. These benefits usually make the largest difference to the real budget."),
+            ("Can you work on a Business Visa?", "No. It covers approved business visits sponsored by a locally registered organisation. Approval is obtained before arrival through the Business Portal, and cumulative stay is limited to 90 days within 12 months."),
+            ("Can family members relocate?", "A Dependent Visa is available to immediate family of some professional foreign workers; a Sponsorship Declaration is filed through IMUGA in advance, normally at least five working days. A foreign spouse of a Maldivian uses a Marriage Visa, initially for one year with later renewals up to five years."),
+            ("Is there residence through investment?", "A Corporate Resident Visa is linked to investment approved by the responsible authorities. The Foreign Investment Law process requires approval, registration, a licence and agreement, with a US$5,000 official administration fee. Verify project eligibility and family rights before transferring funds."),
+            ("When do you become tax resident?", "MIRA treats an individual as resident with a permanent home or when present, or intending to be present, for more than 183 days in any 12-month period beginning or ending in the tax year. A temporary foreign resident can have different scope, so obtain an individual calculation."),
+            ("Should you choose Malé, Hulhumalé or Addu City?", "Malé has the broadest jobs, institutions and care but is dense and expensive. Hulhumalé offers newer housing and airport access. Addu is cheaper and quieter, with fewer jobs, specialist services and flight options."),
+            ("What matters for healthcare and daily life?", "Fully equipped hospitals are concentrated in Malé and Hulhumalé; reaching them from a remote island can take hours, so insurance should cover evacuation. Outside resorts, follow local Islamic rules and budget for boats, domestic flights and imported goods."),
+        ],
+    },
+    "move-to-bhutan": {
+        "ru": [
+            ("Нужна ли виза в Бутан?", "Большинству иностранцев нужна eVisa до поездки. Граждане Индии используют permit, а для граждан Бангладеш и Мальдив действует отдельный порядок. Паспорт обычно должен быть действителен минимум шесть месяцев после планируемого выезда."),
+            ("Сколько стоит туристическая виза?", "Официальный туристический сайт указывает невозвратный сбор $40 и SDF $100 за ночь для взрослого большинства гражданств. Для детей и граждан Индии действуют другие ставки; SDF платят за каждую ночь поездки."),
+            ("Можно ли жить в Бутане по туристической eVisa?", "Строить долгую релокацию на туристическом статусе непрактично: он не даёт права на работу, а ежедневный SDF добавляет около $3 000 за 30 ночей. Для переезда нужно рабочее, учебное или инвестиционное основание."),
+            ("Как получить work permit?", "Заявление начинает работодатель после одобрения компетентного ведомства. DoI требует DOCF2025 и подачу через immi.gov.bt; статус связан с конкретной работой, а продление нужно подавать минимум за 14 дней до окончания."),
+            ("Есть ли digital nomad виза Бутана?", "Отдельной digital nomad категории в официальных материалах DoI не найдено. Туристическая eVisa не является разрешением на удалённую работу или резиденцией, несмотря на заявления некоторых неофициальных сайтов."),
+            ("Что даёт Investor Card?", "FDI Rules 2025 предусматривают трёхлетнюю карту с дальнейшими продлениями для иностранного инвестора или представителя при инвестиции свыше Nu 15 млн после начала бизнеса. Супруг и иждивенцы освобождаются от SDF; супругу для работы нужен work permit."),
+            ("Можно ли учиться в Бутане?", "Да, DoI опубликовал Visa/Entry Permit Guideline for International Students 2026. Понадобятся зачисление и оформление через признанное учреждение; учебный статус не следует автоматически считать правом на любую работу."),
+            ("Когда возникает налоговое резидентство?", "Income Tax Act 2025 использует тест 183 дней в любом 12-месячном периоде, который начинается или заканчивается в соответствующем income year. Доход из Бутана может облагаться и у нерезидента; расчёт и договоры проверяют отдельно."),
+            ("Тхимпху, Паро или Пхунчолинг?", "Тхимпху даёт больше работы и услуг, но дороже. Паро подходит аэропорту и туризму. Пхунчолинг связан с Индией, торговлей и логистикой. Для семьи заранее проверяйте школу, жильё, клинику и дорогу."),
+            ("Что проверить перед переездом?", "Получите письменное одобрение статуса, подтвердите отсутствие SDF для своей категории, проверьте жильё и отопление, связь, дорожную доступность, высоту, страховку с эвакуацией в Индию или Таиланд и условия выезда после окончания контракта."),
+        ],
+        "en": [
+            ("Do you need a visa for Bhutan?", "Most foreign nationals need an eVisa before travel. Indian citizens use a permit, while Bangladesh and Maldives follow a separate process. A passport normally needs at least six months of validity after planned departure."),
+            ("How much does the tourist visa cost?", "The official tourism site lists a non-refundable US$40 fee and a US$100 nightly SDF for most adult visitors. Children and Indian nationals use different rates; the levy applies for each night."),
+            ("Can you live in Bhutan on a tourist eVisa?", "It is impractical as a long-stay plan: tourist status does not authorise employment and the daily SDF adds about US$3,000 for 30 nights. Relocation needs an employment, study or investment basis."),
+            ("How do you obtain a work permit?", "The employer starts the process after competent-agency approval. DoI requires DOCF2025 and an immi.gov.bt filing; status is tied to the specific job and renewal should be filed at least 14 days before expiry."),
+            ("Does Bhutan have a digital-nomad visa?", "No dedicated digital-nomad category was found in the official DoI materials reviewed. A tourist eVisa is not remote-work permission or residence, despite claims on some unofficial sites."),
+            ("What does the Investor Card provide?", "The 2025 FDI Rules provide a renewable three-year card for a foreign investor or representative investing above Nu 15 million after business commencement. Spouse and dependants are SDF-exempt; a spouse needs a work permit for employment."),
+            ("Can foreign students study in Bhutan?", "Yes. DoI published a Visa/Entry Permit Guideline for International Students in 2026. Admission and institution-led processing are required, and student status should not be assumed to grant unrestricted work rights."),
+            ("When do you become tax resident?", "The Income Tax Act 2025 uses 183 days in any 12-month period beginning or ending in the relevant income year. Bhutan-source income may still be taxable for a non-resident; source and treaty treatment need individual advice."),
+            ("Should you choose Thimphu, Paro or Phuentsholing?", "Thimphu has the broadest work and services but costs more. Paro fits airport and tourism roles. Phuentsholing links to Indian trade and logistics. Families should verify school, housing, clinic and commute first."),
+            ("What should you check before relocating?", "Obtain written status approval, confirm SDF treatment for the category, inspect housing and heating, test communications and road access, account for altitude, buy evacuation cover for India or Thailand and document exit terms after the contract."),
+        ],
+    },
+    "move-to-afghanistan": {
+        "ru": [
+            ("Стоит ли переезжать в Афганистан в 2026 году?", "Для обычного добровольного переезда — нет. FCDO советует отказаться от любых поездок. Реалистичный случай — только обязательное назначение через организацию с профессиональной безопасностью, медицинским и эвакуационным планом."),
+            ("Нужна ли виза в Афганистан?", "Да, иностранцу обычно нужна виза. MFA перечисляет tourist, business, entry, residence, student и другие категории. Канал подачи зависит от паспорта и работающего консульства; некоторые представительства закрыты или не признаны всеми сторонами."),
+            ("Можно ли работать по туристической визе?", "Нет. MoLSA отдельно предупреждает против работы иностранцев по туристическим визам. Нужны приглашение лицензированной организации, подходящая entry/work процедура и разрешение на работу."),
+            ("Как устроена рабочая процедура?", "Официальная entry visa требует приглашения лицензированной компании или учреждения, письма компетентного органа и одобрения MFA. Работодатель должен до въезда подтвердить порядок work permit в MoLSA и последующей residence visa."),
+            ("Есть ли digital nomad виза?", "Отдельной digital nomad категории в официальном перечне MFA не найдено. Туристическая виза не разрешает работу, а удалённый доход не устраняет вопросы разрешённой деятельности, налога, банков и безопасности."),
+            ("Сколько стоит жизнь в Афганистане?", "Редакционный бытовой ориентир одного человека — $600–1 500 в месяц, но он не включает профессиональную охрану, защищённый автомобиль, эвакуацию и специальную страховку. Для обязательного назначения считайте полный пакет работодателя, а не только аренду и еду."),
+            ("Можно ли получить residence visa?", "MFA указывает residence visa на срок от одного месяца до года для продолжения пребывания после service, business, entry, student или crew visa. Основание, документы, продление и выезд организация подтверждает письменно до поездки."),
+            ("Когда возникает налоговое резидентство?", "Официальный налоговый guide указывает 183 дня за финансовый год; резидентом также может считаться человек с основным домом в Афганистане. Источник дохода и удержания работодателя нужно рассчитывать отдельно."),
+            ("Кабул, Герат или Мазари-Шариф?", "Кабул концентрирует организации и услуги, но делает иностранца особенно заметным. Герат связан с западной торговлей, Мазари-Шариф — с северной логистикой. Выбор должен определять профессиональный security assessment и эвакуация, а не привлекательность города."),
+            ("Что должно быть в контракте?", "Письменно зафиксируйте визу и work permit, защищённое жильё и транспорт, круглосуточную связь, медицинскую помощь и эвакуацию, страховку, безопасные маршруты, порядок выезда семьи, выплаты при закрытии границ и право отказаться от опасной задачи."),
+        ],
+        "en": [
+            ("Should you move to Afghanistan in 2026?", "Not as an ordinary voluntary move. FCDO advises against all travel. A realistic case is an essential assignment through an organisation providing professional security, medical support and an extraction plan."),
+            ("Do you need a visa for Afghanistan?", "A foreign national generally needs a visa. MFA lists tourist, business, entry, residence, student and other categories. The application channel depends on passport and an operating mission; some embassies are closed or not accepted by every authority."),
+            ("Can you work on a tourist visa?", "No. MoLSA specifically warns against foreigners working under tourist visas. Employment requires an invitation from a licensed organisation, the correct entry or work process and a work permit."),
+            ("How does the employment route work?", "The official entry visa needs an invitation from a licensed company or institution, a relevant-authority letter and MFA approval. The employer should confirm the MoLSA work-permit and later residence steps in writing before travel."),
+            ("Does Afghanistan have a digital-nomad visa?", "No dedicated digital-nomad category was found in the official MFA list. A tourist visa does not authorise employment, and foreign remote income does not resolve permitted activity, tax, banking or security issues."),
+            ("What is the cost of living in Afghanistan?", "The editorial solo living range is $600–1,500 per month, excluding professional security, a protected vehicle, evacuation and specialist insurance. An essential assignee should price the employer's full package, not rent and food alone."),
+            ("Can you obtain a residence visa?", "MFA describes a one-month to one-year residence visa for continued stay after service, business, entry, student or crew status. The organisation should confirm basis, documents, renewal and exit procedure before travel."),
+            ("When do you become tax resident?", "The official tax guide uses 183 days in the fiscal year and may also treat a person with a principal home in Afghanistan as resident. Income source and employer withholding need an individual calculation."),
+            ("Should you choose Kabul, Herat or Mazar-i-Sharif?", "Kabul concentrates organisations and services but makes a foreign national highly visible. Herat links to western trade and Mazar-i-Sharif to northern logistics. A professional security and extraction assessment should decide location."),
+            ("What should the contract cover?", "Put visa and work permit, secure housing and transport, round-the-clock communications, medical care and evacuation, insurance, approved routes, family exit arrangements, border-closure pay and the right to refuse unsafe tasks in writing."),
+        ],
+    },
+    "move-to-bangladesh": {
+        "ru": [
+            ("Нужна ли виза в Бангладеш?", "Правило зависит от паспорта и цели. Для части путешественников доступна виза по прибытии, но решение принимается на границе, обычно на 15–30 дней и не гарантируется. Перед поездкой проверьте официальный визовый портал и требования перевозчика."),
+            ("Сколько стоит жизнь в Бангладеш в 2026 году?", "Редакционный ориентир для одного человека — $550–1 300 в месяц. Дакка обычно дороже Чаттограма и Силхета. Депозит, временное жильё, международная школа, автомобиль, частная медицина и страховка считаются отдельно."),
+            ("Как оформить разрешение на работу?", "Сначала нужен оффер и подходящая E2 или PI виза. Работодатель или проект должен быть зарегистрирован в нужной юрисдикции, а заявление с контрактом, квалификацией и корпоративными документами подают через BIDA OSS или другое компетентное ведомство."),
+            ("Можно ли работать по туристической визе или Visa on Arrival?", "Нет. Краткий въезд не заменяет рабочую визу и разрешение. До начала работы получите письменную схему от работодателя и подтверждение компетентного ведомства."),
+            ("Есть ли digital nomad виза Бангладеш?", "Отдельной digital nomad категории в проверенных официальных материалах visa.gov.bd и BIDA не найдено. Удалённый доход не превращает гостевой статус в долгосрочную резиденцию; допустимую деятельность и налог нужно проверить отдельно."),
+            ("Чем E2 отличается от E3?", "E2 используют для обычной работы у зарегистрированной организации или проекта и связывают с work permit. E3 предназначена для коротких технических задач — установки и обслуживания оборудования или ПО, надзора и инспекции; актуальный BIDA guide указывает отсутствие work permit для E3."),
+            ("Можно ли перевезти семью?", "BIDA guide перечисляет FPI, FE2 и FE3 для супругов и иждивенцев держателей PI, E2 и E3. Это не означает автоматического права супруга на работу: документы, срок и разрешённую деятельность подтверждают отдельно."),
+            ("Когда возникает налоговое резидентство?", "Income Tax Act 2023 указывает 182 дня за финансовый год либо 60 дней в этом году вместе с 365 днями за четыре предыдущих года. Для отдельных граждан Бангладеш и лиц бангладешского происхождения есть исключения; источник дохода и соглашения считают индивидуально."),
+            ("Дакка, Чаттограм или Силхет?", "Дакка даёт самый широкий рынок и сервисы, но самые тяжёлые пробки и загрязнение. Чаттограм подходит портам, логистике и производству. Силхет компактнее и дешевле, но рынок квалифицированной работы и медицина уже."),
+            ("Что проверить перед арендой?", "Проверьте дорогу до работы в час пик, историю подтоплений, резервное электричество и воду, кондиционирование, вентиляцию, интернет, безопасность здания, ближайшую частную клинику, депозит и право владельца сдавать объект."),
+        ],
+        "en": [
+            ("Do you need a visa for Bangladesh?", "The rule depends on passport and purpose. Some travellers may obtain visa on arrival, but border approval is discretionary, normally for 15–30 days and not guaranteed. Check the official visa portal and carrier requirements before travel."),
+            ("What is the cost of living in Bangladesh in 2026?", "The editorial solo range is $550–1,300 per month. Dhaka generally costs more than Chattogram or Sylhet. Deposit, temporary accommodation, international school, a car, private healthcare and insurance are separate."),
+            ("How do you obtain a Bangladesh work permit?", "Start with a genuine offer and suitable E2 or PI visa. The employer or project must be registered with the relevant authority, and the contract, qualifications and corporate documents go through BIDA OSS or the competent zone authority."),
+            ("Can you work on a tourist visa or visa on arrival?", "No. Short-stay entry does not replace employment status or a work permit. Obtain a written process from the employer and confirmation from the competent authority before starting work."),
+            ("Does Bangladesh have a digital-nomad visa?", "No dedicated digital-nomad category was found in the official visa.gov.bd and BIDA materials reviewed. Foreign remote income does not turn visitor status into long-term residence; permitted activity and tax treatment need separate advice."),
+            ("What is the difference between E2 and E3?", "E2 covers regular employment with a registered organisation or project and links to a work permit. E3 covers short technical installation, maintenance, supervision or inspection; the current BIDA guide says E3 assignments do not require a work permit."),
+            ("Can family members relocate?", "The BIDA guide lists FPI, FE2 and FE3 categories for spouses and dependants of PI, E2 and E3 holders. These do not automatically grant a spouse work rights; documents, validity and permitted activity require a separate check."),
+            ("When do you become tax resident?", "The Income Tax Act 2023 uses 182 days in a financial year, or 60 days in that year plus 365 days over the preceding four years. Exceptions apply to some Bangladeshi citizens and people of Bangladeshi origin; source and treaty treatment are separate."),
+            ("Should you choose Dhaka, Chattogram or Sylhet?", "Dhaka has the broadest market and services but the hardest traffic and pollution. Chattogram fits port, logistics and manufacturing work. Sylhet is smaller and often cheaper, with a narrower skilled-job and medical market."),
+            ("What should you check before renting?", "Test the peak-hour commute, flood history, backup electricity and water, air conditioning, ventilation, internet, building security, nearest private hospital, deposit terms and the landlord's authority to lease."),
+        ],
+    },
+    "move-to-pakistan": {
+        "ru": [
+            ("Нужна ли виза в Пакистан?", "Правило зависит от гражданства и цели. Официальная система делит маршруты на туристические, рабочие, учебные, семейные, деловые и другие категории. Проверяйте свой паспорт в Pakistan Online Visa System и не покупайте невозвратные билеты до решения."),
+            ("Сколько стоит жизнь в Пакистане в 2026 году?", "Редакционный ориентир для одного человека — $550–1 300 в месяц. Исламабад обычно дороже Лахора и Карачи. Депозит, временное жильё, автомобиль, международная школа, частная медицина, страховка и безопасность считаются отдельно."),
+            ("Как оформить рабочую визу?", "Нужен реальный оффер и зарегистрированный работодатель. DGI&P перечисляет контракт, письмо и профиль компании, CV и регистрацию SECP. После въездной рабочей визы работодатель помогает с продлением и остальными местными формальностями."),
+            ("Можно ли работать по туристической eVisa?", "Нет. Туристическая или гостевая категория предназначена для визита и не заменяет рабочую визу. До любой оплачиваемой деятельности получите письменное подтверждение подходящего статуса."),
+            ("Есть ли digital nomad виза?", "Отдельной digital nomad категории в официальном перечне DGI&P не найдено. Иностранный удалённый доход не превращает туристическую визу в право на долгосрочное проживание или местную работу; налоги и допустимую деятельность нужно проверить отдельно."),
+            ("Что такое Long Term Residency?", "Это объявленная в 2025 году инвестиционная резиденция на 5, 7 или 10 лет для граждан подходящих стран после проверок. Официальный BOI указывает государственные платежи $300 000, $400 000 или $700 000 и инвестицию от $50 000; до оплаты проверьте запуск цифрового портала и юридическую документацию."),
+            ("Можно ли перевезти семью?", "Рабочие и некоторые другие категории предусматривают семейное оформление, а LTR позволяет включить до семи иждивенцев с отдельным платежом. Состав семьи, право на работу супруга, школу, страховку и документы каждого заявителя нужно подтвердить до переезда."),
+            ("Когда возникает налоговое резидентство?", "FBR указывает тест 183 дней за налоговый год либо 120 дней в текущем году вместе с 365 днями за четыре предыдущих года. Источник дохода, договор об избежании двойного налогообложения и регистрация рассчитываются отдельно."),
+            ("Исламабад, Лахор или Карачи?", "Исламабад удобнее для международных и государственных функций, но дороже. Лахор силён в образовании, технологиях и культуре, однако зимой страдает от смога. Карачи даёт крупнейший рынок работы, но требует особенно тщательного выбора района и транспорта."),
+            ("Что проверить перед арендой и переездом?", "Проверьте визу и регистрацию, безопасность конкретного района, резервное электричество и воду, интернет, дорогу до работы, частную клинику, условия депозита и право арендодателя сдавать объект. Долгую аренду подписывайте после личной проверки."),
+        ],
+        "en": [
+            ("Do you need a visa for Pakistan?", "The rule depends on nationality and purpose. The official system separates tourist, work, study, family, business and other categories. Check the passport in Pakistan Online Visa System and wait for a decision before buying non-refundable travel."),
+            ("What is the cost of living in Pakistan in 2026?", "The editorial solo range is $550–1,300 per month. Islamabad is normally more expensive than Lahore or Karachi. Deposit, temporary housing, a car, international school, private healthcare, insurance and security are separate."),
+            ("How do you get a Pakistan work visa?", "You need a genuine offer and a registered employer. DGI&P lists an employment agreement, company letter and profile, CV and SECP registration. After the entry work visa, the employer supports extension and local formalities."),
+            ("Can you work on a tourist eVisa?", "No. Tourist or visit status covers a visit and does not replace the work route. Obtain written confirmation of the correct status before any paid local activity."),
+            ("Does Pakistan have a digital-nomad visa?", "No dedicated digital-nomad category was found in the official DGI&P list. Foreign remote income does not turn tourist status into long-term residence or local-work permission; activity and tax treatment need a separate check."),
+            ("What is Pakistan Long Term Residency?", "It is an investment residence scheme announced in 2025 for five, seven or ten years, subject to eligible nationality and clearances. BOI lists government payments of $300,000, $400,000 or $700,000 plus at least $50,000 of investment; verify portal availability and legal documents before paying."),
+            ("Can family members relocate?", "Work and some other categories support family processing, while LTR can include up to seven dependants for additional payment. Confirm the family definition, spouse work rights, school, insurance and every applicant's documents first."),
+            ("When do you become tax resident?", "FBR lists a 183-day test, or 120 days in the current tax year combined with 365 days in the preceding four tax years. Income source, treaty relief and registration still need an individual calculation."),
+            ("Should you choose Islamabad, Lahore or Karachi?", "Islamabad is strongest for international and government functions but costs more. Lahore combines education, technology and culture with serious winter smog. Karachi has the largest employment market but demands careful district and transport planning."),
+            ("What should you check before renting?", "Verify visa and registration, district-level security, backup power and water, internet, commute, private medical access, deposit terms and the landlord's title. Inspect in person before signing a long lease."),
+        ],
+    },
     "move-to-kuwait": {
         "ru": [
             ("Нужна ли виза в Кувейт?", "Правило зависит от гражданства и категории. Официальный Kuwait Visa выдаёт туристическую визу для подходящих заявителей: въездное разрешение действует 30 дней, однократное пребывание — до 90 дней. Паспорт должен действовать не менее шести месяцев; туристический статус запрещает работу."),
@@ -4137,8 +5354,13 @@ def ru_country_article(slug: str, facts: sqlite3.Row | None) -> str:
     acc = ru_country_accusative(slug)
     destination = ru_country_destination(slug)
     prep = ru_country_prep(slug)
+    location_prefix = "на" if slug == "move-to-maldives" else "в"
     display_facts = country_facts_for_display(facts, slug, "ru")
     capital = display_facts["capital"] if display_facts and display_facts["capital"] else "данные отсутствуют"
+    capital_label = "Страна / регион" if slug == "move-to-sharm-el-sheikh" else "Столица"
+    population_label = "Население Египта" if slug == "move-to-sharm-el-sheikh" else "Население"
+    if slug == "move-to-sharm-el-sheikh":
+        capital = "Египет · Южный Синай"
     currency = display_facts["currency_code"] if display_facts and display_facts["currency_code"] else "данные отсутствуют"
     languages = display_facts["languages"] if display_facts and display_facts["languages"] else "данные отсутствуют"
     population = compact_number(display_facts["population"] if display_facts else None)
@@ -4170,10 +5392,10 @@ def ru_country_article(slug: str, facts: sqlite3.Row | None) -> str:
     </nav>"""
     facts_band_html = f"""
     <section class="rta-country-pulse" aria-label="Ключевые факты о стране">
-      <div><span>Столица</span><strong>{html.escape(capital)}</strong></div>
+      <div><span>{capital_label}</span><strong>{html.escape(capital)}</strong></div>
       <div><span>Валюта</span><strong>{html.escape(currency)}</strong></div>
       <div><span>Язык</span><strong>{html.escape(languages)}</strong></div>
-      <div><span>Население</span><strong>{population}</strong></div>
+      <div><span>{population_label}</span><strong>{population}</strong></div>
       <div><span>Интернет</span><strong>{internet}</strong></div>
       <div><span>Продолжительность жизни</span><strong>{life}</strong></div>
     </section>"""
@@ -4232,8 +5454,12 @@ def ru_country_article(slug: str, facts: sqlite3.Row | None) -> str:
     pros_html = "".join(f"<li>{html.escape(p)}</li>" for p in pros)
     cons_html = "".join(f"<li>{html.escape(c)}</li>" for c in cons)
     total, rent, food, transport = costs
+    places_label = "Районы для сравнения" if slug == "move-to-sharm-el-sheikh" else "Популярные города"
+    city_section_label = "Районы" if slug == "move-to-sharm-el-sheikh" else "Города"
+    city_section_heading = "Какой район выбрать в Шарм-эль-Шейхе" if slug == "move-to-sharm-el-sheikh" else "Какой город подходит вашему сценарию"
+    city_first_column = "Район" if slug == "move-to-sharm-el-sheikh" else "Город"
     cities_line = (
-        "<p class='ep-p'><strong>Популярные города:</strong> "
+        f"<p class='ep-p'><strong>{places_label}:</strong> "
         + " &middot; ".join(html.escape(c) for c in cities)
         + "</p>"
     ) if cities else ""
@@ -4246,12 +5472,12 @@ def ru_country_article(slug: str, facts: sqlite3.Row | None) -> str:
     )
     city_section = f"""
     <section class="ep-section ep-country-cities" id="ru-cities">
-      <p class="ep-section-label">Города</p>
-      <h2 class="ep-h2">Какой город подходит вашему сценарию</h2>
+      <p class="ep-section-label">{city_section_label}</p>
+      <h2 class="ep-h2">{city_section_heading}</h2>
       <p class="ep-p">Страновой средний бюджет мало помогает при выборе жилья. Сравнивайте город, район и сезон — именно они определяют реальную стоимость и повседневный ритм.</p>
       <div class="ep-table-wrap">
         <table class="ep-table ep-city-table">
-          <thead><tr><th>Город</th><th>Ориентир / мес.</th><th>Лучше всего для</th><th>Главный компромисс</th></tr></thead>
+          <thead><tr><th>{city_first_column}</th><th>Ориентир / мес.</th><th>Лучше всего для</th><th>Главный компромисс</th></tr></thead>
           <tbody>{city_rows}</tbody>
         </table>
       </div>
@@ -4319,7 +5545,7 @@ def ru_country_article(slug: str, facts: sqlite3.Row | None) -> str:
 
     <div class="ep-section" id="ru-costs">
       <p class="ep-section-label">Стоимость жизни</p>
-      <h2 class="ep-h2">Рабочий месячный бюджет в {html.escape(prep)}</h2>
+      <h2 class="ep-h2">Рабочий месячный бюджет {location_prefix} {html.escape(prep)}</h2>
       <div class="ep-budget-ledger">
         <div class="ep-budget-total"><span>Рабочий ориентир</span><strong>{html.escape(total)}</strong><small>один человек, без стартовых расходов</small></div>
         <dl>
@@ -4396,9 +5622,13 @@ def en_country_article(slug: str, facts: sqlite3.Row | None) -> str:
     ru_data = RU_COUNTRY_DATA.get(slug)
     country = COUNTRY_EN_NAMES.get(slug, slug.replace("move-to-", "").replace("-", " ").title())
     capital = facts["capital"] if facts and facts["capital"] else "N/A"
+    capital_label = "Country / region" if slug == "move-to-sharm-el-sheikh" else "Capital"
+    population_label = "Egypt population" if slug == "move-to-sharm-el-sheikh" else "Population"
+    if slug == "move-to-sharm-el-sheikh":
+        capital = "Egypt · South Sinai"
     currency = facts["currency_code"] if facts and facts["currency_code"] else "N/A"
     languages = facts["languages"] if facts and facts["languages"] else "N/A"
-    population = compact_number(facts["population"] if facts else None)
+    population = compact_number_en(facts["population"] if facts else None)
     internet = f"{facts['internet_pct']:.1f}%" if facts and facts["internet_pct"] is not None else "N/A"
     life = f"{facts['life_expectancy']:.1f} yrs" if facts and facts["life_expectancy"] is not None else "N/A"
     year = facts["wb_year"] if facts and facts["wb_year"] else "latest data"
@@ -4420,10 +5650,10 @@ def en_country_article(slug: str, facts: sqlite3.Row | None) -> str:
     </nav>"""
     facts_band_html = f"""
     <section class="rta-country-pulse" aria-label="Key country facts">
-      <div><span>Capital</span><strong>{html.escape(capital)}</strong></div>
+      <div><span>{capital_label}</span><strong>{html.escape(capital)}</strong></div>
       <div><span>Currency</span><strong>{html.escape(currency)}</strong></div>
       <div><span>Languages</span><strong>{html.escape(languages)}</strong></div>
-      <div><span>Population</span><strong>{population}</strong></div>
+      <div><span>{population_label}</span><strong>{population}</strong></div>
       <div><span>Internet</span><strong>{internet}</strong></div>
       <div><span>Life expectancy</span><strong>{life}</strong></div>
     </section>"""
@@ -4685,23 +5915,36 @@ def _ru_countries_catalog_content() -> str:
         "move-to-yemen": "Индивидуальная eVisa, работа через работодателя, разделённая валютная среда и критические риски безопасности.",
         "move-to-syria": "Въезд через eVisa, работа только с разрешением, критические риски безопасности и выбор между Дамаском, Алеппо и Латакией.",
         "move-to-iraq": "Разные правила федерального Ирака и KRG, переезд по контракту и выбор между Багдадом, Эрбилем и Басрой.",
+        "move-to-cyprus": "ЕС-регистрация, работа, Digital Nomad Visa или инвестиционный ВНЖ; Республика и север требуют разных проверок.",
+        "move-to-timor-leste": "Work Permit, Business Visa II и выбор между дорогим Дили, локальным Баукау и проектным Атауро.",
+        "move-to-turkmenistan": "Переезд через спонсора: рабочая виза, разрешение, регистрация, связь и план медицинской эвакуации.",
+        "move-to-sharm-el-sheikh": "Южный Синай: отдельная логика короткого штампа, обычной визы, работы и выбора района курорта.",
+        "move-to-tajikistan": "Работа по категории M, инвестиционная C, обязательная регистрация и отдельный GBAO permit для Памира.",
+        "move-to-palestine": "Западный берег: COGAT, отдельный work permit и выбор между Рамаллой, Вифлеемом и Иерихоном; Газа исключена из обычного переезда.",
+        "move-to-north-korea": "Только официально спонсируемое назначение; общий въезд, перемещения, связь и эвакуация строго ограничены.",
+        "move-to-mongolia": "Работа через работодателя, B1–B3 для инвестора или учёба; зимой критичны воздух и отопление.",
+        "move-to-maldives": "Рабочий контракт, семейное основание или одобренная инвестиция; курортный пакет сильно меняет бюджет.",
+        "move-to-bhutan": "Работа, учёба или Investor Card; туристический SDF нельзя путать с бюджетом резидента.",
+        "move-to-afghanistan": "Только обязательное назначение с профессиональной безопасностью; entry/work и residence через организацию.",
+        "move-to-bangladesh": "Работа через работодателя, E2/E3 и PI, низкие базовые расходы и выбор между Даккой, Чаттограмом и Силхетом.",
+        "move-to-pakistan": "Работа через работодателя, новая инвестиционная LTR и выбор между Исламабадом, Лахором и Карачи.",
     }
     regions = [
         ("Юго-Восточная Азия", "Самый широкий выбор бюджетов и форматов жизни", [
             "move-to-thailand", "move-to-malaysia", "move-to-bali", "move-to-vietnam",
             "move-to-singapore", "move-to-philippines", "move-to-cambodia", "move-to-laos",
-            "move-to-myanmar", "move-to-brunei",
+            "move-to-myanmar", "move-to-brunei", "move-to-timor-leste",
         ]),
         ("Восточная Азия", "Сильная инфраструктура и более высокий порог входа", [
-            "move-to-taiwan", "move-to-japan", "move-to-china", "move-to-south-korea",
+            "move-to-taiwan", "move-to-japan", "move-to-china", "move-to-south-korea", "move-to-mongolia", "move-to-north-korea",
         ]),
         ("Южная Азия", "Контрастные города, природа и большой разброс качества среды", [
-            "move-to-sri-lanka", "move-to-india", "move-to-nepal",
+            "move-to-sri-lanka", "move-to-india", "move-to-nepal", "move-to-pakistan", "move-to-bangladesh", "move-to-afghanistan", "move-to-bhutan", "move-to-maldives",
         ]),
         ("Центральная Азия", "Близкая логистика и города с более доступным стартом", [
-            "move-to-kazakhstan", "move-to-uzbekistan", "move-to-kyrgyzstan",
+            "move-to-kazakhstan", "move-to-uzbekistan", "move-to-kyrgyzstan", "move-to-tajikistan", "move-to-turkmenistan",
         ]),
-        ("Кавказ и Западная Азия", "Близкая логистика, горы, море и понятный тестовый переезд", ["move-to-georgia", "move-to-turkey", "move-to-armenia", "move-to-azerbaijan", "move-to-jordan", "move-to-lebanon", "move-to-israel", "move-to-iran", "move-to-yemen", "move-to-syria", "move-to-iraq"]),
+        ("Кавказ и Западная Азия", "Близкая логистика, горы, море и понятный тестовый переезд", ["move-to-georgia", "move-to-turkey", "move-to-armenia", "move-to-azerbaijan", "move-to-cyprus", "move-to-sharm-el-sheikh", "move-to-jordan", "move-to-lebanon", "move-to-israel", "move-to-palestine", "move-to-iran", "move-to-yemen", "move-to-syria", "move-to-iraq"]),
         ("Персидский залив", "Международная карьера и высокий уровень сервиса", ["move-to-uae", "move-to-qatar", "move-to-saudi-arabia", "move-to-oman", "move-to-bahrain", "move-to-kuwait"]),
     ]
 
@@ -4752,7 +5995,7 @@ def _ru_countries_catalog_content() -> str:
       </div>
     </div>
     <div class="rta-directory-hero-stats" aria-label="О каталоге">
-      <div><strong>37</strong><span>направлений</span></div>
+      <div><strong>50</strong><span>направлений</span></div>
       <div><strong>6</strong><span>регионов</span></div>
       <div><strong>2026</strong><span>актуальный обзор</span></div>
     </div>
@@ -4836,13 +6079,26 @@ def _en_countries_catalog_content() -> str:
         "move-to-yemen": "Individual eVisa approval, employer-led work, split currency markets and critical security risks.",
         "move-to-syria": "eVisa entry, permit-only work, critical security constraints and three assignment-led city choices.",
         "move-to-iraq": "Separate federal and KRG rules, employer-led relocation and three contract-driven city choices.",
+        "move-to-cyprus": "EU registration, employer-led work, Digital Nomad residence or an investor permit, with separate north-island rules.",
+        "move-to-timor-leste": "A Work Permit, Business Visa II and a choice between costly Dili, local Baucau and project-based Atauro.",
+        "move-to-turkmenistan": "A sponsor-led move with a work visa, permit, registration, connectivity and medical-evacuation plan.",
+        "move-to-sharm-el-sheikh": "South Sinai: separate rules for the short resort stamp, standard visas, work and neighbourhood choice.",
+        "move-to-tajikistan": "Category M work, category C investment, mandatory registration and a separate GBAO permit for the Pamirs.",
+        "move-to-palestine": "West Bank entry through Israeli and COGAT procedures plus a separate work permit; Gaza is excluded from ordinary relocation.",
+        "move-to-north-korea": "Officially sponsored assignments only, with severe entry, movement, communication and evacuation constraints.",
+        "move-to-mongolia": "Employer-led work, B1–B3 investment or study, with winter air and heating central to the decision.",
+        "move-to-maldives": "Employer-led work, family status or approved investment, with resort benefits central to the real budget.",
+        "move-to-bhutan": "Employer-led work, study or a substantial Investor Card route, separate from the nightly tourist SDF.",
+        "move-to-afghanistan": "Essential assignments only, with organisation-led entry, work permission, security and evacuation.",
+        "move-to-bangladesh": "Employer-led E2/E3 work, PI investment and a Dhaka, Chattogram or Sylhet choice.",
+        "move-to-pakistan": "Employer-led work, newly announced investor LTR and an Islamabad, Lahore or Karachi choice.",
     }
     regions = [
-        ("Southeast Asia", "The broadest mix of budgets and lifestyles", ["move-to-thailand", "move-to-malaysia", "move-to-bali", "move-to-vietnam", "move-to-singapore", "move-to-philippines", "move-to-cambodia", "move-to-laos", "move-to-myanmar", "move-to-brunei"]),
-        ("East Asia", "Powerful infrastructure with a higher entry threshold", ["move-to-taiwan", "move-to-japan", "move-to-china", "move-to-south-korea"]),
-        ("South Asia", "Contrasting cities, nature and daily-life conditions", ["move-to-sri-lanka", "move-to-india", "move-to-nepal"]),
-        ("Central Asia", "Accessible urban bases and easier regional logistics", ["move-to-kazakhstan", "move-to-uzbekistan", "move-to-kyrgyzstan"]),
-        ("Caucasus & Western Asia", "Short regional links, mountains, coast and a practical trial move", ["move-to-georgia", "move-to-turkey", "move-to-armenia", "move-to-azerbaijan", "move-to-jordan", "move-to-lebanon", "move-to-israel", "move-to-iran", "move-to-yemen", "move-to-syria", "move-to-iraq"]),
+        ("Southeast Asia", "The broadest mix of budgets and lifestyles", ["move-to-thailand", "move-to-malaysia", "move-to-bali", "move-to-vietnam", "move-to-singapore", "move-to-philippines", "move-to-cambodia", "move-to-laos", "move-to-myanmar", "move-to-brunei", "move-to-timor-leste"]),
+        ("East Asia", "Powerful infrastructure with a higher entry threshold", ["move-to-taiwan", "move-to-japan", "move-to-china", "move-to-south-korea", "move-to-mongolia", "move-to-north-korea"]),
+        ("South Asia", "Contrasting cities, nature and daily-life conditions", ["move-to-sri-lanka", "move-to-india", "move-to-nepal", "move-to-pakistan", "move-to-bangladesh", "move-to-afghanistan", "move-to-bhutan", "move-to-maldives"]),
+        ("Central Asia", "Accessible urban bases and easier regional logistics", ["move-to-kazakhstan", "move-to-uzbekistan", "move-to-kyrgyzstan", "move-to-tajikistan", "move-to-turkmenistan"]),
+        ("Caucasus & Western Asia", "Short regional links, mountains, coast and a practical trial move", ["move-to-georgia", "move-to-turkey", "move-to-armenia", "move-to-azerbaijan", "move-to-cyprus", "move-to-sharm-el-sheikh", "move-to-jordan", "move-to-lebanon", "move-to-israel", "move-to-palestine", "move-to-iran", "move-to-yemen", "move-to-syria", "move-to-iraq"]),
         ("The Gulf", "International careers and premium services", ["move-to-uae", "move-to-qatar", "move-to-saudi-arabia", "move-to-oman", "move-to-bahrain", "move-to-kuwait"]),
     ]
 
@@ -4862,7 +6118,7 @@ def _en_countries_catalog_content() -> str:
     thailand = RU_COUNTRY_DATA["move-to-thailand"]
     return f"""
 <article class="rta-country-directory">
-  <header class="rta-directory-hero"><div class="rta-directory-hero-copy"><p class="rta-directory-eyebrow">Relocate to Asia · destination finder</p><h1>Find a country that fits your real life</h1><p>Start with legal stay, budget, work, healthcare and the city—not a beautiful image.</p><div class="rta-directory-actions"><a class="rta-directory-primary" href="#all-countries">Browse all countries</a><a href="/compare/">Compare destinations</a></div></div><div class="rta-directory-hero-stats" aria-label="About this directory"><div><strong>37</strong><span>destinations</span></div><div><strong>6</strong><span>regions</span></div><div><strong>2026</strong><span>planning overview</span></div></div></header>
+  <header class="rta-directory-hero"><div class="rta-directory-hero-copy"><p class="rta-directory-eyebrow">Relocate to Asia · destination finder</p><h1>Find a country that fits your real life</h1><p>Start with legal stay, budget, work, healthcare and the city—not a beautiful image.</p><div class="rta-directory-actions"><a class="rta-directory-primary" href="#all-countries">Browse all countries</a><a href="/compare/">Compare destinations</a></div></div><div class="rta-directory-hero-stats" aria-label="About this directory"><div><strong>50</strong><span>destinations</span></div><div><strong>6</strong><span>regions</span></div><div><strong>2026</strong><span>planning overview</span></div></div></header>
   <nav class="rta-directory-nav" aria-label="Directory navigation"><a href="#start">Start with your goal</a><a href="#popular">Popular choices</a><a href="#all-countries">All destinations</a><a href="/compare/">Compare</a></nav>
   <section class="rta-directory-scenarios" id="start"><header><p>Start with the life you want</p><h2>What should the move make easier?</h2></header><div>{scenarios_html}</div></section>
   <section class="rta-directory-featured" id="popular"><div class="rta-directory-spotlight"><div class="rta-directory-spotlight-visual"><span>🇹🇭</span><small>Destination in focus</small></div><div class="rta-directory-spotlight-copy"><p>A strong all-round starting point</p><h2>Thailand</h2><p>{notes['move-to-thailand']}</p><dl><div><dt>Budget</dt><dd>{_normalize_budget_en(thailand['budget'])}/mo</dd></div><div><dt>Routes</dt><dd>{thailand['visa_label']}</dd></div></dl><a href="/countries/move-to-thailand/">Open the Thailand guide →</a></div></div><div class="rta-directory-shortlist"><header><p>Four more countries for a first comparison</p><h2>Shortlist</h2></header>{featured}</div></section>
@@ -7530,6 +8786,19 @@ COUNTRY_META_DESCRIPTIONS_EN = {
     "move-to-iran": "Move to Iran in 2026: eVisa, employer-led work permission, residence, Tehran costs, banking limits, safety and tax.",
     "move-to-yemen": "Move to Yemen in 2026: eVisa, work permits, residence, city costs, currency fragmentation, safety and tax.",
     "move-to-syria": "Move to Syria in 2026: eVisa, work permits, residence, Damascus costs, money constraints, safety and tax.",
+    "move-to-cyprus": "Move to Cyprus in 2026: EU registration, work permits, Digital Nomad Visa, investor residence, costs, cities and tax.",
+    "move-to-timor-leste": "Move to Timor-Leste in 2026: visa on arrival, work and business routes, Dili costs, cities, healthcare, safety and tax.",
+    "move-to-turkmenistan": "Move to Turkmenistan in 2026: invitation, work visa and permit, registration, Ashgabat costs, internet, healthcare and tax.",
+    "move-to-sharm-el-sheikh": "Move to Sharm el-Sheikh in 2026: South Sinai stamp, Egypt visa, work permit, residence, costs, neighbourhoods, healthcare and tax.",
+    "move-to-tajikistan": "Move to Tajikistan in 2026: eVisa, OVIR registration, work and investor visas, living costs, cities, GBAO permits and tax.",
+    "move-to-palestine": "Move to Palestine in 2026: West Bank entry, COGAT procedures, work permits, costs, cities, safety and Gaza access limits.",
+    "move-to-north-korea": "North Korea in 2026: restricted entry, sponsored assignments, movement controls, sanctions, communications, healthcare and evacuation.",
+    "move-to-mongolia": "Move to Mongolia in 2026: tourist entry, work permits, investor residence, costs, cities, winter air, healthcare and tax.",
+    "move-to-maldives": "Move to the Maldives in 2026: tourist entry, work visas, business visits, family routes, costs, cities, healthcare and tax.",
+    "move-to-bhutan": "Move to Bhutan in 2026: tourist SDF, employer work permits, study, Investor Card, living costs, cities, healthcare and tax.",
+    "move-to-afghanistan": "Move to Afghanistan in 2026: official visa and work routes, residence, essential-assignment costs, cities, safety and tax.",
+    "move-to-bangladesh": "Move to Bangladesh in 2026: visas, E2 and E3 work routes, investor status, living costs, cities, safety and tax.",
+    "move-to-pakistan": "Move to Pakistan in 2026: eVisa, employer-led work, study, investor residence, living costs, cities, safety and tax.",
     "move-to-iraq": "Move to Iraq in 2026: federal and KRG visas, work permits, residence, Baghdad and Erbil costs, safety and tax.",
 }
 
@@ -7556,6 +8825,19 @@ COUNTRY_META_DESCRIPTIONS_RU = {
     "move-to-iran": "Переезд в Иран в 2026 году: eVisa, работа через работодателя, резиденция, расходы Тегерана, банки, безопасность и налоги.",
     "move-to-yemen": "Переезд в Йемен в 2026 году: eVisa, разрешение на работу, резиденция, расходы городов, валюты, безопасность и налоги.",
     "move-to-syria": "Переезд в Сирию в 2026 году: eVisa, разрешение на работу, резиденция, расходы Дамаска, деньги, безопасность и налоги.",
+    "move-to-cyprus": "Переезд на Кипр в 2026 году: MEU1, работа, Digital Nomad Visa, инвестиционный ВНЖ, расходы, города и налоги.",
+    "move-to-timor-leste": "Переезд в Тимор-Лесте в 2026 году: виза по прибытии, работа, бизнес, расходы Дили, города, медицина, безопасность и налоги.",
+    "move-to-turkmenistan": "Переезд в Туркменистан в 2026 году: приглашение, рабочая виза и разрешение, регистрация, расходы, интернет, медицина и налоги.",
+    "move-to-sharm-el-sheikh": "Переезд в Шарм-эль-Шейх в 2026 году: штамп South Sinai, виза Египта, работа, резиденция, расходы, районы, медицина и налоги.",
+    "move-to-tajikistan": "Переезд в Таджикистан в 2026 году: eVisa, регистрация OVIR, работа, инвестиции, расходы, города, GBAO permit и налоги.",
+    "move-to-palestine": "Переезд в Палестину в 2026 году: Западный берег, COGAT, разрешение на работу, расходы, города, безопасность и ограничения Газы.",
+    "move-to-north-korea": "Северная Корея в 2026 году: ограниченный въезд, спонсируемые назначения, контроль перемещений, санкции, связь и эвакуация.",
+    "move-to-mongolia": "Переезд в Монголию в 2026 году: въезд, работа, ВНЖ инвестора, расходы, города, зимний воздух, медицина и налоги.",
+    "move-to-maldives": "Переезд на Мальдивы в 2026 году: въезд, рабочая виза, бизнес, семья, расходы, города, медицина и налоги.",
+    "move-to-bhutan": "Переезд в Бутан в 2026 году: туристический SDF, работа, учёба, Investor Card, расходы, города, медицина и налоги.",
+    "move-to-afghanistan": "Переезд в Афганистан в 2026 году: визы, работа, резиденция, расходы обязательного назначения, города, безопасность и налоги.",
+    "move-to-bangladesh": "Переезд в Бангладеш в 2026 году: визы, работа по E2 и E3, статус инвестора, расходы, города, безопасность и налоги.",
+    "move-to-pakistan": "Переезд в Пакистан в 2026 году: eVisa, рабочая и учебная визы, инвестиционная резиденция, расходы, города и налоги.",
     "move-to-iraq": "Переезд в Ирак в 2026 году: федеральная и KRG eVisa, работа, резиденция, расходы, безопасность и налоги.",
 }
 
@@ -8852,6 +10134,136 @@ def page_source_panel(path: str, *, lang: str) -> dict | None:
             _official_source("UK FCDO: Iraq Travel Advice", "https://www.gov.uk/foreign-travel-advice/iraq", "Current area-specific warnings, insurance implications and security planning.", "Актуальные предупреждения по районам, влияние на страховку и планирование безопасности.", lang=lang),
             _official_source("World Bank Data: Iraq", "https://data.worldbank.org/country/iraq", "Country indicators used for population, income, inflation, internet access, unemployment and life expectancy.", "Страновые показатели населения, дохода, инфляции, интернета, безработицы и продолжительности жизни.", lang=lang),
         ],
+        "cyprus": [
+            _official_source("Cyprus Migration Department: Digital Nomads", "https://www.gov.cy/mip-md/en/documents/digital-nomads-and-family-members/", "Current reopened application status, 500-permit ceiling, €3,500 net income and one-plus-two-year residence.", "Актуальный приём заявлений, квота 500 разрешений, доход €3 500 net и проживание по схеме один плюс два года.", lang=lang),
+            _official_source("Business In Cyprus: Running And Growing A Business", "https://www.businessincyprus.gov.cy/doing-business-in-cyprus/running-and-growing-your-business/", "Official EU registration and third-country key-personnel employment criteria, including salary, qualification and contract.", "Официальные правила регистрации граждан ЕС и найма key personnel из третьих стран: зарплата, квалификация и контракт.", lang=lang),
+            _official_source("Cyprus Migration Department: Investor Immigration Permits", "https://www.mip.gov.cy/dmmip/md.nsf/immigrationpfi_en/immigrationpfi_en?OpenDocument=", "Official €300,000 investment, €50,000 annual income, family and application criteria.", "Официальные требования инвестиции €300 000, годового дохода €50 000, семьи и подачи.", lang=lang),
+            _official_source("Council Of The EU: EU Visa Policy", "https://www.consilium.europa.eu/en/policies/eu-visa-policy/", "Current confirmation that Cyprus does not yet issue Schengen visas and uses national short-stay visas.", "Актуальное подтверждение: Кипр ещё не выдаёт шенгенские визы и применяет национальные краткосрочные визы.", lang=lang),
+            _official_source("Cyprus Tax Department: 60-Day Residence Declaration", "https://www.mof.gov.cy/mof/TAX/taxdep.nsf/All/665546B1E3371807C22582280036DC1E/%24file/TD%20126_2022.pdf?OpenElement=", "Official declaration showing employment, business or office conditions for the 60-day tax-residence rule.", "Официальная декларация с условиями работы, бизнеса или должности для налогового правила 60 дней.", lang=lang),
+            _official_source("European Union: Cyprus Country Profile", "https://european-union.europa.eu/principles-countries-history/eu-countries/cyprus_en", "EU membership, euro, population, area, official-language and divided-island context.", "Членство в ЕС, евро, население, площадь, официальный язык и контекст разделённого острова.", lang=lang),
+            _official_source("UK FCDO: Cyprus Entry Requirements", "https://www.gov.uk/foreign-travel-advice/cyprus/entry-requirements", "Current national entry, 90-day, passport, north-entry and Green Line cautions.", "Актуальные национальные правила въезда, 90 дней, паспорт, риски въезда через север и Green Line.", lang=lang),
+            _official_source("World Bank Data: Cyprus", "https://data.worldbank.org/country/cyprus", "Country indicators used for population, income, inflation, internet access, unemployment and life expectancy.", "Страновые показатели населения, дохода, инфляции, интернета, безработицы и продолжительности жизни.", lang=lang),
+        ],
+        "timor_leste": [
+            _official_source("Timor-Leste Customs: Obtaining A Visa", "https://customs.gov.tl/travelers/obtaining-a-visa/", "Official visa-on-arrival passport, funds, accommodation, onward-ticket and US$30 cash requirements.", "Официальные требования визы по прибытии: паспорт, средства, жильё, обратный билет и $30 наличными.", lang=lang),
+            _official_source("Timor-Leste Immigration: Migration And Asylum Law", "https://migracao.gov.tl/pdf/%5B0503-01%5DLIA-English.pdf", "Primary work-permit, permanent-residence visa, entry and authorised-stay framework.", "Первоисточник по work permit, визе для постоянной резиденции, въезду и срокам.", lang=lang),
+            _official_source("Timor-Leste Immigration: Business Visa", "https://www.migracao.gov.tl/html/sub0306.php", "Official Class I and II purpose, duration, extension, company, tax, medical and police-document rules.", "Официальные правила Class I и II: цель, сроки, продление, компания, налоги, медицина и police clearance.", lang=lang),
+            _official_source("UK FCDO: Timor-Leste Entry Requirements", "https://www.gov.uk/foreign-travel-advice/timor-leste/entry-requirements", "Current 30-day arrival visa, cash fee, extension, land-border, Oecussi and customs rules.", "Актуальные правила визы на 30 дней, наличного сбора, продления, сухопутной границы, Оекусси и таможни.", lang=lang),
+            _official_source("UK FCDO: Timor-Leste Safety", "https://www.gov.uk/foreign-travel-advice/timor-leste/safety-and-security", "Current crime, demonstrations, cash, road, rainy-season, crocodile and transport risks.", "Актуальные риски преступности, протестов, наличных, дорог, сезона дождей, крокодилов и транспорта.", lang=lang),
+            _official_source("UK FCDO: Timor-Leste Health", "https://www.gov.uk/foreign-travel-advice/timor-leste/health", "Limited care, unreliable emergency response and likely evacuation to Australia or Singapore.", "Ограниченная медицина, ненадёжная экстренная помощь и вероятная эвакуация в Австралию или Сингапур.", lang=lang),
+            _official_source("Timor-Leste Tax Authority: Annual Return", "https://attl.gov.tl/annual-income-tax-return-guidelines/", "Official 183-day residence test and resident individual income-tax rules.", "Официальный тест 183 дней и правила налога на доход резидента.", lang=lang),
+            _official_source("World Bank Data: Timor-Leste", "https://data.worldbank.org/country/timor-leste", "Indicators used for population, income, inflation, unemployment and life expectancy.", "Показатели населения, дохода, инфляции, безработицы и продолжительности жизни.", lang=lang),
+        ],
+        "turkmenistan": [
+            _official_source("Turkmenistan Embassy: Visa Information", "https://uk.tmembassy.gov.tm/en/consular-services/visa-info%E2%80%8B", "Official LOI, sponsor, passport, processing and transit-visa requirements.", "Официальные требования к приглашению, спонсору, паспорту, сроку обработки и транзитной визе.", lang=lang),
+            _official_source("Turkmenistan Embassy: Visa Categories", "https://turkey.tmembassy.gov.tm/en/consular-services/visa-requirements", "Official tourist, business, investor, work, family, private and student visa categories.", "Официальные категории туристической, деловой, инвестиционной, рабочей, семейной, частной и учебной виз.", lang=lang),
+            _official_source("Turkmenistan Mejlis: Migration Law", "https://mejlis.gov.tm/single-law/226?lang=ru", "Current sponsor, registration, foreign-worker permit and domestic-labour priority rules.", "Действующие правила спонсора, регистрации, разрешения иностранному работнику и приоритета местного рынка труда.", lang=lang),
+            _official_source("Turkmenistan MFA: Status Of Foreign Citizens", "https://mfa.gov.tm/ru/articles/80", "Official rule that temporary foreign nationals may work only when compatible with their authorised purpose and law.", "Официальное правило: временно пребывающий иностранец работает только в соответствии с целью пребывания и законом.", lang=lang),
+            _official_source("UK FCDO: Turkmenistan Entry Requirements", "https://www.gov.uk/foreign-travel-advice/turkmenistan/entry-requirements", "Current visa, LOI, arrival, registration, migration-fee, tourism-tax, cash and border guidance.", "Актуальные правила визы, приглашения, въезда, регистрации, сборов, наличных и границ.", lang=lang),
+            _official_source("UK FCDO: Turkmenistan Safety", "https://www.gov.uk/foreign-travel-advice/turkmenistan/safety-and-security", "Current internet, VPN, photography, ID, border, road, legal and earthquake risks.", "Актуальные ограничения интернета, VPN, фото, документов, границ, дорог, законов и риски землетрясений.", lang=lang),
+            _official_source("UK FCDO: Turkmenistan Health", "https://www.gov.uk/foreign-travel-advice/turkmenistan/health", "Poor healthcare, limited care outside Ashgabat, insurance, repatriation and medicine guidance.", "Слабая медицина, ограничения вне Ашхабада, страховка, эвакуация и правила лекарств.", lang=lang),
+            _official_source("World Bank: Turkmenistan Overview", "https://www.worldbank.org/en/country/turkmenistan/overview", "Population, GDP per capita, life expectancy and economic-structure context.", "Население, ВВП на душу, продолжительность жизни и структура экономики.", lang=lang),
+        ],
+        "sharm_el_sheikh": [
+            _official_source("Egypt Ministry Of Interior: eVisa FAQ", "https://visa2egypt.gov.eg/eVisa/FAQ", "Official eligible-nationality list, US$30/65 tourist fees, passport, itinerary and accommodation requirements.", "Официальный список гражданств, сборы $30/65, требования к паспорту, маршруту и жилью.", lang=lang),
+            _official_source("UK FCDO: Egypt Entry Requirements", "https://www.gov.uk/foreign-travel-advice/egypt/entry-requirements", "Current South Sinai 15-day stamp, standard visa, extension, Taba and work-permit HIV-test rules.", "Актуальные правила штампа South Sinai на 15 дней, обычной визы, продления, Табы и ВИЧ-теста для работы.", lang=lang),
+            _official_source("Egypt Ministry Of Labour: Foreign Work Permits", "https://www.labour.gov.eg/ar/%D8%A7%D9%84%D8%AE%D8%AF%D9%85%D8%A7%D8%AA/%D8%AE%D8%AF%D9%85%D8%A7%D8%AA-%D8%A7%D8%B5%D8%AD%D8%A7%D8%A8-%D8%A7%D9%84%D8%A7%D8%B9%D9%85%D8%A7%D9%84/%D8%A7%D9%84%D8%AA%D8%B4%D8%BA%D9%8A%D9%84-%D9%88%D9%85%D8%B9%D9%84%D9%88%D9%85%D8%A7%D8%AA-%D8%B3%D9%88%D9%82-%D8%A7%D9%84%D8%B9%D9%85%D9%84/", "Official employer process, experience, company documents, foreign-worker ratio, security review and renewal rules.", "Официальная процедура работодателя: опыт, документы компании, квота иностранцев, проверка безопасности и продление.", lang=lang),
+            _official_source("GAFI: Investment Incentives", "https://gafi.gov.eg/en/contenttemplate/4b41a864-be93-4b6e-b5b8-d767fc7ba261", "Official investor residence for the project period and 10% foreign-worker ceiling, expandable to 20%.", "Официальная резиденция инвестора на период проекта и лимит иностранцев 10% с возможностью 20%.", lang=lang),
+            _official_source("UK FCDO: Egypt Regional Risks", "https://www.gov.uk/foreign-travel-advice/egypt/regional-risks", "Current distinction between lower-risk southern Sinai resorts and restricted northern or off-resort areas.", "Актуальное различие между южными курортами Синая и ограниченными северными либо удалёнными районами.", lang=lang),
+            _official_source("UK FCDO: Egypt Health", "https://www.gov.uk/foreign-travel-advice/egypt/health", "Insurance, medical evacuation, medicine controls, hotel-doctor pricing and specialised-care limits.", "Страховка, эвакуация, правила лекарств, цены гостиничных врачей и ограничения специализированной помощи.", lang=lang),
+            _official_source("Egyptian Tax Authority: Income Tax Laws", "https://eta.gov.eg/en/content/income-tax-laws", "Official Income Tax Law library used with the current more-than-183-day residence interpretation.", "Официальная библиотека закона о подоходном налоге, используемая с актуальным правилом резидентства свыше 183 дней.", lang=lang),
+            _official_source("World Bank Data: Egypt", "https://data.worldbank.org/?locations=EG", "Egypt-wide population, GDP per capita, inflation, unemployment and life-expectancy indicators.", "Общеегипетские показатели населения, ВВП на душу, инфляции, безработицы и продолжительности жизни.", lang=lang),
+        ],
+        "tajikistan": [
+            _official_source("Tajikistan MFA: Visa Information 2026", "https://sip.mfa.tj/assets/documents/Visa%20Information.pdf", "Current visa categories, eVisa filing, fees and passport-specific application guidance.", "Актуальные категории виз, подача eVisa, сборы и инструкция по паспорту.", lang=lang),
+            _official_source("Tajikistan Consular Department: Visa Rules", "https://consular.tj/en/pages/pravila-oformlenija-vydachi-vizy-i-jelektronnoj-vizy-respubliki-tadzhikistan-inostrannym-grazhdanam-i-licam-bez-grazhdanstva/", "Primary M work, C investment, business, study, family and permanent-residence visa categories.", "Первоисточник по категориям M, C, business, study, family и permanent residence.", lang=lang),
+            _official_source("Tajikistan Consular Department: Foreign Citizens Law", "https://consular.tj/en/pages/zakon-respubliki-tadzhikistan-o-pravovom-polozhenii-inostrannyh-grazhdan-v-respubliki-tadzhikistan/", "Official requirement for a migration-authority permit before foreign-national employment.", "Официальное требование разрешения миграционного органа для труда иностранца.", lang=lang),
+            _official_source("UK FCDO: Tajikistan Entry Requirements", "https://www.gov.uk/foreign-travel-advice/tajikistan/entry-requirements", "Passport, visa, OVIR registration, GBAO, border permit, HIV certificate and overstay rules.", "Паспорт, виза, регистрация OVIR, GBAO, пограничный пропуск, ВИЧ-сертификат и просрочка.", lang=lang),
+            _official_source("UK FCDO: Tajikistan Regional Risks", "https://www.gov.uk/foreign-travel-advice/tajikistan/regional-risks", "Current border, GBAO, mine, unrest and Afghanistan-border security conditions.", "Актуальные риски границ, ГБАО, мин, беспорядков и афганского приграничья.", lang=lang),
+            _official_source("UK FCDO: Tajikistan Health", "https://www.gov.uk/foreign-travel-advice/tajikistan/health", "Poor healthcare, limited medicines, cash payment, altitude and evacuation guidance.", "Слабая медицина, дефицит лекарств, наличная оплата, высота и эвакуация.", lang=lang),
+            _official_source("Tajikistan National Legislation Centre: Tax Code", "https://ncz.tj/content/%D0%BD%D0%B0%D0%BB%D0%BE%D0%B3%D0%BE%D0%B2%D1%8B%D0%B9-%D0%BA%D0%BE%D0%B4%D0%B5%D0%BA%D1%81-%D1%80%D0%B5%D1%81%D0%BF%D1%83%D0%B1%D0%BB%D0%B8%D0%BA%D0%B8-%D1%82%D0%B0%D0%B4%D0%B6%D0%B8%D0%BA%D0%B8%D1%81%D1%82%D0%B0%D0%BD-0", "Current more-than-182-day individual tax-residence and worldwide-income rules.", "Действующие правила налогового резидентства свыше 182 дней и мирового дохода.", lang=lang),
+            _official_source("World Bank Data: Tajikistan", "https://data.worldbank.org/country/tajikistan", "Indicators used for population, income, internet access, unemployment and life expectancy.", "Показатели населения, дохода, интернета, безработицы и продолжительности жизни.", lang=lang),
+        ],
+        "palestine": [
+            _official_source("UK FCDO: Palestine Travel Advice", "https://www.gov.uk/foreign-travel-advice/palestine", "Current regional warnings, insurance implications and Gaza access limits.", "Актуальные предупреждения по регионам, влияние на страховку и ограничения доступа в Газу.", lang=lang),
+            _official_source("UK FCDO: Palestine Entry Requirements", "https://www.gov.uk/foreign-travel-advice/palestine/entry-requirements", "Israeli-controlled entry, ETA-IL, border endorsements, West Bank checkpoints and Gaza permissions.", "Контролируемый Израилем въезд, ETA-IL, отметки на границе, блокпосты Западного берега и разрешения Газы.", lang=lang),
+            _official_source("Israel COGAT: Entry And Residence Of Foreigners", "https://www.gov.il/BlobFolder/policy/judeaentry2022/en/%D7%A0%D7%95%D7%94%D7%9C%20%D7%9B%D7%A0%D7%99%D7%A1%D7%AA%20%D7%96%D7%A8%D7%99%D7%9D%20%D7%91%D7%90%D7%A0%D7%92%D7%9C%D7%99%D7%AA-%20%D7%AA%D7%A8%D7%92%D7%95%D7%9D%20%D7%9E%D7%A2%D7%95%D7%93%D7%9B%D7%9F%20%D7%93%D7%A6%D7%9E%D7%91%D7%A8%202022%20%282%29.pdf", "Official procedure for foreign visitor and longer-stay categories in the West Bank.", "Официальная процедура визитов и длительного пребывания иностранцев на Западном берегу.", lang=lang),
+            _official_source("Palestinian Ministry Of Labour: Foreign Worker Licence", "https://www.mol.pna.ps/page/75", "Official service listing for licences to employ non-Palestinian workers.", "Официальная услуга выдачи разрешений на труд иностранных работников.", lang=lang),
+            _official_source("Palestinian Legal Gazette: Foreign Worker Regulation", "https://mjr.ogb.gov.ps/Decrees/Details/26345", "Primary one-year permit, employer filing, need and qualification conditions.", "Первоисточник по годовому разрешению, подаче работодателем, потребности и квалификации.", lang=lang),
+            _official_source("UK FCDO: Palestine Safety And Security", "https://www.gov.uk/foreign-travel-advice/palestine/safety-and-security", "Current conflict, checkpoint, protest, road, detention and transport risks.", "Актуальные риски конфликта, блокпостов, протестов, дорог, задержания и транспорта.", lang=lang),
+            _official_source("UK FCDO: Palestine Health", "https://www.gov.uk/foreign-travel-advice/palestine/health", "Paid healthcare, insurance, accessible funds, vaccines and evacuation guidance.", "Платная медицина, страховка, доступные средства, вакцинация и медицинская эвакуация.", lang=lang),
+            _official_source("World Bank Data: West Bank And Gaza", "https://data.worldbank.org/country/west-bank-and-gaza", "Country indicators used for population, income, inflation, unemployment and life expectancy.", "Показатели населения, дохода, инфляции, безработицы и продолжительности жизни.", lang=lang),
+        ],
+        "north_korea": [
+            _official_source("UK FCDO: North Korea Travel Advice", "https://www.gov.uk/foreign-travel-advice/north-korea", "Current warning, partial border reopening, limited routes, embassy closures and consular constraints.", "Актуальное предупреждение, частичное открытие границ, ограниченные маршруты, закрытие посольств и консульские ограничения.", lang=lang),
+            _official_source("UK FCDO: North Korea Entry Requirements", "https://www.gov.uk/foreign-travel-advice/north-korea/entry-requirements", "Visa, organised-tour, sponsor, registration, customs, cash and connectivity rules.", "Правила визы, организованного тура, спонсора, регистрации, таможни, наличных и связи.", lang=lang),
+            _official_source("UK FCDO: North Korea Safety", "https://www.gov.uk/foreign-travel-advice/north-korea/safety-and-security", "Detention, photography, movement, accompaniment, transport and political-tension risks.", "Риски задержания, фотографирования, перемещений, сопровождения, транспорта и политической напряжённости.", lang=lang),
+            _official_source("UK FCDO: North Korea Health", "https://www.gov.uk/foreign-travel-advice/north-korea/health", "Poor healthcare, medicine and anaesthetic shortages, hygiene and evacuation guidance.", "Слабая медицина, дефицит лекарств и анестезии, гигиена и рекомендации по эвакуации.", lang=lang),
+            _official_source("US State Department: DPRK Passport Validation", "https://travel.state.gov/en/passports/apply/unique-needs/special-validation.html", "Current US passport restriction and limited special-validation eligibility.", "Актуальное ограничение паспортов США и узкие основания специальной отметки.", lang=lang),
+            _official_source("Australian Smartraveller: North Korea", "https://www.smartraveller.gov.au/destinations/asia/north-korea-democratic-peoples-republic-korea", "Current do-not-travel advice and visa requirement for every travel purpose.", "Актуальный совет отказаться от поездок и требование визы для любой цели.", lang=lang),
+            _official_source("UN Security Council: DPRK Sanctions", "https://main.un.org/securitycouncil/en/sanctions/1718", "Official financial, trade, travel and designated-person sanctions framework.", "Официальная система финансовых, торговых, транспортных и персональных санкций.", lang=lang),
+            _official_source("UN Data: DPRK", "https://data.un.org/legacy/en/iso/kp.html", "UN estimates used for population, area, currency, capital and life expectancy.", "Оценки ООН для населения, площади, валюты, столицы и продолжительности жизни.", lang=lang),
+        ],
+        "mongolia": [
+            _official_source("Mongolia Immigration: 2026 Visa Exemption", "https://immigration.gov.mn/en/articles/537/", "Official 34-country tourism exemption for up to 30 days through 31 December 2026.", "Официальный туристический безвизовый режим до 30 дней для 34 стран до 31 декабря 2026 года.", lang=lang),
+            _official_source("Mongolia Immigration: eVisa", "https://www.immigration.gov.mn/en/articles/124/", "Official K2 eVisa eligibility, 180-day passport validity, purpose and processing rules.", "Официальные правила K2 eVisa: страны, паспорт 180 дней, цель и обработка.", lang=lang),
+            _official_source("Invest Mongolia: Visa And Residence Permits", "https://investmongolia.gov.mn/visa-information/", "Official B investor and C work categories, pre-work permit, family documents, 21-day filing and permit duration.", "Официальные категории B и C, pre-work permit, семейные документы, срок подачи 21 день и длительность статуса.", lang=lang),
+            _official_source("Mongolia Immigration: Residence Permit", "https://immigration.gov.mn/en/residence-permit/", "Official residence application, extension, category and address services.", "Официальные услуги подачи, продления, смены категории и адреса residence permit.", lang=lang),
+            _official_source("Invest Mongolia: Setting Up A Business", "https://www.investmongolia.gov.mn/en/?page_id=8924", "Current employer vacancy, pre-work permit, post-arrival filing and investor framework.", "Актуальные правила вакансии, pre-work permit, подачи после въезда и инвестиций.", lang=lang),
+            _official_source("Mongolian Tax Administration: Personal Income Tax", "https://mta.gov.mn/files/pdf-files/factc34n7f/652793452cb0ae5731d067f4.pdf", "Primary 183-day, income-source and worldwide-income tax-residence guidance.", "Первоисточник по тесту 183 дней, источнику дохода и мировому доходу резидента.", lang=lang),
+            _official_source("UK FCDO: Mongolia Health", "https://www.gov.uk/foreign-travel-advice/mongolia/health", "Current winter air, healthcare, advance-payment and evacuation guidance.", "Актуальные сведения о зимнем воздухе, медицине, предоплате и эвакуации.", lang=lang),
+            _official_source("World Bank Data: Mongolia", "https://data.worldbank.org/country/mongolia", "Country indicators used for population, income, inflation, internet access, unemployment and life expectancy.", "Страновые показатели населения, дохода, инфляции, интернета, безработицы и продолжительности жизни.", lang=lang),
+        ],
+        "maldives": [
+            _official_source("Maldives Immigration: Tourist Visa", "https://www.immigration.gov.mv/visa/tourist-visa", "Official visa-on-arrival, passport, accommodation, funds, declaration and entry conditions.", "Официальные условия визы по прибытии, паспорта, жилья, средств, декларации и въезда.", lang=lang),
+            _official_source("Maldives Immigration: Work Visa", "https://www2.immigration.gov.mv/work-visa/", "Official employer-led permit, Xpat filing and 15-day Work Visa deadline.", "Официальные правила разрешения через работодателя, подачи в Xpat и срока Work Visa 15 дней.", lang=lang),
+            _official_source("Maldives Immigration: Business Visa", "https://www.immigration.gov.mv/visa/business", "Official sponsor, preapproval and 90-days-in-12-months business-visit rules.", "Официальные правила спонсора, предварительного одобрения и 90 дней за 12 месяцев.", lang=lang),
+            _official_source("Maldives Immigration: Dependent Visa", "https://www2.immigration.gov.mv/dependent/", "Official professional-worker family eligibility, sponsorship, medical, insurance and fee requirements.", "Официальные правила для семьи иностранного специалиста: спонсорство, медицина, страховка и сборы.", lang=lang),
+            _official_source("Invest Maldives", "https://trade.gov.mv/en/invest-maldives/", "Official foreign-investment approval, registration, licensing, agreement and administration-fee process.", "Официальная процедура одобрения, регистрации, лицензии, соглашения и административного сбора для инвестора.", lang=lang),
+            _official_source("MIRA: Individual Tax Residency", "https://www.mira.gov.mv/Pages/View/ictindividualsresidency", "Primary permanent-home and more-than-183-day individual tax-residence tests.", "Первоисточник по тестам постоянного дома и более 183 дней для налогового резидентства.", lang=lang),
+            _official_source("UK FCDO: Maldives Health", "https://www.gov.uk/foreign-travel-advice/maldives/health", "Current limits of island healthcare and need for insurance covering evacuation.", "Актуальные ограничения островной медицины и необходимость страховки с эвакуацией.", lang=lang),
+            _official_source("World Bank Data: Maldives", "https://data.worldbank.org/country/maldives", "Country indicators used for population, income, inflation, internet access, unemployment and life expectancy.", "Страновые показатели населения, дохода, инфляции, интернета, безработицы и продолжительности жизни.", lang=lang),
+        ],
+        "bhutan": [
+            _official_source("Bhutan Travel: Visa And SDF", "https://bhutan.travel/visa", "Official tourist application, US$40 visa fee, US$100 nightly SDF and passport-specific routes.", "Официальные правила туристической подачи, сбора $40, SDF $100 за ночь и отдельных паспортных маршрутов.", lang=lang),
+            _official_source("Bhutan DoI: Tourist eVisa Requirements", "https://www.doi.gov.bt/?lang=en&page_id=192", "Official passport, photograph, insurance and six-month-validity requirements.", "Официальные требования к паспорту, фото, страховке и шестимесячному сроку действия.", lang=lang),
+            _official_source("Bhutan DoI: Work Permit Compliance 2025", "https://www.doi.gov.bt/wp-content/uploads/2025/09/DECLARATION-OF-COMPLIANCE-WORK-PERMIT.pdf", "Official employer filing, agency approval, DOCF2025, online process and renewal timing.", "Официальная подача работодателем, одобрение ведомства, DOCF2025, онлайн-процесс и срок продления.", lang=lang),
+            _official_source("Bhutan DoI: International Student Guideline 2026", "https://www.doi.gov.bt/wp-content/uploads/2026/05/VisaEntry-Permit-Guideline-for-International-Students-2026.pdf", "Current visa and entry-permit process for recognised international students.", "Актуальная визовая и permit-процедура для международных студентов признанных учреждений.", lang=lang),
+            _official_source("Invest Bhutan: FDI Rules 2025", "https://investbhutan.gov.bt/be/media/resources/1754580651.pdf", "Official Nu 15 million Investor Card threshold, three-year residence, dependant and work-permit rules.", "Официальный порог Nu 15 млн, трёхлетняя Investor Card, правила иждивенцев и work permit.", lang=lang),
+            _official_source("Bhutan Ministry Of Finance: Income Tax Act 2025", "https://www.mof.gov.bt/wp-content/uploads/2025/09/Income-Tax-Act-2025.pdf", "Primary 183-day individual tax-residence test and Bhutan-source framework.", "Первоисточник по тесту 183 дней и налогообложению дохода из Бутана.", lang=lang),
+            _official_source("UK FCDO: Bhutan Health", "https://www.gov.uk/foreign-travel-advice/bhutan/health", "Current healthcare limits, altitude risk and evacuation guidance for India or Thailand.", "Актуальные ограничения медицины, риск высоты и эвакуация в Индию или Таиланд.", lang=lang),
+            _official_source("World Bank Data: Bhutan", "https://data.worldbank.org/country/bhutan", "Country indicators used for population, income, inflation, internet access, unemployment and life expectancy.", "Страновые показатели населения, дохода, инфляции, интернета, безработицы и продолжительности жизни.", lang=lang),
+        ],
+        "afghanistan": [
+            _official_source("Afghanistan MFA: Visa Types", "https://mfa.gov.af/en/page/30209/", "Official tourist, business, entry, residence, student and other visa categories.", "Официальный перечень tourist, business, entry, residence, student и других виз.", lang=lang),
+            _official_source("Afghanistan MFA: Entry Visa", "https://mfa.gov.af/en/entry-visa/", "Official licensed-organisation invitation, approval, validity and fee rules for entry assignments.", "Официальные правила приглашения лицензированной организацией, одобрения, срока и сбора entry visa.", lang=lang),
+            _official_source("Afghanistan MFA: Residence Visa", "https://mfa.gov.af/en/residence-visa/", "Official residence eligibility, one-month to one-year stay and monthly fee.", "Официальные основания residence visa, срок от месяца до года и ежемесячный сбор.", lang=lang),
+            _official_source("Afghanistan MoLSA: Foreign Work Visas And Permits", "https://molsa.gov.af/en/meeting-held-molsa-facilitate-issuance-work-visas-foreign-nationals", "Current official confirmation that tourist status cannot be used for work and foreign workers need the proper permit process.", "Актуальное официальное подтверждение запрета работы по туристической визе и необходимости work permit.", lang=lang),
+            _official_source("Afghanistan Ministry Of Finance: Taxable Income Guide", "https://mof.gov.af/sites/default/files/2019-03/Guide%2015%20-%20Taxable%20and%20Non-Taxable%20Income-min%281%29.pdf", "Official 183-day and principal-home individual tax-residence guidance.", "Официальное руководство по тесту 183 дней и основного дома для налогового резидентства.", lang=lang),
+            _official_source("UK FCDO: Afghanistan Entry Requirements", "https://www.gov.uk/foreign-travel-advice/afghanistan/entry-requirements", "Current visa requirement, mission closure, vaccination and cash-import limits.", "Актуальные требования визы, закрытие представительства, вакцинация и лимиты ввоза наличных.", lang=lang),
+            _official_source("UK FCDO: Afghanistan Travel Advice", "https://www.gov.uk/foreign-travel-advice/afghanistan", "Current advice against all travel, detention, kidnapping, border and consular-support risks.", "Актуальный совет отказаться от поездок, риски задержания, похищения, границ и ограниченной консульской помощи.", lang=lang),
+            _official_source("World Bank Data: Afghanistan", "https://data.worldbank.org/country/afghanistan", "Country indicators used for population, income, inflation, internet access, unemployment and life expectancy.", "Страновые показатели населения, дохода, инфляции, интернета, безработицы и продолжительности жизни.", lang=lang),
+        ],
+        "bangladesh": [
+            _official_source("Bangladesh Visa Application", "https://visa.gov.bd/", "Official visa application portal and purpose-specific form.", "Официальный визовый портал и форма по цели поездки.", lang=lang),
+            _official_source("BIDA: Visa Types For Foreign Workers", "https://bida.gov.bd/details/what-type-visa-available-foreigners-make-them-eligible-working-bangladesh", "Official PI, E2 and E3 eligibility and BIDA recommendation rules.", "Официальные условия PI, E2 и E3 и правила рекомендации BIDA.", lang=lang),
+            _official_source("BIDA: Work Permit Procedure", "https://bida.gov.bd/details/what-procedure-application-work-permit-bangladesh", "Official OSS process, filing timing and employer-registration requirement.", "Официальная процедура OSS, срок подачи и требование регистрации работодателя.", lang=lang),
+            _official_source("BIDA: Investing And Working Guide", "https://bida.gov.bd/storage/app/uploads/public/674/43c/d52/67443cd52586a194173186.pdf", "Official PI, E2, E3 and family-category guide, including the E3 work-permit position.", "Официальный guide по PI, E2, E3 и семейным категориям, включая правило work permit для E3.", lang=lang),
+            _official_source("Bangladesh NBR: Income Tax Act 2023", "https://nbr.gov.bd/uploads/publications/95.pdf", "Primary 182-day and combined 60/365-day individual tax-residence tests.", "Первоисточник по тестам 182 дней и комбинированному правилу 60/365 дней.", lang=lang),
+            _official_source("UK FCDO: Bangladesh Entry Requirements", "https://www.gov.uk/foreign-travel-advice/bangladesh/entry-requirements", "Current visa-on-arrival, electronic-card, work-permit and exit-tax-clearance guidance.", "Актуальные правила visa on arrival, электронных карт, work permit и налоговой справки при выезде.", lang=lang),
+            _official_source("UK FCDO: Bangladesh Travel Advice", "https://www.gov.uk/foreign-travel-advice/bangladesh", "Current regional warnings, flooding, disruption and insurance context.", "Актуальные региональные предупреждения, наводнения, перебои и контекст страховки.", lang=lang),
+            _official_source("World Bank Data: Bangladesh", "https://data.worldbank.org/country/bangladesh", "Country indicators used for population, income, inflation, internet access, unemployment and life expectancy.", "Страновые показатели населения, дохода, инфляции, интернета, безработицы и продолжительности жизни.", lang=lang),
+        ],
+        "pakistan": [
+            _official_source("Pakistan DGI&P: Visa Categories", "https://dgip.gov.pk/visa/categories.php", "Official tourist, work, study, family and business categories, work-entry and extension rules, and registration guidance.", "Официальные туристические, рабочие, учебные, семейные и деловые категории, сроки рабочего въезда и продления, а также регистрация.", lang=lang),
+            _official_source("Pakistan Online Visa System", "https://visa.nadra.gov.pk/", "Official passport-specific visa application and decision portal.", "Официальный портал подачи и получения визового решения по конкретному паспорту.", lang=lang),
+            _official_source("Pakistan Board Of Investment: Work Visa", "https://invest.gov.pk/work-visa", "Official employer eligibility, required employment and company documents, extension and processing guidance.", "Официальные требования к работодателю, контракту и документам компании, продлению и обработке заявления.", lang=lang),
+            _official_source("Pakistan Board Of Investment: Long Term Residency FAQ", "https://invest.gov.pk/long-term-residency/FAQs", "Official five-, seven- and ten-year investor residence, fees, investment, dependant and compliance conditions.", "Официальные условия инвестиционной резиденции на 5, 7 и 10 лет: платежи, инвестиция, иждивенцы и обязанности.", lang=lang),
+            _official_source("Pakistan FBR: Tax Residence Section 82", "https://fbr.gov.pk/section-82/152702", "Primary 183-day and combined 120/365-day individual tax-residence tests.", "Первоисточник по тестам 183 дней и комбинированному правилу 120/365 дней для налогового резидентства.", lang=lang),
+            _official_source("UK FCDO: Pakistan Travel Advice", "https://www.gov.uk/foreign-travel-advice/pakistan", "Current regional warnings, protests, insurance implications and security planning.", "Актуальные предупреждения по регионам, протесты, влияние на страховку и планирование безопасности.", lang=lang),
+            _official_source("UK FCDO: Pakistan Safety And Security", "https://www.gov.uk/foreign-travel-advice/pakistan/safety-and-security", "Current terrorism, crime, movement-permission and transport-risk guidance.", "Актуальные сведения о терроризме, преступности, разрешениях на перемещение и транспортных рисках.", lang=lang),
+            _official_source("World Bank Data: Pakistan", "https://data.worldbank.org/country/pakistan", "Country indicators used for population, income, inflation, internet access, unemployment and life expectancy.", "Страновые показатели населения, дохода, инфляции, интернета, безработицы и продолжительности жизни.", lang=lang),
+        ],
         "kuwait": [
             _official_source("Kuwait Visa: Tourist Visa", "https://kuwaitvisa.moi.gov.kw/", "Official tourist-visa portal with passport, entry-validity, stay-duration and work-prohibition rules.", "Официальный туристический визовый портал: паспорт, срок въезда, пребывание и запрет работы.", lang=lang),
             _official_source("Kuwait Government Online: Work Visa For Private Contract", "https://e.gov.kw/sites/kgoenglish/Pages/Services/MOI/PrivateSectorWorkEntryVisa.aspx", "Official employer-led private-sector work-entry visa, permit documents and current fee.", "Официальная рабочая въездная виза частного сектора через работодателя, документы и действующий сбор.", lang=lang),
@@ -8913,6 +10325,19 @@ def page_source_panel(path: str, *, lang: str) -> dict | None:
             "iran": ["iran"],
             "yemen": ["yemen"],
             "syria": ["syria"],
+            "cyprus": ["cyprus"],
+            "maldives": ["maldives"],
+            "mongolia": ["mongolia"],
+            "timor-leste": ["timor_leste"],
+            "turkmenistan": ["turkmenistan"],
+            "sharm-el-sheikh": ["sharm_el_sheikh"],
+            "tajikistan": ["tajikistan"],
+            "palestine": ["palestine"],
+            "north-korea": ["north_korea"],
+            "bhutan": ["bhutan"],
+            "afghanistan": ["afghanistan"],
+            "bangladesh": ["bangladesh"],
+            "pakistan": ["pakistan"],
             "iraq": ["iraq"],
         }
         keys = country_source_map.get(country_key, ["world_bank"])
@@ -10937,6 +12362,19 @@ RU_COUNTRY_FACT_VALUES = {
     "move-to-iran": {"capital": "Тегеран", "languages": "персидский"},
     "move-to-yemen": {"capital": "Сана", "languages": "арабский"},
     "move-to-syria": {"capital": "Дамаск", "languages": "арабский"},
+    "move-to-cyprus": {"capital": "Никосия", "languages": "греческий, турецкий"},
+    "move-to-timor-leste": {"capital": "Дили", "languages": "тетум, португальский"},
+    "move-to-turkmenistan": {"capital": "Ашхабад", "languages": "туркменский"},
+    "move-to-sharm-el-sheikh": {"capital": "Каир", "languages": "арабский"},
+    "move-to-tajikistan": {"capital": "Душанбе", "languages": "таджикский, русский"},
+    "move-to-palestine": {"capital": "Рамалла (адм. центр)", "languages": "арабский"},
+    "move-to-north-korea": {"capital": "Пхеньян", "languages": "корейский"},
+    "move-to-mongolia": {"capital": "Улан-Батор", "languages": "монгольский"},
+    "move-to-maldives": {"capital": "Мале", "languages": "дивехи"},
+    "move-to-bhutan": {"capital": "Тхимпху", "languages": "дзонг-кэ"},
+    "move-to-afghanistan": {"capital": "Кабул", "languages": "дари, пушту"},
+    "move-to-bangladesh": {"capital": "Дакка", "languages": "бенгальский"},
+    "move-to-pakistan": {"capital": "Исламабад", "languages": "урду, английский"},
     "move-to-iraq": {"capital": "Багдад", "languages": "арабский, курдский"},
 }
 
@@ -11067,7 +12505,7 @@ def ru_country(slug: str):
     internal_links = polish_ru_data(internal_links)
     source_panel_data = polish_ru_data(source_panel_data)
     if source_panel_data:
-        source_limit = 9 if slug in {"move-to-israel", "move-to-yemen"} else (8 if slug in {"move-to-armenia", "move-to-azerbaijan", "move-to-qatar", "move-to-saudi-arabia", "move-to-oman", "move-to-bahrain", "move-to-kuwait", "move-to-jordan", "move-to-lebanon", "move-to-iran", "move-to-yemen", "move-to-syria", "move-to-iraq"} else (9 if slug == "move-to-kyrgyzstan" else (8 if slug == "move-to-turkey" else (7 if slug == "move-to-georgia" else 5))))
+        source_limit = 9 if slug in {"move-to-israel", "move-to-yemen"} else (8 if slug in {"move-to-armenia", "move-to-azerbaijan", "move-to-qatar", "move-to-saudi-arabia", "move-to-oman", "move-to-bahrain", "move-to-kuwait", "move-to-jordan", "move-to-lebanon", "move-to-iran", "move-to-yemen", "move-to-syria", "move-to-iraq", "move-to-pakistan", "move-to-bangladesh", "move-to-afghanistan", "move-to-bhutan", "move-to-maldives", "move-to-mongolia", "move-to-north-korea", "move-to-palestine", "move-to-tajikistan", "move-to-timor-leste", "move-to-turkmenistan", "move-to-sharm-el-sheikh", "move-to-cyprus"} else (9 if slug == "move-to-kyrgyzstan" else (8 if slug == "move-to-turkey" else (7 if slug == "move-to-georgia" else 5))))
         source_panel_data = {**source_panel_data, "sources": source_panel_data["sources"][:source_limit]}
     schema = [
         breadcrumb_schema([("Страны", "/ru/countries/")], row["title"], path),
