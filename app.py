@@ -294,12 +294,12 @@ RU_PAGE_SEO_DESCRIPTIONS = {
         "медицине, безопасности и практичности для релокации."
     ),
     "bali-vs-thailand": (
-        "Что дешевле — Бали или Таиланд в 2026 году? Сравнение расходов, виз, "
-        "медицины, инфраструктуры и сценариев для переезда."
+        "Бали или Таиланд: где дешевле аренда и как сравнить полный бюджет. "
+        "Цены Бали, Чиангмая и Бангкока, условия DTV и E33G, выбор района для жизни."
     ),
     "thailand-vs-malaysia": (
-        "Таиланд или Малайзия в 2026 году: что выбрать для жизни и переезда по расходам, "
-        "визам, английскому языку, медицине и семейному сценарию."
+        "Таиланд или Малайзия: сравнение аренды в Бангкоке и Куала-Лумпуре, "
+        "виз DTV и DE Rantau. Как выбрать город для удалённой работы и переезда с семьёй."
     ),
     "japan-vs-taiwan": (
         "Япония или Тайвань: что лучше для переезда в 2026 году по визам, сроку "
@@ -379,11 +379,17 @@ def seo_payload(
     clean_title = strip_html(title) or SITE_NAME
     description = strip_html(description) or DEFAULT_DESCRIPTION
     title_suffix = f" | {SITE_NAME}"
-    short_title = trim_meta_title(clean_title, 60 - len(title_suffix))
+    # A display-length guideline is not a content limit: never cut the meaning
+    # of an editorial title just to reserve space for the brand. Google may
+    # shorten or rewrite the title link independently of this HTML title.
+    branded_title = clean_title
+    if clean_title != SITE_NAME and not clean_title.endswith(title_suffix):
+        if len(clean_title + title_suffix) <= 65:
+            branded_title += title_suffix
     canonical_url = absolute_url(canonical_path or request.path)
     og_image_url = absolute_url(og_image) if "absolute_url" in globals() else f"{SITE_URL}{og_image}"
     return {
-        "page_title": f"{short_title}{title_suffix}" if short_title != SITE_NAME else SITE_NAME,
+        "page_title": branded_title,
         "meta_title": clean_title,
         "meta_description": trim_meta_text(description, 155),
         "meta_keywords": ", ".join(
@@ -1300,111 +1306,16 @@ def normalize_ru_compare_content(content: str) -> str:
 
 
 def optimize_ru_compare_for_search(slug: str, content: str) -> tuple[str | None, str]:
-    """Put the answer matching high-impression GSC intent before the legacy comparison."""
-    configs = {
-        "bali-vs-thailand": {
-            "title": "Что дешевле — Бали или Таиланд: цены и сравнение в 2026 году",
-            "eyebrow": "Бали vs Таиланд · короткий ответ",
-            "h1": "Бали или Таиланд: где дешевле и лучше жить в 2026 году",
-            "lead": (
-                "Если сравнивать одинаковый уровень комфорта, Чиангмай обычно дешевле популярных "
-                "районов юга Бали. Бангкок, Пхукет и Самуи могут стоить столько же или дороже. "
-                "Таиланд чаще выигрывает по медицине и выбору городов, Бали — по компактному "
-                "международному сообществу и островному образу жизни."
-            ),
-            "cards": [
-                ("Где дешевле", "Чиангмай", "Но сравнивайте одинаковые районы и сезон аренды."),
-                ("Где проще с медициной", "Таиланд", "Больше сильных частных клиник и выбор городов."),
-                ("Где сильнее nomad-среда", "Бали", "Сообщество плотнее, но популярные районы дороже."),
-            ],
-            "rows": [
-                ("Аренда", "Сильно зависит от Чангу, Убуда и сезона", "Больше городов и ценовых сценариев"),
-                ("Виза", "Проверьте подходящий маршрут Индонезии", "Сверьте DTV, LTR или другой официальный маршрут"),
-                ("Медицина", "Основной выбор сосредоточен на юге острова", "Сильнее выбор частных больниц"),
-                ("Кому подходит", "Тем, кому важны остров, community и lifestyle", "Тем, кому важны города, сервисы и запас вариантов"),
-            ],
-            "links": [
-                ("Гид по Бали", "/ru/countries/move-to-bali/"),
-                ("Гид по Таиланду", "/ru/countries/move-to-thailand/"),
-                ("Рассчитать бюджет", "/ru/tools/cost-calculator/"),
-            ],
-        },
-        "thailand-vs-malaysia": {
-            "title": "Таиланд или Малайзия: что выбрать для жизни в 2026 году",
-            "eyebrow": "Таиланд vs Малайзия · короткий ответ",
-            "h1": "Таиланд или Малайзия: что выбрать для жизни и переезда в 2026 году",
-            "lead": (
-                "Таиланд чаще подходит тем, кому важны выбор городов, еда, пляжи и развитая "
-                "туристическая инфраструктура. Малайзия обычно практичнее для английского в быту, "
-                "семьи, городской логистики и спокойного повседневного ритма. Итог зависит от "
-                "официального визового маршрута, а не только от цены аренды."
-            ),
-            "cards": [
-                ("Lifestyle и выбор мест", "Таиланд", "Бангкок, Чиангмай, Пхукет и острова дают разные сценарии."),
-                ("Английский и городской быт", "Малайзия", "Мягче вход в повседневную жизнь и семейную логистику."),
-                ("Бюджет", "Зависит от города", "Сравнивайте Бангкок с Куала-Лумпуром, а не страны в среднем."),
-            ],
-            "rows": [
-                ("Городской выбор", "Больше разных курортных и городских сценариев", "Сильный и понятный городской сценарий в Куала-Лумпуре и Пенанге"),
-                ("Язык", "Английский удобнее в туристических и деловых районах", "Английский шире используется в повседневной жизни"),
-                ("Медицина", "Сильные частные госпитали и большой выбор", "Сильная частная медицина, особенно в крупных городах"),
-                ("Виза", "Проверьте DTV, LTR или другой подходящий маршрут", "Проверьте DE Rantau, MM2H или рабочий маршрут"),
-            ],
-            "links": [
-                ("Гид по Таиланду", "/ru/countries/move-to-thailand/"),
-                ("Гид по Малайзии", "/ru/countries/move-to-malaysia/"),
-                ("Сравнить бюджет", "/ru/tools/cost-calculator/"),
-            ],
-        },
+    """Replace the two audited comparisons, without duplicating legacy content."""
+    titles = {
+        "bali-vs-thailand": "Бали или Таиланд: где дешевле жить и что выбрать",
+        "thailand-vs-malaysia": "Таиланд или Малайзия: что выбрать для жизни",
     }
-    config = configs.get(slug)
-    if not config:
+    title = titles.get(slug)
+    if not title:
         return None, content
-
-    legacy_heading = re.search(r"<h1\b[^>]*>(.*?)</h1>", content, flags=re.I | re.S)
-    if legacy_heading:
-        content = (
-            content[: legacy_heading.start()]
-            + f'<h2 class="rta-legacy-comparison-title">{legacy_heading.group(1)}</h2>'
-            + content[legacy_heading.end() :]
-        )
-
-    cards = "".join(
-        f'<article><span>{html.escape(label)}</span><strong>{html.escape(value)}</strong><p>{html.escape(note)}</p></article>'
-        for label, value, note in config["cards"]
-    )
-    rows = "".join(
-        f'<tr><th scope="row">{html.escape(label)}</th><td>{html.escape(first)}</td><td>{html.escape(second)}</td></tr>'
-        for label, first, second in config["rows"]
-    )
-    links = "".join(
-        f'<a href="{href}">{html.escape(label)} <span aria-hidden="true">→</span></a>'
-        for label, href in config["links"]
-    )
-    first_name = "Бали" if slug == "bali-vs-thailand" else "Таиланд"
-    second_name = "Таиланд" if slug == "bali-vs-thailand" else "Малайзия"
-    block = f"""
-<section class="rta-search-intent-hero" aria-labelledby="search-intent-title">
-  <p class="rta-search-intent-eyebrow">{html.escape(config['eyebrow'])}</p>
-  <h1 id="search-intent-title">{html.escape(config['h1'])}</h1>
-  <p class="rta-search-intent-lead">{html.escape(config['lead'])}</p>
-  <div class="rta-search-intent-cards">{cards}</div>
-  <div class="rta-search-intent-table-wrap">
-    <table class="rta-search-intent-table">
-      <thead><tr><th>Критерий</th><th>{first_name}</th><th>{second_name}</th></tr></thead>
-      <tbody>{rows}</tbody>
-    </table>
-  </div>
-  <nav class="rta-search-intent-links" aria-label="Открыть подробные гайды">{links}</nav>
-</section>
-"""
-    style_end = content.find("</style>")
-    if style_end >= 0:
-        insert_at = style_end + len("</style>")
-        content = content[:insert_at] + block + content[insert_at:]
-    else:
-        content = block + content
-    return str(config["title"]), content
+    source = APP_DIR / "content" / "comparisons" / f"{slug}-ru.html"
+    return title, source.read_text(encoding="utf-8")
 
 
 RU_STATIC_TITLES = {
@@ -11739,6 +11650,18 @@ def render_page_row(row: sqlite3.Row | dict, **kwargs):
     depth_panel_data = content_depth_panel(path, row, lang=lang)
     quality_panel_data = content_quality_panel(path, row, lang=lang)
     source_panel_data = page_source_panel(path, lang=lang)
+    if path in {"/ru/compare/bali-vs-thailand/", "/ru/compare/thailand-vs-malaysia/"}:
+        source_panel_data = {
+            "eyebrow": "Первоисточники",
+            "title": "Официальные условия упомянутых программ",
+            "intro": "Ссылки на проверенные в тексте условия. Перед подачей сверяйте свою категорию и место обращения; одобрение не гарантируется.",
+            "sources": [
+                {**source, "note": "Применимость и ограничения объяснены рядом со ссылкой в тексте."}
+                for source in extract_official_sources(row["content"])
+                if not source["url"].startswith("https://www.numbeo.com/")
+            ],
+            "checks": [],
+        }
     if lang == "ru":
         depth_panel_data = polish_ru_data(depth_panel_data)
         quality_panel_data = polish_ru_data(quality_panel_data)
@@ -11841,7 +11764,7 @@ def render_page_row(row: sqlite3.Row | dict, **kwargs):
     )
 
 
-def render_post_row(row: sqlite3.Row, *, lang: str):
+def render_post_row(row: sqlite3.Row | dict, *, lang: str, preview: bool = False):
     if lang == "ru":
         row = dict(row)
         row["title"] = localized_post_content(row["title"])
@@ -11872,8 +11795,8 @@ def render_post_row(row: sqlite3.Row, *, lang: str):
     if item_list:
         schema.append(item_list)
     seo = seo_payload(
-        title=row["title"],
-        description=row["excerpt"] or row["content"],
+        title=row.get("seo_title") or row["title"],
+        description=row.get("meta_description") or row["excerpt"] or row["content"],
         lang=lang,
         canonical_path=canonical_path,
         alternates=alternates,
@@ -11884,7 +11807,11 @@ def render_post_row(row: sqlite3.Row, *, lang: str):
     article_seo = post_seo_panel(row, lang=lang)
     article_sources = article_source_panel_for_post(row, lang=lang)
     article_trust = article_trust_panel(row, lang=lang)
-    related = related_posts(row)
+    if preview:
+        seo["meta_robots"] = "noindex,nofollow"
+        seo["schema_json"] = ""
+        article_trust = None
+    related = [] if preview else related_posts(row)
     if lang == "ru":
         article_seo = polish_ru_data(article_seo)
         article_sources = polish_ru_data(article_sources)
@@ -11898,6 +11825,7 @@ def render_post_row(row: sqlite3.Row, *, lang: str):
     article_body, article_toc = prepare_article(row["content"])
     return render_template(
         "post.html",
+        editorial_preview=preview,
         post=row,
         article_body=article_body,
         article_toc=article_toc,
@@ -12266,6 +12194,7 @@ def sentence_case_ru_heading_text(text: str) -> str:
     proper_forms = {"Азия", "Азии", "Бали", "Малайзия", "Малайзию", "Малайзии", "Таиланд", "Таиланду", "Таиланде", "Вьетнам", "Вьетнаму", "Вьетнаме", "Тайвань", "Тайваню", "Тайване", "Япония", "Японию", "Японии", "Камбоджа", "Камбоджу", "Камбодже", "Филиппины", "Филиппинам", "Филиппинах", "Сингапур", "Сингапуре", "ОАЭ", "Дубай", "Дубая", "Дубае", "Дубаю", "Абу-Даби", "Маргарита", "Яровенко", "Virtual Work Residence Visa", "Virtual Work Residence"}
     for forms in COUNTRY_FORMS_RU.values():
         proper_forms.update(forms)
+    proper_forms.update({"Бангкок", "Бангкоке", "Бангкока", "Чиангмай", "Чиангмае", "Чиангмая", "Куала-Лумпур", "Куала-Лумпуре", "Куала-Лумпура"})
     for token in sorted(proper_forms, key=len, reverse=True):
         lowered = re.sub(rf"\b{re.escape(token.lower())}\b", token, lowered, flags=re.I)
     first = re.search(r"[A-Za-zА-Яа-яЁё]", lowered)

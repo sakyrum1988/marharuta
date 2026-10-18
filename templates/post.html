@@ -4,6 +4,7 @@
 
 {% block content %}
 <div class="rta-content rta-post">
+  {% if editorial_preview %}<p class="rta-preview-notice" role="status">Редакционный предпросмотр · Не опубликовано · Для проверки Маргаритой Яровенко</p>{% endif %}
   {% set current_title = post['title'] %}
   {% include "_breadcrumbs.html" %}
 

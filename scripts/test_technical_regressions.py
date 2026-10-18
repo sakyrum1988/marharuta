@@ -13,6 +13,23 @@ import app as site
 
 
 class TechnicalRegressionTests(unittest.TestCase):
+    def test_seo_title_preserves_meaning_instead_of_truncating_for_brand(self):
+        titles = (
+            'Cost Of Living In Asia 2026: Real Relocation Budgets',
+            'Бали или Таиланд: где дешевле жить и что выбрать',
+            'Таиланд или Малайзия: сравнение расходов и виз',
+        )
+        with site.app.test_request_context('/'):
+            for title in titles:
+                with self.subTest(title=title):
+                    payload = site.seo_payload(title=title)
+                    self.assertTrue(payload['page_title'].startswith(title))
+                    self.assertNotIn('...', payload['page_title'])
+            self.assertEqual(site.seo_payload(title=site.SITE_NAME)['page_title'], site.SITE_NAME)
+            branded = 'About | ' + site.SITE_NAME
+            self.assertEqual(site.seo_payload(title=branded)['page_title'], branded)
+            self.assertEqual(site.seo_payload(title='About')['page_title'], branded)
+
     def setUp(self):
         site._PAGE_CACHE.clear()
         self.client = site.app.test_client()
