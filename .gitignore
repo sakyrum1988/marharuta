@@ -10,3 +10,4 @@ venv/
 .claude/
 GSC/
 .backups/
+pilot-private/

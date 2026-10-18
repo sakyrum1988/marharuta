@@ -14,12 +14,14 @@ from urllib.parse import urlencode
 from flask import Flask, Response, abort, make_response, redirect, render_template, request, url_for
 from tool_integrations import harden_tool_scripts
 from editorial import article_topic, plain_text, prepare_article, reading_minutes
+from indexing_pilot import register_indexing_pilot
 
 APP_DIR = Path(__file__).resolve().parent
 DB_PATH = APP_DIR / "content.db"
 
 app = Flask(__name__)
 app.config["GA4_MEASUREMENT_ID"] = os.getenv("GA4_MEASUREMENT_ID", "G-QET2HP459Y")
+register_indexing_pilot(app)
 
 
 @app.template_global()
