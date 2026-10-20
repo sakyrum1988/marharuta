@@ -11536,6 +11536,15 @@ def article_source_panel_for_post(row: sqlite3.Row | dict, *, lang: str) -> dict
     for item in extract_official_sources(row["content"] if "content" in row.keys() else "", limit=10):
         add(item["title"], item["url"], "Official source referenced in the article.", "Официальный источник, указанный в статье.")
 
+    if slug == "sezon-dozhdey-v-tailande" and lang == "ru":
+        return {
+            "eyebrow": "Первоисточники",
+            "title": "Климат и прогноз: источники для проверки",
+            "intro": "Источники просмотрены 20 октября 2026 года. Климатические данные помогают выбрать сезон; прогноз и предупреждения нужно проверять заново перед поездкой.",
+            "sources": picked,
+            "checks": [],
+        }
+
     if slug == "arenda-kvartiry-v-tailande" and lang == "ru":
         return {
             "eyebrow": "Первоисточники",
@@ -13640,6 +13649,23 @@ def ru_guide(slug: str):
     )
 
 
+def blog_page_alternates(page: int, *, counts: dict[str, int] | None = None) -> list[dict[str, str]]:
+    """Only advertise language versions whose pagination page exists."""
+    if counts is None:
+        counts = {
+            lang: one("SELECT COUNT(*) AS count FROM posts WHERE lang = ?", (lang,))["count"]
+            for lang in ("en", "ru")
+        }
+    alternates = []
+    for lang, base in (("en", "/blog/"), ("ru", "/ru/blog/")):
+        if page <= max((counts.get(lang, 0) + 9) // 10, 1):
+            path = base if page == 1 else f"{base}page/{page}/"
+            alternates.append({"lang": lang, "url": absolute_url(path)})
+    if alternates:
+        alternates.append({"lang": "x-default", "url": alternates[0]["url"]})
+    return alternates
+
+
 def render_blog_index(*, lang: str, page: int = 1):
     is_ru = lang == "ru"
     path = "/ru/blog/" if is_ru else "/blog/"
@@ -13717,9 +13743,7 @@ def render_blog_index(*, lang: str, page: int = 1):
             for post in posts
         ]
     seo_page = 1 if search_query else page
-    en_path = "/blog/" if seo_page == 1 else f"/blog/page/{seo_page}/"
-    ru_path = "/ru/blog/" if seo_page == 1 else f"/ru/blog/page/{seo_page}/"
-    alternates = localized_page_alternates(en_path=en_path, ru_path=ru_path)
+    alternates = blog_page_alternates(seo_page)
     canonical_path = path if seo_page == 1 else f"{path}page/{seo_page}/"
     trust_panel = blog_trust_panel(lang=lang)
     depth_panel = blog_depth_panel(lang=lang)
@@ -14331,12 +14355,11 @@ def sitemap_xml():
         max((ru_post_count + per_page - 1) // per_page, 1),
     )
     for page_num in range(2, total_paginated + 1):
-        alternates = localized_page_alternates(
-            en_path=f"/blog/page/{page_num}/",
-            ru_path=f"/ru/blog/page/{page_num}/",
+        alternates = blog_page_alternates(
+            page_num, counts={"en": en_post_count, "ru": ru_post_count},
         )
-        alternate_map[f"/blog/page/{page_num}/"] = alternates
-        alternate_map[f"/ru/blog/page/{page_num}/"] = alternates
+        for alternate in alternates:
+            alternate_map[local_path(alternate["url"])] = alternates
     paths = sitemap_paths()
     seen_paths = {path for path, _ in paths}
     # Every localized URL advertised through hreflang must also be discoverable
