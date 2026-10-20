@@ -11536,6 +11536,15 @@ def article_source_panel_for_post(row: sqlite3.Row | dict, *, lang: str) -> dict
     for item in extract_official_sources(row["content"] if "content" in row.keys() else "", limit=10):
         add(item["title"], item["url"], "Official source referenced in the article.", "Официальный источник, указанный в статье.")
 
+    if slug == "arenda-kvartiry-v-tailande" and lang == "ru":
+        return {
+            "eyebrow": "Первоисточники",
+            "title": "Документы для проверки условий аренды",
+            "intro": "Использованы официальные материалы OCPB. Применимость правил к конкретному арендодателю требует отдельной проверки.",
+            "sources": picked,
+            "checks": [],
+        }
+
     if slug in {"luchshie-strany-azii-dlya-ekspatov-2026", "best-countries-in-asia-for-expats-2026"}:
         add("Malaysia My Second Home: Category Overview", "https://www.mm2h.gov.my/category/overview", "Official MM2H tiers, validity, deposits and property minimums.", "Официальные категории MM2H: сроки, депозиты и минимальная стоимость недвижимости.")
         add("Philippine Retirement Authority: SRRVisa", "https://pra.gov.ph/SRRVisa", "Official SRRV age, category and deposit rules.", "Официальные требования SRRV по возрасту, категории и депозиту.")
