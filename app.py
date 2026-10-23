@@ -11545,6 +11545,21 @@ def article_source_panel_for_post(row: sqlite3.Row | dict, *, lang: str) -> dict
             "checks": [],
         }
 
+    if slug == "phuket-ili-pattaya-dlya-zhizni" and lang == "ru":
+        add(
+            "WMO: Phuket",
+            "https://worldweather.wmo.int/en/city.html?cityId=579",
+            "Official climatological information for Phuket.",
+            "Официальный климатический ориентир для Пхукета, не прогноз поездки.",
+        )
+        return {
+            "eyebrow": "Первоисточники",
+            "title": "География, сезонность и транспорт",
+            "intro": "Источники проверены 23 октября 2026 года. Климатические данные не заменяют прогноз, а расписание рейсов нужно обновлять перед покупкой.",
+            "sources": picked,
+            "checks": [],
+        }
+
     if slug == "arenda-kvartiry-v-tailande" and lang == "ru":
         return {
             "eyebrow": "Первоисточники",
