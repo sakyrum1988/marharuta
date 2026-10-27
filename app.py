@@ -183,7 +183,7 @@ def handle_legacy_urls():
 
     # /countries/<slug>/ missing the move-to- prefix
     m = re.match(r"^/countries/(?!move-to-)([a-z0-9-]+)/?$", path)
-    if m:
+    if m and m.group(1) not in {"japan", "hong-kong"}:
         return redirect(f"/countries/move-to-{m.group(1)}/", 301)
 
     # WordPress / bot scanner paths — just 404 quickly without template
@@ -271,6 +271,22 @@ PAGE_SEO_DESCRIPTIONS = {
     "best-asian-countries-for-remote-workers-with-family": "Best Asian countries for remote workers with family in 2026 by visa practicality, schools, healthcare and cost.",
     "philippines-srrv-vs-thailand-retirement-visa": "Philippines SRRV vs Thailand Retirement Visa in 2026 by deposit logic, stay comfort and retirement planning risk.",
     "vietnam-evisa-vs-thailand-dtv": "Vietnam eVisa vs Thailand DTV in 2026 for long stays, remote workers and people testing Southeast Asia.",
+    "safety": "How to assess safety before moving to Asia: compare crime, political, disaster, health, transport and digital risks without trusting one ranking.",
+    "culture-language": "Prepare for culture shock and language barriers when moving to Asia with a practical 30-day adaptation plan and country research checklist.",
+    "housing-rent": "Rent a home in Asia safely: calculate move-in cash, verify listings and landlords, review contracts and document the property before paying.",
+    "country-finder": "Find Asian countries that fit your relocation priorities for budget, career, family life or long-term residence.",
+    "residency-citizenship": "Compare visas, residence permits, permanent residence and citizenship pathways across Asia without confusing the legal stages.",
+    "jobs-business": "Compare legal routes for local jobs, remote work and starting a business in Asia before choosing a destination.",
+    "work-visas": "Compare employer-sponsored work visas in Asia by sponsor, salary, occupation, family rights and job-loss risk.",
+    "long-stay": "Compare long-stay visas in Asia for remote workers, retirees, professionals and financially independent applicants.",
+    "healthcare": "Plan healthcare before moving to Asia: public access, private insurance, exclusions, evacuation and hospital checks.",
+    "banking": "Open and use a bank account in Asia with a practical guide to residency documents, KYC, transfers and tax reporting.",
+    "student": "Compare student visas in Asia by admission, proof of funds, work rights, dependants and post-study options.",
+    "driving-transport": "Driving and transport in Asia for expats: licence rules, IDPs, insurance, road safety and when a car is unnecessary.",
+    "taxes": "Understand tax residence in Asia, source rules, foreign income, treaties, filing and the records expats should keep.",
+    "cost-of-living": "Compare the cost of living across Asian cities using the same household, housing, transport and setup-cost assumptions.",
+    "rankings": "Rank Asian countries and cities by relocation priorities including visas, cost, healthcare, transport, safety and career fit.",
+    "safest-countries": "Compare the safest Asian countries in 2026 using peace, everyday risk, road safety, disasters and relocation practicality.",
 }
 
 RU_PAGE_SEO_DESCRIPTIONS = {
@@ -321,6 +337,22 @@ RU_PAGE_SEO_DESCRIPTIONS = {
         "Сравнение ОАЭ и Катара для релокации в 2026 году: рабочие маршруты, удаленная "
         "работа, расходы и ограничения для экспатов."
     ),
+    "safety": "Как оценить безопасность страны и города Азии перед переездом: преступность, законы, стихийные риски, медицина, транспорт и цифровая безопасность.",
+    "culture-language": "Как подготовиться к культурному шоку и языковому барьеру при переезде в Азию: проверка страны и план адаптации на первые 30 дней.",
+    "housing-rent": "Как безопасно арендовать жильё в Азии: бюджет въезда, проверка объявления и владельца, договор, депозит и акт состояния квартиры.",
+    "country-finder": "Подберите страны Азии для переезда по главному приоритету: бюджет, карьера, семья или долгосрочный статус.",
+    "residency-citizenship": "Как сравнивать визы, ВНЖ, ПМЖ и гражданство в странах Азии и не путать разные юридические статусы.",
+    "jobs-business": "Как выбрать легальный маршрут для местной работы, удалённой занятости или своего бизнеса в Азии.",
+    "work-visas": "Как сравнить рабочие визы стран Азии по работодателю, зарплате, профессии, семье и риску увольнения.",
+    "long-stay": "Как сравнить long-stay визы Азии для удалёнщиков, пенсионеров, специалистов и финансово независимых заявителей.",
+    "healthcare": "Как подготовить медицину перед переездом в Азию: страховка, исключения, клиники и медицинская эвакуация.",
+    "banking": "Как открыть и использовать банковский счёт в Азии: документы, KYC, переводы и налоговая отчётность.",
+    "student": "Как сравнить студенческие визы стран Азии по зачислению, финансам, праву работать и возможностям после учёбы.",
+    "driving-transport": "Вождение и транспорт в Азии: международные права, местные правила, страховка, безопасность и выбор между машиной и метро.",
+    "taxes": "Налоги в Азии для экспатов: налоговое резидентство, источник дохода, переводы, соглашения и подготовка документов.",
+    "cost-of-living": "Сравните стоимость жизни в городах Азии по одинаковому сценарию: обычный месяц, расходы на переезд и возвратные депозиты.",
+    "rankings": "Рейтинг стран и городов Азии для переезда по визам, бюджету, медицине, транспорту, безопасности, работе и семье.",
+    "safest-countries": "Самые безопасные страны Азии в 2026 году: рейтинг GPI, дорожные и природные риски, медицина и практичность переезда.",
 }
 
 
@@ -1347,6 +1379,7 @@ COUNTRY_FORMS_RU = {
     "move-to-taiwan": ("Тайвань", "Тайвань", "Тайване"),
     "move-to-japan": ("Япония", "Японию", "Японии"),
     "move-to-china": ("Китай", "Китай", "Китае"),
+    "move-to-hong-kong": ("Гонконг", "Гонконг", "Гонконге"),
     "move-to-singapore": ("Сингапур", "Сингапур", "Сингапуре"),
     "move-to-south-korea": ("Южная Корея", "Южную Корею", "Южной Корее"),
     "move-to-philippines": ("Филиппины", "Филиппины", "Филиппинах"),
@@ -1392,6 +1425,39 @@ COUNTRY_FORMS_RU = {
     "move-to-iraq": ("Ирак", "Ирак", "Ираке"),
 }
 
+EN_COUNTRY_SEO_TITLES = {
+    "move-to-thailand": "Relocation to Thailand: 2026 Guide",
+    "move-to-bali": "Relocating to Bali: 2026 Guide",
+    "move-to-japan": "Moving to Japan: Visas, Costs and Cities (2026)",
+}
+
+EN_COUNTRY_H1 = {
+    "move-to-thailand": "Relocation to Thailand: Visas, Costs and Where to Live",
+    "move-to-bali": "Relocating to Bali: Visas, Costs and Where to Live",
+    "move-to-japan": "Moving to Japan: Visas, Costs and Where to Live",
+}
+
+RU_COUNTRY_H1 = {
+    "move-to-vietnam": "Как переехать во Вьетнам в 2026 году: визы, расходы и города",
+    "move-to-japan": "Переезд в Японию: визы, расходы и выбор города",
+    "move-to-hong-kong": "Переезд в Гонконг: визы, работа, жильё и цена решения",
+}
+
+
+# Keep the existing database key while exposing a shorter, search-friendly URL.
+# The legacy URL is redirected in the country routes below.
+COUNTRY_SLUG_ALIASES = {"japan": "move-to-japan", "hong-kong": "move-to-hong-kong"}
+COUNTRY_PUBLIC_SLUGS = {"move-to-japan": "japan", "move-to-hong-kong": "hong-kong"}
+
+
+def country_data_slug(slug: str) -> str:
+    return COUNTRY_SLUG_ALIASES.get(slug, slug)
+
+
+def country_public_slug(slug: str) -> str:
+    return COUNTRY_PUBLIC_SLUGS.get(country_data_slug(slug), slug)
+
+
 COUNTRY_EN_NAMES = {
     "move-to-thailand": "Thailand",
     "move-to-malaysia": "Malaysia",
@@ -1400,6 +1466,7 @@ COUNTRY_EN_NAMES = {
     "move-to-taiwan": "Taiwan",
     "move-to-japan": "Japan",
     "move-to-china": "China",
+    "move-to-hong-kong": "Hong Kong",
     "move-to-singapore": "Singapore",
     "move-to-south-korea": "South Korea",
     "move-to-philippines": "Philippines",
@@ -1449,6 +1516,7 @@ COUNTRY_FLAGS = {
     "move-to-thailand": "🇹🇭", "move-to-malaysia": "🇲🇾", "move-to-bali": "🇮🇩",
     "move-to-vietnam": "🇻🇳", "move-to-taiwan": "🇹🇼", "move-to-japan": "🇯🇵",
     "move-to-china": "🇨🇳", "move-to-singapore": "🇸🇬", "move-to-south-korea": "🇰🇷",
+    "move-to-hong-kong": "🇭🇰",
     "move-to-philippines": "🇵🇭", "move-to-uae": "🇦🇪", "move-to-cambodia": "🇰🇭",
     "move-to-sri-lanka": "🇱🇰", "move-to-india": "🇮🇳", "move-to-nepal": "🇳🇵",
     "move-to-laos": "🇱🇦", "move-to-kazakhstan": "🇰🇿", "move-to-brunei": "🇧🇳",
@@ -1497,6 +1565,14 @@ RU_GUIDE_TITLES = {
     "best-asian-countries-for-remote-workers-with-family": "Лучшие страны Азии для удалёнщиков с семьёй в 2026 году",
     "philippines-srrv-vs-thailand-retirement-visa": "Philippines SRRV или пенсионная виза Таиланда: что выбрать в 2026 году",
     "vietnam-evisa-vs-thailand-dtv": "Vietnam eVisa или Thailand DTV: что выбрать в 2026 году",
+    "safety": "Безопасность в Азии: как выбрать страну и город для переезда",
+    "culture-language": "Культура и язык в Азии: как подготовиться к переезду",
+    "jobs-business": "Работа и бизнес в Азии: легальные маршруты",
+    "healthcare": "Медицина в Азии: страховка и выбор клиник",
+    "banking": "Банковские счета в Азии: практический гайд",
+    "driving-transport": "Вождение и транспорт в Азии: права, безопасность и расходы",
+    "taxes": "Налоги в Азии для экспатов: резидентство, доходы и отчётность",
+    "housing-rent": "Аренда жилья в Азии: как снять квартиру безопасно",
 }
 
 def ru_country_display(slug: str) -> str:
@@ -1575,8 +1651,8 @@ RU_COUNTRY_NOTES = {
         "Геополитическая ситуация в Тайваньском проливе — реальный фактор при долгосрочном планировании. Gold Card требует дохода $7 000+/мес или подтверждённых профессиональных достижений.",
     ),
     "move-to-japan": (
-        "Японию выбирают за уникальную городскую среду и безопасность. Токио, Осака, Фукуока — разные ритмы при одинаково высоком стандарте жизни.",
-        "Digital Nomad Visa не продлевается — максимум 6 месяцев, затем нужно покинуть Японию. Долгосрочный stay требует HSP или рабочей визы с местным работодателем.",
+        "Японию выбирают за сильный общественный транспорт, высокий бытовой стандарт и выбор очень разных городов — от глобального Токио до компактной Фукуоки.",
+        "Digital Nomad — шестимесячный тест, а не долгосрочный ВНЖ: продления и карты резидента нет, работать на японскую организацию нельзя. Для переезда на годы сначала выбирайте подходящий рабочий, учебный, семейный или HSP-статус.",
     ),
     "move-to-south-korea": (
         "Корею выбирают специалисты с конкретным предложением от корейского или международного работодателя. Как самостоятельный nomad-маршрут — более ограниченный вариант, чем Тайвань.",
@@ -1778,8 +1854,8 @@ EN_COUNTRY_NOTES: dict[str, tuple[str, str]] = {
         "Cross-Strait geopolitics is a real factor for long-term planning. Gold Card criteria are specific — it's not simply about earning $7K/month, the Ministry of Labor has a qualifying list.",
     ),
     "move-to-japan": (
-        "Japan delivers the highest day-to-day standard in Asia. Fukuoka is notably cheaper than Tokyo and offers a Digital Nomad Visa with minimal bureaucracy.",
-        "Digital Nomad Visa is strictly 6 months, non-renewable — re-entry requires a 3+ month gap. Tokyo 1BR costs $1,000–1,800/month plus a 1–2 month key money deposit.",
+        "Japan combines dense public transport, strong everyday services and very different city options, from global Tokyo to compact Fukuoka.",
+        "Digital Nomad is a six-month test, not a residence path: there is no extension or residence card, and work for a Japanese organisation is not permitted. Choose a qualifying work, study, family or HSP status before planning a multi-year move.",
     ),
     "move-to-south-korea": (
         "Seoul has the best IT ecosystem in Asia outside Tokyo — Samsung, Kakao, Naver, Krafton. Internet is 500–1,000 Mbps for $20–30/month.",
@@ -2054,21 +2130,28 @@ RU_COUNTRY_DATA: dict[str, dict] = {
         "top_cities": ["Тайбэй", "Тайчжун", "Тайнань", "Гаосюн"],
     },
     "move-to-japan": {
-        "budget": "$1 500–2 500",
+        "budget": "¥200 000–300 000",
         "climate": "Умеренный",
         "english": "Низкий",
-        "visa_label": "Digital Nomad / HSP",
-        "description": "Фукуока — дешевле Токио ($600–1 000/мес 1BR), Digital Nomad Visa 6 мес. без продления (повторный въезд только через 3+ мес.). Токио: 1BR в приличном районе $1 000–1 800/мес + коммунальные $100–200. HSP (High Skill Professional) — путь к долгому stay через работодателя или балльную систему.",
+        "visa_label": "Digital Nomad / Work / HSP",
+        "description": "Япония подходит и для шестимесячного теста, и для долгого переезда — но это разные маршруты. Digital Nomad даёт до 6 месяцев без продления, требует доход от ¥10 млн в год и медицинскую страховку с покрытием от ¥10 млн; карта резидента не выдаётся. Для переезда на годы нужен рабочий, учебный, семейный или Highly Skilled Professional статус.",
         "visas": [
-            ("Digital Nomad Visa", "До 6 мес., не продлевается", "10M+ JPY/год (~$65K+)", "Краткосрочная база для remote workers"),
-            ("Working Holiday", "До 1 года", "18–30 лет (зависит от гражданства)", "Молодые специалисты, путешественники"),
-            ("High-Skill Professional (HSP)", "1–5 лет, путь к ПМЖ", "Система очков: должность, образование, доход", "Квалифицированные специалисты"),
-            ("Specified Skilled Worker (SSW)", "До 5 лет", "Тест навыков и базовый японский", "Специальности с дефицитом кадров"),
+            ("Digital Nomad", "6 месяцев, без продления", "Допустимое гражданство; доход от ¥10 млн/год; страховка от ¥10 млн", "Удалённая работа на иностранную компанию или клиентов"),
+            ("Рабочий статус", "Зависит от категории", "Японский работодатель или иной спонсор; Certificate of Eligibility", "Переезд ради конкретной квалифицированной работы"),
+            ("Highly Skilled Professional", "До 5 лет", "От 70 баллов: образование, опыт, доход и другие критерии", "Специалисты, которым важны льготы и ускоренный путь к ПМЖ"),
+            ("Working Holiday", "Обычно до 1 года", "Только граждане стран соглашения; возраст и условия зависят от страны", "Молодые путешественники с правом подрабатывать"),
         ],
-        "costs": ("$1 500–2 500", "$700–1 500", "$300–600", "$50–150"),
-        "pros": ["Безопасность абсолютная — Япония в топ-1 в мире по любым индексам", "Фукуока: 1BR $600–1 000/мес, Digital Nomad Visa без бюрократии (6 мес.)", "Транспорт — электрички и метро по расписанию с точностью до минуты", "Медицина через регистрацию по месту жительства — национальный стандарт"],
-        "cons": ["Digital Nomad Visa — строго 6 мес., не продлевается; повторный въезд с перерывом 3+ мес.", "Токио: 1BR $1 000–1 800/мес (+ кейкин-залог 1–2 мес. при первичной аренде)", "Японский язык критически важен для жизни вне туристических районов", "Бюрократия на японском: открытие счёта, регистрация адреса, медицина — на японском"],
+        "costs": ("¥200 000–300 000", "¥70 000–180 000", "¥45 000–80 000", "¥8 000–25 000"),
+        "pros": ["В крупных городах можно жить без автомобиля благодаря плотному общественному транспорту", "Долгосрочные резиденты, которые соответствуют условиям, получают доступ к системе публичного медицинского страхования", "Токио, Осака, Фукуока, Киото и Саппоро дают заметно разные бюджет и ритм жизни", "Digital Nomad позволяет легально протестировать страну до шести месяцев без японского работодателя"],
+        "cons": ["Digital Nomad — не путь к резидентству: продления и карты резидента нет; повторная подача возможна только через 6 месяцев после выезда", "При обычной аренде стартовый платёж может включать депозит, key money, комиссию агентства и гарантийную компанию", "Японский язык существенно влияет на выбор работы, жилья, врача и решение бытовых вопросов", "Землетрясения, тайфуны и климатические различия требуют отдельного плана по городу"],
         "top_cities": ["Токио", "Осака", "Фукуока", "Киото", "Саппоро"],
+        "city_profiles": [
+            ("Токио", "¥250 000–380 000", "Карьера, международные сервисы, крупнейшее сообщество", "Самая дорогая аренда, компактное жильё и часы пик"),
+            ("Осака", "¥200 000–300 000", "Большой город, еда, бизнес и более расслабленный ритм", "Меньше международных вакансий, чем в Токио"),
+            ("Фукуока", "¥170 000–260 000", "Компактная база, tech-среда, аэропорт близко к центру", "Меньший рынок труда и жаркое влажное лето"),
+            ("Киото", "¥200 000–300 000", "Культура, университеты и спокойные жилые районы", "Туристическая нагрузка и сезонные пики"),
+            ("Саппоро", "¥170 000–260 000", "Природа, пространство и прохладное лето", "Снежная зима и более узкий рынок международной работы"),
+        ],
     },
     "move-to-singapore": {
         "budget": "$2 500–4 500",
@@ -3377,26 +3460,33 @@ COUNTRY_EN_DATA: dict[str, dict] = {
         "top_cities": ["Taipei", "Taichung", "Tainan", "Kaohsiung"],
     },
     "move-to-japan": {
-        "description": "Fukuoka is cheaper than Tokyo ($600–1,000/month 1BR), Digital Nomad Visa requires minimal bureaucracy for a 6-month stay. Tokyo: 1BR in a decent area $1,000–1,800/month plus $100–200 utilities. HSP (High Skill Professional) is the path to long-term stay via employer or points system.",
+        "description": "Japan can work as a six-month trial or a long-term relocation, but those are different legal routes. Digital Nomad permits up to six months with no extension, requires annual income of at least JPY 10 million and medical coverage of at least JPY 10 million, and does not issue a residence card. A multi-year move normally needs work, study, family or Highly Skilled Professional status.",
         "visas": [
-            ("Digital Nomad Visa", "Up to 6 months, non-renewable", "10M+ JPY/year (~$65K+)", "Short-term base for remote workers"),
-            ("Working Holiday", "Up to 1 year", "Aged 18–30 (depends on nationality)", "Young professionals, travellers"),
-            ("High-Skill Professional (HSP)", "1–5 years, path to PR", "Points system: role, education, income", "Qualified professionals"),
-            ("Specified Skilled Worker (SSW)", "Up to 5 years", "Skills test and basic Japanese", "Shortage occupations"),
+            ("Digital Nomad", "6 months, no extension", "Eligible nationality; JPY 10m+ annual income; JPY 10m+ medical coverage", "Remote work for a foreign employer or overseas clients"),
+            ("Work status", "Depends on the category", "Japanese employer or other sponsor; Certificate of Eligibility", "A move tied to a qualifying job"),
+            ("Highly Skilled Professional", "Up to 5 years", "70+ points from education, experience, income and other criteria", "Qualified professionals seeking benefits and a faster PR route"),
+            ("Working Holiday", "Usually up to 1 year", "Partner-country nationality; age and conditions vary by agreement", "Young travellers who want incidental work rights"),
         ],
         "pros": [
-            "Absolute safety — Japan ranks #1 globally on every safety index",
-            "Fukuoka: 1BR $600–1,000/month, Digital Nomad Visa without heavy bureaucracy (6 months)",
-            "Transport — trains and metros run to the minute with no delays",
-            "Healthcare via residential registration — national standard coverage",
+            "Dense public transport makes car-free life realistic in the major cities",
+            "Eligible long-term residents can join Japan's public health-insurance system",
+            "Tokyo, Osaka, Fukuoka, Kyoto and Sapporo offer materially different costs and lifestyles",
+            "Digital Nomad provides a legal six-month test without a Japanese employer",
         ],
         "cons": [
-            "Digital Nomad Visa — strictly 6 months, non-renewable; re-entry requires a 3+ month gap",
-            "Tokyo: 1BR $1,000–1,800/month (plus key money deposit of 1–2 months at initial rental)",
-            "Japanese is critical for life outside tourist districts",
-            "All bureaucracy in Japanese: bank accounts, address registration, medical care",
+            "Digital Nomad is not a residence path: there is no extension or residence card, and a new stay is possible only after six months outside Japan",
+            "A standard rental can require a deposit, key money, agency fee and guarantor-company fee before move-in",
+            "Japanese ability materially changes access to jobs, housing, healthcare and everyday administration",
+            "Earthquakes, typhoons and major climate differences require city-specific planning",
         ],
         "top_cities": ["Tokyo", "Osaka", "Fukuoka", "Kyoto", "Sapporo"],
+        "city_profiles": [
+            ("Tokyo", "JPY 250k–380k", "Careers, international services and the largest expat network", "Highest rents, compact homes and crowded commutes"),
+            ("Osaka", "JPY 200k–300k", "Big-city services, food and a more relaxed rhythm", "Fewer international roles than Tokyo"),
+            ("Fukuoka", "JPY 170k–260k", "A compact base, startup scene and central airport", "Smaller labour market and hot, humid summers"),
+            ("Kyoto", "JPY 200k–300k", "Culture, universities and quieter residential districts", "Tourist pressure and seasonal crowding"),
+            ("Sapporo", "JPY 170k–260k", "Nature, space and cooler summers", "Snowy winters and a narrower international job market"),
+        ],
     },
     "move-to-singapore": {
         "description": "Employment Pass from 2025 requires $5,900/month salary. 1BR in the centre (CBD, Holland V, Orchard) is $2,500–4,000/month. Independent residency without an employer is practically impossible — EntrePass is for funded startups only. Changi Airport is the best transit hub for Asia and Europe.",
@@ -5261,6 +5351,9 @@ def ru_country_comparison_links(slug: str) -> str:
 
 
 def ru_country_article(slug: str, facts: sqlite3.Row | None) -> str:
+    editorial_source = APP_DIR / "content" / "countries" / f"{slug}-ru.html"
+    if editorial_source.exists():
+        return editorial_source.read_text(encoding="utf-8")
     data = RU_COUNTRY_DATA.get(slug)
     has_city_profiles = bool(data and data.get("city_profiles"))
     country = ru_country_display(slug)
@@ -5287,6 +5380,10 @@ def ru_country_article(slug: str, facts: sqlite3.Row | None) -> str:
             f"{country} может быть рабочим направлением, если совпадают виза, бюджет и бытовая среда.",
             "Главный риск — выбирать страну по впечатлению, не проверив легальный срок stay, медицину и расходы.",
         ),
+    )
+    hero_title = RU_COUNTRY_H1.get(
+        slug,
+        f"Переезд {destination}: визы, расходы и реальная логика выбора",
     )
 
     search_faq = country_search_faq_html(slug, "ru")
@@ -5317,7 +5414,7 @@ def ru_country_article(slug: str, facts: sqlite3.Row | None) -> str:
         return f"""
 <div class="rta-hero-card rta-country-hero">
   <div class="rta-country-kicker"><span class="rta-country-flag">{flag}</span><span>Гид по стране · 2026</span></div>
-  <h1>Переезд {html.escape(destination)}: визы, расходы и реальная логика выбора</h1>
+  <h1>{html.escape(hero_title)}</h1>
   <p>{html.escape(note)}</p>
   <div class="rta-country-hero-actions">
     <a class="rta-country-primary" href="#ru-overview">Начать проверку</a>
@@ -5389,7 +5486,7 @@ def ru_country_article(slug: str, facts: sqlite3.Row | None) -> str:
       <h2 class="ep-h2">{city_section_heading}</h2>
       <p class="ep-p">Страновой средний бюджет мало помогает при выборе жилья. Сравнивайте город, район и сезон — именно они определяют реальную стоимость и повседневный ритм.</p>
       <div class="ep-table-wrap">
-        <table class="ep-table ep-city-table">
+        <table class="ep-table ep-city-table" style="min-width:760px;">
           <thead><tr><th>{city_first_column}</th><th>Ориентир / мес.</th><th>Лучше всего для</th><th>Главный компромисс</th></tr></thead>
           <tbody>{city_rows}</tbody>
         </table>
@@ -5405,7 +5502,7 @@ def ru_country_article(slug: str, facts: sqlite3.Row | None) -> str:
   <div class="rta-country-hero-grid">
     <div class="rta-country-hero-copy">
       <div class="rta-country-kicker"><span class="rta-country-flag">{flag}</span><span>Гид по стране · 2026</span></div>
-      <h1>Переезд {html.escape(destination)}: визы, расходы и реальная логика выбора</h1>
+      <h1>{html.escape(hero_title)}</h1>
       <p>{html.escape(description)}</p>
       <div class="rta-country-hero-actions">
         <a class="rta-country-primary" href="#ru-visas">Проверить визы</a>
@@ -5449,7 +5546,7 @@ def ru_country_article(slug: str, facts: sqlite3.Row | None) -> str:
       <h2 class="ep-h2">Визовые маршруты в 2026 году</h2>
       <p class="ep-p">Условия регулярно обновляются. Проверяйте актуальные требования на официальных государственных ресурсах перед подачей.</p>
       <div class="ep-table-wrap">
-        <table class="ep-table">
+        <table class="ep-table" style="min-width:720px;">
           <thead><tr><th>Виза</th><th>Срок</th><th>Ключевые требования</th><th>Кому подходит</th></tr></thead>
           <tbody>{visa_rows}</tbody>
         </table>
@@ -5531,8 +5628,12 @@ _ENGLISH_EN = {
 
 
 def en_country_article(slug: str, facts: sqlite3.Row | None) -> str:
+    editorial_source = APP_DIR / "content" / "countries" / f"{slug}-en.html"
+    if editorial_source.exists():
+        return editorial_source.read_text(encoding="utf-8")
     en_data = COUNTRY_EN_DATA.get(slug)
     ru_data = RU_COUNTRY_DATA.get(slug)
+    has_city_profiles = bool(en_data and en_data.get("city_profiles"))
     country = COUNTRY_EN_NAMES.get(slug, slug.replace("move-to-", "").replace("-", " ").title())
     capital = facts["capital"] if facts and facts["capital"] else "N/A"
     capital_label = "Country / region" if slug == "move-to-sharm-el-sheikh" else "Capital"
@@ -5553,13 +5654,33 @@ def en_country_article(slug: str, facts: sqlite3.Row | None) -> str:
             "The main risk is choosing a country based on impression without verifying legal stay, healthcare and real costs.",
         ),
     )
+    hero_title = EN_COUNTRY_H1.get(
+        slug,
+        f"Move to {country}: Visas, Costs and the Real Logic of Relocation",
+    )
 
     search_faq = country_search_faq_html(slug, "en")
     search_faq_link = '<a href="#en-search-questions">Questions</a>' if search_faq else ""
+    city_toc_link = '<a href="#en-cities">Cities</a>' if has_city_profiles else ""
+    decision_sections = COUNTRY_DEPTH_DATA.get(slug, {}).get("en", {}).get("sections", [])[3:]
+    decision_link = '<a href="#en-planning">Plan</a>' if decision_sections else ""
+    decision_cards = "".join(
+        f'<article class="rta-country-decision-card"><h3>{html.escape(title)}</h3>'
+        f'<p>{html.escape(body)}</p></article>'
+        for title, body in decision_sections
+    )
+    decision_html = (
+        '<div class="ep-section" id="en-planning">'
+        '<p class="ep-section-label">Relocation Plan</p>'
+        f'<h2 class="ep-h2">How To Plan A Move To {html.escape(country)}</h2>'
+        '<p class="ep-p">Use these steps to turn a country shortlist into a decision you can test before making expensive commitments.</p>'
+        f'<div class="rta-country-decision-grid">{decision_cards}</div></div>'
+        if decision_cards else ""
+    )
     jump_nav_html = f"""
     <nav class="rta-country-jumpnav" aria-label="Page sections">
       <a href="#en-overview">Overview</a><a href="#en-visas">Visas</a><a href="#en-costs">Budget</a>
-      <a href="#en-proscons">Fit</a>{search_faq_link}
+      {city_toc_link}{decision_link}<a href="#en-proscons">Fit</a>{search_faq_link}
     </nav>"""
     facts_band_html = f"""
     <section class="rta-country-pulse" aria-label="Key country facts">
@@ -5575,7 +5696,7 @@ def en_country_article(slug: str, facts: sqlite3.Row | None) -> str:
         return f"""
 <div class="rta-hero-card rta-country-hero">
   <div class="rta-country-kicker"><span class="rta-country-flag">{flag}</span><span>Country guide · 2026</span></div>
-  <h1>Move to {html.escape(country)}: Visas, Costs and the Real Logic of Relocation</h1>
+  <h1>{html.escape(hero_title)}</h1>
   <p>{html.escape(note)}</p>
   <div class="rta-country-hero-actions"><a class="rta-country-primary" href="#en-overview">Start the check</a><a class="rta-country-secondary" href="/compare/">Compare countries</a></div>
 </div>
@@ -5605,6 +5726,7 @@ def en_country_article(slug: str, facts: sqlite3.Row | None) -> str:
     visa_label = ru_data["visa_label"]
     costs = ru_data["costs"]
     cities = en_data.get("top_cities") or ru_data.get("top_cities", [])
+    city_profiles = en_data.get("city_profiles", [])
     description = en_data["description"]
     visas = en_data["visas"]
     pros = en_data["pros"]
@@ -5625,6 +5747,27 @@ def en_country_article(slug: str, facts: sqlite3.Row | None) -> str:
         + " &middot; ".join(html.escape(c) for c in cities)
         + "</p>"
     ) if cities else ""
+    city_rows = "".join(
+        f"<tr><td><strong>{html.escape(city)}</strong></td>"
+        f"<td>{html.escape(city_budget)}</td>"
+        f"<td>{html.escape(best_for)}</td>"
+        f"<td>{html.escape(tradeoff)}</td></tr>"
+        for city, city_budget, best_for, tradeoff in city_profiles
+    )
+    city_section = f"""
+    <section class="ep-section ep-country-cities" id="en-cities">
+      <p class="ep-section-label">City Choice</p>
+      <h2 class="ep-h2">Which Japanese City Fits Your Move?</h2>
+      <p class="ep-p">A national average is a weak housing guide. Compare the city, neighbourhood and season because they shape both the real budget and the daily routine.</p>
+      <div class="ep-table-wrap">
+        <table class="ep-table ep-city-table" style="min-width:760px;">
+          <thead><tr><th>City</th><th>Planning range / mo.</th><th>Best for</th><th>Main trade-off</th></tr></thead>
+          <tbody>{city_rows}</tbody>
+        </table>
+      </div>
+      <p class="ep-data-note">Editorial planning ranges for one person using a long-term rental. Flights, visa costs, insurance and housing setup are separate.</p>
+    </section>
+    """ if city_rows else ""
     primary_visa = html.escape(visa_label.split("/")[0].strip())
 
     return f"""
@@ -5632,7 +5775,7 @@ def en_country_article(slug: str, facts: sqlite3.Row | None) -> str:
   <div class="rta-country-hero-grid">
     <div class="rta-country-hero-copy">
       <div class="rta-country-kicker"><span class="rta-country-flag">{flag}</span><span>Country guide · 2026</span></div>
-      <h1>Move to {html.escape(country)}: Visas, Costs and the Real Logic of Relocation</h1>
+      <h1>{html.escape(hero_title)}</h1>
       <p>{html.escape(description)}</p>
       <div class="rta-country-hero-actions"><a class="rta-country-primary" href="#en-visas">Check visas</a><a class="rta-country-secondary" href="#en-costs">See the budget</a></div>
       <div class="rta-country-hero-meta"><span>Updated 2026</span><span>6-minute overview</span></div>
@@ -5663,8 +5806,8 @@ def en_country_article(slug: str, facts: sqlite3.Row | None) -> str:
       <h2 class="ep-h2">Visa Routes in 2026</h2>
       <p class="ep-p">Conditions change regularly. Verify current requirements on official government sources before applying.</p>
       <div style="overflow-x:auto;">
-        <table class="ep-table">
-          <thead><tr><th>Visa</th><th>Duration</th><th>Key Requirements</th><th>Who It's For</th></tr></thead>
+        <table class="ep-table" style="min-width:720px;">
+          <thead><tr><th>Visa</th><th style="white-space:nowrap;">Duration</th><th>Key Requirements</th><th>Who It's For</th></tr></thead>
           <tbody>{visa_rows}</tbody>
         </table>
       </div>
@@ -5698,6 +5841,10 @@ def en_country_article(slug: str, facts: sqlite3.Row | None) -> str:
       <p class="ep-p" style="font-size:13px;color:#888;margin-top:8px;">Excludes insurance, visa fees, flights and setup costs.</p>
       {cities_line}
     </div>
+
+    {city_section}
+
+    {decision_html}
 
     <div class="ep-section" id="en-proscons">
       <p class="ep-section-label">Analysis</p>
@@ -5863,8 +6010,9 @@ def _ru_countries_catalog_content() -> str:
 
     def country_row(slug: str) -> str:
         data = RU_COUNTRY_DATA[slug]
+        public_slug = country_public_slug(slug)
         return f"""
-        <a class="rta-directory-row" href="/ru/countries/{slug}/">
+        <a class="rta-directory-row" href="/ru/countries/{public_slug}/">
           <span class="rta-directory-flag" aria-hidden="true">{COUNTRY_FLAGS.get(slug, '✦')}</span>
           <span class="rta-directory-copy"><strong>{html.escape(ru_country_display(slug))}</strong><small>{html.escape(catalog_notes[slug])}</small></span>
           <span class="rta-directory-meta"><b>{html.escape(data['budget'])}</b><small>{html.escape(data['visa_label'])}</small></span>
@@ -6017,7 +6165,8 @@ def _en_countries_catalog_content() -> str:
 
     def row(slug: str) -> str:
         data = RU_COUNTRY_DATA[slug]
-        return f"""<a class="rta-directory-row" href="/countries/{slug}/"><span class="rta-directory-flag" aria-hidden="true">{COUNTRY_FLAGS.get(slug, '✦')}</span><span class="rta-directory-copy"><strong>{html.escape(COUNTRY_EN_NAMES[slug])}</strong><small>{html.escape(notes[slug])}</small></span><span class="rta-directory-meta"><b>{html.escape(_normalize_budget_en(data['budget']))}</b><small>{html.escape(data['visa_label'])}</small></span><span class="rta-directory-arrow" aria-hidden="true">↗</span></a>"""
+        public_slug = country_public_slug(slug)
+        return f"""<a class="rta-directory-row" href="/countries/{public_slug}/"><span class="rta-directory-flag" aria-hidden="true">{COUNTRY_FLAGS.get(slug, '✦')}</span><span class="rta-directory-copy"><strong>{html.escape(COUNTRY_EN_NAMES[slug])}</strong><small>{html.escape(notes[slug])}</small></span><span class="rta-directory-meta"><b>{html.escape(_normalize_budget_en(data['budget']))}</b><small>{html.escape(data['visa_label'])}</small></span><span class="rta-directory-arrow" aria-hidden="true">↗</span></a>"""
 
     region_html = "".join(f'<section class="rta-directory-region"><header><p>{subtitle}</p><h3>{title}</h3></header><div>{"".join(row(slug) for slug in slugs)}</div></section>' for title, subtitle, slugs in regions)
     scenarios = [
@@ -6070,6 +6219,20 @@ def _ru_guides_catalog_content() -> str:
                 ("10", "Бюджет", "Где жить в Азии на $1 500 в месяц", "Города и компромиссы, которые скрываются за средними ценами по стране.", "where-to-live-in-asia-on-1500-a-month"),
             ],
         ),
+        (
+            "Повседневная жизнь после переезда",
+            "Практические системы, которые определяют обычную неделю: жильё, медицина, деньги, транспорт, работа, налоги и адаптация.",
+            [
+                ("11", "Безопасность", "Как проверить страну, город и район", "Преступность, законы, дороги, медицина, стихийные риски и личный сценарий.", "safety"),
+                ("12", "Жильё", "Как безопасно арендовать жильё", "Проверка объекта и владельца, договор, депозит, оплата и первые недели.", "housing-rent"),
+                ("13", "Адаптация", "Культура и язык в первые 30 дней", "Бытовые процессы, рабочая коммуникация и точки поддержки без туристических клише.", "culture-language"),
+                ("14", "Работа", "Работа и бизнес: легальный маршрут", "Местный найм, удалённая работа и управление компанией требуют разных разрешений.", "jobs-business"),
+                ("15", "Медицина", "Страховка и выбор клиник", "Право на систему, сеть клиник, исключения полиса и план экстренной помощи.", "healthcare"),
+                ("16", "Деньги", "Банковские счета, KYC и переводы", "Документы, источник средств, налоговое резидентство и резервный платёжный контур.", "banking"),
+                ("17", "Транспорт", "Вождение, права и городской транспорт", "МВУ, местные права, страховка, дороги и выбор жизни без автомобиля.", "driving-transport"),
+                ("18", "Налоги", "Налоговое резидентство и доходы", "Дни, источник дохода, переводы, соглашения и обязанности в стране выезда.", "taxes"),
+            ],
+        ),
     ]
 
     def guide_row(item: tuple[str, str, str, str, str]) -> str:
@@ -6100,8 +6263,8 @@ def _ru_guides_catalog_content() -> str:
       <div class="rta-guides-actions"><a href="#guide-library">Найти свой вопрос</a><a href="/ru/countries/">Сначала выбрать страну</a></div>
     </div>
     <aside aria-label="О библиотеке">
-      <div><strong>10</strong><span>практических гайдов</span></div>
-      <div><strong>3</strong><span>типа решений</span></div>
+      <div><strong>18</strong><span>практических гайдов</span></div>
+      <div><strong>4</strong><span>типа решений</span></div>
       <div><strong>0</strong><span>продаж визовых услуг</span></div>
     </aside>
   </header>
@@ -8319,6 +8482,9 @@ def add_ru_thailand_visa_overview_link(slug: str, content: str) -> str:
 
 def localized_guide_content(slug: str, title: str, content: str) -> tuple[str, str]:
     title = RU_GUIDE_TITLES.get(slug, title)
+    editorial_source = APP_DIR / "content" / "guides" / f"{slug}-ru.html"
+    if editorial_source.exists():
+        return title, editorial_source.read_text(encoding="utf-8")
     guide_content = ru_guide_article(slug, title)
     if guide_content:
         return title, add_ru_thailand_visa_overview_link(slug, guide_content)
@@ -9277,14 +9443,14 @@ def page_or_404(slug: str, parent: str | None = None) -> sqlite3.Row:
 # ── Routes ────────────────────────────────────────────────────────────────────
 
 COUNTRY_INTERNAL_LINKS = [
-    ("japan", "yaponiya", "Япони", "/countries/move-to-japan/", "Move to Japan", "Переезд в Японию"),
+    ("japan", "yaponiya", "Япони", "/countries/japan/", "Move to Japan", "Переезд в Японию"),
     ("taiwan", "Тайван", "/countries/move-to-taiwan/", "Move to Taiwan", "Переезд на Тайвань"),
     ("indonesia", "bali", "Бали", "Индонез", "/countries/move-to-bali/", "Move to Bali", "Переезд на Бали"),
     ("thailand", "tailand", "Таиланд", "/countries/move-to-thailand/", "Move to Thailand", "Переезд в Таиланд"),
     ("philippines", "Филиппин", "/countries/move-to-philippines/", "Move to Philippines", "Переезд на Филиппины"),
     ("south-korea", "korea", "Коре", "/countries/move-to-south-korea/", "Move to South Korea", "Переезд в Южную Корею"),
     ("singapore", "Сингапур", "/countries/move-to-singapore/", "Move to Singapore", "Переезд в Сингапур"),
-    ("hong-kong", "Гонконг", "/countries/move-to-china/", "Move to China", "Переезд в Китай"),
+    ("hong-kong", "Гонконг", "/countries/hong-kong/", "Move to Hong Kong", "Переезд в Гонконг"),
     ("vietnam", "Вьетнам", "/countries/move-to-vietnam/", "Move to Vietnam", "Переезд во Вьетнам"),
     ("cambodia", "Камбодж", "/countries/move-to-cambodia/", "Move to Cambodia", "Переезд в Камбоджу"),
     ("sri-lanka", "Шри-Ланк", "/countries/move-to-sri-lanka/", "Move to Sri Lanka", "Переезд на Шри-Ланку"),
@@ -9762,6 +9928,12 @@ def page_source_panel(path: str, *, lang: str) -> dict | None:
         "/ru/guides/": ["japan", "thailand_dtv", "thailand_ltr", "malaysia", "taiwan", "vietnam"],
         "/compare/": ["world_bank", "thailand_dtv", "malaysia", "taiwan", "japan", "vietnam"],
         "/ru/compare/": ["world_bank", "thailand_dtv", "malaysia", "taiwan", "japan", "vietnam"],
+        "/compare/cost-of-living/": ["cost_compare"],
+        "/ru/compare/cost-of-living/": ["cost_compare"],
+        "/compare/rankings/": ["ranking_general"],
+        "/ru/compare/rankings/": ["ranking_general"],
+        "/compare/safest-countries/": ["safety_general", "road_safety"],
+        "/ru/compare/safest-countries/": ["safety_general", "road_safety"],
         "/retire-in-asia/": ["world_bank", "philippines", "thailand_retirement", "thailand_ltr", "thailand_privilege", "malaysia"],
         "/ru/retire-in-asia/": ["world_bank", "philippines", "thailand_retirement", "thailand_ltr", "thailand_privilege", "malaysia"],
         "/digital-nomad-visas-asia/": ["japan", "taiwan", "indonesia", "thailand_dtv", "malaysia", "south-korea", "uae"],
@@ -9772,14 +9944,80 @@ def page_source_panel(path: str, *, lang: str) -> dict | None:
         "/ru/best-countries-in-asia-to-move/": ["world_bank", "thailand_dtv", "thailand_ltr", "thailand_privilege", "malaysia", "taiwan", "japan", "vietnam", "indonesia", "philippines", "singapore", "uae", "cambodia"],
         "/cheapest-countries-in-asia/": ["world_bank", "vietnam", "indonesia", "malaysia", "philippines", "cambodia", "thailand_dtv"],
         "/ru/cheapest-countries-in-asia/": ["world_bank", "vietnam", "indonesia", "malaysia", "philippines", "cambodia", "thailand_dtv"],
+        "/tools/country-finder/": ["world_bank", "thailand_dtv", "malaysia", "taiwan", "japan", "singapore", "hong-kong"],
+        "/ru/tools/country-finder/": ["world_bank", "thailand_dtv", "malaysia", "taiwan", "japan", "singapore", "hong-kong"],
+        "/visas/residency-citizenship/": ["thailand_ltr", "malaysia", "taiwan", "japan", "singapore", "hong-kong"],
+        "/ru/visas/residency-citizenship/": ["thailand_ltr", "malaysia", "taiwan", "japan", "singapore", "hong-kong"],
+        "/visas/work-visas/": ["singapore", "hong-kong", "japan", "taiwan", "malaysia", "south-korea"],
+        "/ru/visas/work-visas/": ["singapore", "hong-kong", "japan", "taiwan", "malaysia", "south-korea"],
+        "/visas/work/": ["singapore", "hong-kong", "japan", "taiwan", "malaysia", "south-korea"],
+        "/ru/visas/work/": ["singapore", "hong-kong", "japan", "taiwan", "malaysia", "south-korea"],
+        "/visas/long-stay/": ["thailand_dtv", "thailand_ltr", "malaysia", "taiwan", "japan", "philippines", "indonesia"],
+        "/ru/visas/long-stay/": ["thailand_dtv", "thailand_ltr", "malaysia", "taiwan", "japan", "philippines", "indonesia"],
+        "/visas/student/": ["student_visas"],
+        "/ru/visas/student/": ["student_visas"],
     }
     simple_source_keys = simple_source_map.get(path)
-    country_match = re.match(r"^/(?:ru/)?countries/move-to-([^/]+)/$", path)
+    country_match = re.match(r"^/(?:ru/)?countries/(?:move-to-)?([^/]+)/$", path)
     compare_match = re.match(r"^/(?:ru/)?compare/([^/]+)/$", path)
     if not guide_match and not is_visa_hub and not country_match and not compare_match and not simple_source_keys:
         return None
 
     sources = {
+        "driving_general": [
+            _official_source("WHO: Road Traffic Injuries", "https://www.who.int/news-room/fact-sheets/detail/road-traffic-injuries", "Global road-risk evidence and vulnerable-road-user context.", "Глобальные данные о дорожных рисках и уязвимых участниках движения.", lang=lang),
+            _official_source("Japan NPA: Traffic Rules And Foreign Licences", "https://www.npa.go.jp/english/bureau/traffic/", "Official rules for foreign licences, qualifying international permits and driving in Japan.", "Официальные правила иностранных прав, подходящих международных удостоверений и вождения в Японии.", lang=lang),
+            _official_source("Singapore Police: Singapore Driving Licence", "https://www.police.gov.sg/Knowledge-Hub/Traffic/Traffic-Matters/Singapore-Driving-Licence", "Official visitor, resident and licence-conversion guidance.", "Официальные правила для туристов и резидентов, включая обмен водительских прав.", lang=lang),
+        ],
+        "tax_general": [
+            _official_source("Thailand Revenue Department: Personal Income Tax", "https://www.rd.go.th/english/6045.html", "Official residence, Thai-source income and assessable-income overview.", "Официальный обзор резидентства, дохода из источников в Таиланде и налогооблагаемого дохода.", lang=lang),
+            _official_source("Singapore IRAS: Working Out My Tax Residency", "https://www.iras.gov.sg/taxes/individual-income-tax/basics-of-individual-income-tax/tax-residency-and-tax-rates/working-out-my-tax-residency", "Official individual tax-residence tests and links to current rates.", "Официальные тесты налогового резидентства физлица и ссылки на актуальные ставки.", lang=lang),
+            _official_source("Malaysia HASiL: Residence Status", "https://www.hasil.gov.my/en/individu/taraf-mastautin/?isStampsSite=false&lang=en", "Official residence tests, including linked-period rules beyond a simple day count.", "Официальные тесты резидентства, включая связанные периоды, а не только простой подсчёт дней.", lang=lang),
+            _official_source("Hong Kong IRD: Individuals", "https://www.ird.gov.hk/eng/tax/ind.htm", "Official entry point for salaries tax, personal assessment and taxpayer obligations.", "Официальный раздел о налоге на зарплату, персональном расчёте и обязанностях налогоплательщика.", lang=lang),
+        ],
+        "cost_compare": [
+            _official_source("Numbeo: Cost Of Living Comparison", "https://www.numbeo.com/cost-of-living/comparison.jsp", "A current crowdsourced city-comparison reference; verify important prices locally.", "Актуальный краудсорсинговый ориентир по городам; важные цены нужно перепроверять на месте.", lang=lang),
+            _official_source("World Bank: Purchasing Power Parity", "https://data.worldbank.org/indicator/PA.NUS.PPP", "Country-level purchasing-power context; not a substitute for a household budget.", "Контекст покупательной способности на уровне страны; не заменяет личный бюджет домохозяйства.", lang=lang),
+        ],
+        "ranking_general": [
+            _official_source("Institute for Economics & Peace: Global Peace Index 2026", "https://gpi.economicsandpeace.org/", "Country-level peace ranking used as one input, not a complete relocation score.", "Страновой индекс мира используется как один из факторов, а не как полный рейтинг для переезда.", lang=lang),
+            _official_source("World Bank: Worldwide Governance Indicators", "https://www.worldbank.org/en/publication/worldwide-governance-indicators", "Six governance dimensions with uncertainty ranges and perception-based inputs.", "Шесть измерений качества управления с диапазонами неопределённости и данными восприятия.", lang=lang),
+            _official_source("Numbeo: Asia Cost Of Living Index", "https://www.numbeo.com/cost-of-living/rankings_current.jsp?region=142", "Current city-level cost signal used only as a directional comparison.", "Текущий ориентир стоимости по городам, используемый только для относительного сравнения.", lang=lang),
+        ],
+        "road_safety": [
+            _official_source("WHO: Road Traffic Injuries", "https://www.who.int/news-room/fact-sheets/detail/road-traffic-injuries", "Global road-death and injury evidence for relocation risk assessment.", "Глобальные данные о смертности и травмах на дорогах для оценки риска переезда.", lang=lang),
+            _official_source("WHO South-East Asia: Road Safety Report", "https://www.who.int/southeastasia/publications/i/item/9789290210797", "Regional road-safety evidence for South-East Asia.", "Региональные данные по безопасности дорожного движения в Юго-Восточной Азии.", lang=lang),
+        ],
+        "safety_general": [
+            _official_source("Institute for Economics & Peace: Global Peace Index", "https://www.economicsandpeace.org/global-peace-index/", "Country-level peace and conflict methodology; use alongside city and personal checks.", "Методика оценки мира и конфликтов на уровне страны; использовать вместе с проверкой города и личных рисков.", lang=lang),
+            _official_source("US Department of State: Travel Advisories", "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories.html/", "Current operational warnings published by the issuing government.", "Актуальные операционные предупреждения государства-эмитента.", lang=lang),
+            _official_source("UK FCDO: Foreign Travel Advice", "https://www.gov.uk/foreign-travel-advice", "Country and regional warnings, entry context and insurance implications.", "Предупреждения по странам и регионам, условия въезда и влияние на страховку.", lang=lang),
+            _official_source("World Bank GFDRR: ThinkHazard", "https://thinkhazard.org/", "Initial screening for flood, earthquake, heat and other natural hazards.", "Первичный скрининг наводнений, землетрясений, жары и других природных угроз.", lang=lang),
+        ],
+        "housing_general": [
+            _official_source("US Federal Trade Commission: Rental Listing Scams", "https://consumer.ftc.gov/articles/rental-listing-scams", "Official consumer guidance on fake listings, advance payments and verification.", "Официальная памятка о фальшивых объявлениях, предоплате и проверке объекта.", lang=lang),
+            _official_source("CCPC: Housing And Accommodation Scams", "https://www.ccpc.ie/consumers/money/scams/housing-accommodation-scams/", "Consumer-authority warning signs and payment precautions.", "Признаки мошенничества и меры предосторожности при оплате от органа защиты потребителей.", lang=lang),
+        ],
+        "culture_general": [
+            _official_source("World Health Organization: Mental Health", "https://www.who.int/news-room/fact-sheets/detail/mental-health-strengthening-our-response", "Health boundary for persistent or severe distress; the guide does not diagnose.", "Граница для стойкого или тяжёлого состояния; гайд не ставит диагноз.", lang=lang),
+        ],
+        "healthcare_general": [
+            _official_source("World Health Organization: Universal Health Coverage", "https://www.who.int/health-topics/universal-health-coverage", "Framework for access, service quality and financial protection; national eligibility still varies.", "Рамка доступности, качества и финансовой защиты; право на национальную систему зависит от страны.", lang=lang),
+            _official_source("WHO: International Travel And Health", "https://www.who.int/health-topics/travel-and-health", "Official health preparation and travel-risk guidance.", "Официальные рекомендации по подготовке здоровья и рискам поездки.", lang=lang),
+            _official_source("Joint Commission International: Accredited Organizations", "https://www.jointcommissioninternational.org/who-we-are/accredited-organizations/", "Directory for checking international accreditation; accreditation does not replace an insurance-network check.", "Каталог международной аккредитации; аккредитация не заменяет проверку сети страховщика.", lang=lang),
+        ],
+        "banking_general": [
+            _official_source("FATF: Customer Due Diligence", "https://www.fatf-gafi.org/en/publications/Fatfrecommendations/Fatf-recommendations.html", "International customer-identification framework behind bank KYC checks.", "Международная рамка идентификации клиента, на которой основаны банковские KYC-проверки.", lang=lang),
+            _official_source("OECD: Common Reporting Standard", "https://www.oecd.org/en/topics/sub-issues/international-standards-on-tax-transparency/standard-for-automatic-exchange-of-financial-account-information-in-tax-matters.html", "Official standard for automatic exchange of financial account information between participating jurisdictions.", "Официальный стандарт автоматического обмена информацией о финансовых счетах между участвующими юрисдикциями.", lang=lang),
+            _official_source("BIS: Correspondent Banking", "https://www.bis.org/cpmi/publ/d147.htm", "Background on cross-border banking dependencies and due-diligence friction.", "Контекст трансграничных банковских связей и дополнительных проверок.", lang=lang),
+        ],
+        "student_visas": [
+            _official_source("Japan MOFA: General Visa Information", "https://www.mofa.go.jp/j_info/visit/visa/index.html", "Official entry point for Japan visa categories and application guidance.", "Официальная отправная точка по категориям виз Японии и процедуре подачи.", lang=lang),
+            _official_source("Singapore ICA: Student's Pass", "https://www.ica.gov.sg/reside/STP/apply", "Official Student's Pass eligibility and application process.", "Официальные условия Student's Pass и процедура подачи в Сингапуре.", lang=lang),
+            _official_source("Malaysia Education Global Services", "https://educationmalaysia.gov.my/", "Official international-student services and visa application information for Malaysia.", "Официальный портал Малайзии для иностранных студентов и оформления student pass.", lang=lang),
+            _official_source("Korea Visa Portal", "https://www.visa.go.kr/?LANG_TYPE=EN", "Official Korea visa category and application navigator.", "Официальный визовый навигатор Кореи по категориям и процедуре подачи.", lang=lang),
+            _official_source("Taiwan BOCA: Visa Information", "https://www.boca.gov.tw/cp-158-4158-09d5a-2.html", "Official Taiwan visa information for foreign students.", "Официальная информация Тайваня по визам для иностранных студентов.", lang=lang),
+        ],
         "world_bank": [
             _official_source("World Bank Data: Individuals Using The Internet", "https://data.worldbank.org/indicator/IT.NET.USER.ZS", "Public World Bank indicator used to sanity-check internet access context by country.", "Открытые данные по охвату интернета в разных странах — полезно для самопроверки.", lang=lang),
             _official_source("World Bank Data: Population, Total", "https://data.worldbank.org/indicator/SP.POP.TOTL", "Public World Bank population indicator used for country-scale context.", "Открытые данные по населению — помогают понять масштаб страны.", lang=lang),
@@ -9836,16 +10074,14 @@ def page_source_panel(path: str, *, lang: str) -> dict | None:
             _official_source("World Bank Data: Azerbaijan", "https://data.worldbank.org/country/azerbaijan", "Country indicators used for population, income, inflation, internet access and life-expectancy context.", "Страновые показатели населения, дохода, инфляции, доступа к интернету и продолжительности жизни.", lang=lang),
         ],
         "japan": [
-            _official_source("Japan Immigration Services Agency: Digital Nomad / Designated Activities", "https://www.moj.go.jp/isa/applications/status/designatedactivities53_00001.html", "Primary rule page for stay length, activity and no-extension language.", "Здесь прямым текстом: 6 месяцев, не продлевается, работать на японских работодателей нельзя.", lang=lang),
             _official_source("Japan MOFA: Specified Visa For Digital Nomad", "https://www.mofa.go.jp/ca/fna/pagewe_000001_00046.html", "MOFA visa page for documents, income proof and insurance requirements.", "Список документов, требования к доходу и страховке от MOFA.", lang=lang),
-            _official_source("JNTO: Digital Nomad Visa", "https://www.japan.travel/en/plan/digital-nomad-visa/", "Public Japan travel summary of the six-month non-renewable route.", "Краткий официальный обзор: что такое виза, сколько можно находиться и кому подходит.", lang=lang),
-            _official_source("Japan ISA: Designated Activities English Page", "https://www.moj.go.jp/isa/applications/status/designatedactivities10_00001.html?hl=en", "Immigration Services Agency page for the Japanese designated activities status.", "Дополнительная страница ISA по статусу Designated Activities на английском.", lang=lang),
-            _official_source("Japan ISA: Digital Nomad Outline PDF", "https://www.moj.go.jp/isa/content/001422249.pdf", "Official ISA PDF used for route outline and Q&A checks.", "Официальный PDF ISA с разбором условий и ответами на частые вопросы.", lang=lang),
-            _official_source("JNTO: Japan Visa Information", "https://www.japan.travel/en/plan/visa-information/", "Official tourism visa information page linking the digital nomad route.", "Список всех визовых категорий от японского туристического ведомства, с переходом на digital nomad.", lang=lang),
+            _official_source("Japan ISA: Designated Activities English Page", "https://www.moj.go.jp/isa/applications/status/designatedactivities10_00001.html?hl=en", "Immigration Services Agency page for the Japanese designated activities status.", "Страница ISA по статусу Designated Activities: срок, разрешённая деятельность и отсутствие карты резидента.", lang=lang),
+            _official_source("Japan ISA: Digital Nomad Q&A", "https://www.moj.go.jp/isa/content/001422249.pdf", "Official Q&A confirming the six-month maximum, no renewal, six-month wait before a new stay and no residence card.", "Официальные ответы: максимум 6 месяцев, без продления и карты резидента; новый въезд по статусу — после 6 месяцев.", lang=lang),
+            _official_source("Japan MOFA: Working Holiday Programmes", "https://www.mofa.go.jp/j_info/visit/w_holiday/index.html", "Official partner-country, age and programme-condition overview.", "Официальный список стран-партнёров, возраст и общие условия Working Holiday.", lang=lang),
+            _official_source("Japan ISA: Highly Skilled Professional System", "https://www.moj.go.jp/isa/publications/materials/newimmiact_3_index.html", "Official introduction to the points-based route for highly skilled professionals.", "Официальное описание балльной системы Highly Skilled Professional.", lang=lang),
+            _official_source("Japan MHLW: Health Insurance For Foreign Residents", "https://www.mhlw.go.jp/content/12400000/001406614.pdf", "Official overview of public health-insurance eligibility for foreign residents.", "Официальный обзор доступа иностранных резидентов к публичному медицинскому страхованию.", lang=lang),
+            _official_source("Japan MLIT: Rental Housing Support For Foreign Nationals", "https://www.mlit.go.jp/jutakukentiku/house/jutakukentiku_house_tk3_000017.html", "Official multilingual rental checklists and housing guidance for foreign nationals.", "Официальные многоязычные чеклисты и рекомендации по аренде жилья для иностранцев.", lang=lang),
             _official_source("MOFA Japan: Visa Information", "https://www.mofa.go.jp/j_info/visit/visa/index.html", "MOFA visa information hub for cross-checking Japanese visa guidance.", "Визовый раздел MOFA — для перекрёстной проверки японских визовых правил.", lang=lang),
-            _official_source("Japan ISA: Status Of Residence List", "https://www.moj.go.jp/isa/applications/status/designatedactivities", "Official status-of-residence reference for Designated Activities.", "Полный список статусов проживания ISA — здесь перечислены все Designated Activities.", lang=lang),
-            _official_source("JNTO: Digital Nomad Visa Spanish Page", "https://www.japan.travel/es/plan/digital-nomad-visa/", "Official JNTO localized page used as a secondary consistency check.", "Испанская версия страницы JNTO — полезна для сверки формулировок.", lang=lang),
-            _official_source("JNTO: Digital Nomad Visa French Page", "https://www.japan.travel/fr/plan/digital-nomad-visa/", "Official JNTO localized page used as a secondary consistency check.", "Французская версия страницы JNTO — аналогичная сверка формулировок.", lang=lang),
         ],
         "thailand_dtv": [
             _official_source("Thailand e-Visa Official Website", "https://www.thaievisa.go.th/", "Official application entry point for Thai visa categories.", "Официальный сайт для подачи заявки — отсюда начинается процесс оформления.", lang=lang),
@@ -10199,6 +10435,14 @@ def page_source_panel(path: str, *, lang: str) -> dict | None:
         "best-asian-countries-for-remote-workers-with-family": ["japan", "malaysia", "thailand_ltr", "taiwan"],
         "philippines-srrv-vs-thailand-retirement-visa": ["philippines", "thailand_retirement"],
         "vietnam-evisa-vs-thailand-dtv": ["vietnam", "thailand_dtv"],
+        "safety": ["safety_general"],
+        "housing-rent": ["housing_general"],
+        "culture-language": ["culture_general"],
+        "jobs-business": ["singapore", "hong-kong", "malaysia", "thailand_ltr", "taiwan", "japan"],
+        "healthcare": ["healthcare_general"],
+        "banking": ["banking_general"],
+        "driving-transport": ["driving_general"],
+        "taxes": ["tax_general"],
     }
     if simple_source_keys:
         keys = simple_source_keys
@@ -10221,6 +10465,7 @@ def page_source_panel(path: str, *, lang: str) -> dict | None:
             "uae": ["uae"],
             "united-arab-emirates": ["uae"],
             "singapore": ["singapore"],
+            "hong-kong": ["hong-kong"],
             "south-korea": ["south-korea"],
             "georgia": ["georgia"],
             "turkey": ["turkey"],
@@ -10296,6 +10541,62 @@ def page_source_panel(path: str, *, lang: str) -> dict | None:
                 panel_sources.append(source)
     if not panel_sources:
         return None
+    guide_slug = guide_match.group(1) if guide_match else ""
+    contextual_panels = {
+        "safety": {
+            "ru": {
+                "eyebrow": "Самопроверка",
+                "title": "Как проверить безопасность перед выбором страны",
+                "intro": "Один рейтинг не описывает повседневный риск. Сверьте национальные и региональные предупреждения, ситуацию в конкретном городе, доступность медицины и природные угрозы непосредственно перед поездкой или переездом.",
+                "checks": ["уличная преступность", "местные законы", "региональные предупреждения", "медицина", "транспорт", "природные риски"],
+            },
+            "en": {
+                "eyebrow": "Safety check",
+                "title": "How To Check Safety Before Choosing A Country",
+                "intro": "No single ranking captures everyday risk. Cross-check national and regional advisories, the situation in your specific city, healthcare access and natural hazards immediately before travel or relocation.",
+                "checks": ["street crime", "local laws", "regional advisories", "healthcare", "transport", "natural hazards"],
+            },
+        },
+        "housing-rent": {
+            "ru": {
+                "eyebrow": "Проверка сделки",
+                "title": "Что проверить до оплаты жилья",
+                "intro": "Правила аренды различаются по странам, но схема проверки универсальна: подтвердите существование объекта и право сдачи, сопоставьте получателя платежа с договором и сохраните доказательства состояния жилья.",
+                "checks": ["объект", "право сдачи", "получатель", "договор", "депозит", "акт состояния"],
+            },
+            "en": {
+                "eyebrow": "Transaction check",
+                "title": "What To Verify Before Paying For Housing",
+                "intro": "Rental rules differ by country, but the verification sequence is consistent: confirm the property and the right to rent it, match the payment recipient to the contract and document the property's condition.",
+                "checks": ["property", "right to rent", "recipient", "contract", "deposit", "condition record"],
+            },
+        },
+        "culture-language": {
+            "ru": {
+                "eyebrow": "План адаптации",
+                "title": "Что подготовить до переезда",
+                "intro": "Адаптация становится проще, когда важные бытовые процессы понятны заранее. Проверьте языковую поддержку, контакты на экстренный случай и реалистичный план первых тридцати дней.",
+                "checks": ["важные процессы", "языковая поддержка", "работа или учёба", "медицина", "контакты", "план на 30 дней"],
+            },
+            "en": {
+                "eyebrow": "Adjustment plan",
+                "title": "What To Prepare Before You Move",
+                "intro": "Adjustment is easier when essential routines are clear in advance. Check language support, emergency contacts and a realistic plan for your first thirty days.",
+                "checks": ["essential routines", "language support", "work or school", "healthcare", "contacts", "30-day plan"],
+            },
+        },
+        "healthcare": {
+            "ru": {"eyebrow": "Медицинская проверка", "title": "Что проверить до покупки страховки", "intro": "Сопоставьте право на государственную систему, сеть клиник, исключения полиса, direct billing и эвакуацию до переезда.", "checks": ["право доступа", "сеть клиник", "исключения", "direct billing", "эвакуация", "продление"]},
+            "en": {"eyebrow": "Healthcare check", "title": "What To Verify Before Buying Cover", "intro": "Match public-system eligibility, provider network, exclusions, direct billing and evacuation before moving.", "checks": ["eligibility", "provider network", "exclusions", "direct billing", "evacuation", "renewal"]},
+        },
+        "banking": {
+            "ru": {"eyebrow": "Банковская проверка", "title": "Что подготовить до открытия счёта", "intro": "Проверьте требования к статусу и адресу, подготовьте source of funds и налоговые данные, затем сравните переводы и правила для нерезидентов.", "checks": ["статус", "адрес", "KYC", "source of funds", "CRS", "переводы"]},
+            "en": {"eyebrow": "Banking check", "title": "What To Prepare Before Opening An Account", "intro": "Check status and address requirements, prepare source-of-funds and tax details, then compare transfers and non-resident rules.", "checks": ["status", "address", "KYC", "source of funds", "CRS", "transfers"]},
+        },
+    }
+    contextual_panel = contextual_panels.get(guide_slug, {}).get(lang)
+    if contextual_panel:
+        return {**contextual_panel, "sources": panel_sources[:10]}
     if lang == "ru":
         return {
             "eyebrow": "Самопроверка",
@@ -10720,6 +11021,10 @@ COUNTRY_DEPTH_DATA: dict[str, dict] = {
                 ("Visa: DTV Or LTR, Not Tourist Runs", "DTV gives up to 180 days per entry, is valid for 5 years with multiple entries and requires foreign-source income. LTR requires $80K+/year in confirmed income. Frequent border-crossing is not a legal long-stay strategy — enforcement has tightened since 2023."),
                 ("What This Means For Budget And City Choice", "Chiang Mai: $800–1,200/month comfortable. Bangkok: $1,500+. Phuket and Koh Samui are tourist-priced year-round. Healthcare: Bumrungrad and Samitivej in Bangkok are internationally accredited, consultations from $40–80."),
                 ("Who Should Be More Careful", "Anyone relying on tourist entries as a long-stay strategy — it is not sustainable. Chiang Mai smoke season runs February through April, with AQI regularly above 200 — this is a quality-of-life issue, not background noise. DTV does not permit work for Thai employers."),
+                ("Choose The Route Before The City", "A relocation to Thailand works best when the legal route matches the way you earn money and the time you want to stay. Write down the allowed activity, stay per entry, extension logic, evidence you must maintain and the rules for dependants. If one of those points is unclear, keep the move reversible: use temporary housing and avoid paying a long lease before the visa decision is settled."),
+                ("Bangkok, Chiang Mai Or Phuket?", "Choose Bangkok when access to major hospitals, business services, public transport and international connections matters more than space. Choose Chiang Mai for a slower working rhythm and lower everyday costs, but plan around northern air quality. Choose Phuket for a coastal base and airport access, while testing neighbourhood traffic and seasonal rent in person. A city that works for a holiday can feel very different during an ordinary working month."),
+                ("Build A First-Month Budget", "Separate recurring costs from arrival costs. Your normal monthly figure covers housing, food and transport; the relocation budget also needs temporary accommodation, a rental deposit, flights, insurance, visa expenses and a reserve. Price the first month before comparing attractive headline rents. This avoids choosing a city that looks affordable on paper but leaves too little cash for setup or an unexpected change of plan."),
+                ("Use A Reversible Relocation Plan", "For the first weeks, book flexible accommodation near the services you use most and test the commute at your real working hours. Compare neighbourhoods after checking noise, internet reliability, access to groceries and the route to a clinic. Keep copies of immigration documents and verify deadlines in official channels. Commit to a longer lease only after the city, legal route and full budget have survived that test."),
             ],
             "faq": [
                 ("Can I live in Thailand long-term on a DTV?", "DTV allows up to 180 days per entry, is valid for 5 years with multiple entries and requires foreign-source income. It is a real tool for remote workers — but not for those wanting to work for Thai employers."),
@@ -10826,24 +11131,32 @@ COUNTRY_DEPTH_DATA: dict[str, dict] = {
     "move-to-japan": {
         "ru": {
             "sections": [
-                ("Digital Nomad Visa: 6 месяцев, не продлевается, перерыв обязателен", "Designated Activities (Digital Nomad) даёт 6 месяцев. Между въездами нужен перерыв минимум 3 месяца. Нужен доход $69K+/год (по данным MOFA) и частная страховка. Работать на японских работодателей нельзя."),
-                ("Что это значит по деньгам и городам", "Фукуока — самый доступный gateway для номадов: 1BR $600–1000. Токио и Осака: $1200–2000+. Кейкин-залог (礼金) 1–2 мес. при заселении — стандарт. Еда и транспорт дешевле, чем в Западной Европе."),
-                ("Кому быть осторожнее", "Тем, кто планирует жить здесь постоянно: путь к долгосрочному статусу сложный. Землетрясения — норма, важно знать базовые правила безопасности. Английский в госструктурах и за пределами Токио ограничен."),
+                ("Digital Nomad: 6 месяцев без продления и карты резидента", "Статус Designated Activities даёт ровно 6 месяцев. Нужен годовой доход от ¥10 млн, страховка с медицинским покрытием от ¥10 млн и работа только на иностранную организацию или клиентов за пределами Японии. Повторный въезд по этому статусу возможен через 6 месяцев после выезда."),
+                ("Что это значит по деньгам и городам", "Для одного человека рабочий ориентир — ¥200 000–300 000 в месяц, но Токио легко выходит выше. Кроме обычного месяца посчитайте временное жильё, депозит, возможный key money, комиссию агентства, гарантийную компанию, страховку и мебель."),
+                ("Кому быть осторожнее", "Тем, кому нужен бесшовный путь к долгому резидентству или кто рассчитывает решать жильё и администрацию только на английском. Digital Nomad не выдаёт карту резидента; долгий переезд требует отдельного основания."),
+                ("Сначала выберите горизонт", "До шести месяцев — сценарий Digital Nomad при выполнении условий. Год и больше — сначала работа, учёба, семья или балльный HSP, а уже потом город и договор аренды."),
+                ("Выберите город по повседневности", "Токио — карьера и международная инфраструктура; Осака — большой город с более мягким бюджетом; Фукуока — компактность и быстрый доступ в аэропорт; Киото — культура и университеты; Саппоро — пространство, природа и снежная зима."),
+                ("Посчитайте старт отдельно от месяца", "Первый платёж за жильё может быть значительно выше одной аренды. Держите отдельный резерв на временную квартиру, депозит, агентскую комиссию, гаранта, подключение связи и непредвиденный переезд."),
+                ("Первые недели сделайте обратимыми", "Не подписывайте долгий договор до проверки маршрута в часы пик, шума, размера квартиры, интернета и доступа к клинике. Для долгосрочного статуса заранее соберите документы для регистрации адреса, страхования, связи и банковских сервисов."),
             ],
             "faq": [
-                ("Можно ли продлить Digital Nomad Visa?", "Нет. После 6 месяцев нужно выехать и подождать минимум 3 месяца. Затем можно въехать снова. Это делает Японию удобной 6-месячной базой, но не вариантом постоянного проживания без другого статуса."),
-                ("Фукуока или Токио?", "Фукуока: $600–1000/мес, меньший город, близко к природе и Корее. Токио: $1500–2500+, мировая инфраструктура, но жильё дорого и компактно. Для первого опыта в Японии Фукуока — логичный старт."),
+                ("Можно ли продлить Digital Nomad Visa?", "Нет. Статус действует 6 месяцев без продления. Новое пребывание по этому же статусу возможно только после 6 месяцев за пределами Японии. Для постоянного переезда нужен другой статус."),
+                ("Фукуока или Токио?", "Фукуока компактнее, обычно дешевле и удобна как тестовая база. Токио даёт крупнейший рынок работы и международных услуг, но требует большего бюджета и терпимости к маленькому жилью и часам пик."),
             ],
         },
         "en": {
             "sections": [
-                ("Digital Nomad Visa: 6 Months, Non-Renewable, Cooldown Required", "The Designated Activities (Digital Nomad) route gives 6 months per entry. A gap of at least 3 months between entries is required. You need $69K+/year in income (per MOFA) and private health insurance. Working for Japanese employers is not permitted."),
-                ("What This Means For Budget And City Choice", "Fukuoka is the most affordable gateway city for nomads: 1BR $600–1,000. Tokyo and Osaka: $1,200–2,000+. Key money (礼金) of 1–2 months' rent is a standard upfront cost when renting. Food and transport are cheaper than Western Europe."),
-                ("Who Should Be More Careful", "Those planning to stay long-term: the path to durable residence status is complex. Earthquakes are common — basic safety awareness matters. English is limited in government offices and outside major cities."),
+                ("Digital Nomad: 6 Months With No Extension Or Residence Card", "Designated Activities permits exactly six months. It requires annual income of at least JPY 10 million, medical coverage of at least JPY 10 million, and work for a foreign organisation or customers outside Japan. A new stay under this status is possible after six months outside Japan."),
+                ("What This Means For Budget And City Choice", "JPY 200,000–300,000 a month is a useful solo planning range, but Tokyo can run higher. Add temporary accommodation, deposit, possible key money, agency and guarantor fees, insurance and furniture to the normal monthly budget."),
+                ("Who Should Be More Careful", "Anyone needing a seamless path to long-term residence or expecting to handle housing and administration only in English. Digital Nomad does not issue a residence card; a durable move needs a different status."),
+                ("Choose The Time Horizon First", "For up to six months, test Digital Nomad eligibility. For a year or more, secure a qualifying work, study, family or points-based HSP route before choosing a city or signing a lease."),
+                ("Choose A City By Daily Life", "Tokyo is strongest for careers and international services; Osaka offers big-city depth at a softer budget; Fukuoka is compact and airport-friendly; Kyoto suits culture and universities; Sapporo offers space, nature and a serious winter."),
+                ("Separate Setup Costs From Monthly Costs", "The first housing payment can be far larger than one month's rent. Keep a separate reserve for temporary accommodation, deposit, agency fee, guarantor service, connectivity and a possible change of apartment."),
+                ("Keep The First Weeks Reversible", "Do not sign a long lease before testing the commute at peak time, noise, apartment size, internet and clinic access. Long-term residents should prepare the documents needed for address registration, insurance, mobile and banking services."),
             ],
             "faq": [
-                ("Can I extend the Digital Nomad Visa?", "No. After 6 months you must leave and wait at least 3 months before re-entering on the same route. This makes Japan a strong 6-month base but not a permanent stay solution without another status."),
-                ("Fukuoka or Tokyo?", "Fukuoka: $600–1,000/month, smaller city, close to Korea and nature. Tokyo: $1,500–2,500+, global infrastructure but expensive and compact housing. For a first Japan experience, Fukuoka is the easier starting point."),
+                ("Can I extend the Digital Nomad Visa?", "No. The status lasts six months with no extension. A new stay under the same status is possible only after six months outside Japan. A permanent move needs another status."),
+                ("Fukuoka or Tokyo?", "Fukuoka is compact, usually less expensive and easier as a trial base. Tokyo offers the largest job and international-service market but needs a higher budget and tolerance for small homes and peak-hour crowds."),
             ],
         },
     },
@@ -11578,7 +11891,7 @@ def article_source_panel_for_post(row: sqlite3.Row | dict, *, lang: str) -> dict
 
     if "japan" in haystack or "yaponiya" in haystack:
         add("Japan MOFA: Specified Visa For Digital Nomad", "https://www.mofa.go.jp/ca/fna/pagewe_000001_00046.html", "Checks stay length, income proof, insurance and no-extension wording.", "Здесь: срок, доход, страховка и прямое правило о том, что виза не продлевается.")
-        add("Japan Immigration Services Agency: Digital Nomad", "https://www.moj.go.jp/isa/applications/status/designatedactivities53_00001.html", "Immigration authority page for the Designated Activities route.", "Страница иммиграционной службы по визе Designated Activities — первоисточник.")
+        add("Japan Immigration Services Agency: Digital Nomad", "https://www.moj.go.jp/isa/applications/status/designatedactivities10_00001.html?hl=en", "Immigration authority page for the Designated Activities route.", "Страница иммиграционной службы по визе Designated Activities — первоисточник.")
     if "taiwan" in haystack or "gold-card" in haystack:
         add("Taiwan Gold Card: What Is The Gold Card?", "https://goldcard.nat.gov.tw/en/about/", "Official explanation of the 4-in-1 card and 1-3 year logic.", "Gold Card — это work permit, residence visa, ARC и re-entry permit в одной карте.")
         add("Taiwan Gold Card: Salary Requirement FAQ", "https://goldcard.nat.gov.tw/en/faq/how-do-i-meet-the-salary-requirements-of-the-gold-card-application/", "Salary-based qualification and proof rules.", "FAQ о том, как подтвердить зарплатные требования для Gold Card.")
@@ -12205,6 +12518,9 @@ RU_HEADING_KEEP_UPPER = {
     "ONE",
     "UAE",
     "ОАЭ",
+    "ВНЖ",
+    "ПМЖ",
+    "KYC",
     "ETA",
     "Remote Worker Visa",
     "Virtual Work Residence Visa",
@@ -12394,16 +12710,21 @@ def ru_countries_index():
 
 @app.route("/countries/<slug>/")
 def country(slug: str):
-    source = page_or_404(slug, parent="countries")
+    data_slug = country_data_slug(slug)
+    public_slug = country_public_slug(data_slug)
+    if slug != public_slug:
+        return redirect(url_for("country", slug=public_slug), 301)
+    source = page_or_404(data_slug, parent="countries")
     row = normalized_country_row(source)
-    country_name = COUNTRY_EN_NAMES.get(slug, slug.replace("move-to-", "").replace("-", " ").title())
-    row["title"] = f"Move to {country_name}: 2026 Guide"
-    facts = one("SELECT * FROM country_facts WHERE slug = ?", (slug,))
-    generated = en_country_article(slug, facts)
+    country_name = COUNTRY_EN_NAMES.get(data_slug, data_slug.replace("move-to-", "").replace("-", " ").title())
+    row["title"] = EN_COUNTRY_SEO_TITLES.get(data_slug, f"Move to {country_name}: 2026 Guide")
+    facts = one("SELECT * FROM country_facts WHERE slug = ?", (data_slug,))
+    generated = en_country_article(data_slug, facts)
     if generated:
         row = dict(row)
         row["content"] = generated
-    path = local_path(row["link"] or request.path)
+    path = f"/countries/{public_slug}/"
+    row["link"] = path
     internal_links = internal_links_for_page(row, current_path=path)
     depth_panel_data = content_depth_panel(path, row, lang="en")
     source_panel_data = page_source_panel(path, lang="en")
@@ -12433,14 +12754,14 @@ def country(slug: str):
         title=row["title"],
         description=country_meta_description(row, facts),
         canonical_path=path,
-        alternates=localized_page_alternates(en_path=f"/countries/{slug}/", ru_path=f"/ru/countries/{slug}/"),
+        alternates=localized_page_alternates(en_path=path, ru_path=f"/ru/countries/{public_slug}/"),
         schema=schema,
-        og_image=og_image_for_path(path, slug),
+        og_image=og_image_for_path(path, data_slug),
     )
     return render_template(
         "country.html",
         page=row,
-        facts=None if generated else country_facts_for_display(facts, slug, "en"),
+        facts=None if generated else country_facts_for_display(facts, data_slug, "en"),
         seo=seo,
         breadcrumbs=[("Countries", "/countries/")],
         internal_links=internal_links[:4],
@@ -12454,22 +12775,26 @@ def country(slug: str):
 
 @app.route("/ru/countries/<slug>/")
 def ru_country(slug: str):
-    source = page_or_404(slug, parent="countries")
+    data_slug = country_data_slug(slug)
+    public_slug = country_public_slug(data_slug)
+    if slug != public_slug:
+        return redirect(url_for("ru_country", slug=public_slug), 301)
+    source = page_or_404(data_slug, parent="countries")
     source = normalized_country_row(source)
-    facts = one("SELECT * FROM country_facts WHERE slug = ?", (slug,))
-    title = f"Переезд {ru_country_destination(slug)}: гид 2026"
-    content = ru_country_article(slug, facts)
-    row = localized_page_dict(slug=f"ru-{slug}", title=title, content=content, link=f"/ru/countries/{slug}/", parent="countries")
+    facts = one("SELECT * FROM country_facts WHERE slug = ?", (data_slug,))
+    title = f"Переезд {ru_country_destination(data_slug)}: гид 2026"
+    content = ru_country_article(data_slug, facts)
+    row = localized_page_dict(slug=f"ru-{public_slug}", title=title, content=content, link=f"/ru/countries/{public_slug}/", parent="countries")
     row = polish_ru_data(row)
     row["content"] = sentence_case_ru_headings(row["content"])
     row["content"] = polish_ru_text(row["content"])
-    path = f"/ru/countries/{slug}/"
+    path = f"/ru/countries/{public_slug}/"
     internal_links = internal_links_for_page(row, current_path=path)
     source_panel_data = page_source_panel(path, lang="ru")
     internal_links = polish_ru_data(internal_links)
     source_panel_data = polish_ru_data(source_panel_data)
     if source_panel_data:
-        source_limit = 9 if slug in {"move-to-israel", "move-to-yemen"} else (8 if slug in {"move-to-armenia", "move-to-azerbaijan", "move-to-qatar", "move-to-saudi-arabia", "move-to-oman", "move-to-bahrain", "move-to-kuwait", "move-to-jordan", "move-to-lebanon", "move-to-iran", "move-to-yemen", "move-to-syria", "move-to-iraq", "move-to-pakistan", "move-to-bangladesh", "move-to-afghanistan", "move-to-bhutan", "move-to-maldives", "move-to-mongolia", "move-to-north-korea", "move-to-palestine", "move-to-tajikistan", "move-to-timor-leste", "move-to-turkmenistan", "move-to-sharm-el-sheikh", "move-to-cyprus"} else (9 if slug == "move-to-kyrgyzstan" else (8 if slug == "move-to-turkey" else (7 if slug == "move-to-georgia" else 5))))
+        source_limit = 9 if data_slug in {"move-to-israel", "move-to-yemen"} else (8 if data_slug in {"move-to-japan", "move-to-armenia", "move-to-azerbaijan", "move-to-qatar", "move-to-saudi-arabia", "move-to-oman", "move-to-bahrain", "move-to-kuwait", "move-to-jordan", "move-to-lebanon", "move-to-iran", "move-to-yemen", "move-to-syria", "move-to-iraq", "move-to-pakistan", "move-to-bangladesh", "move-to-afghanistan", "move-to-bhutan", "move-to-maldives", "move-to-mongolia", "move-to-north-korea", "move-to-palestine", "move-to-tajikistan", "move-to-timor-leste", "move-to-turkmenistan", "move-to-sharm-el-sheikh", "move-to-cyprus"} else (9 if data_slug == "move-to-kyrgyzstan" else (8 if data_slug == "move-to-turkey" else (7 if data_slug == "move-to-georgia" else 5))))
         source_panel_data = {**source_panel_data, "sources": source_panel_data["sources"][:source_limit]}
     schema = [
         breadcrumb_schema([("Страны", "/ru/countries/")], row["title"], path),
@@ -12490,12 +12815,12 @@ def ru_country(slug: str):
             schema.append(source_list)
     seo = seo_payload(
         title=row["title"],
-        description=country_meta_description_ru(slug, row["title"], facts),
+        description=country_meta_description_ru(data_slug, row["title"], facts),
         lang="ru",
         canonical_path=path,
-        alternates=localized_page_alternates(en_path=f"/countries/{slug}/", ru_path=path),
+        alternates=localized_page_alternates(en_path=f"/countries/{public_slug}/", ru_path=path),
         schema=schema,
-        og_image=og_image_for_path(path, slug),
+        og_image=og_image_for_path(path, data_slug),
     )
     return render_template(
         "country.html",
@@ -12538,13 +12863,19 @@ def ru_tools_index():
 def tool(slug: str):
     row = page_or_404(slug, parent="tools")
     return render_page_row(row,
-                           breadcrumbs=[("Tools", "/tools/")])
+                           breadcrumbs=[("Tools", "/tools/")],
+                           extra_js="country_finder" if slug == "country-finder" else None)
 
 
 @app.route("/ru/tools/<slug>/")
 def ru_tool(slug: str):
     source = page_or_404(slug, parent="tools")
-    title, content = localized_simple_page_content(slug, source["title"], source["content"])
+    editorial_source = APP_DIR / "content" / "tools" / f"{slug}-ru.html"
+    if editorial_source.exists():
+        title = "Подбор страны для переезда в Азию" if slug == "country-finder" else source["title"]
+        content = editorial_source.read_text(encoding="utf-8")
+    else:
+        title, content = localized_simple_page_content(slug, source["title"], source["content"])
     row = localized_page_dict(slug=f"ru-{slug}", title=title, content=content, link=f"/ru/tools/{slug}/", parent="tools")
     return render_page_row(
         row,
@@ -12552,6 +12883,7 @@ def ru_tool(slug: str):
         canonical_path=f"/ru/tools/{slug}/",
         alternates=localized_page_alternates(en_path=f"/tools/{slug}/", ru_path=f"/ru/tools/{slug}/"),
         breadcrumbs=[("Инструменты", "/ru/tools/")],
+        extra_js="country_finder" if slug == "country-finder" else None,
     )
 
 
@@ -12766,7 +13098,7 @@ def japan_vs_taiwan_article(lang: str = "en") -> tuple[str, str]:
 <p>Но решать только по бюджету нельзя. Дешевле жить на Тайване не значит легче получить Gold Card. Дороже жить в Японии не значит, что Япония хуже. Вопрос в совпадении: срок, документы, доход, семья, работа, город и запас денег. Если один из этих пунктов не сходится, страна может нравиться сколько угодно - план всё равно слабый.</p>
 <div class="bcm-cols"><div class="bcm-pros"><h3>Япония подходит</h3><ul><li>для короткого premium stay на 6 месяцев;</li><li>для людей с подтверждаемым доходом JPY 10 млн+ в год;</li><li>для тех, кто не рассчитывает на продление;</li><li>для проверки страны перед более серьёзным маршрутом.</li></ul></div><div class="bcm-cons"><h3>Тайвань подходит</h3><ul><li>для квалифицированных специалистов;</li><li>для горизонта 1-3 года;</li><li>для тех, кому нужна работа и резидентская логика вместе;</li><li>для людей с чистыми salary / qualification документами.</li></ul></div></div>
 <h2>Какие официальные источники проверить перед решением</h2>
-<p>Для Японии сначала открывайте <a href="https://www.mofa.go.jp/ca/fna/pagewe_000001_00046.html" rel="nofollow noopener" target="_blank">MOFA Digital Nomad page</a> и страницу <a href="https://www.moj.go.jp/isa/applications/status/designatedactivities53_00001.html" rel="nofollow noopener" target="_blank">Immigration Services Agency</a>. Там важны срок, no extension, income proof, insurance и activity.</p>
+<p>Для Японии сначала открывайте <a href="https://www.mofa.go.jp/ca/fna/pagewe_000001_00046.html" rel="nofollow noopener" target="_blank">MOFA Digital Nomad page</a> и страницу <a href="https://www.moj.go.jp/isa/applications/status/designatedactivities10_00001.html?hl=en" rel="nofollow noopener" target="_blank">Immigration Services Agency</a>. Там важны срок, no extension, income proof, insurance и activity.</p>
 <p>Для Тайваня начинайте с <a href="https://goldcard.nat.gov.tw/en/about/" rel="nofollow noopener" target="_blank">официального объяснения Gold Card</a>, затем проверьте <a href="https://goldcard.nat.gov.tw/en/application/" rel="nofollow noopener" target="_blank">application information</a> и отдельные FAQ по квалификации. Если вы идёте по зарплате, salary FAQ обязателен.</p>
 <h2>Проверка решения перед переездом</h2>
 <p>Соберите две отдельные сметы на первые три месяца: аренда с депозитом, страховка, транспорт, связь, рабочее место, переводы документов и резерв на срочный выезд. Затем выпишите срок визы, право на работу, правила для семьи и условия продления ровно так, как они сформулированы официальным ведомством. Такая таблица быстро показывает слабое место. Если японский сценарий держится на несуществующем продлении, его нужно пересобрать. Если тайваньский сценарий держится на квалификации, которую нельзя подтвердить документами, подачу рано считать рабочим планом. Финальное решение стоит принимать только после проверки бюджета, документов и запасного маршрута, а не по впечатлению от города.</p>
@@ -13218,7 +13550,7 @@ def ru_best_countries_move_article() -> tuple[str, str]:
 </ul></div></div>
 <div class="bcm-cta-box">
 <p>Визовый гид по Японии, стоимость жизни Токио vs Осака, жизнь экспатов</p>
-<a href="/ru/countries/move-to-japan/">Изучить Японию →</a>
+<a href="/ru/countries/japan/">Изучить Японию →</a>
 </div>
 </div>
 <div class="bcm-country" id="south-korea">
@@ -13521,6 +13853,74 @@ def ru_visas():
     return render_page_row(row, lang="ru", canonical_path="/ru/visas/", breadcrumbs=[])
 
 
+@app.route("/visas/residency-citizenship/")
+def residency_citizenship():
+    row = page_or_404("residency-citizenship", parent="visas")
+    return render_page_row(
+        row,
+        canonical_path="/visas/residency-citizenship/",
+        alternates=localized_page_alternates(en_path="/visas/residency-citizenship/", ru_path="/ru/visas/residency-citizenship/"),
+        breadcrumbs=[("Visas", "/visas/")],
+    )
+
+
+@app.route("/ru/visas/residency-citizenship/")
+def ru_residency_citizenship():
+    content = (APP_DIR / "content" / "visas" / "residency-citizenship-ru.html").read_text(encoding="utf-8")
+    row = localized_page_dict(
+        slug="ru-residency-citizenship",
+        title="ВНЖ, ПМЖ и гражданство в Азии: как сравнивать маршруты",
+        content=content,
+        link="/ru/visas/residency-citizenship/",
+        parent="visas",
+    )
+    return render_page_row(
+        row,
+        lang="ru",
+        canonical_path="/ru/visas/residency-citizenship/",
+        alternates=localized_page_alternates(en_path="/visas/residency-citizenship/", ru_path="/ru/visas/residency-citizenship/"),
+        breadcrumbs=[("Визы", "/ru/visas/")],
+    )
+
+
+@app.route("/visas/<slug>/")
+def visa_topic(slug: str):
+    if slug == "work-visas":
+        return redirect("/visas/work/", 301)
+    data_slug = "work-visas" if slug == "work" else slug
+    row = page_or_404(data_slug, parent="visas")
+    return render_page_row(
+        row, canonical_path=f"/visas/{slug}/",
+        alternates=localized_page_alternates(en_path=f"/visas/{slug}/", ru_path=f"/ru/visas/{slug}/"),
+        breadcrumbs=[("Visas", "/visas/")],
+    )
+
+
+@app.route("/ru/visas/<slug>/")
+def ru_visa_topic(slug: str):
+    if slug == "work-visas":
+        return redirect("/ru/visas/work/", 301)
+    data_slug = "work-visas" if slug == "work" else slug
+    source = page_or_404(data_slug, parent="visas")
+    editorial_source = APP_DIR / "content" / "visas" / f"{data_slug}-ru.html"
+    if not editorial_source.exists():
+        abort(404)
+    titles = {
+        "work-visas": "Рабочие визы в Азии: как сравнить маршрут",
+        "long-stay": "Визы для длительного пребывания в Азии: как выбрать статус",
+        "student": "Студенческие визы в Азии: поступление, работа и бюджет",
+    }
+    row = localized_page_dict(
+        slug=f"ru-{data_slug}", title=titles.get(data_slug, source["title"]),
+        content=editorial_source.read_text(encoding="utf-8"), link=f"/ru/visas/{slug}/", parent="visas",
+    )
+    return render_page_row(
+        row, lang="ru", canonical_path=f"/ru/visas/{slug}/",
+        alternates=localized_page_alternates(en_path=f"/visas/{slug}/", ru_path=f"/ru/visas/{slug}/"),
+        breadcrumbs=[("Визы", "/ru/visas/")],
+    )
+
+
 @app.route("/best-countries-in-asia-to-move/")
 def best_countries():
     row = page_or_404("best-countries-in-asia-to-move")
@@ -13563,8 +13963,12 @@ def ru_cheapest_countries():
 
 @app.route("/move-to-asia/")
 def move_to_asia():
-    row = page_or_404("move-to-asia")
-    row = dict(row)
+    row = dict(page_or_404("move-to-asia"))
+    row["title"] = "Moving to Asia: Visas, Costs & Countries"
+    row["content"] = row["content"].replace(
+        "Move To Asia In 2026: Countries, Visas, Costs And Planning",
+        "Moving to Asia in 2026: Countries, Visas, Costs and Planning",
+    )
     row["content"] = f"{row['content']}\n{move_to_asia_search_section('en')}"
     return render_page_row(row, breadcrumbs=[])
 
@@ -13631,9 +14035,28 @@ def ru_cost_of_living_asia():
     return render_page_row(row, lang="ru", canonical_path="/ru/cost-of-living-asia/", breadcrumbs=[])
 
 
+def guides_topic_addendum_en() -> str:
+    topics = [
+        ("Safety", "Check country, city and neighbourhood risk", "safety"),
+        ("Housing & rent", "Verify the property, contract, deposit and payment", "housing-rent"),
+        ("Culture & language", "Prepare for the first 30 days of daily life", "culture-language"),
+        ("Jobs & business", "Separate local work, remote work and company activity", "jobs-business"),
+        ("Healthcare", "Choose insurance, hospitals and an emergency plan", "healthcare"),
+        ("Banking", "Prepare KYC, transfers and a backup payment route", "banking"),
+        ("Driving & transport", "Check licences, insurance, road risk and car-free options", "driving-transport"),
+        ("Taxes", "Map residence, income source, remittances and filing", "taxes"),
+    ]
+    cards = "".join(
+        f'<a class="guides-card" href="/guides/{slug}/"><strong>{html.escape(title)}</strong><span>{html.escape(description)}</span></a>'
+        for title, description, slug in topics
+    )
+    return f'<section class="guides-section"><h2>Daily life after the move</h2><p>Eight practical systems that shape an ordinary week after arrival.</p><div class="guides-grid">{cards}</div></section>'
+
+
 @app.route("/guides/")
 def guides_index():
-    row = page_or_404("guides")
+    row = dict(page_or_404("guides"))
+    row["content"] = f'{row["content"]}\n{guides_topic_addendum_en()}'
     return render_page_row(row, breadcrumbs=[], show_breadcrumbs=True)
 
 
@@ -14164,8 +14587,8 @@ TRUST_PAGES = {
   </ul>
 </section>
 """,
-    },
-}
+        },
+    }
 
 TRUST_PAGES_RU = {
     "about": {
@@ -14289,6 +14712,8 @@ def sitemap_paths() -> list[tuple[str, str]]:
         ("/ru/", "daily"),
         ("/countries/", "weekly"),
         ("/ru/countries/", "weekly"),
+        ("/countries/japan/", "monthly"),
+        ("/ru/countries/japan/", "monthly"),
         ("/tools/", "monthly"),
         ("/ru/tools/", "monthly"),
         ("/compare/", "weekly"),
@@ -14336,6 +14761,8 @@ def sitemap_paths() -> list[tuple[str, str]]:
         link = row["link"]
         if link.startswith(SITE_URL):
             link = link.removeprefix(SITE_URL) or "/"
+        if link == "/countries/move-to-japan/":
+            link = "/countries/japan/"
         paths.append((link, "monthly"))
     for row in many("SELECT slug, lang FROM posts ORDER BY date DESC"):
         prefix = "/blog" if row["lang"] == "en" else "/ru/blog"
@@ -14352,7 +14779,6 @@ def sitemap_paths() -> list[tuple[str, str]]:
 @app.route("/sitemap.xml")
 def sitemap_xml():
     from html import escape
-    from datetime import datetime, timezone
 
     alternate_map = post_pair_map()
     alternate_map.update(compare_pair_map())
@@ -14387,10 +14813,6 @@ def sitemap_xml():
                 seen_paths.add(alternate_path)
                 paths.append((alternate_path, changefreq))
 
-    source_files = [Path(__file__), DB_PATH, APP_DIR / "templates" / "base.html"]
-    latest_source_mtime = max(path.stat().st_mtime for path in source_files if path.exists())
-    default_lastmod = datetime.fromtimestamp(latest_source_mtime, tz=timezone.utc).date().isoformat()
-
     urls = []
     for path, changefreq in paths:
         alternates = alternate_map.get(path) or default_page_alternates(path) or []
@@ -14398,17 +14820,22 @@ def sitemap_xml():
             f"<xhtml:link rel=\"alternate\" hreflang=\"{escape(item['lang'])}\" href=\"{escape(item['url'])}\" />"
             for item in alternates
         )
-        lastmod = default_lastmod
+        lastmod_xml = ""
         post_match = re.match(r"^/(?:ru/)?blog/([^/]+)/$", path)
         if post_match:
-            post = one("SELECT date FROM posts WHERE slug = ? ORDER BY date DESC LIMIT 1", (post_match.group(1),))
+            post_lang = "ru" if path.startswith("/ru/blog/") else "en"
+            post = one(
+                "SELECT date FROM posts WHERE slug = ? AND lang = ? ORDER BY date DESC LIMIT 1",
+                (post_match.group(1), post_lang),
+            )
             if post and post["date"]:
                 lastmod = str(post["date"])[:10]
+                lastmod_xml = f"<lastmod>{escape(lastmod)}</lastmod>"
         urls.append(
             "  <url>"
             f"<loc>{escape(absolute_url(path))}</loc>"
             f"{links}"
-            f"<lastmod>{escape(lastmod)}</lastmod>"
+            f"{lastmod_xml}"
             f"<changefreq>{changefreq}</changefreq>"
             "</url>"
         )

@@ -4,6 +4,7 @@ import html
 import re
 import sys
 import unittest
+import xml.etree.ElementTree as ET
 from pathlib import Path
 from unittest.mock import patch
 from urllib.parse import urlencode
@@ -109,6 +110,23 @@ class TechnicalRegressionTests(unittest.TestCase):
         digest = hashlib.sha256((site.APP_DIR / 'static/css/site.css').read_bytes()).hexdigest()[:12]
         body = self.client.get('/').get_data(as_text=True)
         self.assertIn(f'/static/css/site.css?v={digest}', body)
+
+    def test_sitemap_only_claims_lastmod_when_date_is_known(self):
+        sitemap = ET.fromstring(self.client.get('/sitemap.xml').data)
+        namespace = {'s': 'http://www.sitemaps.org/schemas/sitemap/0.9'}
+        entries = {
+            node.find('s:loc', namespace).text: node
+            for node in sitemap.findall('s:url', namespace)
+        }
+        homepage = entries[f'{site.SITE_URL}/']
+        self.assertIsNone(homepage.find('s:lastmod', namespace))
+
+        post = site.one("SELECT slug, date, lang FROM posts WHERE date IS NOT NULL ORDER BY date DESC LIMIT 1")
+        prefix = '/blog' if post['lang'] == 'en' else '/ru/blog'
+        post_url = f"{site.SITE_URL}{prefix}/{post['slug']}/"
+        post_lastmod = entries[post_url].find('s:lastmod', namespace)
+        self.assertIsNotNone(post_lastmod)
+        self.assertEqual(post_lastmod.text, str(post['date'])[:10])
 
     def test_no_phantom_country_in_either_table_of_contents(self):
         for path in ('/cheapest-countries-in-asia/', '/ru/cheapest-countries-in-asia/'):

@@ -155,9 +155,21 @@
           <a href="{{ countries_prefix }}/move-to-bali/">{{ 'Бали' if is_ru_page else 'Bali' }}</a>
           <a href="{{ countries_prefix }}/move-to-vietnam/">{{ 'Вьетнам' if is_ru_page else 'Vietnam' }}</a>
           <a href="{{ countries_prefix }}/move-to-taiwan/">{{ 'Тайвань' if is_ru_page else 'Taiwan' }}</a>
+          <a href="{{ countries_prefix }}/hong-kong/">{{ 'Гонконг' if is_ru_page else 'Hong Kong' }}</a>
         </div>
       </div>
-      <a href="{{ visas_url }}">{{ nav_visas }}</a>
+      <div class="rta-nav-item">
+        <a class="rta-nav-trigger" href="{{ visas_url }}" aria-haspopup="true" aria-expanded="false">{{ nav_visas }}</a>
+        <div class="rta-dropdown">
+          <a href="{{ visas_url }}">{{ 'Все визы' if is_ru_page else 'All Visas' }}</a>
+          <a href="{{ '/ru/visas/residency-citizenship/' if is_ru_page else '/visas/residency-citizenship/' }}">{{ 'Резидентство и гражданство' if is_ru_page else 'Residency & Citizenship' }}</a>
+          <a href="{{ dn_visas_url }}">{{ 'Digital nomad визы' if is_ru_page else 'Digital Nomad Visas' }}</a>
+          <a href="{{ '/ru/visas/work/' if is_ru_page else '/visas/work/' }}">{{ 'Рабочие визы' if is_ru_page else 'Work Visas' }}</a>
+          <a href="{{ retire_asia_url }}">{{ 'Пенсионные визы' if is_ru_page else 'Retirement Visas' }}</a>
+          <a href="{{ '/ru/visas/long-stay/' if is_ru_page else '/visas/long-stay/' }}">{{ 'Туристические и долгосрочные визы' if is_ru_page else 'Tourist & Long-Stay Visas' }}</a>
+          <a href="{{ '/ru/visas/student/' if is_ru_page else '/visas/student/' }}">{{ 'Студенческие визы' if is_ru_page else 'Student Visas' }}</a>
+        </div>
+      </div>
       <div class="rta-nav-item">
         <a class="rta-nav-trigger" href="{{ guides_prefix }}/" aria-haspopup="true" aria-expanded="false">{{ nav_guides }}</a>
         <div class="rta-dropdown rta-dropdown--wide">
@@ -165,6 +177,14 @@
           <a href="{{ move_to_asia_url }}">{{ 'С чего начать переезд' if is_ru_page else 'Start planning your move' }}</a>
           <a href="{{ dn_visas_url }}">{{ 'Удалённая работа и визы' if is_ru_page else 'Remote work & visas' }}</a>
           <a href="{{ cola_asia_url }}">{{ 'Бюджет и стоимость жизни' if is_ru_page else 'Budget & living costs' }}</a>
+          <a href="{{ guides_prefix }}/safety/">{{ 'Безопасность' if is_ru_page else 'Safety' }}</a>
+          <a href="{{ guides_prefix }}/housing-rent/">{{ 'Жильё и аренда' if is_ru_page else 'Housing & rent' }}</a>
+          <a href="{{ guides_prefix }}/culture-language/">{{ 'Культура и язык' if is_ru_page else 'Culture & language' }}</a>
+          <a href="{{ guides_prefix }}/jobs-business/">{{ 'Работа и бизнес' if is_ru_page else 'Jobs & business' }}</a>
+          <a href="{{ guides_prefix }}/healthcare/">{{ 'Медицина' if is_ru_page else 'Healthcare' }}</a>
+          <a href="{{ guides_prefix }}/banking/">{{ 'Банковские счета' if is_ru_page else 'Banking' }}</a>
+          <a href="{{ guides_prefix }}/driving-transport/">{{ 'Вождение и транспорт' if is_ru_page else 'Driving & transport' }}</a>
+          <a href="{{ guides_prefix }}/taxes/">{{ 'Налоги' if is_ru_page else 'Taxes' }}</a>
           <a href="{{ guides_prefix }}/best-asian-countries-for-remote-workers-with-family/">{{ 'Страны Азии для удалёнщиков с семьёй' if is_ru_page else 'Remote Workers With Family' }}</a>
           <a href="{{ retire_asia_url }}">{{ 'Переезд на пенсии' if is_ru_page else 'Retiring abroad' }}</a>
         </div>
@@ -177,6 +197,9 @@
           <a href="{{ compare_prefix }}/bali-vs-thailand/">{{ 'Бали vs Таиланд' if is_ru_page else 'Bali vs Thailand' }}</a>
           <a href="{{ compare_prefix }}/japan-vs-taiwan/">{{ 'Япония vs Тайвань' if is_ru_page else 'Japan vs Taiwan' }}</a>
           <a href="{{ compare_prefix }}/thailand-vs-vietnam/">{{ 'Таиланд vs Вьетнам' if is_ru_page else 'Thailand vs Vietnam' }}</a>
+          <a href="{{ compare_prefix }}/cost-of-living/">{{ 'Сравнить стоимость жизни' if is_ru_page else 'Compare living costs' }}</a>
+          <a href="{{ compare_prefix }}/rankings/">{{ 'Рейтинги стран и городов' if is_ru_page else 'Country & city rankings' }}</a>
+          <a href="{{ compare_prefix }}/safest-countries/">{{ 'Самые безопасные страны' if is_ru_page else 'Safest countries' }}</a>
           <a href="{{ compare_cities_url }}">{{ compare_cities_label }}</a>
         </div>
       </div>
@@ -186,6 +209,7 @@
           <a href="{{ tools_prefix }}/">{{ 'Все инструменты' if is_ru_page else 'All Tools' }}</a>
           <a href="{{ tools_prefix }}/cost-calculator/">{{ 'Калькулятор стоимости жизни' if is_ru_page else 'Cost of Living Calculator' }}</a>
           <a href="{{ tools_prefix }}/budget-planner/">{{ 'Планировщик бюджета' if is_ru_page else 'Budget Planner' }}</a>
+          <a href="{{ tools_prefix }}/country-finder/">{{ 'Подобрать страну' if is_ru_page else 'Country Finder' }}</a>
           <a href="{{ best_countries_url }}">{{ best_countries_label }}</a>
           <a href="{{ cheapest_countries_url }}">{{ cheapest_countries_label }}</a>
           <a href="{{ cola_asia_url }}">{{ cola_asia_label }}</a>
@@ -260,6 +284,9 @@
 {% block scripts %}{% endblock %}
 {% if extra_js == "compare_cities" %}
 <script src="{{ versioned_static('js/compare-cities.js') }}" defer></script>
+{% endif %}
+{% if extra_js == "country_finder" %}
+<script src="{{ versioned_static('js/country-finder.js') }}" defer></script>
 {% endif %}
 <script src="{{ versioned_static('js/site.js') }}" defer></script>
 </body>

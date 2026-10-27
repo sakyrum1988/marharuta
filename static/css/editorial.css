@@ -44,6 +44,14 @@
   --white: var(--rta-surface);
 }
 
+.cf-panel fieldset { border:0; padding:0; margin:0 0 20px; }
+.cf-panel legend { font:700 1.2rem/1.3 var(--rta-font-display, inherit); margin-bottom:14px; }
+.cf-options { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin-bottom:18px; }
+.cf-options label { display:flex; gap:10px; align-items:center; padding:14px 16px; border:1px solid var(--rta-border,#d9d6cf); border-radius:12px; cursor:pointer; background:#fff; }
+.cf-options input { width:18px; height:18px; accent-color:var(--rta-accent,#b94d2f); }
+.cf-results { margin-top:24px; }
+@media (max-width:640px) { .cf-options { grid-template-columns:1fr; } }
+
 /* Search-intent first screens for comparison pages with existing GSC demand. */
 .rta-search-intent-hero {
   margin: 0 0 clamp(2rem, 5vw, 4.5rem);
@@ -2178,6 +2186,31 @@ body { font: 400 17px/1.7 var(--rta-sans); background: var(--rta-paper); color: 
 }
 .rta-country-page .ep-section .ep-h2 { max-width: 850px; font-size: clamp(32px, 4vw, 50px); letter-spacing: -.035em; line-height: 1.08; }
 .rta-country-page .ep-section > .ep-p { max-width: 840px; font-size: 17px; line-height: 1.75; }
+
+.rta-country-page .rta-country-decision-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 28px;
+}
+.rta-country-page .rta-country-decision-card {
+  padding: clamp(24px, 3vw, 34px);
+  border: 1px solid var(--rta-rule);
+  border-radius: 22px;
+  background: linear-gradient(145deg, #fff 0%, var(--country-wash) 100%);
+}
+.rta-country-page .rta-country-decision-card h3 {
+  margin: 0 0 12px;
+  color: var(--country-deep);
+  font-size: 22px;
+  line-height: 1.25;
+}
+.rta-country-page .rta-country-decision-card p {
+  margin: 0;
+  color: var(--rta-muted);
+  font-size: 15px;
+  line-height: 1.75;
+}
 .rta-country-page #ru-visas,
 .rta-country-page #ru-cities {
   width: 100%;
@@ -2258,6 +2291,7 @@ body { font: 400 17px/1.7 var(--rta-sans); background: var(--rta-paper); color: 
   .rta-country-page .rta-country-pulse > div:nth-child(2n) { border-right: 0; }
   .rta-country-page .rta-country-pulse > div:nth-last-child(-n+2) { border-bottom: 0; }
   .rta-country-page .ep-section { padding: 42px 4px; }
+  .rta-country-page .rta-country-decision-grid { grid-template-columns: minmax(0, 1fr); }
   .rta-country-page #ru-visas,
   .rta-country-page #ru-cities { padding: 36px 18px; border-radius: 22px; }
   .rta-country-page .ep-country-verdict { grid-template-columns: minmax(0, 1fr); }
@@ -2994,6 +3028,13 @@ body { font: 400 17px/1.7 var(--rta-sans); background: var(--rta-paper); color: 
 .rta-guide-detail-page,
 .rta-comparison-page,
 .rta-budget-page { width:min(1180px,calc(100% - 48px)); max-width:none; }
+.rta-guide-detail-page { overflow-x:clip; }
+.rta-guide-detail-page :is(.guide-article,.guide-page,.ep-article,.guide-depth-section,.guide-hero) {
+  min-width:0;
+  max-width:100%;
+}
+.rta-guide-detail-page :is(.guide-article,.guide-page,.ep-article) { width:100%; overflow:hidden; }
+.rta-guide-detail-page .guide-hero { width:100%; box-sizing:border-box; }
 .rta-guide-detail-page :is(.guide-hero),
 .rta-comparison-page :is(.bvt-hero,.bcm-hero),
 .rta-budget-page .bp-hero {
@@ -3138,6 +3179,7 @@ body { font: 400 17px/1.7 var(--rta-sans); background: var(--rta-paper); color: 
   .rta-budget-page .bp-hero,
   .rta-journal .rta-journal-header,
   .rta-content.rta-post .rta-post-header { padding:32px 24px !important; border-radius:22px !important; }
+  .rta-guide-detail-page .guide-hero h1 { overflow-wrap:anywhere; hyphens:auto; }
   .rta-journal-toolbar { top:58px; }
   .rta-journal-aside { display:block !important; padding:30px 24px !important; border-radius:22px !important; }
   .rta-journal-editorial-note { margin-top:28px !important; }

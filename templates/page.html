@@ -20,7 +20,16 @@
   </nav>
   {% endif %}
 
-  {% if '<h1' not in (page['content'] or '')|lower %}<h1 class="sr-only">{{ page['title'] }}</h1>{% endif %}
+  {% if '<h1' not in (page['content'] or '')|lower %}
+    {% if page['parent'] in ['guides', 'ru-guides'] %}
+      <header class="guide-hero rta-generated-guide-hero">
+        <span class="badge">{{ 'Практический гайд' if lang_code == 'ru' else 'Practical guide' }}</span>
+        <h1>{{ page['title'] }}</h1>
+      </header>
+    {% else %}
+      <h1 class="sr-only">{{ page['title'] }}</h1>
+    {% endif %}
+  {% endif %}
   {{ page['content'] | wp_clean | safe }}
 
   {% if source_panel %}
