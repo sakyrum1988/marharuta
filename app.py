@@ -9014,6 +9014,9 @@ def article_schema(
 
 
 POST_TRANSLATION_SLUGS = {
+    "best-places-to-retire-in-the-world": "luchshie-strany-dlya-pensionerov",
+    "cost-of-living-in-thailand": "stoimost-zhizni-v-tailande",
+    "cheapest-places-to-live-abroad": "samye-deshevye-strany-dlya-zhizni",
     "best-countries-in-asia-for-expats-2026": "luchshie-strany-azii-dlya-ekspatov-2026",
     "best-asian-countries-with-easy-visas-2026": "prostye-vizy-v-azii-dlya-ekspatov-2026",
     "malaysia-digital-nomad-guide-2026": "malaysia-dlya-digital-nomads-2026",
