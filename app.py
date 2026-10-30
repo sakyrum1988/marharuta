@@ -9014,6 +9014,8 @@ def article_schema(
 
 
 POST_TRANSLATION_SLUGS = {
+    "traditional-kyoto-culture-guide": "traditsionnyy-kioto-kultura",
+    "what-is-an-expat": "kto-takoy-ekspat",
     "best-places-to-retire-in-the-world": "luchshie-strany-dlya-pensionerov",
     "cost-of-living-in-thailand": "stoimost-zhizni-v-tailande",
     "cheapest-places-to-live-abroad": "samye-deshevye-strany-dlya-zhizni",
@@ -11851,6 +11853,23 @@ def article_source_panel_for_post(row: sqlite3.Row | dict, *, lang: str) -> dict
 
     for item in extract_official_sources(row["content"] if "content" in row.keys() else "", limit=10):
         add(item["title"], item["url"], "Official source referenced in the article.", "Официальный источник, указанный в статье.")
+
+    if slug in {"traditional-kyoto-culture-guide", "traditsionnyy-kioto-kultura"}:
+        if lang == "ru":
+            return {
+                "eyebrow": "Официальные источники",
+                "title": "Что проверить перед прогулкой и бронированием",
+                "intro": "Сверьте часы работы, правила съёмки, доступность и текущую загруженность на официальных страницах. Конкретный объект или оператор может вводить дополнительные условия.",
+                "sources": picked,
+                "checks": ["часы работы", "съёмка", "загруженность", "доступность", "местные правила"],
+            }
+        return {
+            "eyebrow": "Official Sources",
+            "title": "What To Check Before Walking Or Booking",
+            "intro": "Verify opening hours, photography rules, accessibility and current crowd conditions on the official pages. A specific site or operator may apply additional conditions.",
+            "sources": picked,
+            "checks": ["opening hours", "photography", "crowds", "accessibility", "local rules"],
+        }
 
     if slug == "sezon-dozhdey-v-tailande" and lang == "ru":
         return {

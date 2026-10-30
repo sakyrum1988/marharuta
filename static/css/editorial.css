@@ -328,6 +328,7 @@ body { font: 400 17px/1.7 var(--rta-sans); background: var(--rta-paper); color: 
 .rta-dropdown a { font: 500 16px/1.45 var(--rta-sans); color: var(--rta-ink); padding: 12px; }
 .rta-dropdown a:hover { color: var(--rta-accent); background: var(--rta-accent-soft); }
 .rta-dropdown--wide { width: 460px; }
+.rta-nav-links > .rta-nav-item:nth-child(n + 3) > .rta-dropdown { left: auto; right: 0; }
 .rta-lang-switcher { padding: 0; border: 0; gap: 2px; }
 .rta-lang-link, .rta-lang-current { height: 40px; min-width: 40px; padding: 8px; font-size: 13px; }
 .rta-lang-current { background: var(--rta-accent-soft); color: var(--rta-accent-dark); border-radius: 10px; text-decoration: none; }

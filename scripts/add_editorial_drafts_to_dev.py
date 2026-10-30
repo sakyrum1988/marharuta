@@ -19,6 +19,10 @@ REVIEWS = ROOT / "docs" / "content-reviews"
 DATABASE = ROOT / "content.db"
 
 SOURCES = (
+    "traditional-kyoto-culture-guide-en.json",
+    "traditsionnyy-kioto-kultura-ru.json",
+    "what-is-an-expat-en.json",
+    "kto-takoy-ekspat-ru.json",
     "best-places-to-retire-in-the-world-en.json",
     "luchshie-strany-dlya-pensionerov-ru.json",
     "cost-of-living-in-thailand-en.json",
@@ -110,7 +114,7 @@ def main() -> None:
     parser.add_argument(
         "--refresh",
         action="store_true",
-        help="Refresh only the six allow-listed dev posts from their reviewed draft files.",
+        help="Refresh only the allow-listed dev posts from their reviewed draft files.",
     )
     args = parser.parse_args()
     backups = ROOT / ".backups"
