@@ -19,6 +19,12 @@ REVIEWS = ROOT / "docs" / "content-reviews"
 DATABASE = ROOT / "content.db"
 
 SOURCES = (
+    "best-countries-healthcare-expats-en.json",
+    "luchshie-strany-meditsina-dlya-ekspatov-ru.json",
+    "tet-in-vietnam-en.json",
+    "tet-vo-vetname-ru.json",
+    "digital-nomad-lifestyle-pros-cons-en.json",
+    "tsifrovoy-kochevnik-plyusy-minusy-ru.json",
     "traditional-kyoto-culture-guide-en.json",
     "traditsionnyy-kioto-kultura-ru.json",
     "what-is-an-expat-en.json",

@@ -9014,6 +9014,9 @@ def article_schema(
 
 
 POST_TRANSLATION_SLUGS = {
+    "best-countries-healthcare-expats": "luchshie-strany-meditsina-dlya-ekspatov",
+    "tet-in-vietnam": "tet-vo-vetname",
+    "digital-nomad-lifestyle-pros-cons": "tsifrovoy-kochevnik-plyusy-minusy",
     "traditional-kyoto-culture-guide": "traditsionnyy-kioto-kultura",
     "what-is-an-expat": "kto-takoy-ekspat",
     "best-places-to-retire-in-the-world": "luchshie-strany-dlya-pensionerov",
