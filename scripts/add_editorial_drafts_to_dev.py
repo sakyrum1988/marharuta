@@ -19,6 +19,10 @@ REVIEWS = ROOT / "docs" / "content-reviews"
 DATABASE = ROOT / "content.db"
 
 SOURCES = (
+    "digital-nomad-visa-countries-en.json",
+    "strany-s-vizami-dlya-tsifrovyh-kochevnikov-ru.json",
+    "digital-nomad-visa-guide-en.json",
+    "viza-dlya-tsifrovyh-kochevnikov-ru.json",
     "best-countries-healthcare-expats-en.json",
     "luchshie-strany-meditsina-dlya-ekspatov-ru.json",
     "tet-in-vietnam-en.json",
