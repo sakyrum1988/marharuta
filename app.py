@@ -9014,6 +9014,7 @@ def article_schema(
 
 
 POST_TRANSLATION_SLUGS = {
+    "working-holiday-visa-for-americans": "working-holiday-visa-dlya-amerikantsev",
     "digital-nomad-visa-countries": "strany-s-vizami-dlya-tsifrovyh-kochevnikov",
     "digital-nomad-visa-guide": "viza-dlya-tsifrovyh-kochevnikov",
     "best-countries-healthcare-expats": "luchshie-strany-meditsina-dlya-ekspatov",

@@ -19,6 +19,8 @@ REVIEWS = ROOT / "docs" / "content-reviews"
 DATABASE = ROOT / "content.db"
 
 SOURCES = (
+    "working-holiday-visa-for-americans-en.json",
+    "working-holiday-visa-dlya-amerikantsev-ru.json",
     "digital-nomad-visa-countries-en.json",
     "strany-s-vizami-dlya-tsifrovyh-kochevnikov-ru.json",
     "digital-nomad-visa-guide-en.json",
