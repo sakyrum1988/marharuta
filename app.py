@@ -9014,6 +9014,7 @@ def article_schema(
 
 
 POST_TRANSLATION_SLUGS = {
+    "cost-of-living-calculator-compare-countries": "kalkulyator-stoimosti-zhizni-sravnenie-stran",
     "working-holiday-visa-for-americans": "working-holiday-visa-dlya-amerikantsev",
     "digital-nomad-visa-countries": "strany-s-vizami-dlya-tsifrovyh-kochevnikov",
     "digital-nomad-visa-guide": "viza-dlya-tsifrovyh-kochevnikov",
@@ -9617,6 +9618,8 @@ def internal_links_for_blog(lang: str) -> list[dict[str, str]]:
 SOURCE_EXCLUDE_TERMS = (
     "worldbank",
     "api.worldbank",
+    "numbeo.com",
+    "expatistan.com",
     "restcountries",
     "flagcdn",
     "github",
