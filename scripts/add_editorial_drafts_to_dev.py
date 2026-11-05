@@ -19,6 +19,8 @@ REVIEWS = ROOT / "docs" / "content-reviews"
 DATABASE = ROOT / "content.db"
 
 SOURCES = (
+    "best-places-to-live-in-thailand-en.json",
+    "luchshie-mesta-dlya-zhizni-v-tailande-ru.json",
     "cost-of-living-calculator-compare-countries-en.json",
     "kalkulyator-stoimosti-zhizni-sravnenie-stran-ru.json",
     "working-holiday-visa-for-americans-en.json",

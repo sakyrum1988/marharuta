@@ -9014,6 +9014,7 @@ def article_schema(
 
 
 POST_TRANSLATION_SLUGS = {
+    "best-places-to-live-in-thailand": "luchshie-mesta-dlya-zhizni-v-tailande",
     "cost-of-living-calculator-compare-countries": "kalkulyator-stoimosti-zhizni-sravnenie-stran",
     "working-holiday-visa-for-americans": "working-holiday-visa-dlya-amerikantsev",
     "digital-nomad-visa-countries": "strany-s-vizami-dlya-tsifrovyh-kochevnikov",
