@@ -19,6 +19,8 @@ REVIEWS = ROOT / "docs" / "content-reviews"
 DATABASE = ROOT / "content.db"
 
 SOURCES = (
+    "georgia-vs-armenia-en.json",
+    "gruziya-ili-armeniya-ru.json",
     "best-places-to-live-in-thailand-en.json",
     "luchshie-mesta-dlya-zhizni-v-tailande-ru.json",
     "cost-of-living-calculator-compare-countries-en.json",

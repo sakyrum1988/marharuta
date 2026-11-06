@@ -9014,6 +9014,7 @@ def article_schema(
 
 
 POST_TRANSLATION_SLUGS = {
+    "georgia-vs-armenia": "gruziya-ili-armeniya",
     "best-places-to-live-in-thailand": "luchshie-mesta-dlya-zhizni-v-tailande",
     "cost-of-living-calculator-compare-countries": "kalkulyator-stoimosti-zhizni-sravnenie-stran",
     "working-holiday-visa-for-americans": "working-holiday-visa-dlya-amerikantsev",
@@ -12575,7 +12576,12 @@ def sentence_case_ru_heading_text(text: str) -> str:
     proper_forms = {"Азия", "Азии", "Бали", "Малайзия", "Малайзию", "Малайзии", "Таиланд", "Таиланду", "Таиланде", "Вьетнам", "Вьетнаму", "Вьетнаме", "Тайвань", "Тайваню", "Тайване", "Япония", "Японию", "Японии", "Камбоджа", "Камбоджу", "Камбодже", "Филиппины", "Филиппинам", "Филиппинах", "Сингапур", "Сингапуре", "ОАЭ", "Дубай", "Дубая", "Дубае", "Дубаю", "Абу-Даби", "Маргарита", "Яровенко", "Virtual Work Residence Visa", "Virtual Work Residence"}
     for forms in COUNTRY_FORMS_RU.values():
         proper_forms.update(forms)
-    proper_forms.update({"Бангкок", "Бангкоке", "Бангкока", "Чиангмай", "Чиангмае", "Чиангмая", "Куала-Лумпур", "Куала-Лумпуре", "Куала-Лумпура"})
+    proper_forms.update({
+        "Бангкок", "Бангкоке", "Бангкока",
+        "Чиангмай", "Чиангмае", "Чиангмая",
+        "Куала-Лумпур", "Куала-Лумпуре", "Куала-Лумпура",
+        "Тбилиси", "Ереван", "Еревана", "Ереване", "Еревану",
+    })
     for token in sorted(proper_forms, key=len, reverse=True):
         lowered = re.sub(rf"\b{re.escape(token.lower())}\b", token, lowered, flags=re.I)
     first = re.search(r"[A-Za-zА-Яа-яЁё]", lowered)
