@@ -9014,6 +9014,7 @@ def article_schema(
 
 
 POST_TRANSLATION_SLUGS = {
+    "car-rental-in-shanghai": "arenda-avtomobilya-v-shanhae",
     "georgia-vs-armenia": "gruziya-ili-armeniya",
     "best-places-to-live-in-thailand": "luchshie-mesta-dlya-zhizni-v-tailande",
     "cost-of-living-calculator-compare-countries": "kalkulyator-stoimosti-zhizni-sravnenie-stran",
@@ -9187,6 +9188,8 @@ def default_page_alternates(path: str) -> list[dict[str, str]] | None:
         (r"^/ru/tools/([^/]+)/$", "/tools/{slug}/", "/ru/tools/{slug}/"),
         (r"^/guides/([^/]+)/$", "/guides/{slug}/", "/ru/guides/{slug}/"),
         (r"^/ru/guides/([^/]+)/$", "/guides/{slug}/", "/ru/guides/{slug}/"),
+        (r"^/visas/([^/]+)/$", "/visas/{slug}/", "/ru/visas/{slug}/"),
+        (r"^/ru/visas/([^/]+)/$", "/visas/{slug}/", "/ru/visas/{slug}/"),
         (r"^/compare/([^/]+)/$", "/compare/{slug}/", "/ru/compare/{slug}/"),
         (r"^/ru/compare/([^/]+)/$", "/compare/{slug}/", "/ru/compare/{slug}/"),
     ]
@@ -12581,6 +12584,7 @@ def sentence_case_ru_heading_text(text: str) -> str:
         "Чиангмай", "Чиангмае", "Чиангмая",
         "Куала-Лумпур", "Куала-Лумпуре", "Куала-Лумпура",
         "Тбилиси", "Ереван", "Еревана", "Ереване", "Еревану",
+        "Шанхай", "Шанхае", "Шанхая", "Шанхаю",
     })
     for token in sorted(proper_forms, key=len, reverse=True):
         lowered = re.sub(rf"\b{re.escape(token.lower())}\b", token, lowered, flags=re.I)

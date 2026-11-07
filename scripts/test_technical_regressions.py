@@ -128,6 +128,13 @@ class TechnicalRegressionTests(unittest.TestCase):
         self.assertIsNotNone(post_lastmod)
         self.assertEqual(post_lastmod.text, str(post['date'])[:10])
 
+    def test_sitemap_contains_localized_visa_topics(self):
+        sitemap = self.client.get('/sitemap.xml').get_data(as_text=True)
+        for slug in ('work', 'long-stay', 'student', 'residency-citizenship'):
+            with self.subTest(slug=slug):
+                self.assertIn(f'<loc>{site.SITE_URL}/visas/{slug}/</loc>', sitemap)
+                self.assertIn(f'<loc>{site.SITE_URL}/ru/visas/{slug}/</loc>', sitemap)
+
     def test_no_phantom_country_in_either_table_of_contents(self):
         for path in ('/cheapest-countries-in-asia/', '/ru/cheapest-countries-in-asia/'):
             body = self.client.get(path).get_data(as_text=True)

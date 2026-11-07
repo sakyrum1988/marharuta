@@ -3030,13 +3030,13 @@ body { font: 400 17px/1.7 var(--rta-sans); background: var(--rta-paper); color: 
 .rta-comparison-page,
 .rta-budget-page { width:min(1180px,calc(100% - 48px)); max-width:none; }
 .rta-guide-detail-page { overflow-x:clip; }
-.rta-guide-detail-page :is(.guide-article,.guide-page,.ep-article,.guide-depth-section,.guide-hero) {
+.rta-guide-detail-page :is(.guide-article,.guide-page,.ep-article,.guide-depth-section,.guide-hero,.ep-hero) {
   min-width:0;
   max-width:100%;
 }
 .rta-guide-detail-page :is(.guide-article,.guide-page,.ep-article) { width:100%; overflow:hidden; }
-.rta-guide-detail-page .guide-hero { width:100%; box-sizing:border-box; }
-.rta-guide-detail-page :is(.guide-hero),
+.rta-guide-detail-page :is(.guide-hero,.ep-hero) { width:100%; box-sizing:border-box; }
+.rta-guide-detail-page :is(.guide-hero,.ep-hero),
 .rta-comparison-page :is(.bvt-hero,.bcm-hero),
 .rta-budget-page .bp-hero {
   position:relative;
@@ -3051,12 +3051,24 @@ body { font: 400 17px/1.7 var(--rta-sans); background: var(--rta-paper); color: 
   border-radius:30px !important;
   box-shadow:0 24px 64px rgba(6,47,50,.16) !important;
 }
-.rta-guide-detail-page .guide-hero :is(h1,h2,p),
+.rta-guide-detail-page :is(.guide-hero,.ep-hero) :is(h1,h2,p),
 .rta-comparison-page :is(.bvt-hero,.bcm-hero) :is(h1,h2,p),
 .rta-budget-page .bp-hero :is(h1,h2,p) { color:#fff !important; }
-.rta-guide-detail-page .guide-hero h1,
+.rta-guide-detail-page :is(.guide-hero,.ep-hero) h1,
 .rta-comparison-page :is(.bvt-hero,.bcm-hero) h1,
 .rta-budget-page .bp-hero h1 { max-width:900px; font-size:clamp(40px,5vw,66px) !important; font-weight:760 !important; letter-spacing:-.045em !important; line-height:1.04 !important; }
+.rta-guide-detail-page .ep-hero .ep-kicker {
+  margin:0 0 16px;
+  color:#77cbb8 !important;
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+.rta-guide-detail-page .ep-hero .ep-lead { max-width:820px; margin:22px 0 0; font-size:18px; }
+.rta-guide-detail-page .ep-section { max-width:900px; margin:46px 0; }
+.rta-guide-detail-page .ep-section .ep-h2 { max-width:760px; }
+.rta-guide-detail-page .ep-section :is(.ep-p,p) { max-width:820px; }
 .rta-guide-detail-page :is(.guide-grid,.guide-table),
 .rta-comparison-page :is(.bvt-grid,.bvt-verdict-grid,.bvt-nomad-grid) { gap:0 !important; }
 .rta-guide-detail-page .guide-card,
@@ -3175,12 +3187,12 @@ body { font: 400 17px/1.7 var(--rta-sans); background: var(--rta-paper); color: 
 
 @media (max-width:760px) {
   .rta-guide-detail-page,.rta-comparison-page,.rta-budget-page,.rta-blog.rta-journal,.rta-content.rta-post { width:calc(100% - 24px); }
-  .rta-guide-detail-page .guide-hero,
+  .rta-guide-detail-page :is(.guide-hero,.ep-hero),
   .rta-comparison-page :is(.bvt-hero,.bcm-hero),
   .rta-budget-page .bp-hero,
   .rta-journal .rta-journal-header,
   .rta-content.rta-post .rta-post-header { padding:32px 24px !important; border-radius:22px !important; }
-  .rta-guide-detail-page .guide-hero h1 { overflow-wrap:anywhere; hyphens:auto; }
+  .rta-guide-detail-page :is(.guide-hero,.ep-hero) h1 { overflow-wrap:anywhere; hyphens:auto; }
   .rta-journal-toolbar { top:58px; }
   .rta-journal-aside { display:block !important; padding:30px 24px !important; border-radius:22px !important; }
   .rta-journal-editorial-note { margin-top:28px !important; }

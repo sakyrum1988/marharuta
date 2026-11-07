@@ -17,6 +17,7 @@ GUIDES = {
     "banking": "Banking in Asia: Accounts, KYC and International Transfers",
     "driving-transport": "Driving and Transport in Asia: Licences, Safety and City Choice",
     "taxes": "Taxes in Asia for Expats: Residence, Income and Filing",
+    "can-you-extend-japan-digital-nomad-visa": "Can You Extend Japan's Digital Nomad Visa? 2026 Rules",
 }
 
 COMPARE_PAGES = {
