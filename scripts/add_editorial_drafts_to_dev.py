@@ -19,6 +19,8 @@ REVIEWS = ROOT / "docs" / "content-reviews"
 DATABASE = ROOT / "content.db"
 
 SOURCES = (
+    "send-money-us-to-india-en.json",
+    "perevod-deneg-iz-ssha-v-indiyu-ru.json",
     "digital-nomad-jobs-en.json",
     "rabota-dlya-tsifrovyh-kochevnikov-ru.json",
     "car-rental-in-shanghai-en.json",

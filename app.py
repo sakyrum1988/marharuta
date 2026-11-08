@@ -9014,6 +9014,7 @@ def article_schema(
 
 
 POST_TRANSLATION_SLUGS = {
+    "send-money-us-to-india": "perevod-deneg-iz-ssha-v-indiyu",
     "digital-nomad-jobs": "rabota-dlya-tsifrovyh-kochevnikov",
     "car-rental-in-shanghai": "arenda-avtomobilya-v-shanhae",
     "georgia-vs-armenia": "gruziya-ili-armeniya",
