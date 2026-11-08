@@ -9014,6 +9014,7 @@ def article_schema(
 
 
 POST_TRANSLATION_SLUGS = {
+    "digital-nomad-jobs": "rabota-dlya-tsifrovyh-kochevnikov",
     "car-rental-in-shanghai": "arenda-avtomobilya-v-shanhae",
     "georgia-vs-armenia": "gruziya-ili-armeniya",
     "best-places-to-live-in-thailand": "luchshie-mesta-dlya-zhizni-v-tailande",
