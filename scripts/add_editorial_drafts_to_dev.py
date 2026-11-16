@@ -19,6 +19,8 @@ REVIEWS = ROOT / "docs" / "content-reviews"
 DATABASE = ROOT / "content.db"
 
 SOURCES = (
+    "is-vietnam-safe-to-live-en.json",
+    "bezopasno-li-zhit-vo-vetname-ru.json",
     "learn-chinese-online-en.json",
     "uchit-kitayskiy-onlayn-ru.json",
     "send-money-us-to-india-en.json",

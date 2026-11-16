@@ -9014,6 +9014,7 @@ def article_schema(
 
 
 POST_TRANSLATION_SLUGS = {
+    "is-vietnam-safe-to-live": "bezopasno-li-zhit-vo-vetname",
     "learn-chinese-online": "uchit-kitayskiy-onlayn",
     "send-money-us-to-india": "perevod-deneg-iz-ssha-v-indiyu",
     "digital-nomad-jobs": "rabota-dlya-tsifrovyh-kochevnikov",
