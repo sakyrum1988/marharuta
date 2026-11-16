@@ -157,6 +157,17 @@ class TechnicalRegressionTests(unittest.TestCase):
             sitemap,
         )
 
+    def test_sitemap_contains_learn_chinese_articles(self):
+        sitemap = self.client.get('/sitemap.xml').get_data(as_text=True)
+        self.assertIn(
+            f'<loc>{site.SITE_URL}/blog/learn-chinese-online/</loc>',
+            sitemap,
+        )
+        self.assertIn(
+            f'<loc>{site.SITE_URL}/ru/blog/uchit-kitayskiy-onlayn/</loc>',
+            sitemap,
+        )
+
     def test_no_phantom_country_in_either_table_of_contents(self):
         for path in ('/cheapest-countries-in-asia/', '/ru/cheapest-countries-in-asia/'):
             body = self.client.get(path).get_data(as_text=True)
